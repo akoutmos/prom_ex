@@ -14,6 +14,11 @@ defmodule PromEx do
   - phoenix (coming soon)
   - plug (coming soon)
   - gen_rmq (coming soon)
+  - absinthe (coming soon)
+  - beam (coming soon)
+  - tesla (coming soon)
+  - httpoison (coming soon)
+  - oban (coming soon)
 
   Each plugin also has an accompanying Grafana dashboard that you can
   leverage to plot all of the captured data (see each project's GitHub
@@ -24,6 +29,7 @@ defmodule PromEx do
   - exporter (coming soon)
   """
 
+  alias PromEx.{PollableMetrics, StandardMetrics}
   alias TelemetryMetricsPrometheus.Core
 
   @doc """
@@ -40,10 +46,10 @@ defmodule PromEx do
 
   ```elixir
   def metrics do
-    [
+    StandardMetrics.build([
       counter("my_app.data_point.count"),
       last_value("my_app.some_other.data_point")
-    ]
+    ])
   end
   ```
   """
@@ -62,6 +68,8 @@ defmodule PromEx do
 
       import Telemetry.Metrics, only: [counter: 2, distribution: 2, last_value: 2, sum: 2]
 
+      alias PromEx.{PollableMetrics, StandardMetrics}
+
       def metrics, do: raise("#{__MODULE__} must implement metrics/0 function")
 
       def metrics(_opts), do: raise("#{__MODULE__} must implement metrics/1 function")
@@ -74,16 +82,26 @@ defmodule PromEx do
   This function initializes all of the provided plugins and aggregates the
   metrics list.
 
+  TODO: Figure out how to handle polling metrics
+
   TODO: Add the ability to omit metrics from certain plugins via the tuple format
-        and document.
+        and document. Is this a good idea??
   """
   def init_plugins(plugins) do
-    aggregated_metrics =
+    {pollable_metrics, standard_metrics} =
       plugins
-      |> Enum.reduce([], fn plugin_def, acc ->
-        [init_plugin(plugin_def) | acc]
+      |> Enum.reduce([], fn plugin_definition, acc ->
+        [init_plugin(plugin_definition) | acc]
       end)
-      |> Enum.reverse()
+      |> List.flatten()
+      |> Enum.split_with(fn
+        %PollableMetrics{} -> true
+        %StandardMetrics{} -> false
+      end)
+
+    # Perhaps each plugin returns a struct as to the type of metrics it provides??
+    # - Pollable
+    # - Static
 
     {Core, metrics: aggregated_metrics, require_seconds: false, consistent_units: true}
   end
@@ -103,7 +121,9 @@ defmodule PromEx do
 
       opts
       |> module.metrics()
-      |> Enum.reject(fn metric -> metric.name in omit_metrics end)
+
+      # TODO: if :omit is the only key...then invoke metrics/0
+      # TODO: FIX WITH NEW FILTER |> Enum.reject(fn metric -> metric.name in omit_metrics end)
     else
       module.metrics(opts)
     end
@@ -111,5 +131,8 @@ defmodule PromEx do
 
   defp init_plugin(module) when is_atom(module) do
     module.metrics()
+  end
+
+  defp validate_metrics(metrics) do
   end
 end
