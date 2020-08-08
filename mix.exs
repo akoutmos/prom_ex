@@ -21,9 +21,14 @@ defmodule PromEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:telemetry, "~> 0.4.1"},
-      {:telemetry_poller, "~> 0.4.1"},
-      {:telemetry_metrics_prometheus_core, "~> 0.2.1"}
+      # Required dependencies
+      {:telemetry, "~> 0.4.2"},
+      {:telemetry_poller, "~> 0.5.1"},
+      {:telemetry_metrics, "~> 0.5.0"},
+      {:telemetry_metrics_prometheus_core, "~> 0.4.1"}
+
+      # Optional dependencies depending on what telemetry
+      # events the user is acting upon
     ]
   end
 end

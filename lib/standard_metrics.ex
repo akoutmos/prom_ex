@@ -6,6 +6,8 @@ defmodule PromEx.StandardMetrics do
 
   alias __MODULE__
 
+  @type t :: %StandardMetrics{group_name: atom, metrics: list}
+
   defstruct group_name: :default, metrics: []
 
   def build(metrics), do: build(:default, metrics)

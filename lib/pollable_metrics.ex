@@ -6,6 +6,8 @@ defmodule PromEx.PollableMetrics do
 
   alias __MODULE__
 
+  @type t :: %PollableMetrics{group_name: atom, measurements: list, period: integer}
+
   defstruct group_name: :default, measurements: [], period: 5_000
 
   def build(measurements), do: build(:default, 5_000, measurements)

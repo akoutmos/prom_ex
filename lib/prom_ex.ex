@@ -9,16 +9,23 @@ defmodule PromEx do
 
   All metrics gathering will be delegated to plugins which can be found
   here:
-  - broadway (coming soon)
-  - ecto (coming soon)
-  - phoenix (coming soon)
-  - plug (coming soon)
-  - gen_rmq (coming soon)
-  - absinthe (coming soon)
-  - beam (coming soon)
-  - tesla (coming soon)
-  - httpoison (coming soon)
-  - oban (coming soon)
+  - plug
+  - ecto
+  - phoenix
+  - BEAM
+  - plug_cowboy
+  - ecto_sql
+  - absinthe
+  - redix
+  - tesla
+  - phoenix_live_view
+  - memcachex
+  - broadway
+  - oban
+  - nebulex
+  - horde
+  - gen_rmq
+  - finch
 
   Each plugin also has an accompanying Grafana dashboard that you can
   leverage to plot all of the captured data (see each project's GitHub
@@ -53,14 +60,15 @@ defmodule PromEx do
   end
   ```
   """
-  @callback metrics :: [any()]
+  @callback metrics :: [PollableMetrics.t() | StandardMetrics.t()] | PollableMetrics.t() | StandardMetrics.t()
 
   @doc """
   The metrics/1 function is similar to metrics/0 in that it is a list of the
   metrics that the plugin exposes. The only caveat here being that arbitrary
   options may be passed to the plugin to
   """
-  @callback metrics(any()) :: [any()]
+  @callback metrics(keyword()) ::
+              [PollableMetrics.t() | StandardMetrics.t()] | PollableMetrics.t() | StandardMetrics.t()
 
   defmacro __using__ do
     quote do
@@ -81,11 +89,6 @@ defmodule PromEx do
   @doc """
   This function initializes all of the provided plugins and aggregates the
   metrics list.
-
-  TODO: Figure out how to handle polling metrics
-
-  TODO: Add the ability to omit metrics from certain plugins via the tuple format
-        and document. Is this a good idea??
   """
   def init_plugins(plugins) do
     {pollable_metrics, standard_metrics} =
@@ -99,10 +102,8 @@ defmodule PromEx do
         %StandardMetrics{} -> false
       end)
 
-    # Perhaps each plugin returns a struct as to the type of metrics it provides??
-    # - Pollable
-    # - Static
-
+    # TODO: PromEx needs to be a supervisor that starts the pollers and standard metrics
+    # This probably isn't the correct return value
     {Core, metrics: aggregated_metrics, require_seconds: false, consistent_units: true}
   end
 
@@ -116,17 +117,9 @@ defmodule PromEx do
   end
 
   defp init_plugin({module, opts}) when is_atom(module) do
-    if Keyword.has_key?(opts, :omit) do
-      omit_metrics = Keyword.get(opts, :omit)
-
-      opts
-      |> module.metrics()
-
-      # TODO: if :omit is the only key...then invoke metrics/0
-      # TODO: FIX WITH NEW FILTER |> Enum.reject(fn metric -> metric.name in omit_metrics end)
-    else
-      module.metrics(opts)
-    end
+    # TODO: Should there be any PromEx level options like :omit for
+    # skipping a single metric point
+    module.metrics(opts)
   end
 
   defp init_plugin(module) when is_atom(module) do
