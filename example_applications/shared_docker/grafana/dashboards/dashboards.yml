@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: 'Sample Dashboards'
+    type: 'file'
+    disableDeletion: true
+    editable: false
+    updateIntervalSeconds: 10
+    options:
+      folder: '/etc/grafana/provisioning/dashboards/'

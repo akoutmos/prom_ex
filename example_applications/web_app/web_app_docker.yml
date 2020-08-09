@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  elixir_app:
+    image: elixir:1.10.4
+    command: >
+      /bin/sh -c 'apt-get update && apt-get install -y inotify-tools &&
+      mix local.hex --force &&
+      mix local.rebar --force &&
+      mix deps.get &&
+      mix ecto.setup &&
+      mix phx.server'
+    ports:
+      - '4000:4000'
+    depends_on:
+      - postgres
+    working_dir: /app
+    volumes:
+      - ./config:/app/config:ro
+      - ./lib:/app/lib:ro
+      - ./priv:/app/priv:ro
+      - ./.formatter.exs:/app/formatter.exs:ro
+      - ./mix.exs:/app/mix.exs:ro
+      - ./mix.lock:/app/mix.lock:ro
+      - elixir-deps:/app/deps/
+      - elixir-build:/app/_build/
+
+volumes:
+  elixir-deps: {}
+  elixir-build: {}
