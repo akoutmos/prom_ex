@@ -7,25 +7,32 @@ defmodule PromEx do
   interface can be achieved and so that leveraging multiple plugins is
   effortless from the user's point of view.
 
-  All metrics gathering will be delegated to plugins which can be found
-  here:
-  - plug
-  - ecto
-  - phoenix
-  - BEAM
-  - plug_cowboy
-  - ecto_sql
-  - absinthe
-  - redix
-  - tesla
-  - phoenix_live_view
-  - memcachex
-  - broadway
-  - oban
-  - nebulex
-  - horde
-  - gen_rmq
-  - finch
+  All metrics gathering will be delegated to plugins which can be found here:
+
+  Elixir libs:
+    - plug
+    - ecto
+    - phoenix
+    - BEAM
+    - plug_cowboy
+    - ecto_sql
+    - absinthe
+    - redix
+    - tesla
+    - phoenix_live_view
+    - memcachex
+    - broadway
+    - oban
+    - nebulex
+    - horde
+    - gen_rmq
+    - finch
+
+  Database cron based metrics:
+    - Postgres (look at https://github.com/pawurb/ecto_psql_extras for inspiration)
+    - MySQL
+    - Redis
+    - MongoDB
 
   Each plugin also has an accompanying Grafana dashboard that you can
   leverage to plot all of the captured data (see each project's GitHub
