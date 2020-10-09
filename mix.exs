@@ -25,10 +25,11 @@ defmodule PromEx.MixProject do
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.5.0"},
-      {:telemetry_metrics_prometheus_core, "~> 0.4.1"}
+      {:telemetry_metrics_prometheus_core, "~> 0.4.1"},
 
-      # Optional dependencies depending on what telemetry
-      # events the user is acting upon
+      # Optional dependencies depending on what telemetry events the user is acting upon
+      {:phoenix, "~> 1.5", optional: true},
+      {:plug, "~> 1.10", optional: true}
     ]
   end
 end

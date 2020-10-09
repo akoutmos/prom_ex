@@ -4,16 +4,14 @@ defmodule PromEx.StandardMetrics do
   standard metrics from a plugin.
   """
 
-  alias __MODULE__
-
-  @type t :: %StandardMetrics{group_name: atom, metrics: list}
+  @type t :: %__MODULE__{group_name: atom, metrics: list}
 
   defstruct group_name: :default, metrics: []
 
   def build(metrics), do: build(:default, metrics)
 
   def build(group_name, metrics) do
-    %MetricsConfig{
+    %__MODULE__{
       group_name: group_name,
       metrics: metrics
     }
