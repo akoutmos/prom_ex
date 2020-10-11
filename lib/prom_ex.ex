@@ -3,7 +3,7 @@ defmodule PromEx do
   PromEx is a plugin based library which can be used to capture
   telemetry events and report them out for consumption by Prometheus.
   The main purpose of this particular library is to provide the
-  behaviour that all PromEx plugins will leverage so that a consistent
+  behaviour that all PromEx plugins leverage so that a consistent
   interface can be achieved and so that leveraging multiple plugins is
   effortless from the user's point of view.
 
@@ -19,7 +19,7 @@ defmodule PromEx do
     - absinthe
     - redix
     - tesla
-    - phoenix_live_view
+    - phoenix_live_view (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - memcachex
     - broadway
     - oban
@@ -77,13 +77,14 @@ defmodule PromEx do
   @callback metrics(keyword()) ::
               [PollableMetrics.t() | StandardMetrics.t()] | PollableMetrics.t() | StandardMetrics.t()
 
-  defmacro __using__ do
+  defmacro __using__(_) do
     quote do
       @behaviour PromEx
 
       import Telemetry.Metrics, only: [counter: 2, distribution: 2, last_value: 2, sum: 2]
+      import PromEx.BucketGenerator
 
-      alias PromEx.{PollableMetrics, StandardMetrics}
+      alias PromEx.{StandardMetrics, PollableMetrics, BucketGenerator}
 
       def metrics, do: raise("#{__MODULE__} must implement metrics/0 function")
 
@@ -98,7 +99,7 @@ defmodule PromEx do
   metrics list.
   """
   def init_plugins(plugins) do
-    {pollable_metrics, standard_metrics} =
+    {_pollable_metrics, standard_metrics} =
       plugins
       |> Enum.reduce([], fn plugin_definition, acc ->
         [init_plugin(plugin_definition) | acc]
@@ -109,9 +110,16 @@ defmodule PromEx do
         %StandardMetrics{} -> false
       end)
 
+    standard_metrics =
+      standard_metrics
+      |> Enum.map(fn %StandardMetrics{metrics: metrics} ->
+        metrics
+      end)
+      |> List.flatten()
+
     # TODO: PromEx needs to be a supervisor that starts the pollers and standard metrics
     # This probably isn't the correct return value
-    {Core, metrics: aggregated_metrics, require_seconds: false, consistent_units: true}
+    {Core, metrics: standard_metrics, require_seconds: false, consistent_units: true}
   end
 
   @doc """

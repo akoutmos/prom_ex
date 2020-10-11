@@ -8,15 +8,18 @@ defmodule WebApp.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      WebApp.Repo,
+      # WebApp.Repo,
       # Start the Telemetry supervisor
       WebAppWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: WebApp.PubSub},
       # Start the Endpoint (http/https)
-      WebAppWeb.Endpoint
+      WebAppWeb.Endpoint,
       # Start a worker by calling: WebApp.Worker.start_link(arg)
       # {WebApp.Worker, arg}
+      PromEx.init_plugins([
+        {PromEx.Plugins.Phoenix, router: WebAppWeb.Router}
+      ])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
