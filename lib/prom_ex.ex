@@ -19,7 +19,7 @@ defmodule PromEx do
     - absinthe
     - redix
     - tesla
-    - phoenix_live_view
+    - phoenix_live_view (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - memcachex
     - broadway
     - oban

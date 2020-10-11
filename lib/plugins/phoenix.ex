@@ -15,27 +15,19 @@ defmodule PromEx.Plugins.Phoenix do
 
   require Logger
 
+  alias Phoenix.Socket
   alias Plug.Conn
 
   def metrics(opts) do
     phoenix_router = Keyword.fetch!(opts, :router)
 
-    #    :telemetry.attach(
-    #      "promex-test",
-    #      [:phoenix, :endpoint, :stop],
-    #      fn arg1, arg2, arg3, arg4 ->
-    #        IO.inspect(arg1)
-    #        IO.inspect(arg2)
-    #        IO.inspect(arg3)
-    #        IO.inspect(arg4)
-    #      end,
-    #      nil
-    #    )
-
     StandardMetrics.build([
+      # Capture request duration information
       distribution(
-        [:phoenix, :endpoint, :stop, :duration],
-        description: "Dispatched by Plug.Telemetry in your endpoint whenever the response is sent",
+        [:phoenix, :http, :request, :duration, :milliseconds],
+        event_name: [:phoenix, :endpoint, :stop],
+        measurement: :duration,
+        description: "The time it takes for the application to respond to HTTP requests",
         reporter_options: [
           buckets: exponential(1, 2, 12)
         ],
@@ -43,14 +35,55 @@ defmodule PromEx.Plugins.Phoenix do
         tags: [:status, :method, :path, :controller, :action],
         unit: {:native, :millisecond}
       ),
+
+      # Capture response payload size information
       distribution(
-        [:phoenix, :router_dispatch, :stop, :duration],
-        description: "Dispatched by Phoenix.Router after successfully dispatching a matched route",
+        [:phoenix, :http, :response, :size, :kilobytes],
+        event_name: [:phoenix, :endpoint, :stop],
+        description: "The size of the HTTP response payload",
+        reporter_options: [
+          buckets: exponential(1, 2, 16)
+        ],
+        measurement: fn _measurements, metadata ->
+          :erlang.iolist_size(metadata.conn.resp_body)
+        end,
+        tag_values: get_conn_tags(phoenix_router),
+        tags: [:status, :method, :path, :controller, :action],
+        unit: :kilobyte
+      ),
+
+      # Capture the number of requests that have been serviced
+      counter(
+        [:phoenix, :http, :requests, :total],
+        event_name: [:phoenix, :endpoint, :stop],
+        description: "The number of requests have been serviced",
+        tag_values: get_conn_tags(phoenix_router),
+        tags: [:status, :method, :path, :controller, :action]
+      ),
+
+      # Capture the number of channel joins that have occured
+      counter(
+        [:phoenix, :channel, :joined, :total],
+        event_name: [:phoenix, :channel_joined],
+        description: "The number of channel joins that have occured",
+        tag_values: fn %{result: result, socket: %Socket{transport: transport}} ->
+          %{
+            transport: transport,
+            result: result
+          }
+        end,
+        tags: [:result, :transport]
+      ),
+
+      # Capture channel handle_in duration
+      distribution(
+        [:phoenix, :channel, :handled_in, :duration, :milliseconds],
+        event_name: [:phoenix, :channel_handled_in],
+        measurement: :duration,
+        description: "The time it takes for the application to respond to channel messages",
         reporter_options: [
           buckets: exponential(1, 2, 12)
         ],
-        tag_values: get_conn_tags(phoenix_router),
-        tags: [:status, :method, :path, :controller, :action],
         unit: {:native, :millisecond}
       )
     ])
