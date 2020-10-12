@@ -25,7 +25,7 @@ defmodule PromEx.Plugins.Beam do
   end
 
   defp memory_metrics(poll_rate) do
-    PollableMetrics.build(
+    PollMetrics.build(
       :default,
       poll_rate,
       {__MODULE__, :execute_memory_metrics, []},

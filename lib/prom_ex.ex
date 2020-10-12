@@ -43,7 +43,7 @@ defmodule PromEx do
   - exporter (coming soon)
   """
 
-  alias PromEx.{PollableMetrics, StandardMetrics}
+  alias PromEx.{ManualMetrics, PollMetrics, EventMetrics}
   alias TelemetryMetricsPrometheus.Core
 
   use Supervisor
@@ -62,14 +62,18 @@ defmodule PromEx do
 
   ```elixir
   def metrics do
-    StandardMetrics.build([
+    EventMetrics.build([
       counter("my_app.data_point.count"),
       last_value("my_app.some_other.data_point")
     ])
   end
   ```
   """
-  @callback metrics :: [PollableMetrics.t() | StandardMetrics.t()] | PollableMetrics.t() | StandardMetrics.t()
+  @callback metrics ::
+              [PollMetrics.t() | EventMetrics.t() | ManualMetrics.t()]
+              | PollMetrics.t()
+              | EventMetrics.t()
+              | ManualMetrics.t()
 
   @doc """
   The metrics/1 function is similar to metrics/0 in that it is a list of the
@@ -77,7 +81,7 @@ defmodule PromEx do
   options may be passed to the plugin to
   """
   @callback metrics(keyword()) ::
-              [PollableMetrics.t() | StandardMetrics.t()] | PollableMetrics.t() | StandardMetrics.t()
+              [PollMetrics.t() | EventMetrics.t()] | PollMetrics.t() | EventMetrics.t()
 
   defmacro __using__(_) do
     quote do
@@ -86,7 +90,7 @@ defmodule PromEx do
       import Telemetry.Metrics, only: [counter: 2, distribution: 2, last_value: 2, sum: 2]
       import PromEx.BucketGenerator
 
-      alias PromEx.{StandardMetrics, PollableMetrics, BucketGenerator}
+      alias PromEx.{EventMetrics, PollMetrics, BucketGenerator}
 
       def metrics, do: raise("#{__MODULE__} must implement metrics/0 function")
 
@@ -102,20 +106,28 @@ defmodule PromEx do
 
   @impl true
   def init(opts) do
-    %{
-      telemetry_metrics: telemetry_metrics,
-      pollable_metrics: pollable_metrics
-    } =
+    plugins =
       opts
       |> Keyword.get(:plugins, [])
       |> init_plugins()
 
-    telemetry_poller_children = generate_telemetry_poller_child_spec(pollable_metrics)
+    # event_metrics = Map.get(plugins, :event_metrics, [])
+    # manual_metrics = Map.get(plugins, :manual_metrics, [])
+    telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
+    poll_metrics = Map.get(plugins, :poll_metrics, [])
+
+    # Create child specs for each group of poll rates
+    telemetry_poller_children = generate_telemetry_poller_child_spec(poll_metrics)
 
     children = [
       {
         Core,
         metrics: telemetry_metrics, require_seconds: false, consistent_units: true, name: :prom_ex_metrics
+      },
+      {
+        ManualMetricsManager,
+        # manual_metrics
+        metrics: []
       }
       | telemetry_poller_children
     ]
@@ -124,44 +136,55 @@ defmodule PromEx do
   end
 
   defp init_plugins(plugins) do
-    {pollable_metrics, standard_metrics} =
+    grouped_plugins =
       plugins
       |> Enum.reduce([], fn plugin_definition, acc ->
         [init_plugin(plugin_definition) | acc]
       end)
       |> List.flatten()
-      |> Enum.split_with(fn
-        %PollableMetrics{} -> true
-        %StandardMetrics{} -> false
+      |> Enum.group_by(fn %{__struct__: struct} ->
+        struct
+        |> Module.split()
+        |> List.last()
+        |> Macro.underscore()
+        |> String.to_existing_atom()
       end)
 
+    event_metrics = Map.get(grouped_plugins, :event_metrics, [])
+    poll_metrics = Map.get(grouped_plugins, :poll_metrics, [])
+    manual_metrics = Map.get(grouped_plugins, :manual_metrics, [])
+
     telemetry_metrics =
-      (standard_metrics ++ pollable_metrics)
+      (event_metrics ++ poll_metrics ++ manual_metrics)
       |> Enum.map(fn
-        %StandardMetrics{metrics: metrics} ->
+        %EventMetrics{metrics: metrics} ->
           metrics
 
-        %PollableMetrics{metrics: metrics} ->
+        %PollMetrics{metrics: metrics} ->
+          metrics
+
+        %ManualMetrics{metrics: metrics} ->
           metrics
       end)
       |> List.flatten()
 
     %{
       telemetry_metrics: telemetry_metrics,
-      standard_metrics: standard_metrics,
-      pollable_metrics: pollable_metrics
+      event_metrics: event_metrics,
+      poll_metrics: poll_metrics,
+      manual_metrics: manual_metrics
     }
   end
 
   defp generate_telemetry_poller_child_spec(pollable_metrics) do
     pollable_metrics
-    |> Enum.group_by(fn %PollableMetrics{poll_rate: poll_rate} ->
+    |> Enum.group_by(fn %PollMetrics{poll_rate: poll_rate} ->
       poll_rate
     end)
     |> Enum.map(fn {poll_rate, pollable_metrics} ->
       measurements =
         pollable_metrics
-        |> Enum.map(fn %PollableMetrics{measurements_mfa: measurements_mfa} ->
+        |> Enum.map(fn %PollMetrics{measurements_mfa: measurements_mfa} ->
           measurements_mfa
         end)
 
