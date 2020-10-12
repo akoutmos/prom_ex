@@ -18,6 +18,7 @@ defmodule PromEx.Plugins.Phoenix do
   alias Phoenix.Socket
   alias Plug.Conn
 
+  @impl true
   def metrics(opts) do
     # Fetch user options
     phoenix_router = Keyword.fetch!(opts, :router)
@@ -34,7 +35,7 @@ defmodule PromEx.Plugins.Phoenix do
         [:phoenix, :http, :request, :duration, :milliseconds],
         event_name: phoenix_stop_event,
         measurement: :duration,
-        description: "The time it takes for the application to respond to HTTP requests",
+        description: "The time it takes for the application to respond to HTTP requests.",
         reporter_options: [
           buckets: exponential(1, 2, 12)
         ],
@@ -45,9 +46,9 @@ defmodule PromEx.Plugins.Phoenix do
 
       # Capture response payload size information
       distribution(
-        [:phoenix, :http, :response, :size, :kilobytes],
+        [:phoenix, :http, :response, :size, :bytes],
         event_name: phoenix_stop_event,
-        description: "The size of the HTTP response payload",
+        description: "The size of the HTTP response payload.",
         reporter_options: [
           buckets: exponential(1, 2, 16)
         ],
@@ -56,14 +57,14 @@ defmodule PromEx.Plugins.Phoenix do
         end,
         tag_values: get_conn_tags(phoenix_router),
         tags: http_metrics_tags,
-        unit: :kilobyte
+        unit: :byte
       ),
 
       # Capture the number of requests that have been serviced
       counter(
         [:phoenix, :http, :requests, :total],
         event_name: phoenix_stop_event,
-        description: "The number of requests have been serviced",
+        description: "The number of requests have been serviced.",
         tag_values: get_conn_tags(phoenix_router),
         tags: http_metrics_tags
       ),
@@ -72,7 +73,7 @@ defmodule PromEx.Plugins.Phoenix do
       counter(
         [:phoenix, :channel, :joined, :total],
         event_name: [:phoenix, :channel_joined],
-        description: "The number of channel joins that have occured",
+        description: "The number of channel joins that have occured.",
         tag_values: fn %{result: result, socket: %Socket{transport: transport}} ->
           %{
             transport: transport,
@@ -87,7 +88,7 @@ defmodule PromEx.Plugins.Phoenix do
         [:phoenix, :channel, :handled_in, :duration, :milliseconds],
         event_name: [:phoenix, :channel_handled_in],
         measurement: :duration,
-        description: "The time it takes for the application to respond to channel messages",
+        description: "The time it takes for the application to respond to channel messages.",
         reporter_options: [
           buckets: exponential(1, 2, 12)
         ],
