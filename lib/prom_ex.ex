@@ -46,6 +46,8 @@ defmodule PromEx do
   alias PromEx.{PollableMetrics, StandardMetrics}
   alias TelemetryMetricsPrometheus.Core
 
+  use Supervisor
+
   @doc """
   The metrics/0 function returns a list of metrics that will be exposed
   by the given plugin. By using the PromEx module, you have access to the
@@ -94,12 +96,35 @@ defmodule PromEx do
     end
   end
 
-  @doc """
-  This function initializes all of the provided plugins and aggregates the
-  metrics list.
-  """
-  def init_plugins(plugins) do
-    {_pollable_metrics, standard_metrics} =
+  def start_link(init_arg) do
+    Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+  end
+
+  @impl true
+  def init(opts) do
+    %{
+      telemetry_metrics: telemetry_metrics,
+      pollable_metrics: pollable_metrics
+    } =
+      opts
+      |> Keyword.get(:plugins, [])
+      |> init_plugins()
+
+    telemetry_poller_children = generate_telemetry_poller_child_spec(pollable_metrics)
+
+    children = [
+      {
+        Core,
+        metrics: telemetry_metrics, require_seconds: false, consistent_units: true, name: :prom_ex_metrics
+      }
+      | telemetry_poller_children
+    ]
+
+    Supervisor.init(children, strategy: :one_for_one)
+  end
+
+  defp init_plugins(plugins) do
+    {pollable_metrics, standard_metrics} =
       plugins
       |> Enum.reduce([], fn plugin_definition, acc ->
         [init_plugin(plugin_definition) | acc]
@@ -110,16 +135,41 @@ defmodule PromEx do
         %StandardMetrics{} -> false
       end)
 
-    standard_metrics =
-      standard_metrics
-      |> Enum.map(fn %StandardMetrics{metrics: metrics} ->
-        metrics
+    telemetry_metrics =
+      (standard_metrics ++ pollable_metrics)
+      |> Enum.map(fn
+        %StandardMetrics{metrics: metrics} ->
+          metrics
+
+        %PollableMetrics{metrics: metrics} ->
+          metrics
       end)
       |> List.flatten()
 
-    # TODO: PromEx needs to be a supervisor that starts the pollers and standard metrics
-    # This probably isn't the correct return value
-    {Core, metrics: standard_metrics, require_seconds: false, consistent_units: true}
+    %{
+      telemetry_metrics: telemetry_metrics,
+      standard_metrics: standard_metrics,
+      pollable_metrics: pollable_metrics
+    }
+  end
+
+  defp generate_telemetry_poller_child_spec(pollable_metrics) do
+    pollable_metrics
+    |> Enum.group_by(fn %PollableMetrics{poll_rate: poll_rate} ->
+      poll_rate
+    end)
+    |> Enum.map(fn {poll_rate, pollable_metrics} ->
+      measurements =
+        pollable_metrics
+        |> Enum.map(fn %PollableMetrics{measurements_mfa: measurements_mfa} ->
+          measurements_mfa
+        end)
+
+      {
+        :telemetry_poller,
+        measurements: measurements, poll_rate: poll_rate
+      }
+    end)
   end
 
   @doc """
@@ -128,19 +178,14 @@ defmodule PromEx do
   can be scraped.
   """
   def get_metrics do
-    Core.scrape()
+    Core.scrape(:prom_ex_metrics)
   end
 
   defp init_plugin({module, opts}) when is_atom(module) do
-    # TODO: Should there be any PromEx level options like :omit for
-    # skipping a single metric point
     module.metrics(opts)
   end
 
   defp init_plugin(module) when is_atom(module) do
     module.metrics()
-  end
-
-  defp validate_metrics(metrics) do
   end
 end

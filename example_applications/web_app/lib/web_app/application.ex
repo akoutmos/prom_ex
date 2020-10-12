@@ -17,9 +17,13 @@ defmodule WebApp.Application do
       WebAppWeb.Endpoint,
       # Start a worker by calling: WebApp.Worker.start_link(arg)
       # {WebApp.Worker, arg}
-      PromEx.init_plugins([
-        {PromEx.Plugins.Phoenix, router: WebAppWeb.Router}
-      ])
+      {
+        PromEx,
+        plugins: [
+          {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
+          PromEx.Plugins.Beam
+        ]
+      }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
