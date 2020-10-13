@@ -18,6 +18,8 @@ defmodule PromEx do
     - ecto_sql
     - absinthe
     - redix
+    - Cachex
+    - ConCache
     - tesla
     - phoenix_live_view (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - memcachex
