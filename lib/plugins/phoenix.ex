@@ -29,7 +29,7 @@ defmodule PromEx.Plugins.Phoenix do
     http_metrics_tags = [:status, :method, :path, :controller, :action]
 
     # Create metrics
-    StandardMetrics.build([
+    EventMetrics.build([
       # Capture request duration information
       distribution(
         [:phoenix, :http, :request, :duration, :milliseconds],
@@ -123,7 +123,8 @@ defmodule PromEx.Plugins.Phoenix do
         })
 
       _ ->
-        Logger.warning("Could not resolve path for request")
+        # TODO: Change this to warning as warn is deprecated as of Elixir 1.11
+        Logger.warn("Could not resolve path for request")
     end
   end
 end
