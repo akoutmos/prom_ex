@@ -40,7 +40,7 @@ defmodule PromEx.MixProject do
   defp docs do
     [
       main: "readme",
-      logo: "guides/images/logo_2.svg",
+      logo: "guides/images/logo.svg",
       extras: ["README.md"]
     ]
   end
