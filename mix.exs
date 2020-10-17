@@ -8,7 +8,8 @@ defmodule PromEx.MixProject do
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      docs: docs()
+      docs: docs(),
+      aliases: aliases()
     ]
   end
 
@@ -43,5 +44,20 @@ defmodule PromEx.MixProject do
       logo: "guides/images/logo.svg",
       extras: ["README.md"]
     ]
+  end
+
+  defp aliases do
+    [
+      docs: ["docs", &copy_files/1]
+    ]
+  end
+
+  defp copy_files(_) do
+    # Set up directory structure
+    File.mkdir("./doc/guides")
+    File.mkdir("./doc/guides/images")
+
+    # Copy over files
+    File.cp("./guides/images/logo.svg", "./doc/guides/images/logo.svg")
   end
 end

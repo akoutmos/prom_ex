@@ -1,12 +1,12 @@
 # PromEx
 
-<img width="250" src="/guides/images/logo.svg" alt="PromEx">
+<img align="center" width="33%" src="/guides/images/logo.svg" alt="PromEx" style="margin-left:33%">
+
+---
 
 [![Hex.pm](https://img.shields.io/hexpm/v/prom_ex.svg)](http://hex.pm/packages/prom_ex) [![Build
 Status](https://travis-ci.org/akoutmos/prom_ex.svg?branch=master)](https://travis-ci.org/akoutmos/prom_ex) [![Coverage
 Status](https://coveralls.io/repos/github/akoutmos/prom_ex/badge.svg?branch=master)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
-
----
 
 ## Installation
 
