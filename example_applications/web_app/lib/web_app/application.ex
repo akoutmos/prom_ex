@@ -21,8 +21,10 @@ defmodule WebApp.Application do
         PromEx,
         plugins: [
           {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
-          PromEx.Plugins.Beam
-        ]
+          PromEx.Plugins.Beam,
+          {PromEx.Plugins.Application, [otp_app: :web_app]}
+        ],
+        delay_manual_start: :no_delay
       }
     ]
 

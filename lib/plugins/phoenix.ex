@@ -123,7 +123,8 @@ defmodule PromEx.Plugins.Phoenix do
         })
 
       _ ->
-        Logger.warning("Could not resolve path for request")
+        # TODO: Change this to warning as warn is deprecated as of Elixir 1.11
+        Logger.warn("Could not resolve path for request")
     end
   end
 end

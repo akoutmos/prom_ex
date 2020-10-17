@@ -7,45 +7,55 @@ defmodule PromEx do
   interface can be achieved and so that leveraging multiple plugins is
   effortless from the user's point of view.
 
-  All metrics gathering will be delegated to plugins which can be found here:
+  All metrics collection will be delegated to plugins which can be found here:
 
-  Elixir libs:
-    - plug
-    - ecto
-    - phoenix
-    - BEAM
-    - plug_cowboy
-    - ecto_sql
-    - absinthe
-    - redix
-    - Cachex
-    - ConCache
-    - tesla
-    - phoenix_live_view (https://hexdocs.pm/phoenix_live_view/telemetry.html)
-    - memcachex
-    - broadway
-    - oban
-    - nebulex
-    - horde
-    - gen_rmq
-    - finch
+  Foundational metrics:
+    - [~] `PromEx.Plugins.Application` Application related infomational metrics
+    - [~] `PromEx.Plugins.Beam` BEAM virtual machine metrics
+
+  Upcoming Elixir library metrics:
+    - [~] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
+    - [ ] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
+    - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
+    - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
+
+  Backlog Elixir library metrics:
+    - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
+    - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
+    - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
+    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
+    - [ ] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
+    - [ ] Redix (https://hexdocs.pm/redix/Redix.Telemetry.html)
+    - [ ] Tesla (https://hexdocs.pm/tesla/Tesla.Middleware.Telemetry.html)
+    - [ ] PhoenixLiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
+    - [ ] Memcachex (https://hexdocs.pm/memcachex/0.5.0/Memcache.html#module-telemetry)
+    - [ ] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
+    - [ ] Nebulex (https://hexdocs.pm/nebulex/2.0.0-rc.0/telemetry.html)
+    - [ ] Horde (https://github.com/derekkraan/horde/blob/master/lib/horde/supervisor_telemetry_poller.ex)
+    - [ ] Cachex (Need to open up PR)
 
   Database cron based metrics:
-    - Postgres (look at https://github.com/pawurb/ecto_psql_extras for inspiration)
-    - MySQL
-    - Redis
-    - MongoDB
+    - [ ] Postgres (https://github.com/pawurb/ecto_psql_extras for inspiration)
+    - [ ] MySQL (https://github.com/prometheus/mysqld_exporter)
+    - [ ] Redis (https://github.com/oliver006/redis_exporter)
+    - [ ] MongoDB (https://github.com/percona/mongodb_exporter)
 
   Each plugin also has an accompanying Grafana dashboard that you can
   leverage to plot all of the captured data (see each project's GitHub
   repo for details).
 
-  In order to expose captured metrics, you can leverage the PromEx Plug
-  found here (for use with Phoenix or vanilla Plug):
-  - exporter (coming soon)
+  In order to expose captured metrics, you can leverage the PromEx provided Plug
+  found here (for use with Phoenix) `PromEx.Plug`. See that modules' documentation
+  for specifics on how to use it.
   """
 
-  alias PromEx.{ManualMetrics, PollMetrics, EventMetrics}
+  alias PromEx.{
+    EventMetrics,
+    ManualMetrics,
+    ManualMetricsManager,
+    PollMetrics
+  }
+
   alias TelemetryMetricsPrometheus.Core
 
   use Supervisor
@@ -92,7 +102,7 @@ defmodule PromEx do
       import Telemetry.Metrics, only: [counter: 2, distribution: 2, last_value: 2, sum: 2]
       import PromEx.BucketGenerator
 
-      alias PromEx.{EventMetrics, PollMetrics, BucketGenerator}
+      alias PromEx.{EventMetrics, ManualMetrics, PollMetrics, BucketGenerator}
 
       def metrics, do: raise("#{__MODULE__} must implement metrics/0 function")
 
@@ -113,10 +123,9 @@ defmodule PromEx do
       |> Keyword.get(:plugins, [])
       |> init_plugins()
 
-    # event_metrics = Map.get(plugins, :event_metrics, [])
-    # manual_metrics = Map.get(plugins, :manual_metrics, [])
     telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
     poll_metrics = Map.get(plugins, :poll_metrics, [])
+    manual_metrics = Map.get(plugins, :manual_metrics, [])
 
     # Create child specs for each group of poll rates
     telemetry_poller_children = generate_telemetry_poller_child_spec(poll_metrics)
@@ -124,12 +133,16 @@ defmodule PromEx do
     children = [
       {
         Core,
-        metrics: telemetry_metrics, require_seconds: false, consistent_units: true, name: :prom_ex_metrics
+        metrics: telemetry_metrics,
+        require_seconds: false,
+        consistent_units: true,
+        name: :prom_ex_metrics,
+        start_async: false
       },
       {
         ManualMetricsManager,
-        # manual_metrics
-        metrics: []
+        metrics: generate_mfa_call_list(manual_metrics),
+        delay_manual_start: Keyword.get(opts, :delay_manual_start, :no_delay)
       }
       | telemetry_poller_children
     ]
@@ -194,6 +207,13 @@ defmodule PromEx do
         :telemetry_poller,
         measurements: measurements, poll_rate: poll_rate
       }
+    end)
+  end
+
+  defp generate_mfa_call_list(manual_metrics) do
+    manual_metrics
+    |> Enum.map(fn %ManualMetrics{measurements_mfa: mfa} ->
+      mfa
     end)
   end
 
