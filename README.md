@@ -1,6 +1,6 @@
 # PromEx
 
-<img width="250" src="https://github.com/akoutmos/prom_ex/master/guides/images/logo.png" alt="PromEx">
+<img width="250" src="/guides/images/logo.svg" alt="PromEx">
 
 [![Hex.pm](https://img.shields.io/hexpm/v/prom_ex.svg)](http://hex.pm/packages/prom_ex) [![Build
 Status](https://travis-ci.org/akoutmos/prom_ex.svg?branch=master)](https://travis-ci.org/akoutmos/prom_ex) [![Coverage
