@@ -11,7 +11,7 @@ defmodule PromEx.Plugins.Application do
     otp_app = Keyword.fetch!(opts, :otp_app)
     apps = Keyword.get(opts, :deps, :all)
 
-    ManualMetrics.build(
+    Manual.build(
       :default,
       {__MODULE__, :apps_running, [otp_app, apps]},
       [
