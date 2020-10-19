@@ -6,9 +6,23 @@ defmodule PromEx.MixProject do
       app: :prom_ex,
       version: "0.1.0",
       elixir: "~> 1.9",
+      name: "PromEx",
+      source_url: "https://github.com/akoutmos/prom_ex",
+      homepage_url: "https://hex.pm/packages/prom_ex",
+      description: "A Plug-in style Prometheus metrics collection library built on top of Telemetry",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+        "coveralls.travis": :test
+      ],
       deps: deps(),
-      docs: docs()
+      docs: docs(),
+      aliases: aliases()
     ]
   end
 
@@ -18,6 +32,9 @@ defmodule PromEx.MixProject do
       extra_applications: [:logger]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/sample_plugins"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
@@ -30,6 +47,9 @@ defmodule PromEx.MixProject do
 
       # Library development related dependencies
       {:ex_doc, "~> 0.22"},
+      {:excoveralls, "~> 0.12", only: :test, runtime: false},
+      {:doctor, "~> 0.15.0"},
+      {:credo, "~> 1.5.0-rc.4"},
 
       # Optional dependencies depending on what telemetry events the user is acting upon
       {:phoenix, "~> 1.5", optional: true},
@@ -43,5 +63,20 @@ defmodule PromEx.MixProject do
       logo: "guides/images/logo.svg",
       extras: ["README.md"]
     ]
+  end
+
+  defp aliases do
+    [
+      docs: ["docs", &copy_files/1]
+    ]
+  end
+
+  defp copy_files(_) do
+    # Set up directory structure
+    File.mkdir("./doc/guides")
+    File.mkdir("./doc/guides/images")
+
+    # Copy over files
+    File.cp("./guides/images/logo.svg", "./doc/guides/images/logo.svg")
   end
 end

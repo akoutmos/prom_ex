@@ -29,7 +29,7 @@ defmodule PromEx.Plugins.Phoenix do
     http_metrics_tags = [:status, :method, :path, :controller, :action]
 
     # Create metrics
-    EventMetrics.build([
+    Event.build([
       # Capture request duration information
       distribution(
         [:phoenix, :http, :request, :duration, :milliseconds],

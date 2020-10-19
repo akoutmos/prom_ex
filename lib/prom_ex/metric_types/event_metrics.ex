@@ -1,4 +1,4 @@
-defmodule PromEx.EventMetrics do
+defmodule PromEx.MetricTypes.Event do
   @moduledoc """
   This struct defines the fields necessary to export a group of
   standard metrics from a plugin.
