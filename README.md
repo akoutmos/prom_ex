@@ -51,6 +51,15 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 
 ### Available Plugins
 
+| Plugin                       | Status      | Description                                            |
+| ---------------------------- | ----------- | ------------------------------------------------------ |
+| `PromEx.Plugins.Application` | Beta        | Collect metrics on your application dependencies       |
+| `PromEx.Plugins.Beam`        | Beta        | Collect metrics regarding the BEAM virtual machine     |
+| `PromEx.Plugins.Phoenix`     | Beta        | Collect request metrics emitted by Phoenix             |
+| `PromEx.Plugins.Ecto`        | Coming soon | Collect query metrics emitted by Ecto                  |
+| `PromEx.Plugins.Broadway`    | Coming soon | Collect message processing metrics emitted by Broadway |
+| `PromEx.Plugins.Finch`       | Coming soon | Collect HTTP request metrics emitted by Finch          |
+
 ### Setting Up Metrics
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
@@ -62,4 +71,6 @@ be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/prom_ex).
 It wouldn't feel right to not include somewhere in this project a "thanks" to the various projects that
 helped make this possible:
 
--
+-   The logo for the project is an edited version of an SVG image from the [unDraw project](https://undraw.co/)
+-   The various projects available in [BEAM Telemetry](https://github.com/beam-telemetry)
+-   All of the Prometheus libraries that Ilya Khaprov ([@deadtrickster](https://github.com/deadtrickster)) maintains

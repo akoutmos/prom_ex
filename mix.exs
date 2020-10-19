@@ -47,7 +47,7 @@ defmodule PromEx.MixProject do
 
       # Library development related dependencies
       {:ex_doc, "~> 0.22"},
-      {:excoveralls, "~> 0.12", only: :test, runtime: false},
+      {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
       {:doctor, "~> 0.15.0"},
       {:credo, "~> 1.5.0-rc.4"},
 
