@@ -7,7 +7,7 @@ defmodule PromEx.Debug do
   PromEx itself.
   """
 
-  @typep metrics_types :: PromEx.MetricTypes.Event.t() | PromEx.MetricTypes.Manaul.t() | PromEx.MetricTypes.Polling.t()
+  @typep metrics_types :: PromEx.MetricTypes.Event.t() | PromEx.MetricTypes.Manual.t() | PromEx.MetricTypes.Polling.t()
 
   @doc """
   Use this function to attach a debugger handler to a certain telemetry event. This
