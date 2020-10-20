@@ -7,7 +7,7 @@ defmodule PromEx.Plugins.Application do
   use PromEx
 
   @impl true
-  def metrics(opts) do
+  def manual_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     apps = Keyword.get(opts, :deps, :all)
 

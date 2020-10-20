@@ -1,4 +1,4 @@
-defmodule PromEx.MetricTypes.Poll do
+defmodule PromEx.MetricTypes.Polling do
   @moduledoc """
   This struct defines the fields necessary to export a group
   of pollable metric sources from a plugin.

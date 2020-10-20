@@ -15,8 +15,8 @@ An Elixir Prometheus metrics collection library built on top of Telemetry
 This library is still under active development with changing API contracts and forked dependencies...use at your own
 risk for now :).
 
-[Available in Hex](https://hex.pm/packages/prom_ex), the package can be installed
-by adding `prom_ex` to your list of dependencies in `mix.exs`:
+[Available in Hex](https://hex.pm/packages/prom_ex), the package can be installed by adding `prom_ex`
+to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -30,22 +30,20 @@ Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/pr
 
 ### Design Philosophy
 
-With the widespread adoption of BEAM ecosystem projects like Telemetry and the other libraries in
-the [BEAM Telemetry GitHub Org](https://github.com/beam-telemetry), we have reached a point where we
-have a consistent means of surfacing application metrics. This allows us to have a great level of
-insight into our applications and dependencies given that they all leverage the same fundamental
-tools. The goal of this project is to provide a "Plug-in" style library where you can easily add new
-plug-ins to surface metrics so that Prometheus can scrape them. Ideally, this project acts as the
-"Metrics" pillar in your application (in reference to
-[The Three Pillars of
+With the widespread adoption of the Telemetry library and the other libraries in the [BEAM Telemetry GitHub
+Org](https://github.com/beam-telemetry), we have reached a point where we have a consistent means of surfacing
+application metrics. This allows us to have a great level of insight into our applications and dependencies given that
+they all leverage the same fundamental tooling. The goal of this project is to provide a "Plug-in" style library where
+you can easily add new plug-ins to surface metrics so that Prometheus can scrape them. Ideally, this project acts as the
+"Metrics" pillar in your application (in reference to [The Three Pillars of
 Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/ch04.html)).
 
 PromEx provides a few utilities to you in order to accomplish this goal:
 
--   A behaviour that defines the contract for a PromEx plug-in
--   Mix tasks to upload the provided Grafana dashboards that compliment the collected Prometheus metrics
+-   A behaviour that defines the contract for PromEx plug-ins
+-   Mix tasks to upload the provided complimentary Grafana dashboards
 -   The `PromEx.MetricTypes.Event` struct to define event based metrics
--   The `PromEx.MetricTypes.Poll` struct to define pollable metrics
+-   The `PromEx.MetricTypes.Polling` struct to define pollable metrics
 -   The `PromEx.MetricTypes.Manual` struct to define manually refreshed metrics
 -   The `PromEx.Plug` module that can be used in your Phoenix or Plug application to expose the collected metrics
 
@@ -53,18 +51,15 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 
 | Plugin                       | Status      | Description                                            |
 | ---------------------------- | ----------- | ------------------------------------------------------ |
-| `PromEx.Plugins.Application` | Beta        | Collect metrics on your application dependencies       |
-| `PromEx.Plugins.Beam`        | Beta        | Collect metrics regarding the BEAM virtual machine     |
-| `PromEx.Plugins.Phoenix`     | Beta        | Collect request metrics emitted by Phoenix             |
+| `PromEx.Plugins.Application` | Alpha       | Collect metrics on your application dependencies       |
+| `PromEx.Plugins.Beam`        | Alpha       | Collect metrics regarding the BEAM virtual machine     |
+| `PromEx.Plugins.Phoenix`     | Alpha       | Collect request metrics emitted by Phoenix             |
 | `PromEx.Plugins.Ecto`        | Coming soon | Collect query metrics emitted by Ecto                  |
 | `PromEx.Plugins.Broadway`    | Coming soon | Collect message processing metrics emitted by Broadway |
 | `PromEx.Plugins.Finch`       | Coming soon | Collect HTTP request metrics emitted by Finch          |
+| More coming soon...          |             |                                                        |
 
 ### Setting Up Metrics
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/prom_ex).
 
 ### Attribution
 
