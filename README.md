@@ -61,11 +61,81 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 
 ### Setting Up Metrics
 
+The goal of PromEx is to have metrics set up be as simple and streamlined as possible. In that spirit, all
+that you need to do to start leveraging PromEx along with the built-in plugins is the following in your
+`application.ex` file:
+
+```elixir
+defmodule MyCoolApp.Application do
+  use Application
+
+  def start(_type, _args) do
+    children = [
+      ...
+
+      {
+        PromEx,
+        plugins: [
+          {PromEx.Plugins.Phoenix, router: MyCoolAppWeb.Router},
+          PromEx.Plugins.Beam,
+          {PromEx.Plugins.Application, [otp_app: :my_cool_app]},
+          # Any additional PromEx plugins you would like to enable
+        ]
+      }
+    ]
+
+    opts = [strategy: :one_for_one, name: MyCoolApp.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
+```
+
+With that in place, all that you need to do is then add the PromEx plug somewhere in your
+`endpoint.ex` file (I would suggest putting it before your `plug Plug.Telemetry` call so that
+you do not pollute your logs with calls to `/metrics`):
+
+```elixir
+defmodule MyCoolAppWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :my_cool_app
+
+  ...
+
+  plug PromEx.Plug
+  # Or plug PromEx.plug, path: "/some/other/non-standard/path"
+
+  ...
+
+  plug Plug.RequestId
+  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
+
+  ...
+
+  plug MyCoolAppWeb.Router
+end
+```
+
+With that in place, all you need to do is start your server and you should be able to hit your
+metrics endpoint and see your application metrics:
+
+```terminal
+$ curl localhost:4000/metrics
+# HELP my_cool_app_application_dependency_info Information regarding the application's dependencies.
+# TYPE my_cool_app_application_dependency_info gauge
+my_cool_app_application_dependency_info{modules="69",name="hex",version="0.20.5"} 1
+my_cool_app_application_dependency_info{modules="1",name="connection",version="1.0.4"} 1
+my_cool_app_application_dependency_info{modules="4",name="telemetry_poller",version="0.5.1"} 1
+...
+...
+```
+
+Be sure to check out the module docs for each plugin that you choose to use to ensure that you are familiar
+with all of the options that they provide.
+
 ### Attribution
 
-It wouldn't feel right to not include somewhere in this project a "thanks" to the various projects that
+It wouldn't be right to not include somewhere in this project a "thanks" to the various projects that
 helped make this possible:
 
--   The logo for the project is an edited version of an SVG image from the [unDraw project](https://undraw.co/)
 -   The various projects available in [BEAM Telemetry](https://github.com/beam-telemetry)
 -   All of the Prometheus libraries that Ilya Khaprov ([@deadtrickster](https://github.com/deadtrickster)) maintains
+-   The logo for the project is an edited version of an SVG image from the [unDraw project](https://undraw.co/)
