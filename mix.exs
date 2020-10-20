@@ -45,15 +45,16 @@ defmodule PromEx.MixProject do
       {:telemetry_metrics, github: "beam-telemetry/telemetry_metrics", branch: :master, override: true},
       {:telemetry_metrics_prometheus_core, github: "akoutmos/telemetry_metrics_prometheus_core", branch: :experimental},
 
-      # Library development related dependencies
-      {:ex_doc, "~> 0.22"},
-      {:excoveralls, "~> 0.12", only: :test, runtime: false},
-      {:doctor, "~> 0.15.0"},
-      {:credo, "~> 1.5.0-rc.4"},
-
       # Optional dependencies depending on what telemetry events the user is acting upon
       {:phoenix, "~> 1.5", optional: true},
-      {:plug, "~> 1.10", optional: true}
+      {:plug, "~> 1.10", optional: true},
+
+      # Library development related dependencies
+      {:ex_doc, "~> 0.22", only: :dev},
+      {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
+      {:doctor, "~> 0.15.0", only: :dev},
+      {:credo, "~> 1.5.0-rc.4", only: :dev},
+      {:dialyxir, "~> 1.0", only: :dev}
     ]
   end
 

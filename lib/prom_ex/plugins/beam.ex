@@ -10,7 +10,7 @@ defmodule PromEx.Plugins.Beam do
   @memory_event [:prom_ex, :plugin, :beam, :memory]
 
   @impl true
-  def metrics(opts \\ []) do
+  def polling_metrics(opts \\ []) do
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
 
     [
@@ -20,8 +20,8 @@ defmodule PromEx.Plugins.Beam do
   end
 
   defp memory_metrics(poll_rate) do
-    Poll.build(
-      :default,
+    Polling.build(
+      :beam_memory_polling_events,
       poll_rate,
       {__MODULE__, :execute_memory_metrics, []},
       [

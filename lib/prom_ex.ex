@@ -10,7 +10,7 @@ defmodule PromEx do
   All metrics collection will be delegated to plugins which can be found here:
 
   Foundational metrics:
-    - [~] `PromEx.Plugins.Application` Application related infomational metrics
+    - [~] `PromEx.Plugins.Application` Application related informational metrics
     - [~] `PromEx.Plugins.Beam` BEAM virtual machine metrics
 
   Upcoming Elixir library metrics:
@@ -52,49 +52,54 @@ defmodule PromEx do
   alias PromEx.MetricTypes.{
     Event,
     Manual,
-    Poll
+    Polling
   }
 
   alias PromEx.ManualMetricsManager
 
   alias TelemetryMetricsPrometheus.Core
 
+  alias Telemetry.Metrics.{Counter, Distribution, LastValue, Sum, Summary}
+
   use Supervisor
 
-  @doc """
-  The metrics/0 function returns a list of metrics that will be exposed
-  by the given plugin. By using the PromEx module, you have access to the
-  following metrics types which are supported by prometheus:
-  - counter
-  - distribution
-  - last_value
-  - sum
-
-  For example, if you wanted to expose a group of metrics your metrics/0
-  function would look like so:
-
-  ```elixir
-  def metrics do
-    Event.build([
-      counter("my_app.data_point.count"),
-      last_value("my_app.some_other.data_point")
-    ])
-  end
-  ```
-  """
-  @callback metrics ::
-              [Poll.t() | Event.t() | Manual.t()]
-              | Poll.t()
-              | Event.t()
-              | Manual.t()
+  @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
 
   @doc """
-  The metrics/1 function is similar to metrics/0 in that it is a list of the
-  metrics that the plugin exposes. The only caveat here being that arbitrary
-  options may be passed to the plugin to
+  The event_metrics/1 callback returns the configured event based metrics that the
+  plugin exposes. If the plugin does not expose any event style metrics, there is a
+  default implementation of this function that returns an empty list. In other words,
+  if your plugin does not expose any event style metrics, there is no action needed
+  on your part.
+
+  This function is expected to either return a single `PromEx.Plugins.Event` struct
+  or a list of `PromEx.Plugins.Event` structs.
   """
-  @callback metrics(keyword()) ::
-              [Poll.t() | Event.t()] | Poll.t() | Event.t()
+  @callback event_metrics(keyword()) :: [Event.t()] | Event.t()
+
+  @doc """
+  The polling_metrics/1 callback returns the configured polling based metrics that the
+  plugin exposes. If the plugin does not expose any polling style metrics, there is a
+  default implementation of this function that returns an empty list. In other words,
+  if your plugin does not expose any polling style metrics, there is no action needed
+  on your part.
+
+  This function is expected to either return a single `PromEx.Plugins.Polling` struct
+  or a list of `PromEx.Plugins.Polling` structs.
+  """
+  @callback polling_metrics(keyword()) :: [Polling.t()] | Polling.t()
+
+  @doc """
+  The manual_metrics/1 callback returns the configured manual based metrics that the
+  plugin exposes. If the plugin does not expose any manual style metrics, there is a
+  default implementation of this function that returns an empty list. In other words,
+  if your plugin does not expose any manual style metrics, there is no action needed
+  on your part.
+
+  This function is expected to either return a single `PromEx.Plugins.Manual` struct
+  or a list of `PromEx.Plugins.Manual` structs.
+  """
+  @callback manual_metrics(keyword()) :: [Manual.t()] | Manual.t()
 
   defmacro __using__(_) do
     quote do
@@ -103,22 +108,43 @@ defmodule PromEx do
       import Telemetry.Metrics, only: [counter: 2, distribution: 2, last_value: 2, sum: 2]
       import PromEx.BucketGenerator
 
-      alias PromEx.MetricTypes.{Event, Manual, Poll}
+      alias PromEx.MetricTypes.{Event, Manual, Polling}
 
-      def metrics, do: raise("#{__MODULE__} must implement metrics/0 function")
-
-      def metrics(_opts), do: raise("#{__MODULE__} must implement metrics/1 function")
+      def event_metrics(_), do: []
+      def polling_metrics(_), do: []
+      def manual_metrics(_), do: []
 
       defoverridable PromEx
     end
   end
 
+  @doc """
+  Starts a PromEx process with the provided plugins initialized.
+
+  ## Options
+
+  * `:plugins` - The list of plugin modules that you would like PromEx to initialize. Each
+    plugin definition can either be a two element tuple with the structure
+    `{PlugIn.Module, keyword: "list", of: "options"}` or just the module name `PlugIn.Module`.
+    Be sure to check the documentation for each plugin that you are using to ensure that you
+    satisfy any required option fields.
+
+  * `:delay_manual_start` - Manual metrics are gathered once on start up and then only when
+    you call `PromEx.ManualMetricsManager.refresh_metrics()`. Sometimes, you may have metrics
+    that require your entire supervision tree to be started in order to fetch accurate data.
+    This option will allow you to delays the initial metrics capture of the
+    `ManualMetricsManager` by a certain number of milliseconds or the `:no_delay` atom if you
+    want the metrics to be captured as soon as the `ManualMetricsManager` starts up.
+  """
   def start_link(init_arg) do
     Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
   end
 
   @impl true
   def init(opts) do
+    # Get options
+    manual_start_delay = Keyword.get(opts, :delay_manual_start, :no_delay)
+
     plugins =
       opts
       |> Keyword.get(:plugins, [])
@@ -142,8 +168,7 @@ defmodule PromEx do
       },
       {
         ManualMetricsManager,
-        metrics: generate_mfa_call_list(manual_metrics),
-        delay_manual_start: Keyword.get(opts, :delay_manual_start, :no_delay)
+        metrics: generate_mfa_call_list(manual_metrics), delay_manual_start: manual_start_delay
       }
       | telemetry_poller_children
     ]
@@ -151,32 +176,46 @@ defmodule PromEx do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @doc """
+  A simple pass-through to fetch all of the currently configured metrics. This is
+  primarily used by the exporter plug to fetch all of the metrics so that they
+  can be scraped.
+  """
+  @spec get_metrics :: String.t()
+  def get_metrics do
+    Core.scrape(:prom_ex_metrics)
+  end
+
   defp init_plugins(plugins) do
-    grouped_plugins =
+    event_metrics =
       plugins
-      |> Enum.reduce([], fn plugin_definition, acc ->
-        [init_plugin(plugin_definition) | acc]
+      |> Enum.map(fn plugin_definition ->
+        init_plugin(plugin_definition, :event_metrics)
       end)
       |> List.flatten()
-      |> Enum.group_by(fn %{__struct__: struct} ->
-        struct
-        |> Module.split()
-        |> List.last()
-        |> Macro.underscore()
-        |> String.to_existing_atom()
-      end)
 
-    event_metrics = Map.get(grouped_plugins, :event, [])
-    poll_metrics = Map.get(grouped_plugins, :poll, [])
-    manual_metrics = Map.get(grouped_plugins, :manual, [])
+    polling_metrics =
+      plugins
+      |> Enum.map(fn plugin_definition ->
+        init_plugin(plugin_definition, :polling_metrics)
+      end)
+      |> List.flatten()
+
+    manual_metrics =
+      plugins
+      |> Enum.map(fn plugin_definition ->
+        init_plugin(plugin_definition, :manual_metrics)
+      end)
+      |> List.flatten()
 
     telemetry_metrics =
-      (event_metrics ++ poll_metrics ++ manual_metrics)
+      [event_metrics, polling_metrics, manual_metrics]
+      |> List.flatten()
       |> Enum.map(fn
         %Event{metrics: metrics} ->
           metrics
 
-        %Poll{metrics: metrics} ->
+        %Polling{metrics: metrics} ->
           metrics
 
         %Manual{metrics: metrics} ->
@@ -187,20 +226,20 @@ defmodule PromEx do
     %{
       telemetry_metrics: telemetry_metrics,
       event_metrics: event_metrics,
-      poll_metrics: poll_metrics,
+      poll_metrics: polling_metrics,
       manual_metrics: manual_metrics
     }
   end
 
   defp generate_telemetry_poller_child_spec(pollable_metrics) do
     pollable_metrics
-    |> Enum.group_by(fn %Poll{poll_rate: poll_rate} ->
+    |> Enum.group_by(fn %Polling{poll_rate: poll_rate} ->
       poll_rate
     end)
     |> Enum.map(fn {poll_rate, pollable_metrics} ->
       measurements =
         pollable_metrics
-        |> Enum.map(fn %Poll{measurements_mfa: measurements_mfa} ->
+        |> Enum.map(fn %Polling{measurements_mfa: measurements_mfa} ->
           measurements_mfa
         end)
 
@@ -218,20 +257,23 @@ defmodule PromEx do
     end)
   end
 
-  @doc """
-  A simple passthrough to fetch all of the currently configured metrics. This is
-  primarily used by the exporter plug to fetch all of the metrics so that they
-  can be scraped.
-  """
-  def get_metrics do
-    Core.scrape(:prom_ex_metrics)
+  defp init_plugin({module, opts}, function) when is_atom(module) do
+    module
+    |> apply(function, [opts])
+    |> normalize_plugin()
   end
 
-  defp init_plugin({module, opts}) when is_atom(module) do
-    module.metrics(opts)
+  defp init_plugin(module, function) when is_atom(module) do
+    module
+    |> apply(function, [[]])
+    |> normalize_plugin()
   end
 
-  defp init_plugin(module) when is_atom(module) do
-    module.metrics()
+  defp normalize_plugin(metric_definitions) when is_list(metric_definitions) do
+    metric_definitions
+  end
+
+  defp normalize_plugin(metric_definition) do
+    [metric_definition]
   end
 end

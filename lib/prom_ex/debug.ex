@@ -1,11 +1,20 @@
 defmodule PromEx.Debug do
+  # credo:disable-for-this-file Credo.Check.Warning.IoInspect
+
   @moduledoc """
   This is a convenience module used for debugging and introspecting
   telemetry events. Primarily used to ease for development or
   PromEx itself.
   """
 
-  def attach_debugger(%_{event_name: event_name} = telemetry_metric_def) do
+  @typep metrics_types :: PromEx.MetricTypes.Event.t() | PromEx.MetricTypes.Manual.t() | PromEx.MetricTypes.Polling.t()
+
+  @doc """
+  Use this function to attach a debugger handler to a certain telemetry event. This
+  function will also return the
+  """
+  @spec attach_debugger(metrics_types() | list()) :: :ok | metrics_types()
+  def(attach_debugger(%_{event_name: event_name} = telemetry_metric_def)) do
     random_id =
       10
       |> :crypto.strong_rand_bytes()

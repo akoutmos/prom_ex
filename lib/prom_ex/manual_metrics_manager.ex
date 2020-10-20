@@ -1,17 +1,29 @@
 defmodule PromEx.ManualMetricsManager do
   @moduledoc """
+  This GenServer is responsible to keeping track of all the manual
+  metrics from your configured plugins. It will fetch metrics initially
+  when starting (either immediately or after a configured delay). At that
+  point if you would like to refresh your metrics data points call the
+  `refresh_metrics/0` function.
   """
 
   use GenServer
 
   require Logger
 
+  @doc """
+  """
+  @spec start_link(opts :: keyword()) :: GenServer.on_start()
   def start_link(opts) do
     state = Map.new(opts)
 
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
   end
 
+  @doc """
+  This function calls into the GenServer and refreshes all of the configured
+  manual metrics data points.
+  """
   def refresh_metrics do
     GenServer.cast(__MODULE__, :refresh_metrics)
   end
