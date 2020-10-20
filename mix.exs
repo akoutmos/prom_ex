@@ -53,7 +53,8 @@ defmodule PromEx.MixProject do
       {:ex_doc, "~> 0.22", only: :dev},
       {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
       {:doctor, "~> 0.15.0", only: :dev},
-      {:credo, "~> 1.5.0-rc.4", only: :dev}
+      {:credo, "~> 1.5.0-rc.4", only: :dev},
+      {:dialyxir, "~> 1.0", only: :dev}
     ]
   end
 

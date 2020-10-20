@@ -114,12 +114,33 @@ defmodule PromEx do
     end
   end
 
+  @doc """
+  Starts a PromEx process with the provided plugins initialized.
+
+  ## Options
+
+  * `:plugins` - The list of plugin modules that you would like PromEx to initialize. Each
+    plugin definition can either be a two element tuple with the structure
+    `{PlugIn.Module, keyword: "list", of: "options"}` or just the module name `PlugIn.Module`.
+    Be sure to check the documentation for each plugin that you are using to ensure that you
+    satisfy any required option fields.
+
+  * `:delay_manual_start` - Manual metrics are gathered once on start up and then only when
+    you call `PromEx.ManualMetricsManager.refresh_metrics()`. Sometimes, you may have metrics
+    that require your entire supervision tree to be started in order to fetch accurate data.
+    This option will allow you to delays the initial metrics capture of the
+    `ManualMetricsManager` by a certain number of milliseconds or the `:no_delay` atom if you
+    want the metrics to be captured as soon as the `ManualMetricsManager` starts up.
+  """
   def start_link(init_arg) do
     Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
   end
 
   @impl true
   def init(opts) do
+    # Get options
+    manual_start_delay = Keyword.get(opts, :delay_manual_start, :no_delay)
+
     plugins =
       opts
       |> Keyword.get(:plugins, [])
@@ -143,13 +164,22 @@ defmodule PromEx do
       },
       {
         ManualMetricsManager,
-        metrics: generate_mfa_call_list(manual_metrics),
-        delay_manual_start: Keyword.get(opts, :delay_manual_start, :no_delay)
+        metrics: generate_mfa_call_list(manual_metrics), delay_manual_start: manual_start_delay
       }
       | telemetry_poller_children
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
+  end
+
+  @doc """
+  A simple pass-through to fetch all of the currently configured metrics. This is
+  primarily used by the exporter plug to fetch all of the metrics so that they
+  can be scraped.
+  """
+  @spec get_metrics :: String.t()
+  def get_metrics do
+    Core.scrape(:prom_ex_metrics)
   end
 
   defp init_plugins(plugins) do
@@ -221,15 +251,6 @@ defmodule PromEx do
     |> Enum.map(fn %Manual{measurements_mfa: mfa} ->
       mfa
     end)
-  end
-
-  @doc """
-  A simple pass-through to fetch all of the currently configured metrics. This is
-  primarily used by the exporter plug to fetch all of the metrics so that they
-  can be scraped.
-  """
-  def get_metrics do
-    Core.scrape(:prom_ex_metrics)
   end
 
   defp init_plugin({module, opts}, function) when is_atom(module) do
