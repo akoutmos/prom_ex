@@ -59,7 +59,11 @@ defmodule PromEx do
 
   alias TelemetryMetricsPrometheus.Core
 
+  alias Telemetry.Metrics.{Counter, Distribution, LastValue, Sum, Summary}
+
   use Supervisor
+
+  @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
 
   @doc """
   The event_metrics/1 callback returns the configured event based metrics that the
@@ -254,10 +258,22 @@ defmodule PromEx do
   end
 
   defp init_plugin({module, opts}, function) when is_atom(module) do
-    apply(module, function, [opts])
+    module
+    |> apply(function, [opts])
+    |> normalize_plugin()
   end
 
   defp init_plugin(module, function) when is_atom(module) do
-    apply(module, function, [[]])
+    module
+    |> apply(function, [[]])
+    |> normalize_plugin()
+  end
+
+  defp normalize_plugin(metric_definitions) when is_list(metric_definitions) do
+    metric_definitions
+  end
+
+  defp normalize_plugin(metric_definition) do
+    [metric_definition]
   end
 end

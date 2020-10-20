@@ -12,7 +12,7 @@ defmodule PromEx.Plugins.Application do
     apps = Keyword.get(opts, :deps, :all)
 
     Manual.build(
-      :default,
+      :application_versions_manual_metrics,
       {__MODULE__, :apps_running, [otp_app, apps]},
       [
         # Capture information regarding the primary application (i.e the user's application)
@@ -36,6 +36,7 @@ defmodule PromEx.Plugins.Application do
     )
   end
 
+  @doc false
   def apps_running(otp_app, apps) do
     started_apps =
       Application.started_applications()
