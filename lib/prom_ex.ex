@@ -57,7 +57,7 @@ defmodule PromEx do
 
   alias PromEx.ManualMetricsManager
 
-  alias TelemetryMetricsPrometheus.Core
+  alias PromEx.TelemetryMetricsPrometheus.Core
 
   alias Telemetry.Metrics.{Counter, Distribution, LastValue, Sum, Summary}
 

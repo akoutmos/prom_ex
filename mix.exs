@@ -48,7 +48,9 @@ defmodule PromEx.MixProject do
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
-      {:telemetry_metrics_prometheus_core, github: "akoutmos/telemetry_metrics_prometheus_core", branch: :experimental},
+
+      # TODO: Swith back to pulling down from Hex once PRs are merged
+      # {:telemetry_metrics_prometheus_core, "~> SOME_VERSION"},
 
       # Optional dependencies depending on what telemetry events the user is acting upon
       {:phoenix, "~> 1.5", optional: true},
