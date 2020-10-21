@@ -26,7 +26,11 @@ defmodule PromEx.MetricTypes.Manual do
   the following convention: `<APPLICATION>_<SHORT DESCRIPTION>_manual_metrics`. For example, Application related info metrics
   have a `group_name` of: `:application_versions_manual_metrics`
   """
-  @spec build(group_name :: atom(), measurements_mfa :: mfa(), metrics :: list(PromEx.telemetry_metrics())) ::
+  @spec build(
+          group_name :: atom(),
+          measurements_mfa :: PromEx.measurements_mfa(),
+          metrics :: list(PromEx.telemetry_metrics())
+        ) ::
           __MODULE__.t()
   def build(group_name, measurements_mfa, metrics) do
     %__MODULE__{

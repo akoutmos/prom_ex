@@ -20,6 +20,9 @@ defmodule PromEx.MixProject do
         "coveralls.html": :test,
         "coveralls.travis": :test
       ],
+      dialyzer: [
+        plt_add_apps: [:plug, :phoenix, :telemetry_metrics]
+      ],
       deps: deps(),
       docs: docs(),
       aliases: aliases()

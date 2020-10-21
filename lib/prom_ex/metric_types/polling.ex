@@ -32,7 +32,7 @@ defmodule PromEx.MetricTypes.Polling do
   @spec build(
           group_name :: atom(),
           poll_rate :: pos_integer(),
-          measurements_mfa :: mfa(),
+          measurements_mfa :: PromEx.measurements_mfa(),
           metrics :: list(PromEx.telemetry_metrics())
         ) ::
           __MODULE__.t()

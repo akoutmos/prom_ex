@@ -64,6 +64,7 @@ defmodule PromEx do
   use Supervisor
 
   @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
+  @type measurements_mfa() :: {module(), atom(), list()}
 
   @doc """
   The event_metrics/1 callback returns the configured event based metrics that the
