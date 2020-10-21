@@ -52,9 +52,9 @@ jobs:
     strategy:
       matrix:
         elixir:
-          - '1.8'
           - '1.9'
           - '1.10'
+          - '1.11'
         otp:
           - '22.0'
           - '23.0'
