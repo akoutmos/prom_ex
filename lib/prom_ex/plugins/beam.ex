@@ -1,6 +1,8 @@
 defmodule PromEx.Plugins.Beam do
   @moduledoc """
   Telemetry metrics for the BEAM.
+
+  #TODO: More indepth docs coming
   """
 
   use PromEx

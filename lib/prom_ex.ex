@@ -111,8 +111,13 @@ defmodule PromEx do
 
       alias PromEx.MetricTypes.{Event, Manual, Polling}
 
+      @doc false
       def event_metrics(_), do: []
+
+      @doc false
       def polling_metrics(_), do: []
+
+      @doc false
       def manual_metrics(_), do: []
 
       defoverridable PromEx
