@@ -62,7 +62,10 @@ defmodule PromEx.MixProject do
     [
       main: "readme",
       logo: "guides/images/logo.svg",
-      extras: ["README.md"]
+      extras: ["README.md", "guides/howtos/Writing PromEx Plugins.md"],
+      groups_for_extras: [
+        "How-To's": ~r/guides\/howtos\/.?/
+      ]
     ]
   end
 
