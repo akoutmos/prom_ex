@@ -1,7 +1,7 @@
 # PromEx
 
 [![Hex.pm](https://img.shields.io/hexpm/v/prom_ex.svg)](http://hex.pm/packages/prom_ex) [![Build
-Status](https://travis-ci.org/akoutmos/prom_ex.svg?branch=master)](https://travis-ci.org/akoutmos/prom_ex) [![Coverage
+Status](https://github.com/akoutmos/prom_ex/workflows/PromEx%20CI/badge.svg)](https://github.com/akoutmos/prom_ex/actions) [![Coverage
 Status](https://coveralls.io/repos/github/akoutmos/prom_ex/badge.svg?branch=master)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
 
 <img align="center" width="33%" src="/guides/images/logo.svg" alt="PromEx" style="margin-left:33%">
@@ -40,12 +40,12 @@ Observability](https://www.oreilly.com/library/view/distributed-systems-observab
 
 PromEx provides a few utilities to you in order to accomplish this goal:
 
--   A behaviour that defines the contract for PromEx plug-ins
--   Mix tasks to upload the provided complimentary Grafana dashboards
--   The `PromEx.MetricTypes.Event` struct to define event based metrics
--   The `PromEx.MetricTypes.Polling` struct to define pollable metrics
--   The `PromEx.MetricTypes.Manual` struct to define manually refreshed metrics
--   The `PromEx.Plug` module that can be used in your Phoenix or Plug application to expose the collected metrics
+- A behaviour that defines the contract for PromEx plug-ins
+- Mix tasks to upload the provided complimentary Grafana dashboards
+- The `PromEx.MetricTypes.Event` struct to define event based metrics
+- The `PromEx.MetricTypes.Polling` struct to define pollable metrics
+- The `PromEx.MetricTypes.Manual` struct to define manually refreshed metrics
+- The `PromEx.Plug` module that can be used in your Phoenix or Plug application to expose the collected metrics
 
 ### Available Plugins
 
@@ -136,6 +136,6 @@ with all of the options that they provide.
 It wouldn't be right to not include somewhere in this project a "thanks" to the various projects that
 helped make this possible:
 
--   The various projects available in [BEAM Telemetry](https://github.com/beam-telemetry)
--   All of the Prometheus libraries that Ilya Khaprov ([@deadtrickster](https://github.com/deadtrickster)) maintains
--   The logo for the project is an edited version of an SVG image from the [unDraw project](https://undraw.co/)
+- The various projects available in [BEAM Telemetry](https://github.com/beam-telemetry)
+- All of the Prometheus libraries that Ilya Khaprov ([@deadtrickster](https://github.com/deadtrickster)) maintains
+- The logo for the project is an edited version of an SVG image from the [unDraw project](https://undraw.co/)
