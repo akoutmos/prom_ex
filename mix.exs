@@ -23,6 +23,7 @@ defmodule PromEx.MixProject do
       dialyzer: [
         plt_add_apps: [:plug, :phoenix, :telemetry_metrics]
       ],
+      package: package(),
       deps: deps(),
       docs: docs(),
       aliases: aliases()
@@ -69,6 +70,15 @@ defmodule PromEx.MixProject do
       groups_for_extras: [
         "How-To's": ~r/guides\/howtos\/.?/
       ]
+    ]
+  end
+
+  defp package do
+    [
+      name: "prom_ex",
+      files: ~w(lib mix.exs README.md LICENSE CHANGELOG.md),
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/akoutmos/prom_ex"}
     ]
   end
 
