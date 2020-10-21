@@ -6,10 +6,8 @@ defmodule PromEx.MetricTypes.Manual do
 
   @typedoc """
   - `group_name`: A unique identifier for the collection of metrics.
-
   - `measurements_mfa`: An MFA tuple that defines what function will be
     executed that will emit Telemetry events.
-
   - `metrics`: A list of Telemetry Metrics structs that define the metrics.
   """
 
