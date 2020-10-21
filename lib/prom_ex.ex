@@ -64,6 +64,7 @@ defmodule PromEx do
   use Supervisor
 
   @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
+  @type measurements_mfa() :: {module(), atom(), list()}
 
   @doc """
   The event_metrics/1 callback returns the configured event based metrics that the
@@ -110,8 +111,13 @@ defmodule PromEx do
 
       alias PromEx.MetricTypes.{Event, Manual, Polling}
 
+      @doc false
       def event_metrics(_), do: []
+
+      @doc false
       def polling_metrics(_), do: []
+
+      @doc false
       def manual_metrics(_), do: []
 
       defoverridable PromEx

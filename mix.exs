@@ -4,7 +4,7 @@ defmodule PromEx.MixProject do
   def project do
     [
       app: :prom_ex,
-      version: "0.1.0",
+      version: "0.1.0-alpha",
       elixir: "~> 1.9",
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",
@@ -19,6 +19,9 @@ defmodule PromEx.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test,
         "coveralls.travis": :test
+      ],
+      dialyzer: [
+        plt_add_apps: [:plug, :phoenix, :telemetry_metrics]
       ],
       deps: deps(),
       docs: docs(),
@@ -62,7 +65,10 @@ defmodule PromEx.MixProject do
     [
       main: "readme",
       logo: "guides/images/logo.svg",
-      extras: ["README.md"]
+      extras: ["README.md", "guides/howtos/Writing PromEx Plugins.md"],
+      groups_for_extras: [
+        "How-To's": ~r/guides\/howtos\/.?/
+      ]
     ]
   end
 

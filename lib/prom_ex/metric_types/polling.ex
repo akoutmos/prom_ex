@@ -6,12 +6,9 @@ defmodule PromEx.MetricTypes.Polling do
 
   @typedoc """
   - `group_name`: A unique identifier for the collection of metrics.
-
   - `measurements_mfa`: An MFA tuple that defines what function will be
     executed that will emit Telemetry events.
-
   - `metrics`: A list of Telemetry Metrics structs that define the metrics.
-
   - `poll_rate`: An integer representing the millisecond between metrics samples.
   """
 
@@ -32,7 +29,7 @@ defmodule PromEx.MetricTypes.Polling do
   @spec build(
           group_name :: atom(),
           poll_rate :: pos_integer(),
-          measurements_mfa :: mfa(),
+          measurements_mfa :: PromEx.measurements_mfa(),
           metrics :: list(PromEx.telemetry_metrics())
         ) ::
           __MODULE__.t()

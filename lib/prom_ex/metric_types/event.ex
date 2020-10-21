@@ -6,7 +6,6 @@ defmodule PromEx.MetricTypes.Event do
 
   @typedoc """
   - `group_name`: A unique identifier for the collection of metrics.
-
   - `metrics`: A list of Telemetry Metrics structs that define the metrics.
   """
 

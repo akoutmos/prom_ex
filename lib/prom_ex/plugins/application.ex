@@ -1,7 +1,39 @@
 defmodule PromEx.Plugins.Application do
   @moduledoc """
-  This plugin captures metrics regarding your application, its dependencies, and
-  associated with the aforementioned items.
+  This plugin captures metrics regarding your application, and its dependencies. Specifically,
+  it captures the versions of your application and the application dependencies and also
+  how many modules each depepndency is bringing into the project.
+
+  This module supports the following options:
+  - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (E.g. :my_cool_app).
+
+  - `deps`: This option is OPTIONAL and defines what dependencies the plugin should track. A value of `:all`
+    means that PromEx will fetch details on all application dependencies. A list of dependency names like
+    `[:phoenix, :ecto, :unplug]` means that PromEx will only fetch details regarding those dependencies.
+
+  To use plugin in your application, add the following to your application supervision tree:
+  ```
+  def start(_type, _args) do
+    children = [
+      ...
+      {
+        PromEx,
+        plugins: [
+          {PromEx.Plugins.Application, [otp_app: :my_cool_app]},
+          ...
+        ],
+        delay_manual_start: :no_delay
+      }
+    ]
+
+    # See https://hexdocs.pm/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: WebApp.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+  ```
+
+  This plugin exposes manual metrics so be sure to configure the PromEx `:delay_manual_start` as required.
   """
 
   use PromEx

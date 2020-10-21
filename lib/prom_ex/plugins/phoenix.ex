@@ -9,6 +9,8 @@ end
 defmodule PromEx.Plugins.Phoenix do
   @moduledoc """
   Telemetry events for: https://hexdocs.pm/phoenix/Phoenix.Logger.html
+
+  #TODO: More indepth docs coming
   """
 
   use PromEx

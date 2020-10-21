@@ -1,6 +1,8 @@
 defmodule PromEx.Plugins.Beam do
   @moduledoc """
   Telemetry metrics for the BEAM.
+
+  #TODO: More indepth docs coming
   """
 
   use PromEx
@@ -10,7 +12,7 @@ defmodule PromEx.Plugins.Beam do
   @memory_event [:prom_ex, :plugin, :beam, :memory]
 
   @impl true
-  def polling_metrics(opts \\ []) do
+  def polling_metrics(opts) do
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
 
     [
