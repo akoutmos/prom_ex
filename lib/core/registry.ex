@@ -159,10 +159,7 @@ defmodule PromEx.TelemetryMetricsPrometheus.Core.Registry do
     :ets.new(name, [:named_table, :public, type, {:write_concurrency, true}])
   end
 
-  @spec register_metrics(
-          [Metrics.t()],
-          %{}
-        ) :: [Metrics.t()]
+  @spec register_metrics([Metrics.t()], map()) :: [Metrics.t()]
   defp register_metrics(metrics, config) do
     metrics
     |> Enum.reduce([], fn metric, acc ->
