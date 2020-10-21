@@ -1,0 +1,81 @@
+name: PromEx CI
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  static_analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: actions/setup-elixir@v1
+        with:
+          elixir-version: '1.11.1'
+          otp-version: '23.1'
+      - name: Restore dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+      - name: Install dependencies
+        run: mix deps.get
+      - name: Restore PLT cache
+        uses: actions/cache@v2
+        with:
+          path: priv/plts
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+      - name: Mix Formatter
+        run: mix format --check-formatted
+      - name: Check for compiler warnings
+        run: mix compile --warnings-as-errors
+      - name: Credo strict checks
+        run: mix credo --strict
+      - name: Dialyzer checks
+        run: mix dialyzer
+
+  unit_test:
+    name: Run ExUnit tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        elixir:
+          - '1.8'
+          - '1.9'
+          - '1.10'
+        otp:
+          - '22.0'
+          - '23.0'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Elixir
+        uses: actions/setup-elixir@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Restore dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+      - name: Install dependencies
+        run: mix deps.get
+      - name: ExUnit tests
+        env:
+          MIX_ENV: test
+        run: mix coveralls.github

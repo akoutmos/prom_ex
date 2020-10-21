@@ -46,7 +46,7 @@ defmodule PromEx.MixProject do
       # Required dependencies
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
-      {:telemetry_metrics, github: "beam-telemetry/telemetry_metrics", branch: :master, override: true},
+      {:telemetry_metrics, "~> 0.6.0"},
       {:telemetry_metrics_prometheus_core, github: "akoutmos/telemetry_metrics_prometheus_core", branch: :experimental},
 
       # Optional dependencies depending on what telemetry events the user is acting upon
