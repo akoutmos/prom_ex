@@ -75,11 +75,12 @@ defmodule MyCoolApp.Application do
 
       {
         PromEx,
+        delay_manual_start: :no_delay,
+        drop_metrics_groups: [:phoenix_channel_event_metrics],
         plugins: [
-          {PromEx.Plugins.Phoenix, router: MyCoolAppWeb.Router},
+          {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
           PromEx.Plugins.Beam,
-          {PromEx.Plugins.Application, [otp_app: :my_cool_app]},
-          # Any additional PromEx plugins you would like to enable
+          {PromEx.Plugins.Application, [otp_app: :web_app]}
         ]
       }
     ]
