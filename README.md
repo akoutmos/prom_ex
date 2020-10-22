@@ -38,6 +38,19 @@ you can easily add new plug-ins to surface metrics so that Prometheus can scrape
 "Metrics" pillar in your application (in reference to [The Three Pillars of
 Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/ch04.html)).
 
+To this end, while PromEx does provide a certain level of configurability (like the polling rate, starting behaviour for
+manual metrics and all the options that the plugins receive), the goal is not to make an infinitely configurable tool.
+For example, you are not able to edit the names/descriptions of Prometheus metrics via plugin options or even the tags
+that are attached to the data points.
+
+Instead, if there things that you don't agree with or that are incompatible with your usage of a certain 1st party
+plugin and want to edit how the PromEx plugins react to Telemetry events, it is recommended that you fork the plugin in
+question and edit it to your specific use case. If you think that the community can benefit for your changes, do not
+hesitate to make a PR and I'll be sure to review it. This is not to say that event configurability will never come to
+PromEx, but I want to make sure that the public facing API is clean and straightforward and not bogged down with
+configuration. That and the Grafana dashboards would then have to become templatized to accommodate all this
+configurability.
+
 PromEx provides a few utilities to you in order to accomplish this goal:
 
 - A behaviour that defines the contract for PromEx plug-ins
