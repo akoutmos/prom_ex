@@ -4,7 +4,7 @@
 Status](https://github.com/akoutmos/prom_ex/workflows/PromEx%20CI/badge.svg)](https://github.com/akoutmos/prom_ex/actions) [![Coverage
 Status](https://coveralls.io/repos/github/akoutmos/prom_ex/badge.svg?branch=master)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
 
-<img align="center" width="33%" src="/guides/images/logo.svg" alt="PromEx" style="margin-left:33%">
+<img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx" style="margin-left:33%">
 
 An Elixir Prometheus metrics collection library built on top of Telemetry
 
