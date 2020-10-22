@@ -141,6 +141,12 @@ defmodule PromEx do
     This option will allow you to delays the initial metrics capture of the
     `ManualMetricsManager` by a certain number of milliseconds or the `:no_delay` atom if you
     want the metrics to be captured as soon as the `ManualMetricsManager` starts up.
+
+  * `:drop_metrics_groups` - A list of all the metrics groups that you are not interested in
+    tracking. For example, if your application does not leverage Phoenix channels at all but
+    you still would like to use the `PromEx.Plugins.Phoenix` plugin, you can pass
+    [`:phoenix_channel_event_metrics`] as the value to `:drop_metrics_groups` and that set of
+    metrics will not be caputred.
   """
   def start_link(init_arg) do
     Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
@@ -151,10 +157,15 @@ defmodule PromEx do
     # Get options
     manual_start_delay = Keyword.get(opts, :delay_manual_start, :no_delay)
 
+    drop_metrics_groups =
+      opts
+      |> Keyword.get(:drop_metrics_groups, [])
+      |> MapSet.new()
+
     plugins =
       opts
       |> Keyword.get(:plugins, [])
-      |> init_plugins()
+      |> init_plugins(drop_metrics_groups)
 
     telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
     poll_metrics = Map.get(plugins, :poll_metrics, [])
@@ -192,13 +203,16 @@ defmodule PromEx do
     Core.scrape(:prom_ex_metrics)
   end
 
-  defp init_plugins(plugins) do
+  defp init_plugins(plugins, drop_metrics_groups) do
     event_metrics =
       plugins
       |> Enum.map(fn plugin_definition ->
         init_plugin(plugin_definition, :event_metrics)
       end)
       |> List.flatten()
+      |> Enum.reject(fn %_{group_name: group_name} ->
+        MapSet.member?(drop_metrics_groups, group_name)
+      end)
 
     polling_metrics =
       plugins
@@ -206,6 +220,9 @@ defmodule PromEx do
         init_plugin(plugin_definition, :polling_metrics)
       end)
       |> List.flatten()
+      |> Enum.reject(fn %_{group_name: group_name} ->
+        MapSet.member?(drop_metrics_groups, group_name)
+      end)
 
     manual_metrics =
       plugins
@@ -213,6 +230,9 @@ defmodule PromEx do
         init_plugin(plugin_definition, :manual_metrics)
       end)
       |> List.flatten()
+      |> Enum.reject(fn %_{group_name: group_name} ->
+        MapSet.member?(drop_metrics_groups, group_name)
+      end)
 
     telemetry_metrics =
       [event_metrics, polling_metrics, manual_metrics]

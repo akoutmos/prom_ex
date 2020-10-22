@@ -19,12 +19,13 @@ defmodule WebApp.Application do
       # {WebApp.Worker, arg}
       {
         PromEx,
+        delay_manual_start: :no_delay,
+        drop_metrics_groups: [:phoenix_channel_event_metrics],
         plugins: [
           {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
           PromEx.Plugins.Beam,
           {PromEx.Plugins.Application, [otp_app: :web_app]}
-        ],
-        delay_manual_start: :no_delay
+        ]
       }
     ]
 
