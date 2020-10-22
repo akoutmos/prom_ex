@@ -15,6 +15,7 @@ defmodule PromEx do
 
   Upcoming Elixir library metrics:
     - [~] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
+    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
     - [ ] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
     - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
