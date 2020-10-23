@@ -4,12 +4,15 @@ defmodule PromEx.Plugins.Application do
   it captures the versions of your application and the application dependencies and also
   how many modules each depepndency is bringing into the project.
 
-  This module supports the following options:
+  This plugin supports the following options:
   - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (E.g. :my_cool_app).
 
   - `deps`: This option is OPTIONAL and defines what dependencies the plugin should track. A value of `:all`
     means that PromEx will fetch details on all application dependencies. A list of dependency names like
     `[:phoenix, :ecto, :unplug]` means that PromEx will only fetch details regarding those dependencies.
+
+  This plugin exposes the following metric groups:
+  - `:application_versions_manual_metrics`
 
   To use plugin in your application, add the following to your application supervision tree:
   ```
@@ -26,8 +29,6 @@ defmodule PromEx.Plugins.Application do
       }
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: WebApp.Supervisor]
     Supervisor.start_link(children, opts)
   end

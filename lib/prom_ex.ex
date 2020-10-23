@@ -37,9 +37,10 @@ defmodule PromEx do
 
   Database cron based metrics:
     - [ ] Postgres (https://github.com/pawurb/ecto_psql_extras for inspiration)
-    - [ ] MySQL (https://github.com/prometheus/mysqld_exporter)
-    - [ ] Redis (https://github.com/oliver006/redis_exporter)
-    - [ ] MongoDB (https://github.com/percona/mongodb_exporter)
+    - [ ] Mnesia (https://github.com/deadtrickster/prometheus.erl/blob/master/src/collectors/mnesia/prometheus_mnesia_collector.erl for inspiration)
+    - [ ] MySQL (https://github.com/prometheus/mysqld_exporter for inspiration)
+    - [ ] Redis (https://github.com/oliver006/redis_exporter for inspiration)
+    - [ ] MongoDB (https://github.com/percona/mongodb_exporter for inspiration)
 
   Each plugin also has an accompanying Grafana dashboard that you can
   leverage to plot all of the captured data (see each project's GitHub
