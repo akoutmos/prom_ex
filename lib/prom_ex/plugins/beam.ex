@@ -69,11 +69,11 @@ defmodule PromEx.Plugins.Beam do
     ]
   end
 
-  def distribution_metrics(poll_rate) do
+  def distribution_metrics(_poll_rate) do
     []
   end
 
-  def beam_internal_metrics(poll_rate) do
+  def beam_internal_metrics(_poll_rate) do
     []
   end
 
