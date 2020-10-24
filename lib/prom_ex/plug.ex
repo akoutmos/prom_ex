@@ -54,12 +54,16 @@ defmodule PromEx.Plug do
 
   @impl true
   def call(%Conn{request_path: metrics_path} = conn, %{metrics_path: metrics_path}) do
-    metrics = PromEx.get_metrics()
+    case PromEx.get_metrics() do
+      :prom_ex_down ->
+        conn
 
-    conn
-    |> Conn.put_resp_content_type("text/plain")
-    |> Conn.send_resp(200, metrics)
-    |> Conn.halt()
+      metrics ->
+        conn
+        |> Conn.put_resp_content_type("text/plain")
+        |> Conn.send_resp(200, metrics)
+        |> Conn.halt()
+    end
   end
 
   def call(conn, _opts) do

@@ -200,9 +200,11 @@ defmodule PromEx do
   primarily used by the exporter plug to fetch all of the metrics so that they
   can be scraped.
   """
-  @spec get_metrics :: String.t()
+  @spec get_metrics :: String.t() | :prom_ex_down
   def get_metrics do
-    Core.scrape(:prom_ex_metrics)
+    if Process.whereis(:prom_ex_metrics),
+      do: Core.scrape(:prom_ex_metrics),
+      else: :prom_ex_down
   end
 
   defp init_plugins(plugins, drop_metrics_groups) do

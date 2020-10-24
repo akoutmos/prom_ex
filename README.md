@@ -145,6 +145,97 @@ my_cool_app_application_dependency_info{modules="4",name="telemetry_poller",vers
 Be sure to check out the module docs for each plugin that you choose to use to ensure that you are familiar
 with all of the options that they provide.
 
+### Performance Concerns
+
+You may think to yourself that with all these metrics being collected and scraped, that the performance of your
+application my be impacted. Luckily PromEx is built upon the solid foundation established by the `Telemetry`,
+`TelemetryMetrics`, and `TelemetryMetricsPrometheus` projects. These libraries were designed to be as lightweight and
+performant as possible. From some basic stress tests that I have run, I have been unable to observe any meaningful or
+measurable performance reduction (thank you OTP and particularly ETS ;)). Here are six sample stress tests using
+[wrk2](https://github.com/giltene/wrk2) with PromEx enabled and disabled with the following initialization
+configuration:
+
+```elixir
+{
+  PromEx,
+  delay_manual_start: :no_delay,
+  drop_metrics_groups: [:phoenix_channel_event_metrics],
+  plugins: [
+    {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
+    PromEx.Plugins.Beam,
+    {PromEx.Plugins.Application, [otp_app: :web_app]}
+  ]
+}
+```
+
+With out PromEx metrics collection:
+
+```terminal
+$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
+Running 10s test @ http://localhost:4000/
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.25ms    1.02ms  22.00ms   71.90%
+    Req/Sec       -nan      -nan   0.00      0.00%
+  10003 requests in 10.01s, 38.60MB read
+Requests/sec:    999.78
+Transfer/sec:      3.86MB
+
+$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
+Running 10s test @ http://localhost:4000/
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.15ms    0.92ms  15.06ms   67.75%
+    Req/Sec       -nan      -nan   0.00      0.00%
+  10002 requests in 10.00s, 38.59MB read
+Requests/sec:    999.73
+Transfer/sec:      3.86MB
+
+$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
+Running 10s test @ http://localhost:4000/
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.23ms    1.31ms  29.82ms   84.14%
+    Req/Sec       -nan      -nan   0.00      0.00%
+  10001 requests in 10.00s, 38.59MB read
+Requests/sec:    999.82
+Transfer/sec:      3.86MB
+```
+
+With PromEx metrics collection:
+
+```terminal
+$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
+Running 10s test @ http://localhost:4000/
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.55ms    1.69ms  36.86ms   94.40%
+    Req/Sec       -nan      -nan   0.00      0.00%
+  9999 requests in 10.00s, 38.58MB read
+Requests/sec:   1000.11
+Transfer/sec:      3.86MB
+
+$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
+Running 10s test @ http://localhost:4000/
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.42ms    1.56ms  31.58ms   90.48%
+    Req/Sec       -nan      -nan   0.00      0.00%
+  10004 requests in 10.00s, 38.60MB read
+Requests/sec:    999.93
+Transfer/sec:      3.86MB
+
+$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
+Running 10s test @ http://localhost:4000/
+  5 threads and 50 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.39ms    1.09ms  18.56ms   72.96%
+    Req/Sec       -nan      -nan   0.00      0.00%
+  10001 requests in 10.00s, 38.59MB read
+Requests/sec:    999.81
+Transfer/sec:      3.86MB
+```
+
 ### Attribution
 
 It wouldn't be right to not include somewhere in this project a "thanks" to the various projects that
