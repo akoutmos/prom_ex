@@ -14,11 +14,10 @@ An Elixir Prometheus metrics collection library built on top of Telemetry
 
 - [Installation](#installation)
 - [Design Philosophy](#design-philosophy)
-- []()
-- []()
-- []()
-- []()
-- []()
+- [Available Plugins](#available-plugins)
+- [Setting Up Metrics](#setting-up-metrics)
+- [Performance Concerns](#performance-concerns)
+- [Attribution](#attribution)
 
 ## Installation
 
