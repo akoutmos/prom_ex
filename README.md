@@ -8,7 +8,7 @@ Status](https://coveralls.io/repos/github/akoutmos/prom_ex/badge.svg?branch=mast
 
 An Elixir Prometheus metrics collection library built on top of Telemetry
 
----
+<br>
 
 # Contents
 
