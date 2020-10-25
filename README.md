@@ -157,7 +157,7 @@ with all of the options that they provide.
 ### Performance Concerns
 
 You may think to yourself that with all these metrics being collected and scraped, that the performance of your
-application my be impacted. Luckily PromEx is built upon the solid foundation established by the `Telemetry`,
+application my be negatively impacted. Luckily PromEx is built upon the solid foundation established by the `Telemetry`,
 `TelemetryMetrics`, and the `TelemetryMetricsPrometheus` projects. These libraries were designed to be as lightweight
 and performant as possible. From some basic stress tests that I have run, I have been unable to observe any meaningful
 or measurable performance reduction (thank you OTP and particularly ETS ;)). Here are six sample stress tests using
