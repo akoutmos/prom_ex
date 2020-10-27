@@ -10,7 +10,7 @@ defmodule PromEx.Plugins.Beam do
   - `poll_rate`: This is option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
   This plugin exposes the following metric groups:
-  - `:beam_memory_polling_events`
+  - `:beam_memory_polling_metrics`
   - `:beam_cpu_topology_manual_metrics`
   - `:beam_system_limits_manual_metrics`
   - `:beam_system_info_manual_metrics`
@@ -54,6 +54,7 @@ defmodule PromEx.Plugins.Beam do
 
     [
       memory_metrics(poll_rate),
+      mnesia_metrics(poll_rate),
       distribution_metrics(poll_rate),
       beam_internal_metrics(poll_rate)
     ]
@@ -69,14 +70,56 @@ defmodule PromEx.Plugins.Beam do
     ]
   end
 
-  @doc false
-  def distribution_metrics(_poll_rate) do
-    []
+  defp distribution_metrics(poll_rate) do
+    Polling.build(
+      :beam_distribution_polling_metrics,
+      poll_rate,
+      {__MODULE__, :execute_distribution_metrics, []},
+      []
+    )
   end
 
-  @doc false
-  def beam_internal_metrics(_poll_rate) do
-    []
+  defp mnesia_metrics(poll_rate) do
+    Polling.build(
+      :beam_mnesia_polling_metrics,
+      poll_rate,
+      {__MODULE__, :execute_mnesia_metrics, []},
+      []
+    )
+  end
+
+  defp beam_internal_metrics(poll_rate) do
+    Polling.build(
+      :beam_internal_polling_metrics,
+      poll_rate,
+      {__MODULE__, :execute_internal_metrics, []},
+      [
+        last_value(
+          [:beam, :stats, :port, :count],
+          event_name: [:prom_ex, :plugin, :beam, :port, :count],
+          description: "A count of how many ports are currently active.",
+          measurement: :count
+        ),
+        last_value(
+          [:beam, :stats, :process, :count],
+          event_name: [:prom_ex, :plugin, :beam, :process, :count],
+          description: "A count of how many processes are currently running.",
+          measurement: :count
+        ),
+        last_value(
+          [:beam, :stats, :atom, :count],
+          event_name: [:prom_ex, :plugin, :beam, :atom, :count],
+          description: "A count of how many atoms are currently allocated.",
+          measurement: :count
+        ),
+        last_value(
+          [:beam, :stats, :ets, :count],
+          event_name: [:prom_ex, :plugin, :beam, :ets, :count],
+          description: "A count of how many ETS tables currently exist.",
+          measurement: :count
+        )
+      ]
+    )
   end
 
   defp beam_system_info do
@@ -220,7 +263,7 @@ defmodule PromEx.Plugins.Beam do
 
   defp memory_metrics(poll_rate) do
     Polling.build(
-      :beam_memory_polling_events,
+      :beam_memory_polling_metrics,
       poll_rate,
       {__MODULE__, :execute_memory_metrics, []},
       [
@@ -279,6 +322,23 @@ defmodule PromEx.Plugins.Beam do
       |> Map.new()
 
     :telemetry.execute(@memory_event, memory_measurements, %{})
+  end
+
+  @doc false
+  def execute_distribution_metrics do
+  end
+
+  @doc false
+  def execute_internal_metrics do
+    :telemetry.execute([:prom_ex, :plugin, :beam, :port, :count], %{count: :erlang.system_info(:port_count)})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :process, :count], %{count: :erlang.system_info(:process_count)})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :atom, :count], %{count: :erlang.system_info(:atom_count)})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :ets, :count], %{count: :erlang.system_info(:ets_count)})
+  end
+
+  @doc false
+  def execute_mnesia_metrics do
+    # https://github.com/deadtrickster/prometheus.erl/blob/master/src/collectors/mnesia/prometheus_mnesia_collector.erl
   end
 
   @doc false
