@@ -8,9 +8,38 @@ end
 
 defmodule PromEx.Plugins.Phoenix do
   @moduledoc """
-  Telemetry events for: https://hexdocs.pm/phoenix/Phoenix.Logger.html
+  This plugin captures metrics emitted by Phoenix. Specifically, it captures HTTP request metrics and
+  Phoenix channel metrics.
 
-  #TODO: More indepth docs coming
+  This plugin supports the following options:
+  - `router`: This is a REQUIRED option and is the full module name of your Phoenix Router (e.g MyAppWeb.Router).
+
+  - `event_prefix`: This option is OPTIONAL and allows you to set the event prefix for the Telemetry events. This
+    value should align with what you pass to `Plug.Telemetry` in your `endpoint.ex` file (see the plug docs
+    for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
+
+  This plugin exposes the following metric groups:
+  - `:phoenix_http_event_metrics`
+  - `:phoenix_channel_event_metrics`
+
+  To use plugin in your application, add the following to your application supervision tree:
+  ```
+  def start(_type, _args) do
+    children = [
+      ...
+      {
+        PromEx,
+        plugins: [
+          {PromEx.Plugins.Phoenix, router: MyAppWeb.Router},
+          ...
+        ]
+      }
+    ]
+
+    opts = [strategy: :one_for_one, name: MyApp.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+  ```
   """
 
   use PromEx
@@ -34,7 +63,7 @@ defmodule PromEx.Plugins.Phoenix do
     phoenix_router = Keyword.fetch!(opts, :router)
     event_prefix = Keyword.get(opts, :event_prefix, [:phoenix, :endpoint])
 
-    # Shared configuartion
+    # Shared configuration
     phoenix_stop_event = event_prefix ++ [:stop]
     http_metrics_tags = [:status, :method, :path, :controller, :action]
 

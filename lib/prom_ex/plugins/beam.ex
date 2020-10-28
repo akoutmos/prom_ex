@@ -36,7 +36,7 @@ defmodule PromEx.Plugins.Beam do
   end
   ```
 
-  This plugin exposes manual metrics so be sure to configure the PromEx `:delay_manual_start` as required.
+  This plugin exposes manual metrics so be sure to configure the PromEx `:delay_manual_start` as necessary.
   """
 
   use PromEx

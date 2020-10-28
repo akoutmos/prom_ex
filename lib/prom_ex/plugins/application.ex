@@ -2,10 +2,10 @@ defmodule PromEx.Plugins.Application do
   @moduledoc """
   This plugin captures metrics regarding your application, and its dependencies. Specifically,
   it captures the versions of your application and the application dependencies and also
-  how many modules each depepndency is bringing into the project.
+  how many modules each dependency is bringing into the project.
 
   This plugin supports the following options:
-  - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (E.g. :my_cool_app).
+  - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (e.g. :my_cool_app).
 
   - `deps`: This option is OPTIONAL and defines what dependencies the plugin should track. A value of `:all`
     means that PromEx will fetch details on all application dependencies. A list of dependency names like
