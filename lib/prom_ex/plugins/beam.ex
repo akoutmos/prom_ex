@@ -89,6 +89,8 @@ defmodule PromEx.Plugins.Beam do
   end
 
   defp beam_internal_metrics(poll_rate) do
+    # TODO: Additional metrics
+    # https://github.com/deadtrickster/prometheus.erl/blob/master/src/collectors/vm/prometheus_vm_statistics_collector.erl#L157
     Polling.build(
       :beam_internal_polling_metrics,
       poll_rate,
@@ -127,6 +129,12 @@ defmodule PromEx.Plugins.Beam do
       :beam_system_info_manual_metrics,
       {__MODULE__, :execute_system_info, []},
       [
+        last_value(
+          [:beam, :system, :version, :info],
+          event_name: [:prom_ex, :plugin, :beam, :version],
+          description: "The OTP release major version.",
+          measurement: :version
+        ),
         last_value(
           [:beam, :system, :smp_support, :info],
           event_name: [:prom_ex, :plugin, :beam, :smp_support],
@@ -362,11 +370,13 @@ defmodule PromEx.Plugins.Beam do
     thread_support_enabled = if(:erlang.system_info(:threads), do: 1, else: 0)
     time_correction_enabled = if(:erlang.system_info(:time_correction), do: 1, else: 0)
     word_size = :erlang.system_info(:wordsize)
+    version = :otp_release |> :erlang.system_info() |> :erlang.list_to_binary() |> String.to_integer()
 
     :telemetry.execute([:prom_ex, :plugin, :beam, :smp_support], %{enabled: smp_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :thread_support], %{enabled: thread_support_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :time_correction_support], %{enabled: time_correction_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :word_size_bytes], %{size: word_size}, %{})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :version], %{version: version}, %{})
   end
 
   @doc false
