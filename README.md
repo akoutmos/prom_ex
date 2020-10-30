@@ -71,15 +71,18 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 
 ### Available Plugins
 
-| Plugin                       | Status      | Description                                            |
-| ---------------------------- | ----------- | ------------------------------------------------------ |
-| `PromEx.Plugins.Application` | Alpha       | Collect metrics on your application dependencies       |
-| `PromEx.Plugins.Beam`        | Alpha       | Collect metrics regarding the BEAM virtual machine     |
-| `PromEx.Plugins.Phoenix`     | Alpha       | Collect request metrics emitted by Phoenix             |
-| `PromEx.Plugins.Ecto`        | Coming soon | Collect query metrics emitted by Ecto                  |
-| `PromEx.Plugins.Broadway`    | Coming soon | Collect message processing metrics emitted by Broadway |
-| `PromEx.Plugins.Finch`       | Coming soon | Collect HTTP request metrics emitted by Finch          |
-| More coming soon...          |             |                                                        |
+| Plugin                           | Status       | Description                                            |
+| -------------------------------- | ------------ | ------------------------------------------------------ |
+| `PromEx.Plugins.Application`     | Beta         | Collect metrics on your application dependencies       |
+| `PromEx.Plugins.Beam`            | Beta         | Collect metrics regarding the BEAM virtual machine     |
+| `PromEx.Plugins.Phoenix`         | Beta         | Collect request metrics emitted by Phoenix             |
+| `PromEx.Plugins.Ecto`            | Next release | Collect query metrics emitted by Ecto                  |
+| `PromEx.Plugins.PhoenixLiveView` | Next release | Collect metrics emitted by Phoenix LiveView            |
+| `PromEx.Plugins.Absinthe`        | Next release | Collect GraphQL metrics emitted by Absinthe            |
+| `PromEx.Plugins.Broadway`        | Coming soon  | Collect message processing metrics emitted by Broadway |
+| `PromEx.Plugins.Finch`           | Coming soon  | Collect HTTP request metrics emitted by Finch          |
+| `PromEx.Plugins.Redix`           | Coming soon  | Collect Redis request metrics emitted by Redix         |
+| More coming soon...              |              |                                                        |
 
 ### Setting Up Metrics
 

@@ -15,20 +15,20 @@ defmodule PromEx do
 
   Upcoming Elixir library metrics:
     - [~] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
-    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
     - [ ] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
+    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
     - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
 
   Backlog Elixir library metrics:
     - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
+    - [ ] PhoenixLiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
     - [ ] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
     - [ ] Redix (https://hexdocs.pm/redix/Redix.Telemetry.html)
     - [ ] Tesla (https://hexdocs.pm/tesla/Tesla.Middleware.Telemetry.html)
-    - [ ] PhoenixLiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - [ ] Memcachex (https://hexdocs.pm/memcachex/0.5.0/Memcache.html#module-telemetry)
     - [ ] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [ ] Nebulex (https://hexdocs.pm/nebulex/2.0.0-rc.0/telemetry.html)

@@ -1,10 +1,11 @@
-version: '3.8'
+version: '3.3'
 
 services:
   elixir_app:
     image: elixir:1.10.4
     command: >
       /bin/sh -c 'apt-get update && apt-get install -y inotify-tools &&
+      cd /app &&
       mix local.hex --force &&
       mix local.rebar --force &&
       mix deps.get &&

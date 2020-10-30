@@ -4,7 +4,7 @@ defmodule PromEx.MixProject do
   def project do
     [
       app: :prom_ex,
-      version: "0.1.3-alpha",
+      version: "0.1.4-alpha",
       elixir: "~> 1.9",
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",
@@ -48,6 +48,7 @@ defmodule PromEx.MixProject do
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
+      {:finch, "~> 0.5"},
 
       # TODO: Swith back to pulling down from Hex once PRs are merged
       # {:telemetry_metrics_prometheus_core, "~> SOME_VERSION"},
@@ -61,7 +62,7 @@ defmodule PromEx.MixProject do
       {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
       {:doctor, "~> 0.15.0", only: :dev},
       {:credo, "~> 1.5.0-rc.4", only: :dev},
-      {:dialyxir, "~> 1.0", only: :dev}
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false}
     ]
   end
 
