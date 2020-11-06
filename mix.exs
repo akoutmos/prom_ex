@@ -21,7 +21,7 @@ defmodule PromEx.MixProject do
         "coveralls.travis": :test
       ],
       dialyzer: [
-        plt_add_apps: [:plug, :phoenix, :telemetry_metrics],
+        plt_add_apps: [:plug, :phoenix, :telemetry_metrics, :mix],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
       package: package(),
@@ -51,9 +51,6 @@ defmodule PromEx.MixProject do
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
 
-      # TODO: Swith back to pulling down from Hex once PRs are merged
-      # {:telemetry_metrics_prometheus_core, "~> SOME_VERSION"},
-
       # Optional dependencies depending on what telemetry events the user is acting upon
       {:phoenix, "~> 1.5", optional: true},
       {:plug, "~> 1.10", optional: true},
@@ -63,7 +60,8 @@ defmodule PromEx.MixProject do
       {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
       {:doctor, "~> 0.15.0", only: :dev},
       {:credo, "~> 1.5.0-rc.4", only: :dev},
-      {:dialyxir, "~> 1.0", only: :dev, runtime: false}
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:git_hooks, "~> 0.5.0", only: [:test, :dev], runtime: false}
     ]
   end
 
