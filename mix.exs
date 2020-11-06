@@ -45,10 +45,11 @@ defmodule PromEx.MixProject do
   defp deps do
     [
       # Required dependencies
+      {:jason, "~> 1.2"},
+      {:finch, "~> 0.5"},
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
-      {:finch, "~> 0.5"},
 
       # TODO: Swith back to pulling down from Hex once PRs are merged
       # {:telemetry_metrics_prometheus_core, "~> SOME_VERSION"},

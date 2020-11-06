@@ -10,14 +10,10 @@ defmodule PromEx.GrafanaClient do
   def create_or_update_dashboard(finch_process_name, base_url, bearer_token, dashboard_file_path) do
     case File.read(dashboard_file_path) do
       {:ok, dashboard_contents} ->
-        headers = [
-          authorization: "Bearer #{bearer_token}",
-          "content-type": "application/json",
-          accept: "application/json"
-        ]
+        headers = grafana_headers(bearer_token)
 
         :post
-        |> Finch.build("#{base_url}/api/dashboard/db", headers, dashboard_contents)
+        |> Finch.build("#{base_url}/api/dashboards/db", headers, dashboard_contents)
         |> Finch.request(finch_process_name)
         |> IO.inspect(label: "Grafana response")
 
@@ -33,5 +29,13 @@ defmodule PromEx.GrafanaClient do
   end
 
   def get_folder(finch_process_name, base_url, bearer_token, folder_id) do
+  end
+
+  defp grafana_headers(bearer_token) do
+    [
+      {"authorization", "Bearer #{bearer_token}"},
+      {"content-type", "application/json"},
+      {"accept", "application/json"}
+    ]
   end
 end
