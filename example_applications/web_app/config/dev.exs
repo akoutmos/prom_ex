@@ -5,7 +5,7 @@ config :web_app, WebApp.Repo,
   username: "postgres",
   password: "postgres",
   database: "web_app_dev",
-  hostname: "localhost",
+  hostname: System.get_env("POSTGRES_HOST", "localhost"),
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 

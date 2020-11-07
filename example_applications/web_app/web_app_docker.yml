@@ -16,6 +16,8 @@ services:
     depends_on:
       - postgres
     working_dir: /app
+    environment:
+      POSTGRES_HOST: "postgres"
     volumes:
       - ./config:/app/config:ro
       - ./lib:/app/lib:ro

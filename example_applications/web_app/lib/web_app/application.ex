@@ -8,7 +8,7 @@ defmodule WebApp.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      # WebApp.Repo,
+      WebApp.Repo,
       # Start the Telemetry supervisor
       WebAppWeb.Telemetry,
       # Start the PubSub system
@@ -20,7 +20,6 @@ defmodule WebApp.Application do
       {
         PromEx,
         delay_manual_start: :no_delay,
-        drop_metrics_groups: [:phoenix_channel_event_metrics],
         plugins: [
           {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
           PromEx.Plugins.Beam,
