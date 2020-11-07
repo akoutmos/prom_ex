@@ -12,7 +12,7 @@
       }
     ]
   },
-  "editable": true,
+  "editable": false,
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
@@ -125,6 +125,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "New dashboard",
-  "uid": null,
+  "uid": "prom_ex_application_dashboard",
   "version": 2
 }
