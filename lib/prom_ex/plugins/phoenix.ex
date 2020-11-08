@@ -90,7 +90,7 @@ defmodule PromEx.Plugins.Phoenix do
           event_name: phoenix_stop_event,
           description: "The size of the HTTP response payload.",
           reporter_options: [
-            buckets: exponential(1, 2, 16)
+            buckets: exponential(1, 4, 12)
           ],
           measurement: fn _measurements, metadata ->
             :erlang.iolist_size(metadata.conn.resp_body)
