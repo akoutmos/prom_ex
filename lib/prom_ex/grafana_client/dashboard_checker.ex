@@ -14,4 +14,9 @@ defmodule PromEx.GrafanaClient.DashboardChecker do
   # - Ensure version is always at 1
   # - Ensure timeline is current time - 1h
   # - Ensure refresh interval is 5s
+  # - Check for default panel names
+  # - Check for dashboard name format "PromEx - .*"
+  # - Check for 3 variables: time aggregate, job, instance
+  # - Check for PromEx tags: PromEx, Plugin name, prometheus
+  # - Ensure that help tips end in a period
 end

@@ -19,6 +19,7 @@ defmodule PromEx do
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
     - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
+    - [ ] Operating System (http://erlang.org/doc/man/os_mon_app.html)
 
   Backlog Elixir library metrics:
     - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)

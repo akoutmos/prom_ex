@@ -89,13 +89,64 @@ defmodule PromEx.Plugins.Beam do
   end
 
   defp beam_internal_metrics(poll_rate) do
-    # TODO: Additional metrics
-    # https://github.com/deadtrickster/prometheus.erl/blob/master/src/collectors/vm/prometheus_vm_statistics_collector.erl#L157
     Polling.build(
       :beam_internal_polling_metrics,
       poll_rate,
       {__MODULE__, :execute_internal_metrics, []},
       [
+        last_value(
+          [:beam, :stats, :active_task, :count],
+          event_name: [:prom_ex, :plugin, :beam, :active_task, :count],
+          description: "The number of processes and ports that are ready to run, or are currently running.",
+          measurement: :count,
+          tags: [:type]
+        ),
+        last_value(
+          [:beam, :stats, :run_queue, :count],
+          event_name: [:prom_ex, :plugin, :beam, :run_queue, :count],
+          description: "The number of processes and ports that are ready to run and are in the run queue.",
+          measurement: :count,
+          tags: [:type]
+        ),
+        last_value(
+          [:beam, :stats, :context_switch, :count],
+          event_name: [:prom_ex, :plugin, :beam, :context_switch_count],
+          description: "The total number of context switches since the system started.",
+          measurement: :count
+        ),
+        last_value(
+          [:beam, :stats, :reduction, :count],
+          event_name: [:prom_ex, :plugin, :beam, :reduction, :count],
+          description: "The total number of reductions since the system started.",
+          measurement: :count
+        ),
+        last_value(
+          [:beam, :stats, :gc, :count],
+          event_name: [:prom_ex, :plugin, :beam, :gc, :count],
+          description: "The total number of garbage collections since the system started.",
+          measurement: :count
+        ),
+        last_value(
+          [:beam, :stats, :words_reclaimed, :count],
+          event_name: [:prom_ex, :plugin, :beam, :words_reclaimed, :count],
+          description: "The total number of words reclaimed since the system started.",
+          measurement: :count
+        ),
+        last_value(
+          [:beam, :stats, :port_io, :byte, :count],
+          event_name: [:prom_ex, :plugin, :beam, :port_io, :count],
+          description: "The total number of bytes sent and recieved through ports since the system started.",
+          measurement: :count,
+          tags: [:type],
+          unit: :byte
+        ),
+        last_value(
+          [:beam, :stats, :uptime, :milliseconds, :count],
+          event_name: [:prom_ex, :plugin, :beam, :uptime, :count],
+          description: "The total number of wall clock milliseconds that have passed since the system started.",
+          measurement: :count,
+          unit: :millisecond
+        ),
         last_value(
           [:beam, :stats, :port, :count],
           event_name: [:prom_ex, :plugin, :beam, :port, :count],
@@ -338,10 +389,40 @@ defmodule PromEx.Plugins.Beam do
 
   @doc false
   def execute_internal_metrics do
+    total_active_tasks = :erlang.statistics(:total_active_tasks)
+    total_active_tasks_all = :erlang.statistics(:total_active_tasks_all)
+    total_run_queue_lengths = :erlang.statistics(:total_run_queue_lengths)
+    total_run_queue_lengths_all = :erlang.statistics(:total_run_queue_lengths_all)
+    dirty_active_tasks = total_active_tasks_all - total_active_tasks
+    dirty_run_queue_lengths = total_run_queue_lengths_all - total_run_queue_lengths
+
+    {context_switches, _} = :erlang.statistics(:context_switches)
+    {total_reductions, _} = :erlang.statistics(:reductions)
+    {number_of_gcs, words_reclaimed, _} = :erlang.statistics(:garbage_collection)
+    {{:input, input_port_bytes}, {:output, output_port_bytes}} = :erlang.statistics(:io)
+    {wall_clock_time, _} = :erlang.statistics(:wall_clock)
+
     :telemetry.execute([:prom_ex, :plugin, :beam, :port, :count], %{count: :erlang.system_info(:port_count)})
     :telemetry.execute([:prom_ex, :plugin, :beam, :process, :count], %{count: :erlang.system_info(:process_count)})
     :telemetry.execute([:prom_ex, :plugin, :beam, :atom, :count], %{count: :erlang.system_info(:atom_count)})
     :telemetry.execute([:prom_ex, :plugin, :beam, :ets, :count], %{count: :erlang.system_info(:ets_count)})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :active_task, :count], %{count: total_active_tasks}, %{type: :normal})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :active_task, :count], %{count: dirty_active_tasks}, %{type: :dirty})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :context_switch, :count], %{count: context_switches})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :reduction, :count], %{count: total_reductions})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :gc_count], %{count: number_of_gcs})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :words_reclaimed, :count], %{count: words_reclaimed})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: input_port_bytes}, %{type: :input})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: output_port_bytes}, %{type: :output})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :uptime, :count], %{count: wall_clock_time})
+
+    :telemetry.execute([:prom_ex, :plugin, :beam, :run_queue, :count], %{count: total_run_queue_lengths}, %{
+      type: :normal
+    })
+
+    :telemetry.execute([:prom_ex, :plugin, :beam, :run_queue, :count], %{count: dirty_run_queue_lengths}, %{
+      type: :dirty
+    })
   end
 
   @doc false
@@ -351,9 +432,9 @@ defmodule PromEx.Plugins.Beam do
 
   @doc false
   def execute_system_limits_info do
-    :telemetry.execute([:prom_ex, :plugin, :beam, :ets_limit], %{limit: :erlang.system_info(:ets_limit)}, %{})
-    :telemetry.execute([:prom_ex, :plugin, :beam, :port_limit], %{limit: :erlang.system_info(:port_limit)}, %{})
-    :telemetry.execute([:prom_ex, :plugin, :beam, :process_limit], %{limit: :erlang.system_info(:process_limit)}, %{})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :ets_limit], %{limit: :erlang.system_info(:ets_limit)})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :port_limit], %{limit: :erlang.system_info(:port_limit)})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :process_limit], %{limit: :erlang.system_info(:process_limit)})
 
     :telemetry.execute(
       [:prom_ex, :plugin, :beam, :thread_pool_size],
