@@ -110,7 +110,7 @@ defmodule PromEx.Plugins.Beam do
         ),
         last_value(
           [:beam, :stats, :context_switch, :count],
-          event_name: [:prom_ex, :plugin, :beam, :context_switch_count],
+          event_name: [:prom_ex, :plugin, :beam, :context_switch, :count],
           description: "The total number of context switches since the system started.",
           measurement: :count
         ),
@@ -410,7 +410,7 @@ defmodule PromEx.Plugins.Beam do
     :telemetry.execute([:prom_ex, :plugin, :beam, :active_task, :count], %{count: dirty_active_tasks}, %{type: :dirty})
     :telemetry.execute([:prom_ex, :plugin, :beam, :context_switch, :count], %{count: context_switches})
     :telemetry.execute([:prom_ex, :plugin, :beam, :reduction, :count], %{count: total_reductions})
-    :telemetry.execute([:prom_ex, :plugin, :beam, :gc_count], %{count: number_of_gcs})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :gc, :count], %{count: number_of_gcs})
     :telemetry.execute([:prom_ex, :plugin, :beam, :words_reclaimed, :count], %{count: words_reclaimed})
     :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: input_port_bytes}, %{type: :input})
     :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: output_port_bytes}, %{type: :output})
