@@ -16,7 +16,7 @@
   "editable": false,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 3,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -871,7 +871,7 @@
     ]
   },
   "timezone": "",
-  "title": "PromEx - Phoenix Dashboard Copy",
+  "title": "PromEx - Phoenix Dashboard",
   "uid": "prom_ex_phoenix_dashboard",
   "version": 1
 }

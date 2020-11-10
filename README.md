@@ -80,6 +80,7 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 | `PromEx.Plugins.PhoenixLiveView` | Next release | Collect metrics emitted by Phoenix LiveView            |
 | `PromEx.Plugins.Absinthe`        | Next release | Collect GraphQL metrics emitted by Absinthe            |
 | `PromEx.Plugins.Broadway`        | Coming soon  | Collect message processing metrics emitted by Broadway |
+| `PromEx.Plugins.Oban`            | Coming soon  | Collect queue processing metrics emitted by Oban       |
 | `PromEx.Plugins.Finch`           | Coming soon  | Collect HTTP request metrics emitted by Finch          |
 | `PromEx.Plugins.Redix`           | Coming soon  | Collect Redis request metrics emitted by Redix         |
 | More coming soon...              |              |                                                        |
