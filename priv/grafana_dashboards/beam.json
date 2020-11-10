@@ -156,7 +156,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -268,10 +268,10 @@
       "yaxes": [
         {
           "format": "short",
-          "label": null,
+          "label": "Ports",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -383,10 +383,10 @@
       "yaxes": [
         {
           "format": "short",
-          "label": null,
+          "label": "Processes",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -499,10 +499,10 @@
       "yaxes": [
         {
           "format": "locale",
-          "label": null,
+          "label": "Atoms",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -614,10 +614,10 @@
       "yaxes": [
         {
           "format": "short",
-          "label": null,
+          "label": "Tables",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
