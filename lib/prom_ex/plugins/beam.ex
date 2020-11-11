@@ -135,7 +135,7 @@ defmodule PromEx.Plugins.Beam do
         last_value(
           [:beam, :stats, :port_io, :byte, :count],
           event_name: [:prom_ex, :plugin, :beam, :port_io, :count],
-          description: "The total number of bytes sent and recieved through ports since the system started.",
+          description: "The total number of bytes sent and received through ports since the system started.",
           measurement: :count,
           tags: [:type],
           unit: :byte
