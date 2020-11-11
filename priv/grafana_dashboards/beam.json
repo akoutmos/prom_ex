@@ -28,9 +28,400 @@
         "x": 0,
         "y": 0
       },
+      "id": 25,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The amount of time that has passed since the system has started.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "dtdurationms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "beam_stats_uptime_milliseconds_count{job=\"$job\", instance=\"$instance\"}",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Uptime",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The amount of memory currently allocated within the BEAM.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 150000
+              },
+              {
+                "color": "red",
+                "value": 250000
+              }
+            ]
+          },
+          "unit": "deckbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 27,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "beam_memory_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total Memory Usage",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The number of atoms currently in the atom table.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 150000
+              },
+              {
+                "color": "red",
+                "value": 300000
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Atom Count",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The number of running BEAM processes currently running.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 25000
+              },
+              {
+                "color": "red",
+                "value": 75000
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 28,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Process Count",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The number of currently active ports.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 25000
+              },
+              {
+                "color": "red",
+                "value": 75000
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 29,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Port Count",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The number of currently allocated ETS tables.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 2500
+              },
+              {
+                "color": "red",
+                "value": 5000
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "ETS Table Count",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
       "id": 17,
       "panels": [],
-      "title": "BEAM Overview",
+      "title": "Details",
       "type": "row"
     },
     {
@@ -75,7 +466,7 @@
         "h": 15,
         "w": 8,
         "x": 0,
-        "y": 1
+        "y": 9
       },
       "hiddenSeries": false,
       "id": 21,
@@ -102,31 +493,31 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_memory_total_kilobytes",
+          "expr": "beam_memory_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Total Usage",
           "refId": "A"
         },
         {
-          "expr": "beam_memory_atom_total_kilobytes",
+          "expr": "beam_memory_atom_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Atoms",
           "refId": "B"
         },
         {
-          "expr": "beam_memory_binary_total_kilobytes",
+          "expr": "beam_memory_binary_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Binaries",
           "refId": "C"
         },
         {
-          "expr": "beam_memory_code_total_kilobytes",
+          "expr": "beam_memory_code_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Code",
           "refId": "D"
         },
         {
-          "expr": "beam_memory_ets_total_kilobytes",
+          "expr": "beam_memory_ets_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "ETS",
           "refId": "E"
@@ -179,7 +570,396 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "The number of active ports.",
+      "description": "The number of bytes sent and received through ports.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "",
+              "id": 0,
+              "text": "",
+              "to": "",
+              "type": 1
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "deckbytes"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 15,
+        "w": 8,
+        "x": 8,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 33,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "0 - irate(beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"input\"}[$interval])",
+          "interval": "",
+          "legendFormat": "Data Received",
+          "refId": "A"
+        },
+        {
+          "expr": "0 + irate(beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"output\"}[$interval])",
+          "interval": "",
+          "legendFormat": "Data Sent",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Port IO",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "deckbytes",
+          "label": "Data Received (-) / Data Sent (+)",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The number of bytes sent and received through ports.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "",
+              "id": 0,
+              "text": "",
+              "to": "",
+              "type": 1
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 15,
+        "w": 8,
+        "x": 16,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 34,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Garbage Collections",
+          "yaxis": 1
+        },
+        {
+          "alias": "Bytes Reclaimed",
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(beam_stats_gc_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "interval": "",
+          "legendFormat": "Garbage Collections",
+          "refId": "A"
+        },
+        {
+          "expr": "irate(beam_stats_words_reclaimed_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Bytes Reclaimed",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Garbage Collection",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "locale",
+          "label": "Garbage Collections",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "decbytes",
+          "label": "Reclaimed Bytes",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The number of bytes sent and received through ports.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "",
+              "id": 0,
+              "text": "",
+              "to": "",
+              "type": 1
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 15,
+        "w": 8,
+        "x": 0,
+        "y": 24
+      },
+      "hiddenSeries": false,
+      "id": 35,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Reductions",
+          "yaxis": 1
+        },
+        {
+          "alias": "Context Switches",
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(beam_stats_reduction_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "interval": "",
+          "legendFormat": "Reductions",
+          "refId": "A"
+        },
+        {
+          "expr": "irate(beam_stats_context_switch_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Context Switches",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "VM Load",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "locale",
+          "label": "Reduction Count",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "locale",
+          "label": "Context Switch Count",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The number of bytes sent and received through ports.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -214,15 +994,17 @@
         "h": 15,
         "w": 8,
         "x": 8,
-        "y": 1
+        "y": 24
       },
       "hiddenSeries": false,
-      "id": 20,
+      "id": 36,
       "legend": {
         "avg": false,
         "current": false,
+        "hideZero": false,
         "max": false,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": false
@@ -235,23 +1017,60 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "Normal Tasks",
+          "yaxis": 1
+        },
+        {
+          "alias": "Normal Tasks",
+          "yaxis": 1
+        },
+        {
+          "alias": "Dirty Tasks",
+          "yaxis": 2
+        },
+        {
+          "alias": "Dirty Run Queue",
+          "yaxis": 2
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_port_count",
+          "expr": "irate(beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}[$interval])",
           "interval": "",
-          "legendFormat": "Active Ports",
+          "legendFormat": "Normal Tasks",
           "refId": "A"
+        },
+        {
+          "expr": "0 - irate(beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}[$interval])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Normal Run Queue",
+          "refId": "B"
+        },
+        {
+          "expr": "irate(beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
+          "interval": "",
+          "legendFormat": "Dirty Tasks",
+          "refId": "C"
+        },
+        {
+          "expr": "0 - irate(beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Dirty Run Queue",
+          "refId": "D"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Active Ports",
+      "title": "Scheduler Status",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -267,16 +1086,16 @@
       },
       "yaxes": [
         {
-          "format": "short",
-          "label": "Ports",
+          "format": "locale",
+          "label": "Normal Run Queue (-) / Normal Tasks (+)",
           "logBase": 1,
           "max": null,
-          "min": "0",
+          "min": null,
           "show": true
         },
         {
-          "format": "short",
-          "label": null,
+          "format": "locale",
+          "label": "Dirty Run Queue (-) / Dirty Tasks (+)",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -284,7 +1103,7 @@
         }
       ],
       "yaxis": {
-        "align": false,
+        "align": true,
         "alignLevel": null
       }
     },
@@ -329,7 +1148,7 @@
         "h": 15,
         "w": 8,
         "x": 16,
-        "y": 1
+        "y": 24
       },
       "hiddenSeries": false,
       "id": 19,
@@ -356,7 +1175,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_process_count",
+          "expr": "beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active Processes",
           "refId": "A"
@@ -445,7 +1264,7 @@
         "h": 15,
         "w": 8,
         "x": 0,
-        "y": 16
+        "y": 39
       },
       "hiddenSeries": false,
       "id": 22,
@@ -472,7 +1291,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_atom_count",
+          "expr": "beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active ports",
           "refId": "A"
@@ -500,6 +1319,121 @@
         {
           "format": "locale",
           "label": "Atoms",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The number of active ports.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "",
+              "id": 0,
+              "text": "",
+              "to": "",
+              "type": 1
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 15,
+        "w": 8,
+        "x": 8,
+        "y": 39
+      },
+      "hiddenSeries": false,
+      "id": 20,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
+          "interval": "",
+          "legendFormat": "Active Ports",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Active Ports",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Ports",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -559,8 +1493,8 @@
       "gridPos": {
         "h": 15,
         "w": 8,
-        "x": 8,
-        "y": 16
+        "x": 16,
+        "y": 39
       },
       "hiddenSeries": false,
       "id": 23,
@@ -587,7 +1521,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_ets_count",
+          "expr": "beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active ETS Tables",
           "refId": "A"
@@ -641,7 +1575,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 54
       },
       "id": 2,
       "panels": [],
@@ -675,7 +1609,7 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 32
+        "y": 55
       },
       "id": 4,
       "options": {
@@ -695,7 +1629,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_version_info",
+          "expr": "beam_system_version_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -734,7 +1668,7 @@
         "h": 4,
         "w": 4,
         "x": 4,
-        "y": 32
+        "y": 55
       },
       "id": 8,
       "options": {
@@ -754,7 +1688,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_word_size_bytes_info",
+          "expr": "beam_system_word_size_bytes_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -793,7 +1727,7 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 32
+        "y": 55
       },
       "id": 13,
       "options": {
@@ -813,7 +1747,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_logical_processors_info",
+          "expr": "beam_system_logical_processors_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -852,7 +1786,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 32
+        "y": 55
       },
       "id": 14,
       "options": {
@@ -872,7 +1806,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_logical_processors_available_info",
+          "expr": "beam_system_logical_processors_available_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -911,7 +1845,7 @@
         "h": 4,
         "w": 4,
         "x": 16,
-        "y": 32
+        "y": 55
       },
       "id": 15,
       "options": {
@@ -931,7 +1865,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_logical_processors_online_info",
+          "expr": "beam_system_logical_processors_online_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1047,7 +1981,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 36
+        "y": 59
       },
       "id": 10,
       "options": {
@@ -1058,7 +1992,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"beam_system_thread_support_info|beam_system_smp_support_info|beam_system_time_correction_support_info\"}",
+          "expr": "{__name__=~\"beam_system_thread_support_info|beam_system_smp_support_info|beam_system_time_correction_support_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1193,7 +2127,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 36
+        "y": 59
       },
       "id": 12,
       "options": {
@@ -1203,7 +2137,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"beam_system_ets_limit_info|beam_system_port_limit_info|beam_system_process_limit_info|beam_system_atom_limit_info\"}",
+          "expr": "{__name__=~\"beam_system_ets_limit_info|beam_system_port_limit_info|beam_system_process_limit_info|beam_system_atom_limit_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1351,7 +2285,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 36
+        "y": 59
       },
       "id": 11,
       "options": {
@@ -1361,7 +2295,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"beam_system_dirty_cpu_schedulers_info|beam_system_dirty_cpu_schedulers_online_info|beam_system_dirty_io_schedulers_info|beam_system_schedulers_info|beam_system_schedulers_online_info\"}",
+          "expr": "{__name__=~\"beam_system_dirty_cpu_schedulers_info|beam_system_dirty_cpu_schedulers_online_info|beam_system_dirty_io_schedulers_info|beam_system_schedulers_info|beam_system_schedulers_online_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -1403,7 +2337,105 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "datasource": "prometheus",
+        "definition": "label_values(beam_stats_ets_count, job)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Prometheus Job",
+        "multi": false,
+        "name": "job",
+        "options": [],
+        "query": "label_values(beam_stats_ets_count, job)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 6,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "datasource": "prometheus",
+        "definition": "label_values(beam_system_version_info, instance)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Application Instance",
+        "multi": false,
+        "name": "instance",
+        "options": [],
+        "query": "label_values(beam_system_version_info, instance)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": false,
+          "text": "30s",
+          "value": "30s"
+        },
+        "hide": 0,
+        "label": "Interval",
+        "name": "interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "15s",
+            "value": "15s"
+          },
+          {
+            "selected": true,
+            "text": "30s",
+            "value": "30s"
+          },
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "15m",
+            "value": "15m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          }
+        ],
+        "query": "15s, 30s, 1m, 5m, 15m, 30m, 1h",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
   },
   "time": {
     "from": "now-1h",
