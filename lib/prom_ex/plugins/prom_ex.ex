@@ -22,7 +22,7 @@ defmodule PromEx.Plugins.PromEx do
   end
 
   @doc false
-  def apps_running do
+  def prom_ex_status do
     :telemetry.execute([:prom_ex, :status, :info], %{status: 1}, %{})
   end
 end
