@@ -209,35 +209,13 @@ defmodule PromEx do
   end
 
   defp init_plugins(plugins, drop_metrics_groups) do
-    event_metrics =
-      plugins
-      |> Enum.map(fn plugin_definition ->
-        init_plugin(plugin_definition, :event_metrics)
-      end)
-      |> List.flatten()
-      |> Enum.reject(fn %_{group_name: group_name} ->
-        MapSet.member?(drop_metrics_groups, group_name)
-      end)
+    # Adding default PromEx plugin
+    plugins = [PromEx.Plugins.PromEx | plugins]
 
-    polling_metrics =
-      plugins
-      |> Enum.map(fn plugin_definition ->
-        init_plugin(plugin_definition, :polling_metrics)
-      end)
-      |> List.flatten()
-      |> Enum.reject(fn %_{group_name: group_name} ->
-        MapSet.member?(drop_metrics_groups, group_name)
-      end)
-
-    manual_metrics =
-      plugins
-      |> Enum.map(fn plugin_definition ->
-        init_plugin(plugin_definition, :manual_metrics)
-      end)
-      |> List.flatten()
-      |> Enum.reject(fn %_{group_name: group_name} ->
-        MapSet.member?(drop_metrics_groups, group_name)
-      end)
+    # Extract relevant metrics based on type
+    event_metrics = extract_relevant_metrics(plugins, :event_metrics, drop_metrics_groups)
+    polling_metrics = extract_relevant_metrics(plugins, :polling_metrics, drop_metrics_groups)
+    manual_metrics = extract_relevant_metrics(plugins, :manual_metrics, drop_metrics_groups)
 
     telemetry_metrics =
       [event_metrics, polling_metrics, manual_metrics]
@@ -260,6 +238,17 @@ defmodule PromEx do
       poll_metrics: polling_metrics,
       manual_metrics: manual_metrics
     }
+  end
+
+  defp extract_relevant_metrics(plugins, type, drop_metrics_groups) do
+    plugins
+    |> Enum.map(fn plugin_definition ->
+      init_plugin(plugin_definition, type)
+    end)
+    |> List.flatten()
+    |> Enum.reject(fn %_{group_name: group_name} ->
+      MapSet.member?(drop_metrics_groups, group_name)
+    end)
   end
 
   defp generate_telemetry_poller_child_spec(pollable_metrics) do
