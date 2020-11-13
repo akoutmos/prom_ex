@@ -28,9 +28,263 @@
         "x": 0,
         "y": 0
       },
+      "id": 19,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "(\n  (\n    sum(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}) + \n    (sum(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}) - sum(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"})) / 2\n  ) \n  / \n  sum(phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"})\n) * 100",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Apdex Score",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "A percentage of responses that resulted in 400s or 500s over the current time range.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}) / sum(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"})",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Error Percentage",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "A counter of all the data that has been returned by the Phoenix application.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"})",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total Data Transferred",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "A counter of all the requests serviced by the Phoenix application.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"})",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total Requests Received",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
       "id": 2,
       "panels": [],
-      "title": "HTTP Metrics",
+      "title": "HTTP Details",
       "type": "row"
     },
     {
@@ -58,7 +312,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 1
+        "y": 10
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -71,7 +325,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_request_duration_milliseconds_bucket[30s])) by (le)",
+          "expr": "sum(irate(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -130,7 +384,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 1
+        "y": 10
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -143,7 +397,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_response_size_bytes_bucket[30s])) by (le)",
+          "expr": "sum(irate(phoenix_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -196,7 +450,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 11,
@@ -227,7 +481,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_request_duration_milliseconds_sum[30s])) by(path) / sum(irate(phoenix_http_request_duration_milliseconds_count[30s])) by(path)",
+          "expr": "sum(irate(phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -293,7 +547,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 13,
@@ -324,7 +578,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_response_size_bytes_sum[30s])) by(path) / sum(irate(phoenix_http_response_size_bytes_count[30s])) by(path)",
+          "expr": "sum(irate(phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -390,7 +644,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 27
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 8,
@@ -421,7 +675,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(phoenix_http_requests_total[30s])",
+          "expr": "irate(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -487,7 +741,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 27
+        "y": 36
       },
       "hiddenSeries": false,
       "id": 10,
@@ -516,19 +770,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_requests_total{status=~\"2..\"}[30s]))",
+          "expr": "sum(irate(phoenix_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "2xx",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(phoenix_http_requests_total{status=~\"4..\"}[30s]))",
+          "expr": "sum(irate(phoenix_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "4xx",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(phoenix_http_requests_total{status=~\"5..\"}[30s]))",
+          "expr": "sum(irate(phoenix_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "5xx",
           "refId": "C"
@@ -582,11 +836,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 49
       },
       "id": 4,
       "panels": [],
-      "title": "Channel Metrics",
+      "title": "Channel Details",
       "type": "row"
     },
     {
@@ -608,7 +862,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 41
+        "y": 50
       },
       "hiddenSeries": false,
       "id": 15,
@@ -637,7 +891,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(phoenix_channel_joined_total[30s])",
+          "expr": "irate(phoenix_channel_joined_total{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
@@ -709,7 +963,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 50
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -722,7 +976,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_channel_handled_in_duration_milliseconds_bucket[30s])) by (le)",
+          "expr": "sum(irate(phoenix_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -775,7 +1029,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 54
+        "y": 63
       },
       "hiddenSeries": false,
       "id": 17,
@@ -806,7 +1060,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_channel_handled_in_duration_milliseconds_sum[30s])) by(path) / sum(irate(phoenix_channel_handled_in_duration_milliseconds_count[30s])) by(path)",
+          "expr": "sum(irate(phoenix_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(phoenix_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -862,6 +1116,11 @@
     "list": [
       {
         "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "elixir_app",
+          "value": "elixir_app"
+        },
         "datasource": "prometheus",
         "definition": "label_values(prom_ex_status_info, job)",
         "hide": 0,
@@ -883,6 +1142,11 @@
       },
       {
         "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "elixir_app:4000",
+          "value": "elixir_app:4000"
+        },
         "datasource": "prometheus",
         "definition": "label_values(prom_ex_status_info, instance)",
         "hide": 0,

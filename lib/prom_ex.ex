@@ -11,7 +11,7 @@ defmodule PromEx do
 
   Foundational metrics:
     - [~] `PromEx.Plugins.Application` Application related informational metrics
-    - [~] `PromEx.Plugins.Beam` BEAM virtual machine metrics
+    - [X] `PromEx.Plugins.Beam` BEAM virtual machine metrics
 
   Upcoming Elixir library metrics:
     - [~] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
