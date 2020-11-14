@@ -41,10 +41,10 @@ Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/pr
 
 With the widespread adoption of the Telemetry library and the other libraries in the [BEAM Telemetry GitHub
 Org](https://github.com/beam-telemetry), we have reached a point where we have a consistent means of surfacing
-application metrics. This allows us to have a great level of insight into our applications and dependencies given that
-they all leverage the same fundamental tooling. The goal of this project is to provide a "Plug-in" style library where
-you can easily add new plug-ins to surface metrics so that Prometheus can scrape them. Ideally, this project acts as the
-"Metrics" pillar in your application (in reference to [The Three Pillars of
+application and library metrics. This allows us to have a great level of insight into our applications and dependencies
+given that they all leverage the same fundamental tooling. The goal of this project is to provide a "Plug-in" style
+library where you can easily add new plug-ins to surface metrics so that Prometheus can scrape them. Ideally, this
+project acts as the "Metrics" pillar in your application (in reference to [The Three Pillars of
 Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/ch04.html)).
 
 To this end, while PromEx does provide a certain level of configurability (like the polling rate, starting behaviour for
