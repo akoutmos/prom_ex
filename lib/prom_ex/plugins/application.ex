@@ -121,7 +121,7 @@ defmodule PromEx.Plugins.Application do
         git_sha
 
       :error ->
-        Logger.warning("APPLICATION_GIT_SHA has not been defined")
+        Logger.warn("APPLICATION_GIT_SHA has not been defined")
         "Git SHA not available"
     end
   end

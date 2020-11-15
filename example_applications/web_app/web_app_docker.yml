@@ -18,6 +18,7 @@ services:
     working_dir: /app
     environment:
       POSTGRES_HOST: "postgres"
+      APPLICATION_GIT_SHA: "0fa5476"
     volumes:
       - ./config:/app/config:ro
       - ./lib:/app/lib:ro
