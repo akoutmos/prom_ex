@@ -11,6 +11,10 @@ defmodule PromEx.Plugins.Application do
     means that PromEx will fetch details on all application dependencies. A list of dependency names like
     `[:phoenix, :ecto, :unplug]` means that PromEx will only fetch details regarding those dependencies.
 
+  - `git_sha_mfa`: This option is OPTIONAL and defines an MFA that will be called in order to fetch the
+    application's Git SHA at the time of deployment. By default, an Application Plugin function will be called
+    and will attempt to read the APPLICATION_GIT_SHA environment variable to populate the value.
+
   This plugin exposes the following metric groups:
   - `:application_versions_manual_metrics`
 
@@ -38,6 +42,8 @@ defmodule PromEx.Plugins.Application do
   """
 
   use PromEx
+
+  require Logger
 
   @impl true
   def manual_metrics(opts) do
@@ -106,6 +112,18 @@ defmodule PromEx.Plugins.Application do
   def execute_time_metrics do
     {wall_clock_time, _} = :erlang.statistics(:wall_clock)
     :telemetry.execute([:prom_ex, :plugin, :beam, :uptime, :count], %{count: wall_clock_time})
+  end
+
+  @doc false
+  def git_sha do
+    case System.fetch_env("APPLICATION_GIT_SHA") do
+      {:ok, git_sha} ->
+        git_sha
+
+      :error ->
+        Logger.warning("APPLICATION_GIT_SHA has not been defined")
+        "Git SHA not available"
+    end
   end
 
   @doc false
