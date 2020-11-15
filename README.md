@@ -15,6 +15,7 @@ An Elixir Prometheus metrics collection library built on top of Telemetry
 - [Installation](#installation)
 - [Design Philosophy](#design-philosophy)
 - [Available Plugins](#available-plugins)
+- [Grafana Dashboards](#grafana-dashboards)
 - [Setting Up Metrics](#setting-up-metrics)
 - [Performance Concerns](#performance-concerns)
 - [Attribution](#attribution)
@@ -84,6 +85,13 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 | `PromEx.Plugins.Finch`           | Coming soon  | Collect HTTP request metrics emitted by Finch          |
 | `PromEx.Plugins.Redix`           | Coming soon  | Collect Redis request metrics emitted by Redix         |
 | More coming soon...              |              |                                                        |
+
+### Grafana Dashboards
+
+<img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx">
+PromEx comes with a custom tailored Grafana Dashboard per Plugin. [Click here](/guides/howtos/Grafana Dashboards.md) to check out sample screenshots 
+of each Plugin specific Grafana Dashbaord.
+
 
 ### Setting Up Metrics
 
