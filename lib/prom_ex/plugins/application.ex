@@ -111,7 +111,7 @@ defmodule PromEx.Plugins.Application do
   @doc false
   def execute_time_metrics do
     {wall_clock_time, _} = :erlang.statistics(:wall_clock)
-    :telemetry.execute([:prom_ex, :plugin, :beam, :uptime, :count], %{count: wall_clock_time})
+    :telemetry.execute([:prom_ex, :plugin, :application, :uptime, :count], %{count: wall_clock_time})
   end
 
   @doc false
@@ -191,7 +191,7 @@ defmodule PromEx.Plugins.Application do
 
     :telemetry.execute(
       [otp_app | [:application, :git_sha, :info]],
-      %{status: 0},
+      %{status: 1},
       %{sha: git_sha}
     )
   end
