@@ -89,7 +89,7 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 ### Grafana Dashboards
 
 <img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx">
-PromEx comes with a custom tailored Grafana Dashboard per Plugin. [Click here](/guides/howtos/Grafana Dashboards.md) to check out sample screenshots 
+PromEx comes with a custom tailored Grafana Dashboard per Plugin. [Click here](/guides/howtos/Grafana%20Dashboards.md) to check out sample screenshots 
 of each Plugin specific Grafana Dashbaord.
 
 
