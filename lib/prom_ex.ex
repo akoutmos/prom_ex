@@ -35,6 +35,7 @@ defmodule PromEx do
     - [ ] Nebulex (https://hexdocs.pm/nebulex/2.0.0-rc.0/telemetry.html)
     - [ ] Horde (https://github.com/derekkraan/horde/blob/master/lib/horde/supervisor_telemetry_poller.ex)
     - [ ] Cachex (Need to open up PR)
+    - [ ] Quantum (https://hexdocs.pm/quantum/3.3.0/telemetry.html#content)
 
   Database cron based metrics:
     - [ ] Postgres (https://github.com/pawurb/ecto_psql_extras for inspiration)
