@@ -43,34 +43,73 @@ defmodule PromEx.Plugins.Application do
   def manual_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     apps = Keyword.get(opts, :deps, :all)
+    git_sha_mfa = Keyword.get(opts, :git_sha_mfa, {__MODULE__, :git_sha, []})
 
-    Manual.build(
-      :application_versions_manual_metrics,
-      {__MODULE__, :apps_running, [otp_app, apps]},
+    [
+      Manual.build(
+        :application_versions_manual_metrics,
+        {__MODULE__, :apps_running, [otp_app, apps, git_sha_mfa]},
+        [
+          # Capture information regarding the primary application (i.e the user's application)
+          last_value(
+            [otp_app | [:application, :primary, :info]],
+            event_name: [otp_app | [:application, :primary, :info]],
+            description: "Information regarding the primary application.",
+            measurement: :status,
+            tags: [:name, :version, :modules]
+          ),
+
+          # Capture information regarding the application dependencies (i.e the user's libs)
+          last_value(
+            [otp_app | [:application, :dependency, :info]],
+            event_name: [otp_app | [:application, :dependency, :info]],
+            description: "Information regarding the application's dependencies.",
+            measurement: :status,
+            tags: [:name, :version, :modules]
+          ),
+
+          # Capture application Git SHA using user provided MFA
+          last_value(
+            [otp_app | [:application, :git_sha, :info]],
+            event_name: [otp_app | [:application, :git_sha, :info]],
+            description: "The application's Git SHA at the time of deployment.",
+            measurement: :status,
+            tags: [:sha]
+          )
+        ]
+      )
+    ]
+  end
+
+  @impl true
+  def polling_metrics(opts) do
+    otp_app = Keyword.fetch!(opts, :otp_app)
+    poll_rate = Keyword.get(opts, :poll_rate, 5_000)
+
+    Polling.build(
+      :application_time_polling_metrics,
+      poll_rate,
+      {__MODULE__, :execute_time_metrics, []},
       [
-        # Capture information regarding the primary application (i.e the user's application)
         last_value(
-          [otp_app | [:application, :primary, :info]],
-          event_name: [otp_app | [:application, :primary, :info]],
-          description: "Information regarding the primary application.",
-          measurement: :status,
-          tags: [:name, :version, :modules]
-        ),
-
-        # Capture information regarding the application dependencies (i.e the user's libs)
-        last_value(
-          [otp_app | [:application, :dependency, :info]],
-          event_name: [otp_app | [:application, :dependency, :info]],
-          description: "Information regarding the application's dependencies.",
-          measurement: :status,
-          tags: [:name, :version, :modules]
+          [otp_app | [:uptime, :milliseconds, :count]],
+          event_name: [:prom_ex, :plugin, :application, :uptime, :count],
+          description: "The total number of wall clock milliseconds that have passed since the application started.",
+          measurement: :count,
+          unit: :millisecond
         )
       ]
     )
   end
 
   @doc false
-  def apps_running(otp_app, apps) do
+  def execute_time_metrics do
+    {wall_clock_time, _} = :erlang.statistics(:wall_clock)
+    :telemetry.execute([:prom_ex, :plugin, :beam, :uptime, :count], %{count: wall_clock_time})
+  end
+
+  @doc false
+  def apps_running(otp_app, apps, git_sha_mfa) do
     started_apps =
       Application.started_applications()
       |> Enum.map(fn {app, _description, version} ->
@@ -127,5 +166,15 @@ defmodule PromEx.Plugins.Application do
         %{name: app, version: version, modules: length(Application.spec(app)[:modules])}
       )
     end)
+
+    # Publish Git SHA data
+    {module, function, args} = git_sha_mfa
+    git_sha = apply(module, function, args)
+
+    :telemetry.execute(
+      [otp_app | [:application, :git_sha, :info]],
+      %{status: 0},
+      %{sha: git_sha}
+    )
   end
 end
