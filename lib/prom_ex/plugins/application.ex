@@ -98,7 +98,7 @@ defmodule PromEx.Plugins.Application do
       {__MODULE__, :execute_time_metrics, []},
       [
         last_value(
-          [otp_app | [:uptime, :milliseconds, :count]],
+          [otp_app | [:application, :uptime, :milliseconds, :count]],
           event_name: [:prom_ex, :plugin, :application, :uptime, :count],
           description: "The total number of wall clock milliseconds that have passed since the application started.",
           measurement: :count,
