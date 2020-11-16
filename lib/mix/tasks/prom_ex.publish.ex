@@ -65,6 +65,8 @@ defmodule Mix.Tasks.PromEx.Publish do
   end
 
   defp get_prom_ex_config do
+    Mix.Task.run("compile")
+
     app_priv_dir =
       Project.config()
       |> Keyword.get(:app)
