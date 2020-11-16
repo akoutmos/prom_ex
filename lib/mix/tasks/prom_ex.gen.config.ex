@@ -10,6 +10,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
 
   @impl true
   def run(_args) do
+    Mix.Task.run("compile")
+
     app_priv_dir =
       Project.config()
       |> Keyword.get(:app)
