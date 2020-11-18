@@ -6,7 +6,7 @@ defmodule PromEx.GrafanaClient.DashboardChecker do
 
   # TODO: Items to check for to ensure uniformity
   # - Shared cross hair
-  # - YAxis min 0 on non-negative data
+  # - Y Axis min 0 on non-negative data
   # - Y axis labels
   # - Ensure null ID field value
   # - Ensure readonly dashboard
@@ -19,4 +19,5 @@ defmodule PromEx.GrafanaClient.DashboardChecker do
   # - Check for 3 variables: time aggregate, job, instance
   # - Check for PromEx tags: PromEx, Plugin name, prometheus
   # - Ensure that help tips end in a period
+  # - Check for template strings in datasource fields
 end

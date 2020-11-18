@@ -14,7 +14,7 @@ defmodule PromEx.Debug do
   function will also return the
   """
   @spec attach_debugger(metrics_types() | list()) :: :ok | metrics_types()
-  def(attach_debugger(%_{event_name: event_name} = telemetry_metric_def)) do
+  def attach_debugger(%_{event_name: event_name} = telemetry_metric_def) do
     random_id =
       10
       |> :crypto.strong_rand_bytes()
