@@ -26,7 +26,8 @@ defmodule WebAppWeb.Endpoint do
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
-  plug PromEx.Plug
+  plug PromEx.Plug, prom_ex_module: WebApp.PromEx
+  plug PromEx.Plug, path: "/limited-metrics", prom_ex_module: WebApp.Limited.PromEx
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

@@ -9,6 +9,11 @@ config :web_app, WebApp.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :web_app, WebApp.PromEx,
+  grafana_host: "http://localhost:3000",
+  grafana_auth_token: "asdf",
+  grafana_datasource_id: "asdf"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

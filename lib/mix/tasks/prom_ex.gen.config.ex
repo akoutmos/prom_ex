@@ -46,9 +46,14 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
     path
     |> File.write!("""
     %{
+      # The ID of the Prometheus datasource in your Grafana instance
+      grafana_host: "",
+      grafana_auth_token: "",
+      grafana_datasource_id: "prometheus",
+
+      # Dashboard that will be uploaded when running dashboard uploads
       dashboards: [
-        # PromEx built in dashboard definitions. Remove dashboards
-        # that you do not need.
+        # PromEx built in dashboard definitions. Remove dashboards that you do not need
         {:prom_ex, "/grafana_dashboards/application.json"},
         {:prom_ex, "/grafana_dashboards/beam.json"},
         {:prom_ex, "/grafana_dashboards/phoenix.json"}

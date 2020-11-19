@@ -41,7 +41,7 @@ defmodule PromEx.Plugins.Application do
   This plugin exposes manual metrics so be sure to configure the PromEx `:delay_manual_start` as required.
   """
 
-  use PromEx
+  use PromEx.Plugin
 
   require Logger
 

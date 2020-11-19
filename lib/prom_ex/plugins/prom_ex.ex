@@ -1,7 +1,7 @@
 defmodule PromEx.Plugins.PromEx do
   @moduledoc false
 
-  use PromEx
+  use PromEx.Plugin
 
   @impl true
   def manual_metrics(_opts) do

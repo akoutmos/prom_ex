@@ -12,20 +12,25 @@ defmodule PromEx.ManualMetricsManager do
   require Logger
 
   @doc """
+  Used to start the ManualMetricsManager process
   """
   @spec start_link(opts :: keyword()) :: GenServer.on_start()
   def start_link(opts) do
-    state = Map.new(opts)
+    {name, remaining_opts} = Keyword.pop(opts, :name)
+    state = Map.new(remaining_opts)
 
-    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+    GenServer.start_link(__MODULE__, state, name: name)
   end
 
   @doc """
   This function calls into the GenServer and refreshes all of the configured
   manual metrics data points.
   """
-  def refresh_metrics do
-    GenServer.cast(__MODULE__, :refresh_metrics)
+  @spec refresh_metrics(prom_ex_module :: module()) :: :ok
+  def refresh_metrics(prom_ex_module) do
+    prom_ex_module
+    |> PromEx.generate_manual_metrics_module_name()
+    |> GenServer.cast(:refresh_metrics)
   end
 
   @impl true
@@ -47,26 +52,26 @@ defmodule PromEx.ManualMetricsManager do
 
   @impl true
   def handle_continue(:refresh_metrics, state) do
-    refresh_metrics(state)
+    internal_refresh_metrics(state)
 
     {:noreply, state}
   end
 
   @impl true
   def handle_info(:refresh_metrics, state) do
-    refresh_metrics(state)
+    internal_refresh_metrics(state)
 
     {:noreply, state}
   end
 
   @impl true
   def handle_cast(:refresh_metrics, state) do
-    refresh_metrics(state)
+    internal_refresh_metrics(state)
 
     {:noreply, state}
   end
 
-  defp refresh_metrics(state) do
+  defp internal_refresh_metrics(state) do
     state.metrics
     |> Enum.each(fn {module, function, args} ->
       apply(module, function, args)

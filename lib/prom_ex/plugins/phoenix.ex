@@ -42,7 +42,7 @@ defmodule PromEx.Plugins.Phoenix do
   ```
   """
 
-  use PromEx
+  use PromEx.Plugin
 
   require Logger
 

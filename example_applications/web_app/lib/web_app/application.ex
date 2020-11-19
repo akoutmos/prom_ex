@@ -17,15 +17,8 @@ defmodule WebApp.Application do
       WebAppWeb.Endpoint,
       # Start a worker by calling: WebApp.Worker.start_link(arg)
       # {WebApp.Worker, arg}
-      {
-        PromEx,
-        delay_manual_start: :no_delay,
-        plugins: [
-          {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
-          PromEx.Plugins.Beam,
-          {PromEx.Plugins.Application, [otp_app: :web_app]}
-        ]
-      }
+      WebApp.PromEx,
+      WebApp.Limited.PromEx
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

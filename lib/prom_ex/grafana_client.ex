@@ -77,6 +77,9 @@ defmodule PromEx.GrafanaClient do
 
       {:ok, %Finch.Response{status: 412}} ->
         {:error, :already_exists}
+
+      {:error, _reason} = error ->
+        error
     end
   end
 

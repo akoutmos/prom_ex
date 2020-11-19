@@ -45,17 +45,21 @@ defmodule PromEx.Plug do
 
   @behaviour Plug
 
+  require Logger
+
   @impl true
   def init(opts) do
     %{
+      prom_ex_module: Keyword.fetch!(opts, :prom_ex_module),
       metrics_path: Keyword.get(opts, :path, "/metrics")
     }
   end
 
   @impl true
-  def call(%Conn{request_path: metrics_path} = conn, %{metrics_path: metrics_path}) do
-    case PromEx.get_metrics() do
+  def call(%Conn{request_path: metrics_path} = conn, %{metrics_path: metrics_path, prom_ex_module: prom_ex_module}) do
+    case PromEx.get_metrics(prom_ex_module) do
       :prom_ex_down ->
+        Logger.warn("Attempted to fetch metrics from #{prom_ex_module}, but the module has not been initialized")
         conn
 
       metrics ->

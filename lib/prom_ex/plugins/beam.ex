@@ -39,7 +39,7 @@ defmodule PromEx.Plugins.Beam do
   This plugin exposes manual metrics so be sure to configure the PromEx `:delay_manual_start` as necessary.
   """
 
-  use PromEx
+  use PromEx.Plugin
 
   require Logger
 

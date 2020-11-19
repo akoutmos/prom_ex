@@ -21,7 +21,7 @@ services:
       POSTGRES_HOST: "postgres"
       APPLICATION_GIT_SHA: "0fa5476"
       GRAFANA_HOST: "http://grafana:3000"
-      GRAFANA_AUTH_TOKEN: "<YOUR_TOKEN_HERE>"
+      GRAFANA_AUTH_TOKEN: "eyJrIjoiNXhyd1ZFQ0N6VDRMcXprWlRhcWpVc0FpZ2w2ZkYxOFgiLCJuIjoiUHJvbUV4IiwiaWQiOjF9"
     volumes:
       - ./config:/app/config:ro
       - ./lib:/app/lib:ro
