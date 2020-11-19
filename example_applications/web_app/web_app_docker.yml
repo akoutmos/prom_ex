@@ -10,7 +10,6 @@ services:
       mix local.rebar --force &&
       mix deps.get &&
       mix ecto.setup &&
-      mix prom_ex.publish --host $${GRAFANA_HOST} --auth-token $${GRAFANA_AUTH_TOKEN} &&
       mix phx.server'
     ports:
       - '4000:4000'
@@ -21,7 +20,7 @@ services:
       POSTGRES_HOST: "postgres"
       APPLICATION_GIT_SHA: "0fa5476"
       GRAFANA_HOST: "http://grafana:3000"
-      GRAFANA_AUTH_TOKEN: "eyJrIjoiNXhyd1ZFQ0N6VDRMcXprWlRhcWpVc0FpZ2w2ZkYxOFgiLCJuIjoiUHJvbUV4IiwiaWQiOjF9"
+      GRAFANA_AUTH_TOKEN: "<YOUR_AUTH_TOKEN_HERE>"
     volumes:
       - ./config:/app/config:ro
       - ./lib:/app/lib:ro

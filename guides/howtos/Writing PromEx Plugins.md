@@ -119,7 +119,7 @@ Depending on what `:poll_rate` value you pass to the initialization tuple for `P
 
 Manual metrics behave more or less the same as polling metrics except they do not require a poll rate value. Instead the
 provided `measurements_mfa` is called once on application start, and the metrics are only then updated if you make a
-call to `PromEx.ManualMetricsManager.refresh_metrics/0`. An example of this can be seen from the
+call to `PromEx.ManualMetricsManager.refresh_metrics/1`. An example of this can be seen from the
 `PromEx.Plugins.Application` plugin:
 
 ```elixir

@@ -87,6 +87,9 @@ defmodule PromEx do
 
   alias PromEx.TelemetryMetricsPrometheus.Core
 
+  @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
+  @type measurements_mfa() :: {module(), atom(), list()}
+
   @doc """
   A simple pass-through to fetch all of the currently configured metrics. This is
   primarily used by the exporter plug to fetch all of the metrics so that they
