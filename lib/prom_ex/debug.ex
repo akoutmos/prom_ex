@@ -7,13 +7,11 @@ defmodule PromEx.Debug do
   PromEx itself.
   """
 
-  @typep metrics_types :: PromEx.MetricTypes.Event.t() | PromEx.MetricTypes.Manual.t() | PromEx.MetricTypes.Polling.t()
-
   @doc """
   Use this function to attach a debugger handler to a certain telemetry event. This
   function will also return the
   """
-  @spec attach_debugger(metrics_types() | list()) :: :ok | metrics_types()
+  @spec attach_debugger(PromEx.telemetry_metrics() | list()) :: :ok | PromEx.telemetry_metrics()
   def attach_debugger(%_{event_name: event_name} = telemetry_metric_def) do
     random_id =
       10
