@@ -77,7 +77,7 @@ defmodule PromEx.Plugins.Phoenix do
           measurement: :duration,
           description: "The time it takes for the application to respond to HTTP requests.",
           reporter_options: [
-            buckets: exponential(1, 2, 12)
+            buckets: exponential!(1, 2, 12)
           ],
           tag_values: get_conn_tags(phoenix_router),
           tags: http_metrics_tags,
@@ -90,7 +90,7 @@ defmodule PromEx.Plugins.Phoenix do
           event_name: phoenix_stop_event,
           description: "The size of the HTTP response payload.",
           reporter_options: [
-            buckets: exponential(1, 4, 12)
+            buckets: exponential!(1, 4, 12)
           ],
           measurement: fn _measurements, metadata ->
             :erlang.iolist_size(metadata.conn.resp_body)
@@ -137,7 +137,7 @@ defmodule PromEx.Plugins.Phoenix do
           measurement: :duration,
           description: "The time it takes for the application to respond to channel messages.",
           reporter_options: [
-            buckets: exponential(1, 2, 12)
+            buckets: exponential!(1, 2, 12)
           ],
           unit: {:native, :millisecond}
         )

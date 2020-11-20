@@ -1,0 +1,6 @@
+{
+  "skip_files": [
+    "lib/core/",
+    "lib/core.ex"
+  ]
+}
