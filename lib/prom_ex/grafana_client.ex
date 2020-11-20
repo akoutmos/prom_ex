@@ -72,6 +72,9 @@ defmodule PromEx.GrafanaClient do
       {:ok, %Finch.Response{status: 200, body: body}} ->
         {:ok, Jason.decode!(body)}
 
+      {:ok, %Finch.Response{status: 401}} ->
+        {:error, :unauthorized}
+
       {:ok, %Finch.Response{status: 404}} ->
         {:error, :not_found}
 
