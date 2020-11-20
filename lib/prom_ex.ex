@@ -85,6 +85,8 @@ defmodule PromEx do
     Polling
   }
 
+  alias Telemetry.Metrics.{Counter, Distribution, LastValue, Sum, Summary}
+
   alias PromEx.TelemetryMetricsPrometheus.Core
 
   @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
