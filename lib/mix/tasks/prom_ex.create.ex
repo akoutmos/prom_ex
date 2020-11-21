@@ -5,6 +5,8 @@ defmodule Mix.Tasks.PromEx.Create do
 
   use Mix.Task
 
+  alias Mix.Shell.IO
+
   @impl true
   def run(args) do
     # Compile the project
@@ -15,10 +17,32 @@ defmodule Mix.Tasks.PromEx.Create do
 
     # Generate relevant path info
     project_root = File.cwd!()
-    path = Path.join([project_root, "lib", "#{otp_app}.exx"])
+    path = Path.join([project_root, "lib", otp_app, "prom_ex.ex"])
+    dirname = Path.dirname(path)
 
-    # Write out the config file
-    create_config_file(path, otp_app)
+    unless File.exists?(dirname) do
+      raise "Required directory path #{dirname} does not exist. " <>
+              "Be sure that the --otp-app argument is correct."
+    end
+
+    write_file =
+      if File.exists?(path) do
+        IO.yes?("File already exists at #{path}. Overwrite?")
+      else
+        true
+      end
+
+    if write_file do
+      # Write out the config file
+      create_config_file(path, otp_app)
+      IO.info("Successfully wrote out #{path}")
+
+      IO.info(
+        "Be sure to follow the @moduledoc instructions in the generated module to complete the PromEx setup process."
+      )
+    else
+      IO.info("Did not write file out to #{path}")
+    end
   end
 
   defp parse_options(args) do
@@ -44,17 +68,26 @@ defmodule Mix.Tasks.PromEx.Create do
   end
 
   defp create_config_file(path, otp_app) do
-    root_module_name = Macro.camelize(otp_app)
+    module_name = Macro.camelize(otp_app)
+    assigns = [module_name: module_name, otp_app: otp_app]
+
+    module_template =
+      prom_ex_module_template()
+      |> EEx.eval_string(assigns: assigns)
 
     path
-    |> File.write!("""
-    defmodule #{inspect(root_module_name)}.PromEx do
+    |> File.write!(module_template)
+  end
+
+  defp prom_ex_module_template do
+    """
+    defmodule <%= @module_name %>.PromEx do
       @moduledoc \"\"\"
       Be sure to add the following to finish setting up PromEx:
 
       1. Update your configuration (config.exs, dev.exs, prod.exs, releases.exs, etc):
       ```
-        config #{inspect(otp_app)}, #{inspect(root_module_name)}.PromEx,
+        config :<%= @otp_app %>, <%= @module_name %>.PromEx,
           grafana_host: "<YOUR GRAFANA HOST HERE>",
           grafana_auth_token: "<YOUR GRAFANA AUTH TOKEN HERE>",
           grafana_datasource_id: "<THE NAME OF YOUR PROMETHEUS DATA SOURCE HERE>"
@@ -75,12 +108,12 @@ defmodule Mix.Tasks.PromEx.Create do
 
       3. Update your `endpoint.ex` file to expose your metrics:
       ```
-      defmodule #{inspect(root_module_name)}Web.Endpoint do
-        use Phoenix.Endpoint, otp_app: #{inspect(otp_app)}
+      defmodule <%= @module_name %>Web.Endpoint do
+        use Phoenix.Endpoint, otp_app: :<%= @otp_app %>
 
         ...
 
-        plug PromEx.Plug, prom_ex_module: #{inspect(root_module_name)}.PromEx
+        plug PromEx.Plug, prom_ex_module: <%= @module_name %>.PromEx
 
         ...
       end
@@ -88,7 +121,7 @@ defmodule Mix.Tasks.PromEx.Create do
       \"\"\"
 
       use PromEx,
-        otp_app: #{inspect(otp_app)},
+        otp_app: :<%= @otp_app %>,
         delay_manual_start: :no_delay,
         drop_metrics_groups: [],
         upload_dashboards_on_start: true
@@ -97,12 +130,12 @@ defmodule Mix.Tasks.PromEx.Create do
       def plugins do
         [
           # PromEx built in plugins
-          {PromEx.Plugins.Application, otp_app: #{inspect(otp_app)}},
+          {PromEx.Plugins.Application, otp_app: :<%= @otp_app %>},
           PromEx.Plugins.Beam,
-          {PromEx.Plugins.Phoenix, router: #{root_module_name}Web.Router}
+          {PromEx.Plugins.Phoenix, router: <%= @module_name %>Web.Router}
 
           # Add your own PromEx metrics plugins
-          # #{inspect(root_module_name)}.Users.PromEx
+          # <%= @module_name %>.Users.PromEx
         ]
       end
 
@@ -115,10 +148,10 @@ defmodule Mix.Tasks.PromEx.Create do
           {:prom_ex, "phoenix.json"}
 
           # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
-          # {#{inspect(otp_app)}, "/grafana_dashboards/user_metrics.json"}
+          # {:<%= @otp_app %>, "/grafana_dashboards/user_metrics.json"}
         ]
       end
     end
-    """)
+    """
   end
 end
