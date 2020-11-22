@@ -1,6 +1,6 @@
 defmodule Mix.Tasks.PromEx.Create do
   @moduledoc """
-  This will generate a PromEx config module
+  This will generate a PromEx config module in the appropriate place
   """
 
   use Mix.Task
@@ -13,7 +13,14 @@ defmodule Mix.Tasks.PromEx.Create do
     Mix.Task.run("compile")
 
     # Get CLI args
-    %{otp_app: otp_app} = parse_options(args)
+    otp_app =
+      args
+      |> parse_options()
+      |> Map.get_lazy(:otp_app, fn ->
+        Mix.Project.config()
+        |> Keyword.get(:app)
+        |> Atom.to_string()
+      end)
 
     # Generate relevant path info
     project_root = File.cwd!()
@@ -22,7 +29,7 @@ defmodule Mix.Tasks.PromEx.Create do
 
     unless File.exists?(dirname) do
       raise "Required directory path #{dirname} does not exist. " <>
-              "Be sure that the --otp-app argument is correct."
+              "Be sure that the --otp-app argument or that you Mix project file is correct."
     end
 
     write_file =
@@ -58,13 +65,6 @@ defmodule Mix.Tasks.PromEx.Create do
       {_options, _remaining_args, errors} ->
         raise "Invalid CLI args were provided: #{inspect(errors)}"
     end
-    |> case do
-      %{otp_app: _} = parsed_options ->
-        parsed_options
-
-      _ ->
-        raise "Missing required arguments. Run mix help prom_ex.create for more information"
-    end
   end
 
   defp create_config_file(path, otp_app) do
@@ -99,7 +99,7 @@ defmodule Mix.Tasks.PromEx.Create do
         children = [
           ...
 
-          WebApp.PromEx
+          <%= @module_name %>.PromEx
         ]
 
         ...

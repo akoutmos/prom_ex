@@ -12,7 +12,8 @@ defmodule PromEx.GrafanaClient do
 
   alias PromEx.GrafanaClient.Connection
 
-  @typep handler_respose :: {:ok, result :: map()} | {:error, reason :: atom()}
+  @typep handler_respose ::
+           {:ok, result :: map()} | {:error, reason :: atom()} | {:error, reason :: Mint.TransportError.t()}
 
   @doc """
   Used to create a new dashboard or update an existing dashboard.
