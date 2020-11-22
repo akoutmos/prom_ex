@@ -47,7 +47,7 @@ defmodule WebApp.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:prom_ex, github: "akoutmos/prom_ex", branch: :master}
+      {:prom_ex, "~> 0.1.6-alpha"}
     ]
   end
 
