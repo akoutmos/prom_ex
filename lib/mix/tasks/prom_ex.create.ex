@@ -44,9 +44,12 @@ defmodule Mix.Tasks.PromEx.Create do
       create_config_file(path, otp_app)
       IO.info("Successfully wrote out #{path}")
 
-      IO.info(
-        "Be sure to follow the @moduledoc instructions in the generated module to complete the PromEx setup process."
-      )
+      first_line = "| Be sure to follow the @moduledoc instructions in #{Macro.camelize(otp_app)}.PromEx |"
+      line_length = String.length(first_line) - 2
+      second_line = "| to complete the PromEx setup process" <> String.duplicate(" ", line_length - 37) <> "|"
+      divider = "+" <> String.duplicate("-", line_length) <> "+"
+
+      IO.info(Enum.join(["", divider, first_line, second_line, divider], "\n"))
     else
       IO.info("Did not write file out to #{path}")
     end
