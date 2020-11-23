@@ -7,31 +7,57 @@ defmodule PromEx do
   interface can be achieved and so that leveraging multiple plugins is
   effortless from the user's point of view.
 
+  To use PromEx you need to define a module that uses the PromEx library. When using
+  PromEx you have a few options available to you. For example, you can do the
+  following:
 
-  Starts a PromEx process with the provided plugins initialized.
+  ```elixir
+  defmodule MyApp.PromEx do
+    use PromEx,
+      otp_app: :web_app,
+      delay_manual_start: :no_delay,
+      drop_metrics_groups: [],
+      upload_dashboards_on_start: true
+
+    ...
+  end
+  ```
+
+  The options that you can pass to PromEx are outlined in the following section. In order to
+  tell PromEx what plugins you would like to use and what dashboards you would like PromEx to
+  upload for you, implement the `plugins/0` and `dashboards/0` callbacks respectively. Each
+  plugin also has an accompanying Grafana dashboard that you can leverage to plot all of the
+  plugin captured data.
+
+  In order to expose captured metrics, you can leverage the PromEx provided Plug `PromEx.Plug`.
+  See the `PromEx.Plug` documentation modules for specifics on how to use it.
 
   ## Options
 
-  * `:plugins` - The list of plugin modules that you would like PromEx to initialize. Each
-    plugin definition can either be a two element tuple with the structure
-    `{PlugIn.Module, keyword: "list", of: "options"}` or just the module name `PlugIn.Module`.
-    Be sure to check the documentation for each plugin that you are using to ensure that you
-    satisfy any required option fields.
+  * `:otp_app` - This is a required option and is used by PromEx to fetch the application
+    configuration values for the various PromEx caputure modules. Make sure that this value
+    matches the `:app` value in `project/0` from your `mix.exs` file. If you use the PromEx
+    `mix prom_ex.create` mix task this will be done automatically for you.
 
   * `:delay_manual_start` - Manual metrics are gathered once on start up and then only when
-    you call `PromEx.ManualMetricsManager.refresh_metrics()`. Sometimes, you may have metrics
+    you call `PromEx.ManualMetricsManager.refresh_metrics/1`. Sometimes, you may have metrics
     that require your entire supervision tree to be started in order to fetch accurate data.
     This option will allow you to delays the initial metrics capture of the
     `ManualMetricsManager` by a certain number of milliseconds or the `:no_delay` atom if you
-    want the metrics to be captured as soon as the `ManualMetricsManager` starts up.
+    want the metrics to be captured as soon as the `ManualMetricsManager` starts up. Default
+    value: `:no_delay`
 
   * `:drop_metrics_groups` - A list of all the metrics groups that you are not interested in
     tracking. For example, if your application does not leverage Phoenix channels at all but
     you still would like to use the `PromEx.Plugins.Phoenix` plugin, you can pass
     [`:phoenix_channel_event_metrics`] as the value to `:drop_metrics_groups` and that set of
-    metrics will not be caputred.
+    metrics will not be caputred. Default value: `[]`
 
+  * `:upload_dashboards_on_start` - Using the config values that you set in your application config
+    (`config.exs`, `dev.exs`, `prod.exs`, etc) PromEx will attempt to upload your Dashboards to
+    Grafana using Grafana's HTTP API. Default value: false
 
+  ## PromEx Plugins
 
   All metrics collection will be delegated to plugins which can be found here:
 
@@ -69,14 +95,6 @@ defmodule PromEx do
     - [ ] MySQL (https://github.com/prometheus/mysqld_exporter for inspiration)
     - [ ] Redis (https://github.com/oliver006/redis_exporter for inspiration)
     - [ ] MongoDB (https://github.com/percona/mongodb_exporter for inspiration)
-
-  Each plugin also has an accompanying Grafana dashboard that you can
-  leverage to plot all of the captured data (see each project's GitHub
-  repo for details).
-
-  In order to expose captured metrics, you can leverage the PromEx provided Plug
-  found here (for use with Phoenix) `PromEx.Plug`. See that modules' documentation
-  for specifics on how to use it.
   """
 
   alias PromEx.MetricTypes.{

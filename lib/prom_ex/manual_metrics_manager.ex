@@ -4,7 +4,7 @@ defmodule PromEx.ManualMetricsManager do
   metrics from your configured plugins. It will fetch metrics initially
   when starting (either immediately or after a configured delay). At that
   point if you would like to refresh your metrics data points call the
-  `refresh_metrics/0` function.
+  `refresh_metrics/1` function.
   """
 
   use GenServer

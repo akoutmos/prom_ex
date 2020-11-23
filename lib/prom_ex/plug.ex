@@ -6,15 +6,16 @@ defmodule PromEx.Plug do
   @moduledoc """
   Use this plug in your Endpoint file to expose your metrics. The following options are supported by this plug:
 
-  - `path`: The path through which your metrics can be accessed (default is "/metrics")
+  * `:prom_ex_module` - The PromEx module whose metrics will be plublished through this particular plug
+  * `:path` - The path through which your metrics can be accessed (default is "/metrics")
 
   If you need to have some sort of access control around your metrics endpoint, I would suggest looking at another
-  library that I maintain called `Unplug` (https://hex.pm/packages/unplug). Using `Unplug` you can skip over this plug if
-  some sort of requirement is not fulfilled. For example, if you wanted to configure the metrics endpoint to
+  library that I maintain called `Unplug` (https://hex.pm/packages/unplug). Using `Unplug`, you can skip over this plug
+  if some sort of requirement is not fulfilled. For example, if you wanted to configure the metrics endpoint to
   only be accessible if the request has an Authorization header that matches a configured environment variable you
   could do something like so using `Unplug`:
 
-  ```
+  ```elixir
   defmodule MyApp.UnplugPredicates.SecureMetricsEndpoint do
     @behaviour Unplug.Predicate
 
@@ -29,10 +30,10 @@ defmodule PromEx.Plug do
 
   Which can then be used in your `endpoint.ex` file like so:
 
-  ```
+  ```elixir
   plug Unplug,
     if: {MyApp.UnplugPredicates.SecureMetricsEndpoint, "PROMETHEUS_AUTH_SECRET"},
-    do: PromEx.Plug
+    do: {PromEx.Plug, prom_ex_module: MyApp.PromEx}
   ```
 
   The reason that this functionality is not part of PromEx itself is that how you chose to configure the visibility

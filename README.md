@@ -31,7 +31,7 @@ to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 0.1.1-alpha"}
+    {:prom_ex, "~> 0.1.6-alpha"}
   ]
 end
 ```
@@ -63,12 +63,12 @@ configurability.
 
 PromEx provides a few utilities to you in order to accomplish this goal:
 
-- A behaviour that defines the contract for PromEx plug-ins
-- Mix tasks to upload the provided complimentary Grafana dashboards
-- The `PromEx.MetricTypes.Event` struct to define event based metrics
-- The `PromEx.MetricTypes.Polling` struct to define pollable metrics
-- The `PromEx.MetricTypes.Manual` struct to define manually refreshed metrics
 - The `PromEx.Plug` module that can be used in your Phoenix or Plug application to expose the collected metrics
+- A Mix task to upload the provided complimentary Grafana dashboards
+- A Mix task to create a PromEx metrics capture module
+- A behaviour that defines the contract for PromEx plug-ins
+- A behaviour that defines the functionality of a PromEx metrics capture module
+- Grafana dashboards tailored to each specific Plugin so that metrics work out of the box with dashboards
 
 ### Available Plugins
 
@@ -96,8 +96,14 @@ to check out sample screenshots of each Plugin specific Grafana Dashbaord.
 ### Setting Up Metrics
 
 The goal of PromEx is to have metrics set up be as simple and streamlined as possible. In that spirit, all
-that you need to do to start leveraging PromEx along with the built-in plugins is the following in your
-`application.ex` file:
+that you need to do to start leveraging PromEx along with the built-in plugins is to run the following mix
+task:
+
+```
+$ mix prom_ex.create
+```
+
+Then add the generated module to your `application.ex` file supervision tree:
 
 ```elixir
 defmodule MyCoolApp.Application do
@@ -107,16 +113,7 @@ defmodule MyCoolApp.Application do
     children = [
       ...
 
-      {
-        PromEx,
-        delay_manual_start: :no_delay,
-        drop_metrics_groups: [:phoenix_channel_event_metrics],
-        plugins: [
-          {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
-          PromEx.Plugins.Beam,
-          {PromEx.Plugins.Application, [otp_app: :web_app]}
-        ]
-      }
+      MyCoolApp.PromEx
     ]
 
     opts = [strategy: :one_for_one, name: MyCoolApp.Supervisor]
@@ -135,8 +132,8 @@ defmodule MyCoolAppWeb.Endpoint do
 
   ...
 
-  plug PromEx.Plug
-  # Or plug PromEx.plug, path: "/some/other/non-standard/path"
+  plug PromEx.Plug, prom_ex_module: MyCoolApp.PromEx
+  # Or plug PromEx.plug, path: "/some/other/non-standard/path", prom_ex_module: MyCoolApp.PromEx
 
   ...
 
