@@ -1,6 +1,5 @@
+# credo:disable-for-this-file Credo.Check.Warning.IoInspect
 defmodule PromEx.Debug do
-  # credo:disable-for-this-file Credo.Check.Warning.IoInspect
-
   @moduledoc """
   This is a convenience module used for debugging and introspecting
   telemetry events. Primarily used to ease for development or
