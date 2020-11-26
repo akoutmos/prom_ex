@@ -3,7 +3,7 @@ defmodule PromEx.DebugTest do
 
   import ExUnit.CaptureIO
 
-  alias PromEx.{Debug, MetricTypes.Event}
+  alias PromEx.Debug
   alias Telemetry.Metrics
 
   describe "attach_debugger/1" do
