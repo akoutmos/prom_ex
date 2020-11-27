@@ -49,7 +49,8 @@ defmodule WebApp.PromEx do
       # PromEx built in plugins
       {PromEx.Plugins.Application, otp_app: :web_app},
       PromEx.Plugins.Beam,
-      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router}
+      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
+      {PromEx.Plugins.Ecto, otp_app: :web_app, repo: WebApp.Repo}
 
       # Add your own PromEx metrics plugins
       # WebApp.Users.PromEx
