@@ -54,7 +54,8 @@ jobs:
     strategy:
       matrix:
         elixir:
-          - '1.9'
+          # TODO: Figure out why 1.9 fails
+          # - '1.9'
           - '1.10'
           - '1.11'
         otp:

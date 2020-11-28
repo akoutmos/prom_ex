@@ -56,19 +56,9 @@ defmodule PromExTest do
       end
       """
 
-      message =
-        try do
-          Code.eval_string(module_def)
-        rescue
-          error ->
-            if error.__struct__ in [RuntimeError, ArgumentError] do
-              Exception.message(error)
-            else
-              flunk("Expected exception RuntimeError or ArgumentError but nothing was raised")
-            end
-        end
-
-      assert message == "Failed to initialize ErrorPromExSetUp due to missing :otp_app option"
+      assert_raise RuntimeError, "Failed to initialize ErrorPromExSetUp due to missing :otp_app option", fn ->
+        Code.eval_string(module_def)
+      end
     end
   end
 end
