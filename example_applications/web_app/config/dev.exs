@@ -11,7 +11,7 @@ config :web_app, WebApp.Repo,
 
 config :web_app, WebApp.PromEx,
   grafana_host: "http://grafana:3000",
-  grafana_auth_token: "<YOUR_AUTH_TOKEN_HERE >",
+  grafana_auth_token: "<YOUR_AUTH_TOKEN_HERE>",
   grafana_datasource_id: "<YOUR_DATASOURCE_ID_HERE>"
 
 # For development, we disable any cache and enable

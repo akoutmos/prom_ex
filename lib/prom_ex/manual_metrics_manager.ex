@@ -28,8 +28,7 @@ defmodule PromEx.ManualMetricsManager do
   """
   @spec refresh_metrics(prom_ex_module :: module()) :: :ok
   def refresh_metrics(prom_ex_module) do
-    prom_ex_module
-    |> PromEx.generate_manual_metrics_module_name()
+    prom_ex_module.__manual_metrics_name__()
     |> GenServer.cast(:refresh_metrics)
   end
 

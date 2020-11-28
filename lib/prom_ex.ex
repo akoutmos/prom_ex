@@ -117,7 +117,7 @@ defmodule PromEx do
   """
   @spec get_metrics(prom_ex_module :: module()) :: String.t() | :prom_ex_down
   def get_metrics(prom_ex_module) do
-    prom_ex_process_name = generate_metrics_module_name(prom_ex_module)
+    prom_ex_process_name = prom_ex_module.__metrics_collector_name__()
 
     if Process.whereis(prom_ex_process_name),
       do: Core.scrape(prom_ex_process_name),
@@ -129,6 +129,9 @@ defmodule PromEx do
   @callback dashboards :: list()
 
   defmacro __using__(opts) do
+    # Get calling module name
+    %Macro.Env{module: calling_module} = __CALLER__
+
     # Set defaults from opts
     otp_app =
       case Keyword.fetch(opts, :otp_app) do
@@ -136,13 +139,17 @@ defmodule PromEx do
           otp_app
 
         :error ->
-          %Macro.Env{module: calling_module} = __CALLER__
           raise "Failed to initialize #{inspect(calling_module)} due to missing :otp_app option"
       end
 
     delay_manual_start = Keyword.get(opts, :delay_manual_start, :no_delay)
     drop_metrics_groups = Keyword.get(opts, :drop_metrics_groups, [])
     upload_dashboards_on_start = Keyword.get(opts, :upload_dashboards_on_start, false)
+
+    # Generate process names under calling module namespace
+    manual_metrics_name = Module.concat([calling_module, ManualMetricsManager])
+    metrics_collector_name = Module.concat([calling_module, Metrics])
+    dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
 
     quote do
       @behaviour PromEx
@@ -187,14 +194,14 @@ defmodule PromEx do
             metrics: telemetry_metrics,
             require_seconds: false,
             consistent_units: true,
-            name: PromEx.generate_metrics_module_name(__MODULE__),
+            name: unquote(metrics_collector_name),
             start_async: false
           },
           {
             ManualMetricsManager,
             metrics: PromEx.generate_mfa_call_list(manual_metrics),
             delay_manual_start: manual_start_delay,
-            name: PromEx.generate_manual_metrics_module_name(__MODULE__)
+            name: unquote(manual_metrics_name)
           }
           | telemetry_poller_children
         ]
@@ -204,7 +211,7 @@ defmodule PromEx do
             [
               {
                 PromEx.DashboardUploader,
-                name: PromEx.generate_uploader_module_name(__MODULE__), prom_ex_module: __MODULE__
+                name: unquote(dashboard_uploader_name), prom_ex_module: __MODULE__
               }
               | children
             ]
@@ -233,6 +240,21 @@ defmodule PromEx do
       @doc false
       @impl true
       def dashboards, do: []
+
+      @doc false
+      def __manual_metrics_name__ do
+        unquote(manual_metrics_name)
+      end
+
+      @doc false
+      def __metrics_collector_name__ do
+        unquote(metrics_collector_name)
+      end
+
+      @doc false
+      def __dashboard_uploader_name__ do
+        unquote(dashboard_uploader_name)
+      end
 
       defoverridable PromEx
     end
@@ -297,21 +319,6 @@ defmodule PromEx do
     |> Enum.map(fn %Manual{measurements_mfa: mfa} ->
       mfa
     end)
-  end
-
-  @doc false
-  def generate_manual_metrics_module_name(base_module) do
-    Module.concat([base_module, ManualMetricsManager])
-  end
-
-  @doc false
-  def generate_metrics_module_name(base_module) do
-    Module.concat([base_module, Metrics])
-  end
-
-  @doc false
-  def generate_uploader_module_name(base_module) do
-    Module.concat([base_module, DashboardUploader])
   end
 
   defp extract_relevant_metrics(plugins, type, drop_metrics_groups) do
