@@ -1,6 +1,19 @@
 defmodule PromExTest do
   use ExUnit.Case, async: false
 
+  defmodule ManualMetricsDelayStart do
+    use PromEx,
+      otp_app: :prom_ex,
+      delay_manual_start: 60_000
+
+    alias PromEx.Plugins.Application
+
+    @impl true
+    def plugins do
+      [{Application, otp_app: :prom_ex}]
+    end
+  end
+
   defmodule DefaultPromExSetUp do
     use PromEx, otp_app: :prom_ex
 
@@ -79,6 +92,10 @@ defmodule PromExTest do
              |> PromEx.get_metrics()
              |> String.contains?("beam_stats_active_task_count")
 
+      assert DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("beam_stats_port_count")
+
       # Kill the supervision tree
       assert DefaultPromExSetUp
              |> Process.whereis()
@@ -99,6 +116,35 @@ defmodule PromExTest do
                    fn ->
                      Code.eval_string(module_def)
                    end
+    end
+  end
+
+  describe "ManualMetricsDelayStart" do
+    test "should not have metrics on start but can have metrics on manual refresh" do
+      # Start the supervision tree for dummy PromEx Module
+      ManualMetricsDelayStart.start_link([])
+
+      # There should be no manual metrics on start
+      manual_metrics_pid = Process.whereis(ManualMetricsDelayStart.__manual_metrics_name__())
+      assert is_pid(manual_metrics_pid)
+
+      refute ManualMetricsDelayStart
+             |> PromEx.get_metrics()
+             |> String.contains?("prom_ex_application_primary_info")
+
+      # Refresh the metrics and wait a second for them to populate since
+      # this is a cast call
+      PromEx.ManualMetricsManager.refresh_metrics(ManualMetricsDelayStart)
+      Process.sleep(1_000)
+
+      assert ManualMetricsDelayStart
+             |> PromEx.get_metrics()
+             |> String.contains?("prom_ex_application_primary_info")
+
+      # Kill the supervision tree
+      assert ManualMetricsDelayStart
+             |> Process.whereis()
+             |> Process.exit(:normal)
     end
   end
 end
