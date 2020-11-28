@@ -4,11 +4,14 @@ defmodule PromExTest do
   defmodule DefaultPromExSetUp do
     use PromEx, otp_app: :prom_ex
 
+    alias PromEx.Plugins.{Application, Beam, Phoenix}
+
     @impl true
     def plugins do
       [
-        {PromEx.Plugins.Application, otp_app: :prom_ex},
-        {PromEx.Plugins.Phoenix, router: MyAppWeb.Router}
+        {Application, otp_app: :prom_ex},
+        {Phoenix, router: MyAppWeb.Router},
+        {Beam, poll_rate: 500}
       ]
     end
 
@@ -31,7 +34,7 @@ defmodule PromExTest do
       config = DefaultPromExSetUp.init_opts()
 
       assert module_dashboards == [prom_ex: "application.json"]
-      assert length(module_plugins) == 2
+      assert length(module_plugins) == 3
       assert Keyword.get(config, :otp_app) == :prom_ex
       assert Keyword.get(config, :delay_manual_start) == :no_delay
       assert Keyword.get(config, :drop_metrics_groups) == []
@@ -42,17 +45,27 @@ defmodule PromExTest do
       # Start the supervision tree for dummy PromEx Module
       DefaultPromExSetUp.start_link([])
 
+      # Give the manual metrics manager a chance to capture application metrics
+      Process.sleep(1_000)
+
       # Get supervsion tree child proceses
       manual_metrics_pid = Process.whereis(DefaultPromExSetUp.__manual_metrics_name__())
       metrics_collector_pid = Process.whereis(DefaultPromExSetUp.__metrics_collector_name__())
       dashboard_uploader_pid = Process.whereis(DefaultPromExSetUp.__dashboard_uploader_name__())
+      poller_500 = Process.whereis(:"Elixir.PromExTest.DefaultPromExSetUp.Poller.500")
+      poller_5000 = Process.whereis(:"Elixir.PromExTest.DefaultPromExSetUp.Poller.5000")
 
+      # Ensure the correct processes are running
       assert is_pid(manual_metrics_pid)
       assert is_pid(metrics_collector_pid)
+      assert is_pid(poller_500)
+      assert is_pid(poller_5000)
       refute is_pid(dashboard_uploader_pid)
 
-      # Give the manual metrics manager a chance to capture application metrics
-      Process.sleep(1_000)
+      # Validate that the running processes have the correct names
+      assert DefaultPromExSetUp.__manual_metrics_name__() == DefaultPromExSetUp.ManualMetricsManager
+      assert DefaultPromExSetUp.__metrics_collector_name__() == DefaultPromExSetUp.Metrics
+      assert DefaultPromExSetUp.__dashboard_uploader_name__() == DefaultPromExSetUp.DashboardUploader
 
       assert DefaultPromExSetUp
              |> PromEx.get_metrics()
@@ -62,6 +75,11 @@ defmodule PromExTest do
              |> PromEx.get_metrics()
              |> String.contains?("395459c")
 
+      assert DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("beam_stats_active_task_count")
+
+      # Kill the supervision tree
       assert DefaultPromExSetUp
              |> Process.whereis()
              |> Process.exit(:normal)

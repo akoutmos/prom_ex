@@ -186,7 +186,7 @@ defmodule PromEx do
         manual_metrics = Map.get(plugins, :manual_metrics, [])
 
         # Create child specs for each group of poll rates
-        telemetry_poller_children = PromEx.generate_telemetry_poller_child_spec(poll_metrics)
+        telemetry_poller_children = PromEx.generate_telemetry_poller_child_spec(__MODULE__, poll_metrics)
 
         children = [
           {
@@ -294,7 +294,7 @@ defmodule PromEx do
   end
 
   @doc false
-  def generate_telemetry_poller_child_spec(pollable_metrics) do
+  def generate_telemetry_poller_child_spec(prom_ex_module, pollable_metrics) do
     pollable_metrics
     |> Enum.group_by(fn %Polling{poll_rate: poll_rate} ->
       poll_rate
@@ -306,9 +306,20 @@ defmodule PromEx do
           measurements_mfa
         end)
 
+      # Creating an atom of the time interval so that additional
+      # metrics pollers don't have name collisions. While String.to_atom/1
+      # is being used here, it is assumed that this is trusted input and not
+      # infinitely bounded.
+      uniqe_poll_value =
+        poll_rate
+        |> Integer.to_string()
+        |> String.to_atom()
+
       {
         :telemetry_poller,
-        measurements: measurements, poll_rate: poll_rate
+        name: Module.concat([prom_ex_module, Poller, uniqe_poll_value]),
+        measurements: measurements,
+        poll_rate: poll_rate
       }
     end)
   end
