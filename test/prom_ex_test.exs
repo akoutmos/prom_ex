@@ -51,6 +51,9 @@ defmodule PromExTest do
       assert is_pid(metrics_collector_pid)
       refute is_pid(dashboard_uploader_pid)
 
+      # Give the manual metrics manager a chance to capture application metrics
+      Process.sleep(1_000)
+
       assert DefaultPromExSetUp
              |> PromEx.get_metrics()
              |> String.contains?("prom_ex_application_primary_info")
