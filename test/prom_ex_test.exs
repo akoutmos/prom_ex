@@ -56,8 +56,22 @@ defmodule PromExTest do
       end
       """
 
-      assert_raise RuntimeError, "Failed to initialize ErrorPromExSetUp due to missing :otp_app option", fn ->
-        Code.eval_string(module_def)
+      %Version{minor: minor_elixir_version} =
+        System.version()
+        |> Version.parse!()
+
+      if minor_elixir_version > 9 do
+        assert_raise RuntimeError,
+                     "Failed to initialize ErrorPromExSetUp due to missing :otp_app option",
+                     fn ->
+                       Code.eval_string(module_def)
+                     end
+      else
+        assert_raise ArgumentError,
+                     "argument error",
+                     fn ->
+                       Code.eval_string(module_def)
+                     end
       end
     end
   end
