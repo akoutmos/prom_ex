@@ -6,13 +6,22 @@ defmodule PromExTest do
 
     @impl true
     def plugins do
-      [{PromEx.Plugins.Application, otp_app: :prom_ex}]
+      [
+        {PromEx.Plugins.Application, otp_app: :prom_ex},
+        {PromEx.Plugins.Phoenix, router: MyAppWeb.Router}
+      ]
     end
 
     @impl true
     def dashboards do
       [{:prom_ex, "application.json"}]
     end
+  end
+
+  setup_all do
+    System.put_env("APPLICATION_GIT_SHA", "395459c")
+
+    []
   end
 
   describe "DefaultPromExSetUp" do
@@ -22,7 +31,7 @@ defmodule PromExTest do
       config = DefaultPromExSetUp.init_opts()
 
       assert module_dashboards == [prom_ex: "application.json"]
-      assert module_plugins == [{PromEx.Plugins.Application, otp_app: :prom_ex}]
+      assert length(module_plugins) == 2
       assert Keyword.get(config, :otp_app) == :prom_ex
       assert Keyword.get(config, :delay_manual_start) == :no_delay
       assert Keyword.get(config, :drop_metrics_groups) == []
@@ -41,6 +50,14 @@ defmodule PromExTest do
       assert is_pid(manual_metrics_pid)
       assert is_pid(metrics_collector_pid)
       refute is_pid(dashboard_uploader_pid)
+
+      assert DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("prom_ex_application_primary_info")
+
+      assert DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("395459c")
 
       assert DefaultPromExSetUp
              |> Process.whereis()
