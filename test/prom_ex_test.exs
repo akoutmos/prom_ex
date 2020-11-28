@@ -17,14 +17,15 @@ defmodule PromExTest do
   defmodule DefaultPromExSetUp do
     use PromEx, otp_app: :prom_ex
 
-    alias PromEx.Plugins.{Application, Beam, Phoenix}
+    alias PromEx.Plugins.{Application, Beam, Ecto, Phoenix}
 
     @impl true
     def plugins do
       [
         {Application, otp_app: :prom_ex},
         {Phoenix, router: MyAppWeb.Router},
-        {Beam, poll_rate: 500}
+        {Beam, poll_rate: 500},
+        {Ecto, otp_app: :prom_ex, repo: Test.Repo}
       ]
     end
 
@@ -36,6 +37,7 @@ defmodule PromExTest do
 
   setup_all do
     System.put_env("APPLICATION_GIT_SHA", "395459c")
+    Application.put_env(:prom_ex, Test.Repo, telemetry_prefix: [:test, :repo])
 
     []
   end
@@ -47,7 +49,7 @@ defmodule PromExTest do
       config = DefaultPromExSetUp.init_opts()
 
       assert module_dashboards == [prom_ex: "application.json"]
-      assert length(module_plugins) == 3
+      assert length(module_plugins) == 4
       assert Keyword.get(config, :otp_app) == :prom_ex
       assert Keyword.get(config, :delay_manual_start) == :no_delay
       assert Keyword.get(config, :drop_metrics_groups) == []
