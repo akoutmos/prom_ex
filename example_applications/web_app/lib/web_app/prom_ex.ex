@@ -41,7 +41,8 @@ defmodule WebApp.PromEx do
     otp_app: :web_app,
     delay_manual_start: :no_delay,
     drop_metrics_groups: [],
-    upload_dashboards_on_start: true
+    upload_dashboards_on_start: true,
+    start_metrics_server: true
 
   @impl true
   def plugins do

@@ -12,7 +12,12 @@ config :web_app, WebApp.Repo,
 config :web_app, WebApp.PromEx,
   grafana_host: "http://grafana:3000",
   grafana_auth_token: "<YOUR_AUTH_TOKEN_HERE>",
-  grafana_datasource_id: "<YOUR_DATASOURCE_ID_HERE>"
+  grafana_datasource_id: "<YOUR_DATASOURCE_ID_HERE>",
+  metrics_server_port: 4021,
+  metrics_server_path: "/metrics",
+  metrics_server_protocol: :http,
+  metrics_server_pool_size: 5,
+  metrics_server_cowboy_opts: []
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

@@ -145,11 +145,13 @@ defmodule PromEx do
     delay_manual_start = Keyword.get(opts, :delay_manual_start, :no_delay)
     drop_metrics_groups = Keyword.get(opts, :drop_metrics_groups, [])
     upload_dashboards_on_start = Keyword.get(opts, :upload_dashboards_on_start, false)
+    start_metrics_server = Keyword.get(opts, :start_metrics_server, false)
 
     # Generate process names under calling module namespace
     manual_metrics_name = Module.concat([calling_module, ManualMetricsManager])
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
+    metrics_server_name = Module.concat([calling_module, MetricsServer])
 
     quote do
       @behaviour PromEx
@@ -193,10 +195,15 @@ defmodule PromEx do
             __MODULE__,
             unquote(dashboard_uploader_name)
           )
-          |> PromEx.metrics_server_child_spec(false)
+          |> PromEx.metrics_server_child_spec(
+            unquote(start_metrics_server),
+            unquote(otp_app),
+            __MODULE__,
+            unquote(metrics_server_name)
+          )
           |> Enum.reverse()
 
-        Supervisor.init(children, strategy: :one_for_one)
+        Supervisor.init(children, strategy: :one_for_one, name: __MODULE__)
       end
 
       @doc false
@@ -206,7 +213,8 @@ defmodule PromEx do
           otp_app: unquote(otp_app),
           delay_manual_start: unquote(delay_manual_start),
           drop_metrics_groups: unquote(drop_metrics_groups),
-          upload_dashboards_on_start: unquote(upload_dashboards_on_start)
+          upload_dashboards_on_start: unquote(upload_dashboards_on_start),
+          start_metrics_server: unquote(start_metrics_server)
         ]
       end
 
@@ -231,6 +239,11 @@ defmodule PromEx do
       @doc false
       def __dashboard_uploader_name__ do
         unquote(dashboard_uploader_name)
+      end
+
+      @doc false
+      def __metrics_server_name__ do
+        unquote(metrics_server_name)
       end
 
       defoverridable PromEx
@@ -274,7 +287,7 @@ defmodule PromEx do
   def metrics_collector_child_spec(acc, metrics, process_name) do
     spec = {
       Core,
-      metrics: metrics, require_seconds: false, consistent_units: true, name: process_name, start_async: false
+      name: process_name, metrics: metrics, require_seconds: false, consistent_units: true, start_async: false
     }
 
     [spec | acc]
@@ -284,7 +297,7 @@ defmodule PromEx do
   def manual_metrics_child_spec(acc, metrics, manual_start_delay, process_name) do
     spec = {
       PromEx.ManualMetricsManager,
-      metrics: generate_mfa_call_list(metrics), delay_manual_start: manual_start_delay, name: process_name
+      name: process_name, metrics: generate_mfa_call_list(metrics), delay_manual_start: manual_start_delay
     }
 
     [spec | acc]
@@ -313,7 +326,75 @@ defmodule PromEx do
   end
 
   @doc false
-  def metrics_server_child_spec(acc, false) do
+  def metrics_server_child_spec(acc, true, otp_app, prom_ex_module, _process_name) do
+    metrics_server_config =
+      otp_app
+      |> Application.get_env(prom_ex_module)
+      |> Map.new()
+
+    cowboy_opts =
+      metrics_server_config
+      |> Map.get(:metrics_server_cowboy_opts, [])
+      |> Keyword.delete(:port)
+      |> Keyword.delete(:transport_options)
+
+    path = Map.get(metrics_server_config, :metrics_server_path, "/metrics")
+
+    transport_options = [
+      num_acceptors: Map.get(metrics_server_config, :metrics_server_pool_size, 5)
+    ]
+
+    port =
+      metrics_server_config
+      |> Map.fetch(:metrics_server_port)
+      |> case do
+        {:ok, port} when is_integer(port) ->
+          port
+
+        {:ok, port} when is_binary(port) ->
+          String.to_integer(port)
+
+        :error ->
+          raise "PromEx.MetricsServer requires a :metrics_server_port config value"
+      end
+
+    scheme =
+      metrics_server_config
+      |> Map.fetch(:metrics_server_protocol)
+      |> case do
+        {:ok, "http"} ->
+          :http
+
+        {:ok, "https"} ->
+          :https
+
+        {:ok, :http} ->
+          :http
+
+        {:ok, :https} ->
+          :https
+
+        :error ->
+          raise "PromEx.MetricsServer requires a :metrics_server_protocol config value of :http or :https"
+
+        _ ->
+          raise "Invalid :metrics_server_protocol config value provided to PromEx.MetricsServer (valid values are :http and :https)"
+      end
+
+    plug_definition = {PromEx.MetricsServer.Plug, path: path, prom_ex_module: prom_ex_module}
+
+    spec =
+      Plug.Cowboy.child_spec(
+        # name: process_name,
+        scheme: scheme,
+        plug: plug_definition,
+        options: [{:port, port}, {:transport_options, transport_options} | cowboy_opts]
+      )
+
+    [spec | acc]
+  end
+
+  def metrics_server_child_spec(acc, false, _otp_app, _prom_ex_module, _process_name) do
     acc
   end
 

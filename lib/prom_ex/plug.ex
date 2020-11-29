@@ -1,7 +1,3 @@
-unless Code.ensure_loaded?(Plug) do
-  raise "Attempting to use PromEx.Plug when Plug has not been installed"
-end
-
 defmodule PromEx.Plug do
   @moduledoc """
   Use this plug in your Endpoint file to expose your metrics. The following options are supported by this plug:
