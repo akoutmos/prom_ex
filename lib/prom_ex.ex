@@ -154,9 +154,6 @@ defmodule PromEx do
     quote do
       @behaviour PromEx
 
-      alias PromEx.ManualMetricsManager
-      alias PromEx.TelemetryMetricsPrometheus.Core
-
       use Supervisor
 
       @doc false
@@ -185,39 +182,19 @@ defmodule PromEx do
         poll_metrics = Map.get(plugins, :poll_metrics, [])
         manual_metrics = Map.get(plugins, :manual_metrics, [])
 
-        # Create child specs for each group of poll rates
-        telemetry_poller_children = PromEx.generate_telemetry_poller_child_spec(__MODULE__, poll_metrics)
-
-        children = [
-          {
-            Core,
-            metrics: telemetry_metrics,
-            require_seconds: false,
-            consistent_units: true,
-            name: unquote(metrics_collector_name),
-            start_async: false
-          },
-          {
-            ManualMetricsManager,
-            metrics: PromEx.generate_mfa_call_list(manual_metrics),
-            delay_manual_start: manual_start_delay,
-            name: unquote(manual_metrics_name)
-          }
-          | telemetry_poller_children
-        ]
-
+        # Start the relevant child processes depending on configuration
         children =
-          if unquote(upload_dashboards_on_start) do
-            [
-              {
-                PromEx.DashboardUploader,
-                name: unquote(dashboard_uploader_name), prom_ex_module: __MODULE__
-              }
-              | children
-            ]
-          else
-            children
-          end
+          []
+          |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
+          |> PromEx.manual_metrics_child_spec(manual_metrics, manual_start_delay, unquote(manual_metrics_name))
+          |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
+          |> PromEx.dashboard_uploader_child_spec(
+            unquote(upload_dashboards_on_start),
+            __MODULE__,
+            unquote(dashboard_uploader_name)
+          )
+          |> PromEx.metrics_server_child_spec(false)
+          |> Enum.reverse()
 
         Supervisor.init(children, strategy: :one_for_one)
       end
@@ -294,7 +271,53 @@ defmodule PromEx do
   end
 
   @doc false
-  def generate_telemetry_poller_child_spec(prom_ex_module, pollable_metrics) do
+  def metrics_collector_child_spec(acc, metrics, process_name) do
+    spec = {
+      Core,
+      metrics: metrics, require_seconds: false, consistent_units: true, name: process_name, start_async: false
+    }
+
+    [spec | acc]
+  end
+
+  @doc false
+  def manual_metrics_child_spec(acc, metrics, manual_start_delay, process_name) do
+    spec = {
+      PromEx.ManualMetricsManager,
+      metrics: generate_mfa_call_list(metrics), delay_manual_start: manual_start_delay, name: process_name
+    }
+
+    [spec | acc]
+  end
+
+  @doc false
+  def poller_child_specs(acc, metrics, prom_ex_module) do
+    # Create child specs for each group of poll rates
+    telemetry_poller_children = generate_telemetry_poller_child_spec(prom_ex_module, metrics)
+
+    telemetry_poller_children ++ acc
+  end
+
+  @doc false
+  def dashboard_uploader_child_spec(acc, true, prom_ex_module, process_name) do
+    spec = {
+      PromEx.DashboardUploader,
+      name: process_name, prom_ex_module: prom_ex_module
+    }
+
+    [spec | acc]
+  end
+
+  def dashboard_uploader_child_spec(acc, false, _, _) do
+    acc
+  end
+
+  @doc false
+  def metrics_server_child_spec(acc, false) do
+    acc
+  end
+
+  defp generate_telemetry_poller_child_spec(prom_ex_module, pollable_metrics) do
     pollable_metrics
     |> Enum.group_by(fn %Polling{poll_rate: poll_rate} ->
       poll_rate
@@ -324,8 +347,7 @@ defmodule PromEx do
     end)
   end
 
-  @doc false
-  def generate_mfa_call_list(manual_metrics) do
+  defp generate_mfa_call_list(manual_metrics) do
     manual_metrics
     |> Enum.map(fn %Manual{measurements_mfa: mfa} ->
       mfa

@@ -50,13 +50,14 @@ defmodule PromEx.MixProject do
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
+      {:plug_cowboy, "~> 2.1"},
 
-      # Optional dependencies depending on what telemetry events the user is acting upon
+      # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.5.0", optional: true},
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
 
-      # Library development related dependencies
+      # PromEx development related dependencies
       {:ex_doc, "~> 0.22", only: :dev},
       {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
       {:doctor, "~> 0.15.0", only: :dev},
