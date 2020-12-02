@@ -133,7 +133,7 @@ defmodule MyCoolAppWeb.Endpoint do
   ...
 
   plug PromEx.Plug, prom_ex_module: MyCoolApp.PromEx
-  # Or plug PromEx.plug, path: "/some/other/non-standard/path", prom_ex_module: MyCoolApp.PromEx
+  # Or plug PromEx.plug, path: "/some/other/metrics/path", prom_ex_module: MyCoolApp.PromEx
 
   ...
 

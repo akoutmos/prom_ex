@@ -18,16 +18,11 @@ defmodule PromEx.MetricsServer.Plug do
 
   @impl true
   def init(opts) do
-    # Get supported options and set defaults
-    # TODO: Set up authorization header checks
-    opts
-    |> Keyword.take([:path, :prom_ex_module])
-    |> Map.new()
-    |> Map.put_new(:path, "/metrics")
+    Map.pop(opts, :auth_strategy, :none)
   end
 
   @impl true
-  def call(%Conn{request_path: path} = conn, %{path: path, prom_ex_module: prom_ex_module}) do
+  def call(%Conn{request_path: path} = conn, {:none, %{path: path, prom_ex_module: prom_ex_module}}) do
     case PromEx.get_metrics(prom_ex_module) do
       :prom_ex_down ->
         Logger.warn("Attempted to fetch metrics from #{prom_ex_module}, but the module has not been initialized")
@@ -37,6 +32,39 @@ defmodule PromEx.MetricsServer.Plug do
         conn
         |> put_resp_content_type("text/plain")
         |> send_resp(200, metrics)
+    end
+  end
+
+  def call(
+        %Conn{request_path: path} = conn,
+        {:bearer, %{auth_token: auth_token, path: path} = plug_opts}
+      ) do
+    with ["Bearer " <> req_auth_token] <- get_req_header(conn, "authorization"),
+         true <- req_auth_token == auth_token do
+      call(conn, {:none, plug_opts})
+    else
+      _ ->
+        conn
+        |> put_resp_content_type("text/plain")
+        |> send_resp(401, "Unauthorized")
+    end
+  end
+
+  def call(
+        %Conn{request_path: path} = conn,
+        {:basic, %{auth_user: auth_user, auth_password: auth_password, path: path} = plug_opts}
+      ) do
+    with ["Basic " <> req_auth_user_pass] <- get_req_header(conn, "authorization"),
+         {:ok, user_and_pass} <- Base.decode64(req_auth_user_pass),
+         [req_user, req_pass] <- String.split(user_and_pass, ":", parts: 2),
+         true <- req_user == auth_user,
+         true <- req_pass == auth_password do
+      call(conn, {:none, plug_opts})
+    else
+      _ ->
+        conn
+        |> put_resp_content_type("text/plain")
+        |> send_resp(401, "Unauthorized")
     end
   end
 
