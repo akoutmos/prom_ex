@@ -153,8 +153,8 @@ defmodule PromEx.Config do
   defp generate_grafana_config(grafana_opts) do
     %{
       host: get_grafana_config(grafana_opts, :host),
-      auth_token: get_grafana_config(grafana_opts, :host),
-      datasource_id: get_grafana_config(grafana_opts, :host),
+      auth_token: get_grafana_config(grafana_opts, :auth_token),
+      datasource_id: get_grafana_config(grafana_opts, :datasource_id),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true)
     }
   end
