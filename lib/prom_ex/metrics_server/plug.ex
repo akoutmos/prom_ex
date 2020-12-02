@@ -26,7 +26,9 @@ defmodule PromEx.MetricsServer.Plug do
     case PromEx.get_metrics(prom_ex_module) do
       :prom_ex_down ->
         Logger.warn("Attempted to fetch metrics from #{prom_ex_module}, but the module has not been initialized")
+
         conn
+        |> send_resp(503, "Service Unavailable")
 
       metrics ->
         conn
@@ -71,6 +73,6 @@ defmodule PromEx.MetricsServer.Plug do
   def call(conn, _opts) do
     conn
     |> put_resp_content_type("text/plain")
-    |> send_resp(404, "Not found")
+    |> send_resp(404, "Not Found")
   end
 end

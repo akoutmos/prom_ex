@@ -2,6 +2,8 @@ defmodule PromEx.MetricsServer.PlugTest do
   use ExUnit.Case, async: false
   use Plug.Test
 
+  import ExUnit.CaptureLog
+
   alias Plug.Conn
   alias PromEx.MetricsServer
 
@@ -32,11 +34,11 @@ defmodule PromEx.MetricsServer.PlugTest do
     test "should separate the auth strategy from the remainder of the opts" do
       opts = %{
         path: "/metrics",
-        prom_ex_module: TestModule,
+        prom_ex_module: DefaultPromExSetUp,
         auth_strategy: :none
       }
 
-      assert {:none, %{path: "/metrics", prom_ex_module: TestModule}} = MetricsServer.Plug.init(opts)
+      assert {:none, %{path: "/metrics", prom_ex_module: DefaultPromExSetUp}} = MetricsServer.Plug.init(opts)
     end
   end
 
@@ -71,7 +73,7 @@ defmodule PromEx.MetricsServer.PlugTest do
       opts =
         MetricsServer.Plug.init(%{
           path: "/metrics",
-          prom_ex_module: TestModule,
+          prom_ex_module: DefaultPromExSetUp,
           auth_strategy: :basic,
           auth_user: "root",
           auth_password: "toor"
@@ -116,7 +118,7 @@ defmodule PromEx.MetricsServer.PlugTest do
       opts =
         MetricsServer.Plug.init(%{
           path: "/metrics",
-          prom_ex_module: TestModule,
+          prom_ex_module: DefaultPromExSetUp,
           auth_strategy: :bearer,
           auth_token: "abcd=="
         })
@@ -153,13 +155,32 @@ defmodule PromEx.MetricsServer.PlugTest do
       opts =
         MetricsServer.Plug.init(%{
           path: "/metrics",
-          prom_ex_module: TestModule,
+          prom_ex_module: DefaultPromExSetUp,
           auth_strategy: :none
         })
 
       conn = conn(:get, "/bad-path")
 
       assert %Conn{status: 404} = MetricsServer.Plug.call(conn, opts)
+    end
+
+    test "should return a 503 and emit a logger warning if the PromEx server is not available" do
+      stop_supervised(DefaultPromExSetUp)
+
+      opts =
+        MetricsServer.Plug.init(%{
+          path: "/metrics",
+          prom_ex_module: DefaultPromExSetUp,
+          auth_strategy: :none
+        })
+
+      conn = conn(:get, "/metrics")
+
+      assert %Conn{status: 503} = MetricsServer.Plug.call(conn, opts)
+
+      assert capture_log(fn ->
+               MetricsServer.Plug.call(conn, opts)
+             end) =~ "Attempted to fetch metrics from Elixir.PromEx.MetricsServer.PlugTest.DefaultPromExSetUp"
     end
   end
 
