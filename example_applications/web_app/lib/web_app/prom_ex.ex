@@ -1,48 +1,9 @@
 defmodule WebApp.PromEx do
   @moduledoc """
-  Be sure to add the following to finish setting up PromEx:
-
-  1. Update your configuration (config.exs, dev.exs, prod.exs, releases.exs, etc):
-  ```
-    config :web_app, WebApp.PromEx,
-      grafana_host: "<YOUR GRAFANA HOST HERE>",
-      grafana_auth_token: "<YOUR GRAFANA AUTH TOKEN HERE>",
-      grafana_datasource_id: "<THE NAME OF YOUR PROMETHEUS DATA SOURCE HERE>"
-  ```
-
-  2. Add this module to your application supervision tree:
-  ```
-  def start(_type, _args) do
-    children = [
-      ...
-
-      WebApp.PromEx
-    ]
-
-    ...
-  end
-  ```
-
-  3. Update your `endpoint.ex` file to expose your metrics:
-  ```
-  defmodule WebAppWeb.Endpoint do
-    use Phoenix.Endpoint, otp_app: :web_app
-
-    ...
-
-    plug PromEx.Plug, prom_ex_module: WebApp.PromEx
-
-    ...
-  end
-  ```
+  Full metrics
   """
 
-  use PromEx,
-    otp_app: :web_app,
-    delay_manual_start: :no_delay,
-    drop_metrics_groups: [],
-    upload_dashboards_on_start: true,
-    start_metrics_server: true
+  use PromEx, otp_app: :web_app
 
   @impl true
   def plugins do

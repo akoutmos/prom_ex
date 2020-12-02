@@ -1,16 +1,9 @@
 defmodule WebApp.Limited.PromEx do
   @moduledoc """
-  config :web_app, WebApp.PromEx,
-    grafana_host: "",
-    grafana_auth_token: "",
-    grafana_datasource_id: ""
+  Limited metrics
   """
 
-  use PromEx,
-    otp_app: :web_app,
-    delay_manual_start: :no_delay,
-    drop_metrics_groups: [],
-    upload_dashboards_on_start: false
+  use PromEx, otp_app: :web_app
 
   @impl true
   def plugins do
