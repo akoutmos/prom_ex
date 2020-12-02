@@ -49,8 +49,9 @@ defmodule PromEx.Config do
     ]
   ```
 
+  ## Option Details
 
-  * `:delay_manual_start` - Manual metrics are gathered once on start up and then only when
+  * `:manual_metrics_start_delay` - Manual metrics are gathered once on start up and then only when
     you call `PromEx.ManualMetricsManager.refresh_metrics/1`. Sometimes, you may have metrics
     that require your entire supervision tree to be started in order to fetch accurate data.
     This option will allow you to delays the initial metrics capture of the
@@ -64,10 +65,42 @@ defmodule PromEx.Config do
     [`:phoenix_channel_event_metrics`] as the value to `:drop_metrics_groups` and that set of
     metrics will not be caputred. Default value: `[]`
 
-  * `:upload_dashboards_on_start` - Using the config values that you set in your application config
-    (`config.exs`, `dev.exs`, `prod.exs`, etc) PromEx will attempt to upload your Dashboards to
-    Grafana using Grafana's HTTP API. Default value: false
+  * `:grafana` - This key contains the configuration information for connecting to Grafana. Its
+    configuration options are:
 
+    * `:host` - The host address of your Grafana instance. In order for PromEx to communicate with
+      Grafana this valueshould be in the format `protocol://host:port` like `http://localhost:3000`
+      for example.
+
+    * `:auth_token` - The auth token that was created in Grafana so that PromEx can upload dashboards
+      via the API.
+
+    * `:datasource_id` - When configuring a datasource in Grafana, you allocate an ID to each datasource.
+      This datasource is required by the queries that populate the graphs so that Grafana knows what backing
+      time-series data store to communicate with. Given that PromEx works with Prometheus, you'll need
+      to tell PromEx what the ID of the Prometheus datasource is in Grafana. This value is required so that
+      the PromQL queries can be directed to the correct Prometheus instance.
+
+    * `:upload_dashboards_on_start` - Using the config values that you set in your application config
+      (`config.exs`, `dev.exs`, `prod.exs`, etc) PromEx will attempt to upload your Dashboards to
+      Grafana using Grafana's HTTP API.
+
+  * `:metrics_server` - This key contains the configuration information needed to run a standalone
+    HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
+    metrics. Its configuration options are:
+
+    * `:port` - The port that the Cowboy HTTP server should run on.
+
+    * `:path` - The path that the metrics should be accessible at.
+
+    * `:protocol` - The protocol that the metrics should be accessible over (`:http` or `:https`).
+
+    * `:pool_size` - How many Cowboy processes should be in the pool to handle metrics related requests.
+
+    * `:cowboy_opts` - A keyword list of any additional options that should be passed to `Plug.Cowboy` (see
+      docs for more information https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html). The `:port` and
+      `:transport_options` options are handled by PromEx via the aforementioned config settings and so
+      adding them again here has no effect.
   """
 
   @typedoc """
