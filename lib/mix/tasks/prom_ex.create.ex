@@ -88,12 +88,15 @@ defmodule Mix.Tasks.PromEx.Create do
       @moduledoc \"\"\"
       Be sure to add the following to finish setting up PromEx:
 
-      1. Update your configuration (config.exs, dev.exs, prod.exs, releases.exs, etc):
+      1. Update your configuration (config.exs, dev.exs, prod.exs, releases.exs, etc) to
+         configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
+         more details regarding configuring PromEx:
       ```
         config :<%= @otp_app %>, <%= @module_name %>.PromEx,
-          grafana_host: "<YOUR GRAFANA HOST HERE>",
-          grafana_auth_token: "<YOUR GRAFANA AUTH TOKEN HERE>",
-          grafana_datasource_id: "<THE NAME OF YOUR PROMETHEUS DATA SOURCE HERE>"
+          manual_metrics_start_delay: :no_delay,
+          drop_metrics_groups: [],
+          grafana: :disabled,
+          metrics_server: :disabled
       ```
 
       2. Add this module to your application supervision tree:
@@ -109,7 +112,8 @@ defmodule Mix.Tasks.PromEx.Create do
       end
       ```
 
-      3. Update your `endpoint.ex` file to expose your metrics:
+      3. Update your `endpoint.ex` file to expose your metrics (or configure a standalone
+      server using the `:metrics_server` config options):
       ```
       defmodule <%= @module_name %>Web.Endpoint do
         use Phoenix.Endpoint, otp_app: :<%= @otp_app %>
@@ -123,11 +127,7 @@ defmodule Mix.Tasks.PromEx.Create do
       ```
       \"\"\"
 
-      use PromEx,
-        otp_app: :<%= @otp_app %>,
-        delay_manual_start: :no_delay,
-        drop_metrics_groups: [],
-        upload_dashboards_on_start: true
+      use PromEx, otp_app: :<%= @otp_app %>
 
       @impl true
       def plugins do

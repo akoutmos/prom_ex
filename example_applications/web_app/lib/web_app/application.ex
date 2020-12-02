@@ -8,7 +8,7 @@ defmodule WebApp.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      WebApp.Repo,
+      # WebApp.Repo,
       # Start the Telemetry supervisor
       WebAppWeb.Telemetry,
       # Start the PubSub system
@@ -17,8 +17,8 @@ defmodule WebApp.Application do
       WebAppWeb.Endpoint,
       # Start a worker by calling: WebApp.Worker.start_link(arg)
       # {WebApp.Worker, arg}
-      WebApp.PromEx,
-      WebApp.Limited.PromEx
+      WebApp.PromEx
+      # WebApp.Limited.PromEx
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

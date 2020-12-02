@@ -19,6 +19,7 @@ defmodule PromEx.MetricsServer.Plug do
   @impl true
   def init(opts) do
     # Get supported options and set defaults
+    # TODO: Set up authorization header checks
     opts
     |> Keyword.take([:path, :prom_ex_module])
     |> Map.new()

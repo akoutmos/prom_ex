@@ -39,24 +39,6 @@ defmodule PromEx do
     matches the `:app` value in `project/0` from your `mix.exs` file. If you use the PromEx
     `mix prom_ex.create` mix task this will be done automatically for you.
 
-  * `:delay_manual_start` - Manual metrics are gathered once on start up and then only when
-    you call `PromEx.ManualMetricsManager.refresh_metrics/1`. Sometimes, you may have metrics
-    that require your entire supervision tree to be started in order to fetch accurate data.
-    This option will allow you to delays the initial metrics capture of the
-    `ManualMetricsManager` by a certain number of milliseconds or the `:no_delay` atom if you
-    want the metrics to be captured as soon as the `ManualMetricsManager` starts up. Default
-    value: `:no_delay`
-
-  * `:drop_metrics_groups` - A list of all the metrics groups that you are not interested in
-    tracking. For example, if your application does not leverage Phoenix channels at all but
-    you still would like to use the `PromEx.Plugins.Phoenix` plugin, you can pass
-    [`:phoenix_channel_event_metrics`] as the value to `:drop_metrics_groups` and that set of
-    metrics will not be caputred. Default value: `[]`
-
-  * `:upload_dashboards_on_start` - Using the config values that you set in your application config
-    (`config.exs`, `dev.exs`, `prod.exs`, etc) PromEx will attempt to upload your Dashboards to
-    Grafana using Grafana's HTTP API. Default value: false
-
   ## PromEx Plugins
 
   All metrics collection will be delegated to plugins which can be found here:
@@ -65,8 +47,10 @@ defmodule PromEx do
     - [X] `PromEx.Plugins.Application` Application related informational metrics
     - [X] `PromEx.Plugins.Beam` BEAM virtual machine metrics
 
-  Upcoming Elixir library metrics:
+  Library metrics:
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
+
+  Upcoming Elixir library metrics:
     - [ ] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
@@ -124,7 +108,7 @@ defmodule PromEx do
       else: :prom_ex_down
   end
 
-  @callback init_opts :: list()
+  @callback init_opts :: PromEx.Config.t()
   @callback plugins :: list()
   @callback dashboards :: list()
 
@@ -132,7 +116,7 @@ defmodule PromEx do
     # Get calling module name
     %Macro.Env{module: calling_module} = __CALLER__
 
-    # Set defaults from opts
+    # Ensure that required otp_app option is provided
     otp_app =
       case Keyword.fetch(opts, :otp_app) do
         {:ok, otp_app} ->
@@ -141,11 +125,6 @@ defmodule PromEx do
         :error ->
           raise "Failed to initialize #{inspect(calling_module)} due to missing :otp_app option"
       end
-
-    delay_manual_start = Keyword.get(opts, :delay_manual_start, :no_delay)
-    drop_metrics_groups = Keyword.get(opts, :drop_metrics_groups, [])
-    upload_dashboards_on_start = Keyword.get(opts, :upload_dashboards_on_start, false)
-    start_metrics_server = Keyword.get(opts, :start_metrics_server, false)
 
     # Generate process names under calling module namespace
     manual_metrics_name = Module.concat([calling_module, ManualMetricsManager])
@@ -166,20 +145,19 @@ defmodule PromEx do
       @impl true
       def init(_) do
         # Get module init options from module callback
-        opts = __MODULE__.init_opts()
+        %PromEx.Config{
+          manual_metrics_start_delay: manual_metrics_start_delay,
+          drop_metrics_groups: drop_metrics_groups,
+          grafana_config: grafana_config,
+          metrics_server_config: metrics_server_config
+        } = __MODULE__.init_opts()
 
-        # Get options
-        manual_start_delay = Keyword.get(opts, :delay_manual_start, :no_delay)
-
-        drop_metrics_groups =
-          opts
-          |> Keyword.get(:drop_metrics_groups, [])
-          |> MapSet.new()
-
+        # Configure each of the desired plugins
         plugins =
           __MODULE__.plugins()
           |> PromEx.init_plugins(drop_metrics_groups)
 
+        # Extract the various metrics types from all of the plugins
         telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
         poll_metrics = Map.get(plugins, :poll_metrics, [])
         manual_metrics = Map.get(plugins, :manual_metrics, [])
@@ -188,16 +166,15 @@ defmodule PromEx do
         children =
           []
           |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
-          |> PromEx.manual_metrics_child_spec(manual_metrics, manual_start_delay, unquote(manual_metrics_name))
+          |> PromEx.manual_metrics_child_spec(manual_metrics, manual_metrics_start_delay, unquote(manual_metrics_name))
           |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
           |> PromEx.dashboard_uploader_child_spec(
-            unquote(upload_dashboards_on_start),
+            grafana_config,
             __MODULE__,
             unquote(dashboard_uploader_name)
           )
           |> PromEx.metrics_server_child_spec(
-            unquote(start_metrics_server),
-            unquote(otp_app),
+            metrics_server_config,
             __MODULE__,
             unquote(metrics_server_name)
           )
@@ -209,13 +186,9 @@ defmodule PromEx do
       @doc false
       @impl true
       def init_opts do
-        [
-          otp_app: unquote(otp_app),
-          delay_manual_start: unquote(delay_manual_start),
-          drop_metrics_groups: unquote(drop_metrics_groups),
-          upload_dashboards_on_start: unquote(upload_dashboards_on_start),
-          start_metrics_server: unquote(start_metrics_server)
-        ]
+        unquote(otp_app)
+        |> Application.get_env(__MODULE__, [])
+        |> PromEx.Config.build()
       end
 
       @doc false
@@ -294,10 +267,10 @@ defmodule PromEx do
   end
 
   @doc false
-  def manual_metrics_child_spec(acc, metrics, manual_start_delay, process_name) do
+  def manual_metrics_child_spec(acc, metrics, manual_metrics_start_delay, process_name) do
     spec = {
       PromEx.ManualMetricsManager,
-      name: process_name, metrics: generate_mfa_call_list(metrics), delay_manual_start: manual_start_delay
+      name: process_name, metrics: generate_mfa_call_list(metrics), delay_manual_start: manual_metrics_start_delay
     }
 
     [spec | acc]
@@ -312,7 +285,7 @@ defmodule PromEx do
   end
 
   @doc false
-  def dashboard_uploader_child_spec(acc, true, prom_ex_module, process_name) do
+  def dashboard_uploader_child_spec(acc, %{upload_dashboards_on_start: true}, prom_ex_module, process_name) do
     spec = {
       PromEx.DashboardUploader,
       name: process_name, prom_ex_module: prom_ex_module
@@ -321,33 +294,21 @@ defmodule PromEx do
     [spec | acc]
   end
 
-  def dashboard_uploader_child_spec(acc, false, _, _) do
+  def dashboard_uploader_child_spec(acc, %{upload_dashboards_on_start: false}, _, _) do
+    acc
+  end
+
+  def dashboard_uploader_child_spec(acc, :disabled, _, _) do
     acc
   end
 
   @doc false
-  def metrics_server_child_spec(acc, true, otp_app, prom_ex_module, _process_name) do
-    metrics_server_config =
-      otp_app
-      |> Application.get_env(prom_ex_module)
-      |> Map.new()
-
-    cowboy_opts =
-      metrics_server_config
-      |> Map.get(:metrics_server_cowboy_opts, [])
-      |> Keyword.delete(:port)
-      |> Keyword.delete(:transport_options)
-
-    path = Map.get(metrics_server_config, :metrics_server_path, "/metrics")
-
-    transport_options = [
-      num_acceptors: Map.get(metrics_server_config, :metrics_server_pool_size, 5)
-    ]
+  def metrics_server_child_spec(acc, config, prom_ex_module, _process_name) when is_map(config) do
+    transport_options = [num_acceptors: config.pool_size]
+    cowboy_opts = Keyword.drop(config.cowboy_opts, [:port, :transport_options])
 
     port =
-      metrics_server_config
-      |> Map.fetch(:metrics_server_port)
-      |> case do
+      case Map.fetch(config, :port) do
         {:ok, port} when is_integer(port) ->
           port
 
@@ -355,12 +316,12 @@ defmodule PromEx do
           String.to_integer(port)
 
         :error ->
-          raise "PromEx.MetricsServer requires a :metrics_server_port config value"
+          raise "PromEx.MetricsServer requires a :port config value"
       end
 
     scheme =
-      metrics_server_config
-      |> Map.fetch(:metrics_server_protocol)
+      config
+      |> Map.fetch(:protocol)
       |> case do
         {:ok, "http"} ->
           :http
@@ -375,17 +336,16 @@ defmodule PromEx do
           :https
 
         :error ->
-          raise "PromEx.MetricsServer requires a :metrics_server_protocol config value of :http or :https"
+          raise "PromEx.MetricsServer requires a :protocol config value of :http or :https"
 
         _ ->
-          raise "Invalid :metrics_server_protocol config value provided to PromEx.MetricsServer (valid values are :http and :https)"
+          raise "Invalid :protocol config value provided to PromEx.MetricsServer (valid values are :http and :https)"
       end
 
-    plug_definition = {PromEx.MetricsServer.Plug, path: path, prom_ex_module: prom_ex_module}
+    plug_definition = {PromEx.MetricsServer.Plug, path: config.path, prom_ex_module: prom_ex_module}
 
     spec =
       Plug.Cowboy.child_spec(
-        # name: process_name,
         scheme: scheme,
         plug: plug_definition,
         options: [{:port, port}, {:transport_options, transport_options} | cowboy_opts]
@@ -394,7 +354,7 @@ defmodule PromEx do
     [spec | acc]
   end
 
-  def metrics_server_child_spec(acc, false, _otp_app, _prom_ex_module, _process_name) do
+  def metrics_server_child_spec(acc, :disabled, _prom_ex_module, _process_name) do
     acc
   end
 
