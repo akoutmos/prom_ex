@@ -12,7 +12,7 @@ defmodule PromEx.Config do
   following config:
 
   ```elixir
-  config :web_app, WebApp.PromExs,
+  config :web_app, WebApp.PromEx,
     manual_metrics_start_delay: :no_delay,
     drop_metrics_groups: [],
     grafana: :disabled,
@@ -26,7 +26,7 @@ defmodule PromEx.Config do
   If you would like to set up PromEx to communicate with Grafana, your config would look something like:
 
   ```elixir
-  config :web_app, WebApp.PromExs,
+  config :web_app, WebApp.PromEx,
     grafana: [
       host: "http://localhost:3000",
       auth_token: "<YOUR_AUTH_TOKEN_HERE>",
@@ -39,7 +39,7 @@ defmodule PromEx.Config do
   config:
 
   ```elixir
-  config :web_app, WebApp.PromExs,
+  config :web_app, WebApp.PromEx,
     metrics_server: [
       port: 4021,
       path: "/metrics", # This is an optional setting and will default to `"/metrics"`

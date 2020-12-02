@@ -170,20 +170,21 @@ application my be negatively impacted. Luckily PromEx is built upon the solid fo
 `TelemetryMetrics`, and the `TelemetryMetricsPrometheus` projects. These libraries were designed to be as lightweight
 and performant as possible. From some basic stress tests that I have run, I have been unable to observe any meaningful
 or measurable performance reduction (thank you OTP and particularly ETS ;)). Here are six sample stress tests using
-[wrk2](https://github.com/giltene/wrk2) with PromEx enabled and disabled with the following initialization
-configuration:
+[wrk2](https://github.com/giltene/wrk2) with PromEx enabled and disabled with the following configuration:
 
 ```elixir
-{
-  PromEx,
-  delay_manual_start: :no_delay,
-  drop_metrics_groups: [:phoenix_channel_event_metrics],
-  plugins: [
-    {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
-    PromEx.Plugins.Beam,
-    {PromEx.Plugins.Application, [otp_app: :web_app]}
-  ]
-}
+defmodule WebApp.PromEx
+  use PromEx, otp_app: :web_app
+
+  @impl true
+  def plugins do
+    [
+      {PromEx.Plugins.Application, otp_app: :web_app},
+      PromEx.Plugins.Beam,
+      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router}
+    ]
+  end
+end
 ```
 
 With out PromEx metrics collection:
