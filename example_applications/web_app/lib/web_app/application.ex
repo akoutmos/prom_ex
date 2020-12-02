@@ -8,7 +8,7 @@ defmodule WebApp.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      WebApp.Repo,
+      # WebApp.Repo,
       # Start the Telemetry supervisor
       WebAppWeb.Telemetry,
       # Start the PubSub system

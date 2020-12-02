@@ -35,25 +35,20 @@ defmodule PromEx.DashboardUploader do
 
   @impl true
   def init(%{prom_ex_module: prom_ex_module}) do
-    otp_app = Keyword.fetch!(prom_ex_module.init_opts(), :otp_app)
-
-    state =
-      otp_app
-      |> Application.get_env(prom_ex_module)
-      |> Map.new()
-      |> Map.put(:prom_ex_module, prom_ex_module)
+    state = %{prom_ex_module: prom_ex_module}
 
     {:ok, state, {:continue, :upload_grafana_dashboards}}
   end
 
   @impl true
-  def handle_continue(:upload_grafana_dashboards, state) do
-    %{
-      grafana_host: grafana_host,
-      grafana_auth_token: grafana_auth_token,
-      grafana_datasource_id: _grafana_datasource_id,
-      prom_ex_module: prom_ex_module
-    } = state
+  def handle_continue(:upload_grafana_dashboards, %{prom_ex_module: prom_ex_module}) do
+    %PromEx.Config{
+      grafana_config: %{
+        host: grafana_host,
+        auth_token: grafana_auth_token,
+        datasource_id: _grafana_datasource_id
+      }
+    } = prom_ex_module.init_opts()
 
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, Finch])

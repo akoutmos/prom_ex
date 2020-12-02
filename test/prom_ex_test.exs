@@ -2,15 +2,18 @@ defmodule PromExTest do
   use ExUnit.Case, async: false
 
   defmodule ManualMetricsDelayStart do
-    use PromEx,
-      otp_app: :prom_ex,
-      delay_manual_start: 60_000
+    use PromEx, otp_app: :prom_ex
 
     alias PromEx.Plugins.Application
 
     @impl true
     def plugins do
       [{Application, otp_app: :prom_ex}]
+    end
+
+    @impl true
+    def init_opts do
+      PromEx.Config.build(manual_metrics_start_delay: 60_000)
     end
   end
 
@@ -50,10 +53,10 @@ defmodule PromExTest do
 
       assert module_dashboards == [prom_ex: "application.json"]
       assert length(module_plugins) == 4
-      assert Keyword.get(config, :otp_app) == :prom_ex
-      assert Keyword.get(config, :delay_manual_start) == :no_delay
-      assert Keyword.get(config, :drop_metrics_groups) == []
-      assert Keyword.get(config, :upload_dashboards_on_start) == false
+      assert Map.get(config, :manual_metrics_start_delay) == :no_delay
+      assert Map.get(config, :drop_metrics_groups) == MapSet.new([])
+      assert Map.get(config, :grafana_config) == :disabled
+      assert Map.get(config, :metrics_server_config) == :disabled
     end
 
     test "should start the correct processes under the supervision tree" do
@@ -125,6 +128,9 @@ defmodule PromExTest do
     test "should not have metrics on start but can have metrics on manual refresh" do
       # Start the supervision tree for dummy PromEx Module
       ManualMetricsDelayStart.start_link([])
+
+      # Short sleep to ensure everything is started
+      Process.sleep(1_000)
 
       # There should be no manual metrics on start
       manual_metrics_pid = Process.whereis(ManualMetricsDelayStart.__manual_metrics_name__())

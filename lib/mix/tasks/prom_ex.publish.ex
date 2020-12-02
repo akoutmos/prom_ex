@@ -53,17 +53,15 @@ defmodule Mix.Tasks.PromEx.Publish do
   end
 
   defp upload_dashboards(prom_ex_module) do
-    otp_app = Keyword.fetch!(prom_ex_module.init_opts(), :otp_app)
     dashboards = prom_ex_module.dashboards()
 
-    %{
-      grafana_host: grafana_host,
-      grafana_auth_token: grafana_auth_token,
-      grafana_datasource_id: _grafana_datasource_id
-    } =
-      otp_app
-      |> Application.get_env(prom_ex_module)
-      |> Map.new()
+    %PromEx.Config{
+      grafana_config: %{
+        host: grafana_host,
+        auth_token: grafana_auth_token,
+        datasource_id: _grafana_datasource_id
+      }
+    } = prom_ex_module.init_opts()
 
     finch_name = Module.concat([prom_ex_module, Finch])
     Finch.start_link(name: finch_name)

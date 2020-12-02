@@ -14,6 +14,8 @@ services:
       mix phx.server'
     ports:
       - '4000:4000'
+      - '4021:4021'
+      - '4022:4022'
     depends_on:
       - postgres
     working_dir: /app
