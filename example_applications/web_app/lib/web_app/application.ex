@@ -17,8 +17,8 @@ defmodule WebApp.Application do
       WebAppWeb.Endpoint,
       # Start a worker by calling: WebApp.Worker.start_link(arg)
       # {WebApp.Worker, arg}
-      WebApp.PromEx
-      # WebApp.Limited.PromEx
+      WebApp.PromEx,
+      WebApp.Limited.PromEx
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

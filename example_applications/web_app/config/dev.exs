@@ -16,7 +16,7 @@ config :web_app, WebApp.PromEx,
     host: "http://grafana:3000",
     auth_token: "<YOUR_AUTH_TOKEN_HERE>",
     datasource_id: "<YOUR_DATASOURCE_ID_HERE>",
-    upload_dashboards_on_start: false
+    upload_dashboards_on_start: true
   ],
   metrics_server: [
     port: 4021,
@@ -24,6 +24,14 @@ config :web_app, WebApp.PromEx,
     protocol: :http,
     pool_size: 5,
     cowboy_opts: []
+  ]
+
+config :web_app, WebApp.Limited.PromEx,
+  manual_metrics_start_delay: 10_000,
+  drop_metrics_groups: [],
+  metrics_server: [
+    port: 4022,
+    path: "/cool-metrics"
   ]
 
 # For development, we disable any cache and enable

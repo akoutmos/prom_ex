@@ -81,6 +81,8 @@ defmodule PromEx do
     - [ ] MongoDB (https://github.com/percona/mongodb_exporter for inspiration)
   """
 
+  require Logger
+
   alias PromEx.MetricTypes.{
     Event,
     Manual,
@@ -303,7 +305,7 @@ defmodule PromEx do
   end
 
   @doc false
-  def metrics_server_child_spec(acc, config, prom_ex_module, _process_name) when is_map(config) do
+  def metrics_server_child_spec(acc, config, prom_ex_module, process_name) when is_map(config) do
     transport_options = [num_acceptors: config.pool_size]
     cowboy_opts = Keyword.drop(config.cowboy_opts, [:port, :transport_options])
 
@@ -346,10 +348,15 @@ defmodule PromEx do
 
     spec =
       Plug.Cowboy.child_spec(
+        ref: process_name,
         scheme: scheme,
         plug: plug_definition,
         options: [{:port, port}, {:transport_options, transport_options} | cowboy_opts]
       )
+
+    Logger.info(
+      "PromEx is starting a standalone metrics server on port #{inspect(port)} over #{Atom.to_string(scheme)}"
+    )
 
     [spec | acc]
   end
