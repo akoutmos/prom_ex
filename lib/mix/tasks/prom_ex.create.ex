@@ -89,8 +89,8 @@ defmodule Mix.Tasks.PromEx.Create do
       Be sure to add the following to finish setting up PromEx:
 
       1. Update your configuration (config.exs, dev.exs, prod.exs, releases.exs, etc) to
-         configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
-         more details regarding configuring PromEx:
+      configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
+      more details regarding configuring PromEx:
       ```
         config :<%= @otp_app %>, <%= @module_name %>.PromEx,
           manual_metrics_start_delay: :no_delay,
