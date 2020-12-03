@@ -142,7 +142,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_memory_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_allocated_kilobytes{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -493,7 +493,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_memory_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_allocated_kilobytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Total Usage",
           "refId": "A"

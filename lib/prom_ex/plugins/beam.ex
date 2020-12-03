@@ -156,7 +156,7 @@ defmodule PromEx.Plugins.Beam do
         last_value(
           [:beam, :stats, :process, :count],
           event_name: [:prom_ex, :plugin, :beam, :process, :count],
-          description: "A count of how many processes are currently running.",
+          description: "A count of how many BEAM processes are currently running.",
           measurement: :count
         ),
         last_value(
@@ -328,7 +328,7 @@ defmodule PromEx.Plugins.Beam do
       [
         # Capture the total memory allocated to the entire Erlang VM (or BEAM for short)
         last_value(
-          [:beam, :memory, :total, :kilobytes],
+          [:beam, :memory, :allocated, :kilobytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated.",
           measurement: :total,
@@ -368,6 +368,15 @@ defmodule PromEx.Plugins.Beam do
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for ETS tables.",
           measurement: :ets,
+          unit: {:byte, :kilobyte}
+        ),
+
+        # Capture the total memory allocated to BEAM processes
+        last_value(
+          [:beam, :memory, :processes, :total, :kilobytes],
+          event_name: @memory_event,
+          description: "The total amount of memory currently allocated to BEAM processes.",
+          measurement: :processes,
           unit: {:byte, :kilobyte}
         )
       ]
