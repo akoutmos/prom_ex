@@ -594,7 +594,7 @@
               }
             ]
           },
-          "unit": "Bps"
+          "unit": "deckbytes"
         },
         "overrides": []
       },
@@ -664,7 +664,7 @@
       },
       "yaxes": [
         {
-          "format": "Bps",
+          "format": "deckbytes",
           "label": "Data Received (-) / Data Sent (+)",
           "logBase": 1,
           "max": null,
@@ -1003,16 +1003,7 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "Normal Tasks",
-          "yaxis": 1
-        },
-        {
-          "alias": "Normal Tasks",
-          "yaxis": 1
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -1057,6 +1048,14 @@
           "max": null,
           "min": null,
           "show": true
+        },
+        {
+          "format": "locale",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
         }
       ],
       "yaxis": {
@@ -1124,16 +1123,7 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "Dirty Tasks",
-          "yaxis": 2
-        },
-        {
-          "alias": "Dirty Run Queue",
-          "yaxis": 2
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
@@ -1178,6 +1168,14 @@
           "max": null,
           "min": null,
           "show": true
+        },
+        {
+          "format": "locale",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
         }
       ],
       "yaxis": {
