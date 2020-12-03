@@ -344,7 +344,16 @@ defmodule PromEx do
           raise "Invalid :protocol config value provided to PromEx.MetricsServer (valid values are :http and :https)"
       end
 
-    plug_definition = {PromEx.MetricsServer.Plug, path: config.path, prom_ex_module: prom_ex_module}
+    plug_opts = %{
+      path: config.path,
+      prom_ex_module: prom_ex_module,
+      auth_strategy: Map.get(config, :auth_strategy),
+      auth_token: Map.get(config, :auth_token),
+      auth_user: Map.get(config, :auth_user),
+      auth_password: Map.get(config, :auth_password)
+    }
+
+    plug_definition = {PromEx.MetricsServer.Plug, plug_opts}
 
     spec =
       Plug.Cowboy.child_spec(

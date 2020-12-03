@@ -45,7 +45,20 @@ defmodule PromEx.Config do
       path: "/metrics", # This is an optional setting and will default to `"/metrics"`
       protocol: :http, # This is an optional setting and will default to `:http`
       pool_size: 5, # This is an optional setting and will default to `5`
-      cowboy_opts: [] # This is an optional setting and will default to `[]`
+      cowboy_opts: [], # This is an optional setting and will default to `[]`
+      auth_strategy: :none # This is an optional and will default to `:none`
+    ]
+  ```
+
+  If you would like the metrics server to be protected behind some sort of authentication, you can configure your `:metrics_server`
+  like so:
+
+  ```elixir
+  config :web_app, WebApp.PromEx,
+    metrics_server: [
+      port: 4021,
+      auth_strategy: :bearer,
+      auth_token: "VGhpcyBpcyBzdXBlciBzZWNyZXQuLi5kb24ndCBkZWNvZGUgbWU="
     ]
   ```
 
@@ -96,6 +109,21 @@ defmodule PromEx.Config do
     * `:protocol` - The protocol that the metrics should be accessible over (`:http` or `:https`).
 
     * `:pool_size` - How many Cowboy processes should be in the pool to handle metrics related requests.
+
+    * `:auth_strategy` - What authentication strategy should be used to authorize requests to your metrics. The
+      Supported strategies are `:none`, `:bearer`, and `:basic`. Depending on what strategy is selected, you
+      will need to also add additional config values. For `:none` (which is the default), no additional
+      information needs to be provided. When using a `:bearer` strategy, you'll need to provide a `:auth_token`
+      config value. When using `:basic` strategy you'll need to provide `:auth_user` and `:auth_password` values.
+
+    * `:auth_token` - When using a `:bearer` authentication strategy, this field is required to validate the
+      incoming request against a valid auth token.
+
+    * `:auth_user` - When using a `:basic` authentication strategy, this field is required to validate the
+      incoming request against a valid user.
+
+    * `:auth_password` - When using a `:bearer` authentication strategy, this field is required to validate the
+      incoming request against a valid password.
 
     * `:cowboy_opts` - A keyword list of any additional options that should be passed to `Plug.Cowboy` (see
       docs for more information https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html). The `:port` and
@@ -172,17 +200,38 @@ defmodule PromEx.Config do
   defp generate_metrics_server_config(:disabled), do: :disabled
 
   defp generate_metrics_server_config(metrics_server_opts) do
-    %{
+    base_config = %{
       port: get_metrics_server_config(metrics_server_opts, :port),
       path: Keyword.get(metrics_server_opts, :path, "/metrics"),
       protocol: Keyword.get(metrics_server_opts, :protocol, :http),
       pool_size: Keyword.get(metrics_server_opts, :pool_size, 5),
-      cowboy_opts: Keyword.get(metrics_server_opts, :cowboy_opts, [])
+      cowboy_opts: Keyword.get(metrics_server_opts, :cowboy_opts, []),
+      auth_strategy: Keyword.get(metrics_server_opts, :auth_strategy, :none)
     }
+
+    add_auth_config(base_config, metrics_server_opts)
   end
 
-  defp get_metrics_server_config(grafana_opts, config_key) do
-    case Keyword.fetch(grafana_opts, config_key) do
+  defp add_auth_config(%{auth_strategy: :none} = base_config, _add_auth_config) do
+    base_config
+  end
+
+  defp add_auth_config(%{auth_strategy: :bearer} = base_config, add_auth_config) do
+    Map.put(base_config, :auth_token, get_metrics_server_config(add_auth_config, :auth_token))
+  end
+
+  defp add_auth_config(%{auth_strategy: :basic} = base_config, add_auth_config) do
+    base_config
+    |> Map.put(:auth_user, get_metrics_server_config(add_auth_config, :auth_user))
+    |> Map.put(:auth_password, get_metrics_server_config(add_auth_config, :auth_password))
+  end
+
+  defp add_auth_config(_base_config, _add_auth_config) do
+    raise "Unknown auth strategy provided to PromEx metrics server. Supported strategies include :none, :bearer, or :basic."
+  end
+
+  defp get_metrics_server_config(metrics_server_opts, config_key) do
+    case Keyword.fetch(metrics_server_opts, config_key) do
       {:ok, value} ->
         value
 
