@@ -594,7 +594,7 @@
               }
             ]
           },
-          "unit": "deckbytes"
+          "unit": "Bps"
         },
         "overrides": []
       },
@@ -664,7 +664,7 @@
       },
       "yaxes": [
         {
-          "format": "deckbytes",
+          "format": "Bps",
           "label": "Data Received (-) / Data Sent (+)",
           "logBase": 1,
           "max": null,
