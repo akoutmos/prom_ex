@@ -520,8 +520,8 @@
         },
         {
           "expr": "beam_memory_processes_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
-          "legendFormat": "Processes",
           "interval": "",
+          "legendFormat": "Processes",
           "refId": "F"
         }
       ],
@@ -594,7 +594,7 @@
               }
             ]
           },
-          "unit": "deckbytes"
+          "unit": "Bps"
         },
         "overrides": []
       },
@@ -949,7 +949,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "Statistics regarding the normal and dirty schedulers.",
+      "description": "Statistics regarding the normal scheduler.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -1011,14 +1011,6 @@
         {
           "alias": "Normal Tasks",
           "yaxis": 1
-        },
-        {
-          "alias": "Dirty Tasks",
-          "yaxis": 2
-        },
-        {
-          "alias": "Dirty Run Queue",
-          "yaxis": 2
         }
       ],
       "spaceLength": 10,
@@ -1037,26 +1029,13 @@
           "interval": "",
           "legendFormat": "Normal Run Queue",
           "refId": "B"
-        },
-        {
-          "expr": "irate(beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
-          "interval": "",
-          "legendFormat": "Dirty Tasks",
-          "refId": "C"
-        },
-        {
-          "expr": "0 - irate(beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "Dirty Run Queue",
-          "refId": "D"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Scheduler Status",
+      "title": "Normal Scheduler Status",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1078,14 +1057,6 @@
           "max": null,
           "min": null,
           "show": true
-        },
-        {
-          "format": "locale",
-          "label": "Dirty Run Queue (-) / Dirty Tasks (+)",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
         }
       ],
       "yaxis": {
@@ -1099,7 +1070,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "The number of running BEAM processes.",
+      "description": "Statistics regarding the dirty schedulers.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -1133,41 +1104,59 @@
         "y": 24
       },
       "hiddenSeries": false,
-      "id": 19,
+      "id": 37,
       "legend": {
         "avg": false,
         "current": false,
+        "hideZero": false,
         "max": false,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": false
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "percentage": false,
       "pluginVersion": "7.1.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "Dirty Tasks",
+          "yaxis": 2
+        },
+        {
+          "alias": "Dirty Run Queue",
+          "yaxis": 2
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "irate(beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
           "interval": "",
-          "legendFormat": "Active Processes",
-          "refId": "A"
+          "legendFormat": "Dirty Tasks",
+          "refId": "C"
+        },
+        {
+          "expr": "0 - irate(beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Dirty Run Queue",
+          "refId": "D"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Active BEAM Processes",
+      "title": "Dirty Scheduler Status",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1183,16 +1172,8 @@
       },
       "yaxes": [
         {
-          "format": "short",
-          "label": "Processes",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
+          "format": "locale",
+          "label": "Dirty Run Queue (-) / Dirty Tasks (+)",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -1200,7 +1181,7 @@
         }
       ],
       "yaxis": {
-        "align": false,
+        "align": true,
         "alignLevel": null
       }
     },
@@ -1433,7 +1414,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "The number of active ETS tables.",
+      "description": "The number of running BEAM processes.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -1465,6 +1446,117 @@
         "w": 8,
         "x": 16,
         "y": 39
+      },
+      "hiddenSeries": false,
+      "id": 19,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
+          "interval": "",
+          "legendFormat": "Active Processes",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Active BEAM Processes",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Processes",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The number of active ETS tables.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "",
+              "id": 0,
+              "text": "",
+              "to": "",
+              "type": 1
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 15,
+        "w": 8,
+        "x": 0,
+        "y": 54
       },
       "hiddenSeries": false,
       "id": 23,
@@ -1545,7 +1637,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 69
       },
       "id": 2,
       "panels": [],
@@ -1575,7 +1667,7 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 55
+        "y": 70
       },
       "id": 4,
       "options": {
@@ -1630,7 +1722,7 @@
         "h": 4,
         "w": 4,
         "x": 4,
-        "y": 55
+        "y": 70
       },
       "id": 8,
       "options": {
@@ -1685,7 +1777,7 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 55
+        "y": 70
       },
       "id": 13,
       "options": {
@@ -1740,7 +1832,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 55
+        "y": 70
       },
       "id": 14,
       "options": {
@@ -1795,7 +1887,7 @@
         "h": 4,
         "w": 4,
         "x": 16,
-        "y": 55
+        "y": 70
       },
       "id": 15,
       "options": {
@@ -1927,7 +2019,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 59
+        "y": 74
       },
       "id": 10,
       "options": {
@@ -2069,7 +2161,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 59
+        "y": 74
       },
       "id": 12,
       "options": {
@@ -2223,7 +2315,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 59
+        "y": 74
       },
       "id": 11,
       "options": {
