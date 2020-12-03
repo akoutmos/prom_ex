@@ -180,7 +180,7 @@ defmodule PromEx.Config do
 
   defp generate_grafana_config(grafana_opts) do
     %{
-      host: get_grafana_config(grafana_opts, :host),
+      host: grafana_opts |> get_grafana_config(:host) |> normalize_host(),
       auth_token: get_grafana_config(grafana_opts, :auth_token),
       datasource_id: get_grafana_config(grafana_opts, :datasource_id),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true)
@@ -195,6 +195,14 @@ defmodule PromEx.Config do
       :error ->
         raise "When configuring the Grafana client for PromEx, the #{inspect(config_key)} key is required."
     end
+  end
+
+  defp normalize_host(host_string) do
+    host_string
+    |> URI.parse()
+    |> Map.put(:path, nil)
+    |> Map.put(:query, nil)
+    |> URI.to_string()
   end
 
   defp generate_metrics_server_config(:disabled), do: :disabled
