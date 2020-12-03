@@ -113,7 +113,10 @@ defmodule Mix.Tasks.PromEx.Create do
       ```
 
       3. Update your `endpoint.ex` file to expose your metrics (or configure a standalone
-      server using the `:metrics_server` config options):
+      server using the `:metrics_server` config options). Be sure to put this plug before
+      your `Plug.Telemetry` entry so that you can avoid having calls to your `/metrics`
+      endpoint create their own metrics and logs which can pollute your logs/metrics given
+      that Prometheus will scrape at a regular interval and that can get noisy:
       ```
       defmodule <%= @module_name %>Web.Endpoint do
         use Phoenix.Endpoint, otp_app: :<%= @otp_app %>

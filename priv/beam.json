@@ -449,10 +449,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -521,6 +517,12 @@
           "interval": "",
           "legendFormat": "ETS",
           "refId": "E"
+        },
+        {
+          "expr": "beam_memory_processes_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "legendFormat": "Processes",
+          "interval": "",
+          "refId": "F"
         }
       ],
       "thresholds": [],
@@ -589,10 +591,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -666,7 +664,7 @@
       },
       "yaxes": [
         {
-          "format": "deckbytes",
+          "format": "Bps",
           "label": "Data Received (-) / Data Sent (+)",
           "logBase": 1,
           "max": null,
@@ -693,7 +691,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "The number of bytes sent and received through ports.",
+      "description": "The number of garbage collection events that are occuring and the number of words reclaimed",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -712,10 +710,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -826,7 +820,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "The number of bytes sent and received through ports.",
+      "description": "The number of context switches that have occured along with the number of reductions.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -845,10 +839,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -959,7 +949,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "The number of bytes sent and received through ports.",
+      "description": "Statistics regarding the normal and dirty schedulers.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -978,10 +968,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1132,10 +1118,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1247,10 +1229,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -1363,10 +1341,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1478,10 +1452,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1595,10 +1565,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1654,10 +1620,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1713,10 +1675,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1772,10 +1730,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1831,10 +1785,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -1909,10 +1859,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -2043,10 +1989,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -2205,10 +2147,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
