@@ -16,23 +16,26 @@ defmodule PromEx.Plugins.Beam do
   - `:beam_system_info_manual_metrics`
   - `:beam_scheduler_manual_metrics`
 
-  To use plugin in your application, add the following to your application supervision tree:
+  To use plugin in your application, add the following to your PromEx module:
   ```
-  def start(_type, _args) do
-    children = [
-      ...
-      {
-        PromEx,
-        plugins: [
-          PromEx.Plugins.Beam
-          ...
-        ],
-        delay_manual_start: :no_delay
-      }
-    ]
+  defmodule MyApp.PromEx do
+    use PromEx, otp_app: :web_app
 
-    opts = [strategy: :one_for_one, name: WebApp.Supervisor]
-    Supervisor.start_link(children, opts)
+    @impl true
+    def plugins do
+      [
+        ...
+        PromEx.Plugins.Beam
+      ]
+    end
+
+    @impl true
+    def dashboards do
+      [
+        ...
+        {:prom_ex, "beam.json"}
+      ]
+    end
   end
   ```
 
@@ -51,6 +54,10 @@ defmodule PromEx.Plugins.Beam do
 
     # TODO: Investigate Microstate accounting metrics
     # http://erlang.org/doc/man/erlang.html#statistics_microstate_accounting
+
+    # TODO: Add a metrics group for allocators
+    # https://erlang.org/doc/man/erts_alloc.html
+    # :erlang.system_info(:allocator)
 
     [
       memory_metrics(poll_rate),
@@ -127,10 +134,11 @@ defmodule PromEx.Plugins.Beam do
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :words_reclaimed, :count],
-          event_name: [:prom_ex, :plugin, :beam, :words_reclaimed, :count],
-          description: "The total number of words reclaimed since the system started.",
-          measurement: :count
+          [:beam, :stats, :gc, :reclaimed, :bytes],
+          event_name: [:prom_ex, :plugin, :beam, :gc, :bytes_reclaimed],
+          description: "The total number of bytes reclaimed since the system started.",
+          measurement: :count,
+          unit: :byte
         ),
         last_value(
           [:beam, :stats, :port_io, :byte, :count],
@@ -156,7 +164,7 @@ defmodule PromEx.Plugins.Beam do
         last_value(
           [:beam, :stats, :process, :count],
           event_name: [:prom_ex, :plugin, :beam, :process, :count],
-          description: "A count of how many BEAM processes are currently running.",
+          description: "A count of how many Erlang processes are currently running.",
           measurement: :count
         ),
         last_value(
@@ -328,56 +336,56 @@ defmodule PromEx.Plugins.Beam do
       [
         # Capture the total memory allocated to the entire Erlang VM (or BEAM for short)
         last_value(
-          [:beam, :memory, :allocated, :kilobytes],
+          [:beam, :memory, :allocated, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated.",
           measurement: :total,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to atoms
         last_value(
-          [:beam, :memory, :atom, :total, :kilobytes],
+          [:beam, :memory, :atom, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for atoms.",
           measurement: :atom,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to binaries
         last_value(
-          [:beam, :memory, :binary, :total, :kilobytes],
+          [:beam, :memory, :binary, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for binaries.",
           measurement: :binary,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to Erlang code
         last_value(
-          [:beam, :memory, :code, :total, :kilobytes],
+          [:beam, :memory, :code, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for Erlang code.",
           measurement: :code,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to ETS tables
         last_value(
-          [:beam, :memory, :ets, :total, :kilobytes],
+          [:beam, :memory, :ets, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for ETS tables.",
           measurement: :ets,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
-        # Capture the total memory allocated to BEAM processes
+        # Capture the total memory allocated to Erlang processes
         last_value(
-          [:beam, :memory, :processes, :total, :kilobytes],
+          [:beam, :memory, :processes, :total, :bytes],
           event_name: @memory_event,
-          description: "The total amount of memory currently allocated to BEAM processes.",
+          description: "The total amount of memory currently allocated to Erlang processes.",
           measurement: :processes,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         )
       ]
     )
@@ -407,7 +415,11 @@ defmodule PromEx.Plugins.Beam do
 
     {context_switches, _} = :erlang.statistics(:context_switches)
     {total_reductions, _} = :erlang.statistics(:reductions)
+
+    word_size = :erlang.system_info(:wordsize)
     {number_of_gcs, words_reclaimed, _} = :erlang.statistics(:garbage_collection)
+    bytes_reclaimed = words_reclaimed * word_size
+
     {{:input, input_port_bytes}, {:output, output_port_bytes}} = :erlang.statistics(:io)
     {wall_clock_time, _} = :erlang.statistics(:wall_clock)
 
@@ -420,7 +432,7 @@ defmodule PromEx.Plugins.Beam do
     :telemetry.execute([:prom_ex, :plugin, :beam, :context_switch, :count], %{count: context_switches})
     :telemetry.execute([:prom_ex, :plugin, :beam, :reduction, :count], %{count: total_reductions})
     :telemetry.execute([:prom_ex, :plugin, :beam, :gc, :count], %{count: number_of_gcs})
-    :telemetry.execute([:prom_ex, :plugin, :beam, :words_reclaimed, :count], %{count: words_reclaimed})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :gc, :bytes_reclaimed], %{count: bytes_reclaimed})
     :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: input_port_bytes}, %{type: :input})
     :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: output_port_bytes}, %{type: :output})
     :telemetry.execute([:prom_ex, :plugin, :beam, :uptime, :count], %{count: wall_clock_time})

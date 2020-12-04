@@ -38,11 +38,13 @@ defmodule PromEx.Plug do
   it is the recommended tool for the job.
   """
 
-  alias Plug.Conn
-
   @behaviour Plug
 
   require Logger
+
+  import Plug.Conn
+
+  alias Plug.Conn
 
   @impl true
   def init(opts) do
@@ -57,13 +59,17 @@ defmodule PromEx.Plug do
     case PromEx.get_metrics(prom_ex_module) do
       :prom_ex_down ->
         Logger.warn("Attempted to fetch metrics from #{prom_ex_module}, but the module has not been initialized")
+
         conn
+        |> put_resp_content_type("text/plain")
+        |> send_resp(503, "Service Unavailable")
+        |> halt()
 
       metrics ->
         conn
-        |> Conn.put_resp_content_type("text/plain")
-        |> Conn.send_resp(200, metrics)
-        |> Conn.halt()
+        |> put_resp_content_type("text/plain")
+        |> send_resp(200, metrics)
+        |> halt()
     end
   end
 

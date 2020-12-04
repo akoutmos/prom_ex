@@ -28,6 +28,7 @@ defmodule PromEx.MetricsServer.Plug do
         Logger.warn("Attempted to fetch metrics from #{prom_ex_module}, but the module has not been initialized")
 
         conn
+        |> put_resp_content_type("text/plain")
         |> send_resp(503, "Service Unavailable")
 
       metrics ->
