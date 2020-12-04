@@ -679,7 +679,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "prometheus",
-      "description": "The number of garbage collection events that are occuring and the number of words reclaimed",
+      "description": "The number of garbage collection events that are occuring and the number of bytes reclaimed",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -754,7 +754,7 @@
           "refId": "A"
         },
         {
-          "expr": "irate(beam_stats_words_reclaimed_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(beam_stats_gc_reclaimed_bytes{job=\"$job\", instance=\"$instance\"}[$interval])",
           "instant": false,
           "interval": "",
           "legendFormat": "Bytes Reclaimed",

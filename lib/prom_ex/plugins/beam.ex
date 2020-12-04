@@ -130,10 +130,11 @@ defmodule PromEx.Plugins.Beam do
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :words_reclaimed, :count],
-          event_name: [:prom_ex, :plugin, :beam, :words_reclaimed, :count],
-          description: "The total number of words reclaimed since the system started.",
-          measurement: :count
+          [:beam, :stats, :gc, :reclaimed, :bytes],
+          event_name: [:prom_ex, :plugin, :beam, :gc, :bytes_reclaimed],
+          description: "The total number of bytes reclaimed since the system started.",
+          measurement: :count,
+          unit: :byte
         ),
         last_value(
           [:beam, :stats, :port_io, :byte, :count],
@@ -410,7 +411,11 @@ defmodule PromEx.Plugins.Beam do
 
     {context_switches, _} = :erlang.statistics(:context_switches)
     {total_reductions, _} = :erlang.statistics(:reductions)
+
+    word_size = :erlang.system_info(:wordsize)
     {number_of_gcs, words_reclaimed, _} = :erlang.statistics(:garbage_collection)
+    bytes_reclaimed = words_reclaimed * word_size
+
     {{:input, input_port_bytes}, {:output, output_port_bytes}} = :erlang.statistics(:io)
     {wall_clock_time, _} = :erlang.statistics(:wall_clock)
 
@@ -423,7 +428,7 @@ defmodule PromEx.Plugins.Beam do
     :telemetry.execute([:prom_ex, :plugin, :beam, :context_switch, :count], %{count: context_switches})
     :telemetry.execute([:prom_ex, :plugin, :beam, :reduction, :count], %{count: total_reductions})
     :telemetry.execute([:prom_ex, :plugin, :beam, :gc, :count], %{count: number_of_gcs})
-    :telemetry.execute([:prom_ex, :plugin, :beam, :words_reclaimed, :count], %{count: words_reclaimed})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :gc, :bytes_reclaimed], %{count: bytes_reclaimed})
     :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: input_port_bytes}, %{type: :input})
     :telemetry.execute([:prom_ex, :plugin, :beam, :port_io, :count], %{count: output_port_bytes}, %{type: :output})
     :telemetry.execute([:prom_ex, :plugin, :beam, :uptime, :count], %{count: wall_clock_time})
