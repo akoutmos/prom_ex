@@ -55,6 +55,10 @@ defmodule PromEx.Plugins.Beam do
     # TODO: Investigate Microstate accounting metrics
     # http://erlang.org/doc/man/erlang.html#statistics_microstate_accounting
 
+    # TODO: Add a metrics group for allocators
+    # https://erlang.org/doc/man/erts_alloc.html
+    # :erlang.system_info(:allocator)
+
     [
       memory_metrics(poll_rate),
       mnesia_metrics(poll_rate),
