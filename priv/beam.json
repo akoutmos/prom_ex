@@ -90,7 +90,7 @@
     },
     {
       "datasource": "prometheus",
-      "description": "The amount of memory currently allocated within the BEAM.",
+      "description": "The amount of memory currently allocated by the BEAM.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -104,15 +104,15 @@
               },
               {
                 "color": "#EAB839",
-                "value": 150000
+                "value": 500000000
               },
               {
                 "color": "red",
-                "value": 250000
+                "value": 1000000000
               }
             ]
           },
-          "unit": "deckbytes"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -440,7 +440,7 @@
               }
             ]
           },
-          "unit": "deckbytes"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -533,7 +533,7 @@
       },
       "yaxes": [
         {
-          "format": "deckbytes",
+          "format": "bytes",
           "label": null,
           "logBase": 1,
           "max": null,
