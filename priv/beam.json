@@ -789,7 +789,7 @@
           "show": true
         },
         {
-          "format": "decbytes",
+          "format": "bytes",
           "label": "Reclaimed Bytes",
           "logBase": 2,
           "max": null,
