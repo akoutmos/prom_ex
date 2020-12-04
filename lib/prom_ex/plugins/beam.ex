@@ -16,23 +16,26 @@ defmodule PromEx.Plugins.Beam do
   - `:beam_system_info_manual_metrics`
   - `:beam_scheduler_manual_metrics`
 
-  To use plugin in your application, add the following to your application supervision tree:
+  To use plugin in your application, add the following to your PromEx module:
   ```
-  def start(_type, _args) do
-    children = [
-      ...
-      {
-        PromEx,
-        plugins: [
-          PromEx.Plugins.Beam
-          ...
-        ],
-        delay_manual_start: :no_delay
-      }
-    ]
+  defmodule MyApp.PromEx do
+    use PromEx, otp_app: :web_app
 
-    opts = [strategy: :one_for_one, name: WebApp.Supervisor]
-    Supervisor.start_link(children, opts)
+    @impl true
+    def plugins do
+      [
+        ...
+        PromEx.Plugins.Beam
+      ]
+    end
+
+    @impl true
+    def dashboards do
+      [
+        ...
+        {:prom_ex, "beam.json"}
+      ]
+    end
   end
   ```
 
