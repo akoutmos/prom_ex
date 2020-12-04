@@ -67,9 +67,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -131,9 +129,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -142,7 +138,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_memory_allocated_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -195,9 +191,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -259,9 +253,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -323,9 +315,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -387,9 +377,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
+          "calcs": ["last"],
           "fields": "",
           "values": false
         },
@@ -489,37 +477,37 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_memory_allocated_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Total Usage",
           "refId": "A"
         },
         {
-          "expr": "beam_memory_atom_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_atom_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Atoms",
           "refId": "B"
         },
         {
-          "expr": "beam_memory_binary_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_binary_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Binaries",
           "refId": "C"
         },
         {
-          "expr": "beam_memory_code_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_code_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Code",
           "refId": "D"
         },
         {
-          "expr": "beam_memory_ets_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_ets_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "ETS",
           "refId": "E"
         },
         {
-          "expr": "beam_memory_processes_total_kilobytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "beam_memory_processes_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Processes",
           "refId": "F"
@@ -1674,9 +1662,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -1729,9 +1715,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -1784,9 +1768,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -1839,9 +1821,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -1894,9 +1874,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -2470,18 +2448,7 @@
     "to": "now"
   },
   "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
-    ]
+    "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"]
   },
   "timezone": "",
   "title": "PromEx - BEAM Dashboard",
