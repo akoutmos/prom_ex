@@ -156,7 +156,7 @@ defmodule PromEx.Plugins.Beam do
         last_value(
           [:beam, :stats, :process, :count],
           event_name: [:prom_ex, :plugin, :beam, :process, :count],
-          description: "A count of how many BEAM processes are currently running.",
+          description: "A count of how many Erlang processes are currently running.",
           measurement: :count
         ),
         last_value(
@@ -328,56 +328,56 @@ defmodule PromEx.Plugins.Beam do
       [
         # Capture the total memory allocated to the entire Erlang VM (or BEAM for short)
         last_value(
-          [:beam, :memory, :allocated, :kilobytes],
+          [:beam, :memory, :allocated, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated.",
           measurement: :total,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to atoms
         last_value(
-          [:beam, :memory, :atom, :total, :kilobytes],
+          [:beam, :memory, :atom, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for atoms.",
           measurement: :atom,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to binaries
         last_value(
-          [:beam, :memory, :binary, :total, :kilobytes],
+          [:beam, :memory, :binary, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for binaries.",
           measurement: :binary,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to Erlang code
         last_value(
-          [:beam, :memory, :code, :total, :kilobytes],
+          [:beam, :memory, :code, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for Erlang code.",
           measurement: :code,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
         # Capture the total memory allocated to ETS tables
         last_value(
-          [:beam, :memory, :ets, :total, :kilobytes],
+          [:beam, :memory, :ets, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for ETS tables.",
           measurement: :ets,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         ),
 
-        # Capture the total memory allocated to BEAM processes
+        # Capture the total memory allocated to Erlang processes
         last_value(
-          [:beam, :memory, :processes, :total, :kilobytes],
+          [:beam, :memory, :processes, :total, :bytes],
           event_name: @memory_event,
-          description: "The total amount of memory currently allocated to BEAM processes.",
+          description: "The total amount of memory currently allocated to Erlang processes.",
           measurement: :processes,
-          unit: {:byte, :kilobyte}
+          unit: :byte
         )
       ]
     )
