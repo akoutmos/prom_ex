@@ -30,8 +30,6 @@ defmodule PromEx.Plugins.Ecto do
 
   use PromEx.Plugin
 
-  alias PromEx.Debug
-
   require Logger
 
   @impl true
@@ -48,9 +46,6 @@ defmodule PromEx.Plugins.Ecto do
 
     init_event = [:ecto, :repo, :init]
     query_event = telemetry_prefix ++ [:query]
-
-    Debug.attach_debugger(init_event)
-    Debug.attach_debugger(query_event)
 
     # Event metrics definitions
     [
@@ -76,13 +71,7 @@ defmodule PromEx.Plugins.Ecto do
           description: "Information regarding the initialized repo.",
           measurement: fn _measurements -> 1 end,
           tags: [:repo, :database_name, :database_host],
-          tag_values: fn %{repo: repo, opts: opts} ->
-            %{
-              repo: repo |> Atom.to_string() |> String.trim_leading("Elixir."),
-              database_name: Keyword.get(opts, :database),
-              database_host: Keyword.get(opts, :hostname)
-            }
-          end
+          tag_values: &ecto_init_tag_values/1
         ),
         last_value(
           [:ecto, :repo, :init, :pool, :size],
@@ -91,7 +80,8 @@ defmodule PromEx.Plugins.Ecto do
           measurement: fn _measurements, %{opts: opts} ->
             Keyword.get(opts, :pool_size)
           end,
-          tags: [:repo]
+          tags: [:repo],
+          tag_values: &ecto_init_tag_values/1
         ),
         last_value(
           [:ecto, :repo, :init, :timeout, :duration],
@@ -100,20 +90,14 @@ defmodule PromEx.Plugins.Ecto do
           measurement: fn _measurements, %{opts: opts} ->
             Keyword.get(opts, :timeout)
           end,
-          tags: [:repo]
+          tags: [:repo],
+          tag_values: &ecto_init_tag_values/1
         )
       ]
     )
   end
 
   defp query_metrics(query_event) do
-    # - From telemetry_prefix ++ [:query]:
-    #   - [x] Connection idle time (tags include: repo)
-    #   - [x] Connection queue time (tags include: repo)
-    #   - [x] Connection decode time (tags include: repo)
-    #   - [ ] Query execution time (tags include: repo, source, command)
-    #   - [ ] Query num results returned (tags include: repo, source, command)
-
     Event.build(
       :ecto_query_event_metrics,
       [
@@ -124,6 +108,7 @@ defmodule PromEx.Plugins.Ecto do
           measurement: :idle_time,
           description: "The time the connection spent waiting before being checked out for the query.",
           tags: [:repo],
+          tag_values: &ecto_query_tag_values/1,
           reporter_options: [
             buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
           ],
@@ -137,6 +122,7 @@ defmodule PromEx.Plugins.Ecto do
           measurement: :queue_time,
           description: "The time spent waiting to check out a database connection.",
           tags: [:repo],
+          tag_values: &ecto_query_tag_values/1,
           reporter_options: [
             buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
           ],
@@ -150,12 +136,82 @@ defmodule PromEx.Plugins.Ecto do
           measurement: :decode_time,
           description: "The time spent decoding the data received from the database.",
           tags: [:repo],
+          tag_values: &ecto_query_tag_values/1,
           reporter_options: [
             buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
           ],
           unit: {:native, :millisecond}
+        ),
+
+        # Capture the query execution time
+        distribution(
+          [:ecto, :repo, :query, :execution, :time, :milliseconds],
+          event_name: query_event,
+          measurement: :query_time,
+          description: "The time spent executing the query.",
+          tags: [:repo, :source, :command],
+          tag_values: &ecto_query_tag_values/1,
+          reporter_options: [
+            buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+          ],
+          unit: {:native, :millisecond}
+        ),
+
+        # - [ ] Query num results returned (tags include: repo, source, command)
+        # Capture the number of results returned
+        distribution(
+          [:ecto, :repo, :query, :results, :returned],
+          event_name: query_event,
+          measurement: fn _measurement, %{result: result} ->
+            normalize_results_returned(result)
+          end,
+          description: "The time spent executing the query.",
+          tags: [:repo, :source, :command],
+          tag_values: &ecto_query_tag_values/1,
+          reporter_options: [
+            buckets: [1, 10, 50, 100, 250, 500, 1_000, 5_000]
+          ],
+          drop: fn %{result: result} ->
+            normalize_results_returned(result) == :drop_data_point
+          end
         )
       ]
     )
+  end
+
+  defp ecto_init_tag_values(%{repo: repo, opts: opts}) do
+    %{
+      repo: repo |> Atom.to_string() |> String.trim_leading("Elixir."),
+      database_name: Keyword.get(opts, :database),
+      database_host: Keyword.get(opts, :hostname)
+    }
+  end
+
+  defp ecto_query_tag_values(%{repo: repo, source: source, result: result}) do
+    %{
+      repo: repo |> Atom.to_string() |> String.trim_leading("Elixir."),
+      source: normalize_source(source),
+      command: normalize_command(result)
+    }
+  end
+
+  defp normalize_source(source) when is_binary(source), do: source
+  defp normalize_source(source) when is_atom(source), do: Atom.to_string(source)
+  defp normalize_source(_), do: "unavailable"
+
+  defp normalize_command({:ok, %_{command: command}}) when is_atom(command) do
+    Atom.to_string(command)
+  end
+
+  defp normalize_command(_) do
+    "unavailable"
+  end
+
+  defp normalize_results_returned({:ok, %_{num_rows: num_row}}) when is_integer(num_row) do
+    num_row
+  end
+
+  defp normalize_results_returned(_) do
+    :drop_data_point
   end
 end
