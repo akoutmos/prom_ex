@@ -20,6 +20,16 @@ defmodule WebAppWeb.Router do
     live "/", PageLive, :index
   end
 
+  scope "/", WebAppWeb do
+    pipe_through :api
+
+    get "/users", UserController, :index
+    get "/users/:id", UserController, :show
+    post "/users/:id/action/level-up", UserController, :level_up
+    post "/users", UserController, :create
+    delete "/users/:id", UserController, :delete
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", WebAppWeb do
   #   pipe_through :api

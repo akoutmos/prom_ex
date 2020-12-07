@@ -22,22 +22,26 @@ defmodule PromEx.Plugins.Phoenix do
   - `:phoenix_http_event_metrics`
   - `:phoenix_channel_event_metrics`
 
-  To use plugin in your application, add the following to your application supervision tree:
+  To use plugin in your application, add the following to your PromEx module:
   ```
-  def start(_type, _args) do
-    children = [
-      ...
-      {
-        PromEx,
-        plugins: [
-          {PromEx.Plugins.Phoenix, router: MyAppWeb.Router},
-          ...
-        ]
-      }
-    ]
+  defmodule WebApp.PromEx do
+    use PromEx, otp_app: :web_app
 
-    opts = [strategy: :one_for_one, name: MyApp.Supervisor]
-    Supervisor.start_link(children, opts)
+    @impl true
+    def plugins do
+      [
+        ...
+        {PromEx.Plugins.Phoenix, router: WebAppWeb.Router}
+      ]
+    end
+
+    @impl true
+    def dashboards do
+      [
+        ...
+        {:prom_ex, "phoenix.json"}
+      ]
+    end
   end
   ```
   """

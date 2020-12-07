@@ -9,13 +9,21 @@ config :web_app, WebApp.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :web_app, WebApp.Repo2,
+  username: "postgres",
+  password: "postgres",
+  database: "web_app_dev",
+  hostname: System.get_env("POSTGRES_HOST", "localhost"),
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
 config :web_app, WebApp.PromEx,
   manual_metrics_start_delay: :no_delay,
   drop_metrics_groups: [],
   grafana: [
     host: "http://grafana:3000",
-    auth_token: "<YOUR_AUTH_TOKEN_HERE>",
-    datasource_id: "<YOUR_DATASOURCE_ID_HERE>",
+    auth_token: System.get_env("GRAFANA_TOKEN", ""),
+    datasource_id: System.get_env("GRAFANA_DATASOURCE", ""),
     upload_dashboards_on_start: true
   ],
   metrics_server: [
