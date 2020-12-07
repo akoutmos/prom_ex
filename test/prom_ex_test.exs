@@ -1,5 +1,6 @@
 defmodule PromExTest do
   use ExUnit.Case, async: false
+  use Plug.Test
 
   defmodule ManualMetricsDelayStart do
     use PromEx, otp_app: :prom_ex
@@ -26,7 +27,7 @@ defmodule PromExTest do
     def plugins do
       [
         {Application, otp_app: :prom_ex},
-        {Phoenix, router: MyAppWeb.Router},
+        {Phoenix, router: TestApp.Router},
         {Beam, poll_rate: 500},
         {Ecto, otp_app: :prom_ex, repo: Test.Repo}
       ]
@@ -100,6 +101,22 @@ defmodule PromExTest do
       assert DefaultPromExSetUp
              |> PromEx.get_metrics()
              |> String.contains?("beam_stats_port_count")
+
+      # Ensure new metrics pop up after execution
+      refute DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("phoenix_http_request_duration_milliseconds")
+
+      conn =
+        :get
+        |> conn("/users")
+        |> send_resp(404, "Not found")
+
+      :telemetry.execute([:phoenix, :endpoint, :stop], %{duration: 10}, %{conn: conn})
+
+      assert DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("phoenix_http_request_duration_milliseconds")
 
       # Kill the supervision tree
       assert DefaultPromExSetUp
