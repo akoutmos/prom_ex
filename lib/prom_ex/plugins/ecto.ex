@@ -157,7 +157,6 @@ defmodule PromEx.Plugins.Ecto do
           unit: {:native, :millisecond}
         ),
 
-        # - [ ] Query num results returned (tags include: repo, source, command)
         # Capture the number of results returned
         distribution(
           [:ecto, :repo, :query, :results, :returned],
