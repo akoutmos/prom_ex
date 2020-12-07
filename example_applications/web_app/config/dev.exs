@@ -23,7 +23,7 @@ config :web_app, WebApp.PromEx,
   grafana: [
     host: "http://grafana:3000",
     auth_token: System.get_env("GRAFANA_TOKEN", ""),
-    datasource_id: "prometheus",
+    datasource_id: System.get_env("GRAFANA_DATASOURCE", ""),
     upload_dashboards_on_start: true
   ],
   metrics_server: [
