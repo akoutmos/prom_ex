@@ -107,6 +107,10 @@ defmodule PromExTest do
              |> PromEx.get_metrics()
              |> String.contains?("phoenix_http_request_duration_milliseconds")
 
+      refute DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("ecto_repo_init_status_info")
+
       conn =
         :get
         |> conn("/users")
@@ -114,9 +118,23 @@ defmodule PromExTest do
 
       :telemetry.execute([:phoenix, :endpoint, :stop], %{duration: 10}, %{conn: conn})
 
+      :telemetry.execute([:ecto, :repo, :init], %{duration: 10}, %{
+        repo: Test.Repo,
+        opts: [
+          timeout: 10_000,
+          pool_size: 10,
+          database_name: "test_db",
+          database_host: "postgres"
+        ]
+      })
+
       assert DefaultPromExSetUp
              |> PromEx.get_metrics()
              |> String.contains?("phoenix_http_request_duration_milliseconds")
+
+      assert DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("ecto_repo_init_status_info")
 
       # Kill the supervision tree
       assert DefaultPromExSetUp
