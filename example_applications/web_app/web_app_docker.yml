@@ -18,10 +18,13 @@ services:
       - '4022:4022'
     depends_on:
       - postgres
+      - grafana
     working_dir: /app
     environment:
       POSTGRES_HOST: "postgres"
       APPLICATION_GIT_SHA: "0fa5476"
+      GRAFANA_TOKEN: ""
+      GRAFANA_DATASOURCE: "prometheus"
     volumes:
       - ./config:/app/config:ro
       - ./lib:/app/lib:ro

@@ -2,6 +2,7 @@ defmodule WebAppWeb.UserController do
   use WebAppWeb, :controller
 
   alias WebApp.Accounts
+  alias WebApp.Accounts.User
 
   def index(conn, _) do
     users = Accounts.list_users()
@@ -25,11 +26,13 @@ defmodule WebAppWeb.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    user = Accounts.delete_user(id)
+    user = Accounts.delete_user(%User{id: id})
     json(conn, user)
   end
 
-  def level_up(_conn, _params) do
+  def level_up(conn, %{"id" => id}) do
+    user = Accounts.level_up_user(id)
+    json(conn, user)
   end
 
   def errors_on(changeset) do

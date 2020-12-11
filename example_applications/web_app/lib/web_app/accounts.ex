@@ -74,6 +74,19 @@ defmodule WebApp.Accounts do
   end
 
   @doc """
+  Level up a user
+  """
+  def level_up_user(id) do
+    {:ok, {:ok, user}} =
+      Repo.transaction(fn ->
+        user = get_user!(id)
+        update_user(user, %{points: user.points + 1})
+      end)
+
+    user
+  end
+
+  @doc """
   Deletes a user.
 
   ## Examples
@@ -86,7 +99,8 @@ defmodule WebApp.Accounts do
 
   """
   def delete_user(%User{} = user) do
-    Repo.delete(user)
+    {:ok, user} = Repo.delete(user)
+    user
   end
 
   @doc """
