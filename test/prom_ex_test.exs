@@ -29,7 +29,7 @@ defmodule PromExTest do
         {Application, otp_app: :prom_ex},
         {Phoenix, router: TestApp.Router},
         {Beam, poll_rate: 500},
-        {Ecto, otp_app: :prom_ex, repo: Test.Repo}
+        {Ecto, otp_app: :prom_ex, repos: [Test.Repo]}
       ]
     end
 

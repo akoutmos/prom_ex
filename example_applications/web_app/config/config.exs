@@ -8,8 +8,7 @@
 use Mix.Config
 
 config :web_app,
-  ecto_repos: [WebApp.Repo],
-  # ecto_repos: [WebApp.Repo, WebApp.Repo2],
+  ecto_repos: [WebApp.Repo, WebApp.Repo2],
   generators: [binary_id: true]
 
 # Configures the endpoint
