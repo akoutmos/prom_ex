@@ -48,8 +48,9 @@ defmodule WebApp.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:faker, "~> 0.16"},
-      {:prom_ex, "~> 0.1.9-alpha"}
+      {:prom_ex, "~> 0.1.10-alpha"}
       # {:prom_ex, path: "../../"}
+      # {:prom_ex, github: "akoutmos/prom_ex", branch: :master}
     ]
   end
 
