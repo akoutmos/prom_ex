@@ -99,13 +99,16 @@ defmodule Mix.Tasks.PromEx.Create do
           metrics_server: :disabled
       ```
 
-      2. Add this module to your application supervision tree:
+      2. Add this module to your application supervision tree. It should be one of the first
+         things that is started so that no Telemetry events are missed. For example, if PromEx
+         is started after your Repo module, you will miss Ecto's init events and the dashbaords
+         will be missing some data points:
       ```
       def start(_type, _args) do
         children = [
-          ...
+          <%= @module_name %>.PromEx,
 
-          <%= @module_name %>.PromEx
+          ...
         ]
 
         ...

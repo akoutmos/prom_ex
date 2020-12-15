@@ -4,7 +4,9 @@ end
 
 defmodule PromEx.Plugins.Ecto do
   @moduledoc """
-  This plugin captures metrics emitted by Ecto.
+  This plugin captures metrics emitted by Ecto. Be sure that your PromEx module is listed before your Repo module
+  in your supervision tree so that the Ecto init events are not missed. If you miss those events the dashboard
+  variable dropdowns for the repo value will be broken.
 
   This plugin supports the following options:
   - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (e.g. :my_cool_app).
