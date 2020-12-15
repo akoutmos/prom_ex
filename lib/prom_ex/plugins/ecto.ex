@@ -7,13 +7,15 @@ defmodule PromEx.Plugins.Ecto do
   This plugin captures metrics emitted by Ecto.
 
   This plugin supports the following options:
-  - `repo`: This is a REQUIRED option and is the full module name of your Ecto Repo (e.g MyApp.Repo).
-
   - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (e.g. :my_cool_app).
 
+  - `repo`: This is an OPTIONAL option and is a list with the full module name of your Ecto R
+    epos (e.g [MyApp.Repo]). If you do not provide this value, PromEx will attempt to resolve your
+    Repo modules via the `:ecto_repos` configuration on your OTP app.
 
   This plugin exposes the following metric groups:
-  - `:`
+  - `:ecto_init_event_metrics`
+  - `:ecto_query_event_metrics`
 
   To use plugin in your application, add the following to your PromEx module `plugins/0` function:
   ```
@@ -21,7 +23,7 @@ defmodule PromEx.Plugins.Ecto do
     [
       ...
 
-      {PromEx.Plugins.Ecto, otp_app: :web_app, repo: WebApp.Repo}
+      {PromEx.Plugins.Ecto, otp_app: :web_app, repos: [WebApp.Repo]}
     ]
   end
 
@@ -222,9 +224,10 @@ defmodule PromEx.Plugins.Ecto do
     }
   end
 
+  defp normalize_source(nil), do: "source_unavailable"
   defp normalize_source(source) when is_binary(source), do: source
   defp normalize_source(source) when is_atom(source), do: Atom.to_string(source)
-  defp normalize_source(_), do: "unavailable"
+  defp normalize_source(_), do: "source_unavailable"
 
   defp normalize_command({:ok, %_{command: command}}) when is_atom(command) do
     Atom.to_string(command)
