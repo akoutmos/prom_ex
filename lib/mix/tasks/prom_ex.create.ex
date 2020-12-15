@@ -138,7 +138,8 @@ defmodule Mix.Tasks.PromEx.Create do
           # PromEx built in plugins
           {PromEx.Plugins.Application, otp_app: :<%= @otp_app %>},
           PromEx.Plugins.Beam,
-          {PromEx.Plugins.Phoenix, router: <%= @module_name %>Web.Router}
+          {PromEx.Plugins.Phoenix, router: <%= @module_name %>Web.Router},
+          {PromEx.Plugins.Ecto, otp_app: :<%= @otp_app %>}
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromEx
@@ -151,7 +152,8 @@ defmodule Mix.Tasks.PromEx.Create do
           # PromEx built in dashboard definitions. Remove dashboards that you do not need
           {:prom_ex, "application.json"},
           {:prom_ex, "beam.json"},
-          {:prom_ex, "phoenix.json"}
+          {:prom_ex, "phoenix.json"},
+          {:prom_ex, "ecto.json"}
 
           # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
           # {:<%= @otp_app %>, "/grafana_dashboards/user_metrics.json"}
