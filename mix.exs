@@ -81,7 +81,7 @@ defmodule PromEx.MixProject do
   defp package do
     [
       name: "prom_ex",
-      files: ~w(lib priv mix.exs README.md LICENSE CHANGELOG.md),
+      files: ~w(lib priv/*.json mix.exs README.md LICENSE CHANGELOG.md),
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/akoutmos/prom_ex"}
     ]

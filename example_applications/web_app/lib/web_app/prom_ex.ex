@@ -25,7 +25,8 @@ defmodule WebApp.PromEx do
       # PromEx built in dashboard definitions. Remove dashboards that you do not need
       {:prom_ex, "application.json"},
       {:prom_ex, "beam.json"},
-      {:prom_ex, "phoenix.json"}
+      {:prom_ex, "phoenix.json"},
+      {:prom_ex, "ecto.json"}
 
       # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
       # {:web_app, "/grafana_dashboards/user_metrics.json"}
