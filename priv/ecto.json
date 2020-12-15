@@ -578,7 +578,7 @@
       },
       "id": 2,
       "panels": [],
-      "title": "HTTP Details",
+      "title": "Query Details",
       "type": "row"
     },
     {
