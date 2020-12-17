@@ -229,9 +229,14 @@ defmodule PromEx do
               unquote(otp_app)
               |> Atom.to_string()
 
-            module_name = Macro.underscore(__MODULE__)
+            module_name = Atom.to_string(__MODULE__)
+            string_uid = "#{otp_app_name}:#{module_name}:prom_ex_dashboards"
 
-            "#{otp_app_name}:#{module_name}_prom_ex_dashboards"
+            # Grafana limits us to 40 character UIDs...so taking the MD5 of
+            # a complete unique identifier to use as the UID
+            :md5
+            |> :crypto.hash(string_uid)
+            |> Base.encode16()
         end
       end
 
