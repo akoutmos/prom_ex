@@ -139,10 +139,10 @@ defmodule Mix.Tasks.PromEx.Create do
       def plugins do
         [
           # PromEx built in plugins
-          {PromEx.Plugins.Application, otp_app: :<%= @otp_app %>},
+          PromEx.Plugins.Application,
           PromEx.Plugins.Beam,
           {PromEx.Plugins.Phoenix, router: <%= @module_name %>Web.Router},
-          {PromEx.Plugins.Ecto, otp_app: :<%= @otp_app %>}
+          PromEx.Plugins.Ecto
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromEx

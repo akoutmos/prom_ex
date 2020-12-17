@@ -154,10 +154,13 @@ defmodule PromEx do
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
 
+        # Default plugin opts
+        default_plugin_opts = [otp_app: unquote(otp_app)]
+
         # Configure each of the desired plugins
         plugins =
           __MODULE__.plugins()
-          |> PromEx.init_plugins(drop_metrics_groups)
+          |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
 
         # Extract the various metrics types from all of the plugins
         telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
@@ -245,14 +248,14 @@ defmodule PromEx do
   end
 
   @doc false
-  def init_plugins(plugins, drop_metrics_groups) do
+  def init_plugins(plugins, default_plugin_opts, drop_metrics_groups) do
     # Adding default PromEx plugin
     plugins = [PromEx.Plugins.PromEx | plugins]
 
     # Extract relevant metrics based on type
-    event_metrics = extract_relevant_metrics(plugins, :event_metrics, drop_metrics_groups)
-    polling_metrics = extract_relevant_metrics(plugins, :polling_metrics, drop_metrics_groups)
-    manual_metrics = extract_relevant_metrics(plugins, :manual_metrics, drop_metrics_groups)
+    event_metrics = extract_relevant_metrics(plugins, default_plugin_opts, :event_metrics, drop_metrics_groups)
+    polling_metrics = extract_relevant_metrics(plugins, default_plugin_opts, :polling_metrics, drop_metrics_groups)
+    manual_metrics = extract_relevant_metrics(plugins, default_plugin_opts, :manual_metrics, drop_metrics_groups)
 
     telemetry_metrics =
       [event_metrics, polling_metrics, manual_metrics]
@@ -430,10 +433,10 @@ defmodule PromEx do
     end)
   end
 
-  defp extract_relevant_metrics(plugins, type, drop_metrics_groups) do
+  defp extract_relevant_metrics(plugins, default_plugin_opts, type, drop_metrics_groups) do
     plugins
     |> Enum.map(fn plugin_definition ->
-      init_plugin(plugin_definition, type)
+      init_plugin(plugin_definition, default_plugin_opts, type)
     end)
     |> List.flatten()
     |> Enum.reject(fn %_{group_name: group_name} ->
@@ -441,15 +444,17 @@ defmodule PromEx do
     end)
   end
 
-  defp init_plugin({module, opts}, function) when is_atom(module) do
+  defp init_plugin({module, opts}, default_plugin_opts, function) when is_atom(module) do
+    opts = Keyword.merge(default_plugin_opts, opts)
+
     module
     |> apply(function, [opts])
     |> normalize_plugin()
   end
 
-  defp init_plugin(module, function) when is_atom(module) do
+  defp init_plugin(module, default_plugin_opts, function) when is_atom(module) do
     module
-    |> apply(function, [[]])
+    |> apply(function, [default_plugin_opts])
     |> normalize_plugin()
   end
 
