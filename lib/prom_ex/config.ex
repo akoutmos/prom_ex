@@ -98,6 +98,13 @@ defmodule PromEx.Config do
       (`config.exs`, `dev.exs`, `prod.exs`, etc) PromEx will attempt to upload your Dashboards to
       Grafana using Grafana's HTTP API.
 
+    * `:folder_name` - The name of the folder that PromEx will put all of the project dashboards in.
+      PromEx will automatically generate a unique ID for the folder based on the project's otp_app
+      value so that it can access the correct folder in Grafana. This also makes sure that differnt
+      Elixir projects running in the same cluster and publishing dashboards to Grafana do not collide
+      with one another. If no name is provided, then the dashboards will all be uploaded to the default
+      Grafana folder.
+
   * `:metrics_server` - This key contains the configuration information needed to run a standalone
     HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
     metrics. Its configuration options are:
@@ -183,7 +190,8 @@ defmodule PromEx.Config do
       host: grafana_opts |> get_grafana_config(:host) |> normalize_host(),
       auth_token: get_grafana_config(grafana_opts, :auth_token),
       datasource_id: get_grafana_config(grafana_opts, :datasource_id),
-      upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true)
+      upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
+      folder_name: Keyword.get(grafana_opts, :folder_name, :default)
     }
   end
 

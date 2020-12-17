@@ -202,6 +202,25 @@ defmodule PromEx do
       def dashboards, do: []
 
       @doc false
+      def __otp_app__ do
+        unquote(otp_app)
+      end
+
+      @doc false
+      def __grafana_folder_uid__ do
+        __MODULE__.init_opts()
+        |> Map.get(:grafana_config)
+        |> Map.get(:folder_name)
+        |> case do
+          :default ->
+            :default
+
+          folder_name ->
+            "#{folder_name}_prom_ex_dashboards"
+        end
+      end
+
+      @doc false
       def __manual_metrics_name__ do
         unquote(manual_metrics_name)
       end

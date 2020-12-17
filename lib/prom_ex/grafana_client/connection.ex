@@ -19,8 +19,16 @@ defmodule PromEx.GrafanaClient.Connection do
   def build(finch_process, base_url, auth_token) do
     %__MODULE__{
       finch_process: finch_process,
-      base_url: base_url,
+      base_url: normalize_host(base_url),
       auth_token: "Bearer #{auth_token}"
     }
+  end
+
+  defp normalize_host(host_string) do
+    host_string
+    |> URI.parse()
+    |> Map.put(:path, nil)
+    |> Map.put(:query, nil)
+    |> URI.to_string()
   end
 end

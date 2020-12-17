@@ -46,7 +46,8 @@ defmodule PromEx.DashboardUploader do
       grafana_config: %{
         host: grafana_host,
         auth_token: grafana_auth_token,
-        datasource_id: _grafana_datasource_id
+        datasource_id: _grafana_datasource_id,
+        folder_name: folder_name
       }
     } = prom_ex_module.init_opts()
 
@@ -55,11 +56,20 @@ defmodule PromEx.DashboardUploader do
     Finch.start_link(name: finch_name)
     grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
 
+    upload_opts =
+      case folder_name do
+        :default ->
+          []
+
+        folder_name ->
+          [folderId: get_folder_id(grafana_conn, folder_name, prom_ex_module)]
+      end
+
     # Iterate over all the configured dashboards and upload them
     prom_ex_module.dashboards()
     |> Enum.each(fn
       full_path when is_binary(full_path) ->
-        upload_dashboard(full_path, grafana_conn)
+        upload_dashboard(full_path, grafana_conn, upload_opts)
 
       {app, dashboard_path} ->
         priv_path =
@@ -69,7 +79,7 @@ defmodule PromEx.DashboardUploader do
 
         priv_path
         |> Path.join(dashboard_path)
-        |> upload_dashboard(grafana_conn)
+        |> upload_dashboard(grafana_conn, upload_opts)
     end)
 
     # No longer need this short-lived Finch process
@@ -81,13 +91,34 @@ defmodule PromEx.DashboardUploader do
     {:stop, :normal, :ok}
   end
 
-  defp upload_dashboard(full_dashboard_path, grafana_conn) do
-    case GrafanaClient.upload_dashboard(grafana_conn, full_dashboard_path) do
+  defp upload_dashboard(full_dashboard_path, grafana_conn, upload_opts) do
+    case GrafanaClient.upload_dashboard(grafana_conn, full_dashboard_path, upload_opts) do
       {:ok, _response_payload} ->
         Logger.info("PromEx.DashboardUploader successfully uploaded #{full_dashboard_path} to Grafana.")
 
       {:error, reason} ->
         Logger.warn("PromEx.DashboardUploader failed to upload #{full_dashboard_path} to Grafana: #{inspect(reason)}")
     end
+  end
+
+  defp get_folder_id(grafana_conn, folder_name, prom_ex_module) do
+    folder_uid = prom_ex_module.__grafana_folder_uid__()
+
+    %{"id" => id, "title" => title} =
+      case GrafanaClient.get_folder(grafana_conn, folder_uid) do
+        {:ok, folder_details} ->
+          folder_details
+
+        {:error, :not_found} ->
+          {:ok, folder_details} = GrafanaClient.create_folder(grafana_conn, folder_uid, folder_name)
+          folder_details
+      end
+
+    # Update the folder if the name is not up to date with the config
+    if title != folder_name do
+      GrafanaClient.update_folder(grafana_conn, folder_uid, folder_name)
+    end
+
+    id
   end
 end
