@@ -219,7 +219,13 @@ defmodule PromEx do
             :default
 
           _folder_name ->
-            "#{unquote(otp_app)}_prom_ex_dashboards"
+            otp_app_name =
+              unquote(otp_app)
+              |> Atom.to_string()
+
+            module_name = Macro.underscore(__MODULE__)
+
+            "#{otp_app_name}:#{module_name}_prom_ex_dashboards"
         end
       end
 

@@ -83,7 +83,10 @@ defmodule PromEx.MixProject do
       name: "prom_ex",
       files: ~w(lib priv/*.json mix.exs README.md LICENSE CHANGELOG.md),
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/akoutmos/prom_ex"}
+      links: %{
+        "GitHub" => "https://github.com/akoutmos/prom_ex",
+        "Sponsor" => "https://github.com/sponsors/akoutmos"
+      }
     ]
   end
 
