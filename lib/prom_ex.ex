@@ -213,7 +213,13 @@ defmodule PromEx do
       def __grafana_folder_uid__ do
         __MODULE__.init_opts()
         |> Map.get(:grafana_config)
-        |> Map.get(:folder_name)
+        |> case do
+          :disabled ->
+            :default
+
+          grafana_config ->
+            Map.get(grafana_config, :folder_name, :default)
+        end
         |> case do
           :default ->
             :default
