@@ -215,8 +215,8 @@ defmodule PromEx do
           :default ->
             :default
 
-          folder_name ->
-            "#{folder_name}_prom_ex_dashboards"
+          _folder_name ->
+            "#{unquote(otp_app)}_prom_ex_dashboards"
         end
       end
 
