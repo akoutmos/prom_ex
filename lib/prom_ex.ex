@@ -133,6 +133,7 @@ defmodule PromEx do
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
     metrics_server_name = Module.concat([calling_module, MetricsServer])
+    lifecycle_annotator_name = Module.concat([calling_module, LifecycleAnnotator])
 
     quote do
       @behaviour PromEx
@@ -182,6 +183,12 @@ defmodule PromEx do
             metrics_server_config,
             __MODULE__,
             unquote(metrics_server_name)
+          )
+          |> PromEx.lifecycle_annotator_child_spec(
+            grafana_config,
+            __MODULE__,
+            unquote(otp_app),
+            unquote(lifecycle_annotator_name)
           )
           |> Enum.reverse()
 
@@ -258,6 +265,11 @@ defmodule PromEx do
       @doc false
       def __metrics_server_name__ do
         unquote(metrics_server_name)
+      end
+
+      @doc false
+      def __lifecycle_annotator_name__ do
+        unquote(lifecycle_annotator_name)
       end
 
       defoverridable PromEx
@@ -340,6 +352,24 @@ defmodule PromEx do
   end
 
   def dashboard_uploader_child_spec(acc, :disabled, _, _) do
+    acc
+  end
+
+  @doc false
+  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: true}, prom_ex_module, otp_app, process_name) do
+    spec = {
+      PromEx.LifecycleAnnotator,
+      name: process_name, prom_ex_module: prom_ex_module, otp_app: otp_app
+    }
+
+    [spec | acc]
+  end
+
+  def lifecycle_annotator_child_spec(acc, :disabled, _, _, _) do
+    acc
+  end
+
+  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: false}, _, _, _) do
     acc
   end
 

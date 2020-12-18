@@ -105,6 +105,17 @@ defmodule PromEx.Config do
       with one another. If no name is provided, then the dashboards will all be uploaded to the default
       Grafana folder.
 
+    * `:annotate_app_lifecycle` - By enabling this setting, PromEx will leverage the Grafana API to annotate
+      when the application was started, and when it was shut down. By default this is disabled but if you
+      do enable it, no action is required from you in order to display these events on the dashboards. The
+      annotations will automatically contain the necessary tags to only display on the PromEx dashboards.
+      The annotation will include information including:
+        - Hostname
+        - OTP app name
+        - App version
+        - Git SHA of the last commit (if the GIT_SHA environment variable is present)
+        - Git author of the last commit (if the GIT_AUTHOR environment variable is present)
+
   * `:metrics_server` - This key contains the configuration information needed to run a standalone
     HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
     metrics. Its configuration options are:
@@ -191,7 +202,8 @@ defmodule PromEx.Config do
       auth_token: get_grafana_config(grafana_opts, :auth_token),
       datasource_id: get_grafana_config(grafana_opts, :datasource_id),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
-      folder_name: Keyword.get(grafana_opts, :folder_name, :default)
+      folder_name: Keyword.get(grafana_opts, :folder_name, :default),
+      annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false)
     }
   end
 

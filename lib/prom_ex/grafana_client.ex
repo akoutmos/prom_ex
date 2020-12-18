@@ -116,6 +116,26 @@ defmodule PromEx.GrafanaClient do
     |> handle_create_dashboard_response()
   end
 
+  @doc """
+  Used to create annotations on dashboard panels
+  """
+  @spec create_annotation(grafana_conn :: Connection.t(), tags :: [String.t()], message :: String.t()) ::
+          handler_respose()
+  def create_annotation(%Connection{} = grafana_conn, tags, message) do
+    headers = grafana_headers(:post, grafana_conn.auth_token)
+
+    payload =
+      Jason.encode!(%{
+        tags: tags,
+        text: message
+      })
+
+    :post
+    |> Finch.build("#{grafana_conn.base_url}/api/annotations", headers, payload)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_create_dashboard_response()
+  end
+
   defp handle_create_dashboard_response(finch_response) do
     case finch_response do
       {:ok, %Finch.Response{status: 200, body: body}} ->

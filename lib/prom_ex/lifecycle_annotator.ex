@@ -1,0 +1,131 @@
+defmodule PromEx.LifecycleAnnotator do
+  @moduledoc """
+  This GenServer is responsible to keeping track of the life cycle
+  of the application and sending annotation requests to Grafana
+  when the application starts and when it terminates. It will
+  include things like in the message:
+
+    - Hostname
+    - OTP app name
+    - App version
+    - Git SHA of the last commit (if the GIT_SHA environment variable is present)
+    - Git author of the last commit (if the GIT_AUTHOR environment variable is present)
+  """
+
+  use GenServer
+
+  require Logger
+
+  alias PromEx.{GrafanaClient, GrafanaClient.Connection}
+
+  @doc """
+  Used to start the ManualMetricsManager process
+  """
+  @spec start_link(opts :: keyword()) :: GenServer.on_start()
+  def start_link(opts) do
+    {name, remaining_opts} = Keyword.pop(opts, :name)
+    state = Map.new(remaining_opts)
+
+    GenServer.start_link(__MODULE__, state, name: name)
+  end
+
+  @impl true
+  def init(state) do
+    # Trap exit so that the stop annotation can be published
+    Process.flag(:trap_exit, true)
+
+    {:ok, state, {:continue, :create_startup_annotation}}
+  end
+
+  @impl true
+  def handle_continue(:create_startup_annotation, %{prom_ex_module: prom_ex_module, otp_app: otp_app} = state) do
+    # Collect relevant info for application
+    hostname =
+      :inet.gethostname()
+      |> elem(1)
+      |> :erlang.list_to_binary()
+
+    app_version =
+      otp_app
+      |> Application.spec(:vsn)
+      |> to_string()
+
+    git_sha =
+      case System.fetch_env("GIT_SHA") do
+        {:ok, git_sha} ->
+          git_sha
+
+        :error ->
+          Logger.warn("GIT_SHA has not been defined")
+          "Not available"
+      end
+
+    git_author =
+      case System.fetch_env("GIT_AUTHOR") do
+        {:ok, git_sha} ->
+          git_sha
+
+        :error ->
+          Logger.warn("GIT_AUTHOR has not been defined")
+          "Not available"
+      end
+
+    state =
+      state
+      |> Map.put(:hostname, hostname)
+      |> Map.put(:app_version, app_version)
+      |> Map.put(:git_sha, git_sha)
+      |> Map.put(:git_author, git_author)
+
+    # Get the Grafana config
+    %PromEx.Config{
+      grafana_config: %{
+        host: grafana_host,
+        auth_token: grafana_auth_token
+      }
+    } = prom_ex_module.init_opts()
+
+    # Start Finch process and build Grafana connection
+    finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
+    Finch.start_link(name: finch_name)
+    grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
+
+    annotation_details = generate_annotation_details(state)
+    annotation_text = ["#{to_string(otp_app)} is starting up\n" | annotation_details] |> Enum.join("\n")
+    GrafanaClient.create_annotation(grafana_conn, ["prom_ex", to_string(otp_app), "start"], annotation_text)
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def terminate(_reason, %{prom_ex_module: prom_ex_module, otp_app: otp_app} = state) do
+    %PromEx.Config{
+      grafana_config: %{
+        host: grafana_host,
+        auth_token: grafana_auth_token
+      }
+    } = prom_ex_module.init_opts()
+
+    # Start Finch process and build Grafana connection
+    finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
+    Finch.start_link(name: finch_name)
+    grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
+
+    annotation_details = generate_annotation_details(state)
+    annotation_text = ["#{to_string(otp_app)} is shutting down\n" | annotation_details] |> Enum.join("\n")
+    GrafanaClient.create_annotation(grafana_conn, ["prom_ex", to_string(otp_app), "stop"], annotation_text)
+
+    :ok
+  end
+
+  defp generate_annotation_details(state) do
+    %{app_version: app_version, hostname: hostname, git_sha: git_sha, git_author: git_author} = state
+
+    [
+      "Hostname - #{hostname}",
+      "App Version - #{app_version}",
+      "Git SHA - #{git_sha}",
+      "Git Author - #{git_author}"
+    ]
+  end
+end

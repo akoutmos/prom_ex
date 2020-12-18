@@ -52,7 +52,7 @@ defmodule PromEx.DashboardUploader do
     } = prom_ex_module.init_opts()
 
     # Start Finch process and build Grafana connection
-    finch_name = Module.concat([prom_ex_module, Finch])
+    finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
     Finch.start_link(name: finch_name)
     grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
 
