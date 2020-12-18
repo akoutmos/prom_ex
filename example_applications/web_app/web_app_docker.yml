@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  elixir_app:
+  elixir_app_one:
     image: elixir:1.10.4
     command: >
       /bin/sh -c 'apt-get update && apt-get install -y inotify-tools &&
@@ -11,7 +11,7 @@ services:
       mix deps.get &&
       mix ecto.setup &&
       mix prom_ex.publish &&
-      mix phx.server'
+      exec mix phx.server'
     ports:
       - '4000:4000'
       - '4021:4021'
@@ -22,7 +22,8 @@ services:
     working_dir: /app
     environment:
       POSTGRES_HOST: "postgres"
-      APPLICATION_GIT_SHA: "0fa5476"
+      GIT_SHA: "0fa5476"
+      GIT_AUTHOR: "Alex Koutmos"
       GRAFANA_TOKEN: ""
       GRAFANA_DATASOURCE: "prometheus"
     volumes:
@@ -32,9 +33,46 @@ services:
       - ./.formatter.exs:/app/formatter.exs:ro
       - ./mix.exs:/app/mix.exs:ro
       - ./mix.lock:/app/mix.lock:ro
-      - elixir-deps:/app/deps/
-      - elixir-build:/app/_build/
+      - elixir-deps-one:/app/deps/
+      - elixir-build-one:/app/_build/
+
+  elixir_app_two:
+    image: elixir:1.10.4
+    command: >
+      /bin/sh -c 'apt-get update && apt-get install -y inotify-tools &&
+      cd /app &&
+      mix local.hex --force &&
+      mix local.rebar --force &&
+      mix deps.get &&
+      mix ecto.setup &&
+      mix prom_ex.publish &&
+      exec mix phx.server'
+    ports:
+      - '4100:4000'
+      - '4121:4021'
+      - '4122:4022'
+    depends_on:
+      - postgres
+      - grafana
+    working_dir: /app
+    environment:
+      POSTGRES_HOST: "postgres"
+      GIT_SHA: "0fa5476"
+      GIT_AUTHOR: "Alex Koutmos"
+      GRAFANA_TOKEN: ""
+      GRAFANA_DATASOURCE: "prometheus"
+    volumes:
+      - ./config:/app/config:ro
+      - ./lib:/app/lib:ro
+      - ./priv:/app/priv:ro
+      - ./.formatter.exs:/app/formatter.exs:ro
+      - ./mix.exs:/app/mix.exs:ro
+      - ./mix.lock:/app/mix.lock:ro
+      - elixir-deps-two:/app/deps/
+      - elixir-build-two:/app/_build/
 
 volumes:
-  elixir-deps: {}
-  elixir-build: {}
+  elixir-deps-one: {}
+  elixir-build-one: {}
+  elixir-deps-two: {}
+  elixir-build-two: {}

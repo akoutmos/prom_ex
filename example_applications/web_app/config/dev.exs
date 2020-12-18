@@ -21,10 +21,12 @@ config :web_app, WebApp.PromEx,
   manual_metrics_start_delay: :no_delay,
   drop_metrics_groups: [],
   grafana: [
-    host: "http://grafana:3000",
+    host: System.get_env("GRAFANA_HOST", "http://grafana:3000"),
     auth_token: System.get_env("GRAFANA_TOKEN", ""),
     datasource_id: System.get_env("GRAFANA_DATASOURCE", ""),
-    upload_dashboards_on_start: true
+    upload_dashboards_on_start: true,
+    folder_name: "Web App Dashboards",
+    annotate_app_lifecycle: true
   ],
   metrics_server: [
     port: 4021,
