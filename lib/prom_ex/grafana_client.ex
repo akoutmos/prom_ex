@@ -18,12 +18,13 @@ defmodule PromEx.GrafanaClient do
   @doc """
   Used to create a new dashboard or update an existing dashboard.
   """
-  @spec upload_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) :: handler_respose()
-  def upload_dashboard(%Connection{} = grafana_conn, dashboard_file_path) do
+  @spec upload_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t(), opts :: keyword()) ::
+          handler_respose()
+  def upload_dashboard(%Connection{} = grafana_conn, dashboard_file_path, opts \\ []) do
     case File.read(dashboard_file_path) do
       {:ok, dashboard_contents} ->
         headers = grafana_headers(:post, grafana_conn.auth_token)
-        payload = generate_payload(dashboard_contents, overwrite: true)
+        payload = generate_payload(dashboard_contents, Keyword.merge(opts, overwrite: true))
 
         :post
         |> Finch.build("#{grafana_conn.base_url}/api/dashboards/db", headers, payload)
@@ -62,11 +63,78 @@ defmodule PromEx.GrafanaClient do
     end
   end
 
-  # @doc """
-  # Used to fetch the details regarding a particular folder on Grafana
-  # """
-  # def get_folder(_finch_process_name, _base_url, _bearer_token, _folder_id) do
-  # end
+  @doc """
+  Used to create a new folder in Grafana
+  """
+  @spec create_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), title :: String.t()) ::
+          handler_respose()
+  def create_folder(%Connection{} = grafana_conn, folder_uid, title) do
+    headers = grafana_headers(:post, grafana_conn.auth_token)
+
+    payload =
+      Jason.encode!(%{
+        uid: folder_uid,
+        title: title
+      })
+
+    :post
+    |> Finch.build("#{grafana_conn.base_url}/api/folders", headers, payload)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_create_dashboard_response()
+  end
+
+  @doc """
+  Update an existing folder in Grafana
+  """
+  @spec update_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), new_title :: String.t()) ::
+          handler_respose()
+  def update_folder(%Connection{} = grafana_conn, folder_uid, new_title) do
+    headers = grafana_headers(:put, grafana_conn.auth_token)
+
+    payload =
+      Jason.encode!(%{
+        title: new_title,
+        overwrite: true
+      })
+
+    :put
+    |> Finch.build("#{grafana_conn.base_url}/api/folders/#{folder_uid}", headers, payload)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_create_dashboard_response()
+  end
+
+  @doc """
+  Used to fetch the details regarding a particular folder on Grafana
+  """
+  @spec get_folder(grafana_conn :: Connection.t(), folder_uid :: String.t()) :: handler_respose()
+  def get_folder(%Connection{} = grafana_conn, folder_id) do
+    headers = grafana_headers(:get, grafana_conn.auth_token)
+
+    :get
+    |> Finch.build("#{grafana_conn.base_url}/api/folders/#{folder_id}", headers)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_create_dashboard_response()
+  end
+
+  @doc """
+  Used to create annotations on dashboard panels
+  """
+  @spec create_annotation(grafana_conn :: Connection.t(), tags :: [String.t()], message :: String.t()) ::
+          handler_respose()
+  def create_annotation(%Connection{} = grafana_conn, tags, message) do
+    headers = grafana_headers(:post, grafana_conn.auth_token)
+
+    payload =
+      Jason.encode!(%{
+        tags: tags,
+        text: message
+      })
+
+    :post
+    |> Finch.build("#{grafana_conn.base_url}/api/annotations", headers, payload)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_create_dashboard_response()
+  end
 
   defp handle_create_dashboard_response(finch_response) do
     case finch_response do
@@ -94,7 +162,7 @@ defmodule PromEx.GrafanaClient do
     ]
   end
 
-  defp grafana_headers(:post, bearer_token) do
+  defp grafana_headers(action, bearer_token) when action in [:post, :put] do
     [
       {"authorization", bearer_token},
       {"content-type", "application/json"},

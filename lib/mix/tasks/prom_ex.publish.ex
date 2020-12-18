@@ -6,23 +6,16 @@ defmodule Mix.Tasks.PromEx.Publish do
   use Mix.Task
 
   alias Mix.Shell.IO
-  alias PromEx.{GrafanaClient, GrafanaClient.Connection}
+  alias PromEx.DashboardUploader
 
   @impl true
   def run(args) do
     # Compile the project
     Mix.Task.run("compile")
 
-    prom_ex_module =
-      args
-      |> parse_options()
-      |> Map.get_lazy(:module, fn ->
-        Mix.Project.config()
-        |> Keyword.get(:app)
-        |> Atom.to_string()
-        |> Macro.camelize()
-        |> Kernel.<>(".PromEx")
-      end)
+    # Get CLI args and set up uploader
+    %{module: prom_ex_module, timeout: timeout} = parse_options(args)
+    uploader_process_name = Mix.Tasks.PromEx.Publish.Uploader
 
     "Elixir.#{prom_ex_module}"
     |> String.to_atom()
@@ -34,13 +27,14 @@ defmodule Mix.Tasks.PromEx.Publish do
       {:error, reason} ->
         raise "#{prom_ex_module} is not a valid PromEx module because #{inspect(reason)}"
     end
-    |> upload_dashboards()
+    |> upload_dashboards(uploader_process_name, timeout)
   end
 
   defp parse_options(args) do
-    cli_options = [module: :string]
-    cli_aliases = [m: :module]
+    cli_options = [module: :string, timeout: :integer]
+    cli_aliases = [m: :module, t: :timeout]
 
+    # Parse out the arguments and put defaults where necessary
     args
     |> OptionParser.parse(aliases: cli_aliases, strict: cli_options)
     |> case do
@@ -50,58 +44,36 @@ defmodule Mix.Tasks.PromEx.Publish do
       {_options, _remaining_args, errors} ->
         raise "Invalid CLI args were provided: #{inspect(errors)}"
     end
-  end
-
-  defp upload_dashboards(prom_ex_module) do
-    dashboards = prom_ex_module.dashboards()
-
-    %PromEx.Config{
-      grafana_config: %{
-        host: grafana_host,
-        auth_token: grafana_auth_token,
-        datasource_id: _grafana_datasource_id
-      }
-    } = prom_ex_module.init_opts()
-
-    finch_name = Module.concat([prom_ex_module, Finch])
-    Finch.start_link(name: finch_name)
-    grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
-
-    # Iterate over all the configured dashboards and upload them
-    dashboards
-    |> Enum.each(fn
-      full_path when is_binary(full_path) ->
-        upload_dashboard(full_path, grafana_conn)
-
-      {app, dashboard_path} ->
-        priv_path =
-          app
-          |> :code.priv_dir()
-          |> :erlang.list_to_binary()
-
-        priv_path
-        |> Path.join(dashboard_path)
-        |> upload_dashboard(grafana_conn)
+    |> Map.put_new(:timeout, 10_000)
+    |> Map.put_new_lazy(:module, fn ->
+      Mix.Project.config()
+      |> Keyword.get(:app)
+      |> Atom.to_string()
+      |> Macro.camelize()
+      |> Kernel.<>(".PromEx")
     end)
-
-    # No longer need this short-lived Finch process
-    finch_name
-    |> Process.whereis()
-    |> Process.exit(:normal)
   end
 
-  defp upload_dashboard(full_dashboard_path, grafana_conn) do
-    case GrafanaClient.upload_dashboard(grafana_conn, full_dashboard_path) do
-      {:ok, _response_payload} ->
-        IO.info("Successfully uploaded #{full_dashboard_path} to Grafana.")
+  defp upload_dashboards(prom_ex_module, uploader_process_name, timeout) do
+    # We don't want errors in DashboardUploader to kill the mix task
+    Process.flag(:trap_exit, true)
 
-      {:error, %Mint.TransportError{reason: :nxdomain}} ->
+    # Start the DashboardUploader
+    {:ok, pid} = DashboardUploader.start_link(name: uploader_process_name, prom_ex_module: prom_ex_module)
+
+    receive do
+      {:EXIT, ^pid, :normal} ->
+        IO.info("\nPromEx dashboard upload complete! Review the above statuses for each dashboard.")
+
+      {:EXIT, ^pid, error_reason} ->
         IO.error(
-          "Failed to upload #{full_dashboard_path} to Grafana because #{grafana_conn.base_url} cannot be reached"
+          "PromEx was unable to upload your dashboards to Grafana because:\n#{
+            Code.format_string!(inspect(error_reason))
+          }"
         )
-
-      {:error, reason} ->
-        IO.error("Failed to upload #{full_dashboard_path} to Grafana: #{inspect(reason)}")
+    after
+      timeout ->
+        raise "PromEx timed out trying to upload your dashboards to Grafana"
     end
   end
 end

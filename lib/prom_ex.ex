@@ -133,6 +133,7 @@ defmodule PromEx do
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
     metrics_server_name = Module.concat([calling_module, MetricsServer])
+    lifecycle_annotator_name = Module.concat([calling_module, LifecycleAnnotator])
 
     quote do
       @behaviour PromEx
@@ -154,10 +155,13 @@ defmodule PromEx do
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
 
+        # Default plugin opts
+        default_plugin_opts = [otp_app: unquote(otp_app)]
+
         # Configure each of the desired plugins
         plugins =
           __MODULE__.plugins()
-          |> PromEx.init_plugins(drop_metrics_groups)
+          |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
 
         # Extract the various metrics types from all of the plugins
         telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
@@ -179,6 +183,12 @@ defmodule PromEx do
             metrics_server_config,
             __MODULE__,
             unquote(metrics_server_name)
+          )
+          |> PromEx.lifecycle_annotator_child_spec(
+            grafana_config,
+            __MODULE__,
+            unquote(otp_app),
+            unquote(lifecycle_annotator_name)
           )
           |> Enum.reverse()
 
@@ -202,6 +212,42 @@ defmodule PromEx do
       def dashboards, do: []
 
       @doc false
+      def __otp_app__ do
+        unquote(otp_app)
+      end
+
+      @doc false
+      def __grafana_folder_uid__ do
+        __MODULE__.init_opts()
+        |> Map.get(:grafana_config)
+        |> case do
+          :disabled ->
+            :default
+
+          grafana_config ->
+            Map.get(grafana_config, :folder_name, :default)
+        end
+        |> case do
+          :default ->
+            :default
+
+          _folder_name ->
+            otp_app_name =
+              unquote(otp_app)
+              |> Atom.to_string()
+
+            module_name = Atom.to_string(__MODULE__)
+            string_uid = "#{otp_app_name}:#{module_name}:prom_ex_dashboards"
+
+            # Grafana limits us to 40 character UIDs...so taking the MD5 of
+            # a complete unique identifier to use as the UID
+            :md5
+            |> :crypto.hash(string_uid)
+            |> Base.encode16()
+        end
+      end
+
+      @doc false
       def __manual_metrics_name__ do
         unquote(manual_metrics_name)
       end
@@ -221,19 +267,24 @@ defmodule PromEx do
         unquote(metrics_server_name)
       end
 
+      @doc false
+      def __lifecycle_annotator_name__ do
+        unquote(lifecycle_annotator_name)
+      end
+
       defoverridable PromEx
     end
   end
 
   @doc false
-  def init_plugins(plugins, drop_metrics_groups) do
+  def init_plugins(plugins, default_plugin_opts, drop_metrics_groups) do
     # Adding default PromEx plugin
     plugins = [PromEx.Plugins.PromEx | plugins]
 
     # Extract relevant metrics based on type
-    event_metrics = extract_relevant_metrics(plugins, :event_metrics, drop_metrics_groups)
-    polling_metrics = extract_relevant_metrics(plugins, :polling_metrics, drop_metrics_groups)
-    manual_metrics = extract_relevant_metrics(plugins, :manual_metrics, drop_metrics_groups)
+    event_metrics = extract_relevant_metrics(plugins, default_plugin_opts, :event_metrics, drop_metrics_groups)
+    polling_metrics = extract_relevant_metrics(plugins, default_plugin_opts, :polling_metrics, drop_metrics_groups)
+    manual_metrics = extract_relevant_metrics(plugins, default_plugin_opts, :manual_metrics, drop_metrics_groups)
 
     telemetry_metrics =
       [event_metrics, polling_metrics, manual_metrics]
@@ -301,6 +352,24 @@ defmodule PromEx do
   end
 
   def dashboard_uploader_child_spec(acc, :disabled, _, _) do
+    acc
+  end
+
+  @doc false
+  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: true}, prom_ex_module, otp_app, process_name) do
+    spec = {
+      PromEx.LifecycleAnnotator,
+      name: process_name, prom_ex_module: prom_ex_module, otp_app: otp_app
+    }
+
+    [spec | acc]
+  end
+
+  def lifecycle_annotator_child_spec(acc, :disabled, _, _, _) do
+    acc
+  end
+
+  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: false}, _, _, _) do
     acc
   end
 
@@ -411,10 +480,10 @@ defmodule PromEx do
     end)
   end
 
-  defp extract_relevant_metrics(plugins, type, drop_metrics_groups) do
+  defp extract_relevant_metrics(plugins, default_plugin_opts, type, drop_metrics_groups) do
     plugins
     |> Enum.map(fn plugin_definition ->
-      init_plugin(plugin_definition, type)
+      init_plugin(plugin_definition, default_plugin_opts, type)
     end)
     |> List.flatten()
     |> Enum.reject(fn %_{group_name: group_name} ->
@@ -422,15 +491,17 @@ defmodule PromEx do
     end)
   end
 
-  defp init_plugin({module, opts}, function) when is_atom(module) do
+  defp init_plugin({module, opts}, default_plugin_opts, function) when is_atom(module) do
+    opts = Keyword.merge(default_plugin_opts, opts)
+
     module
     |> apply(function, [opts])
     |> normalize_plugin()
   end
 
-  defp init_plugin(module, function) when is_atom(module) do
+  defp init_plugin(module, default_plugin_opts, function) when is_atom(module) do
     module
-    |> apply(function, [[]])
+    |> apply(function, [default_plugin_opts])
     |> normalize_plugin()
   end
 

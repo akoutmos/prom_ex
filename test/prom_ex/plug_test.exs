@@ -21,7 +21,7 @@ defmodule PromEx.PlugTest do
   end
 
   setup_all do
-    System.put_env("APPLICATION_GIT_SHA", "395459c")
+    System.put_env("GIT_SHA", "395459c")
     Application.put_env(:prom_ex, Test.Repo, telemetry_prefix: [:test, :repo])
 
     []

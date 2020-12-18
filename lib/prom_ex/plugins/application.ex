@@ -13,7 +13,7 @@ defmodule PromEx.Plugins.Application do
 
   - `git_sha_mfa`: This option is OPTIONAL and defines an MFA that will be called in order to fetch the
     application's Git SHA at the time of deployment. By default, an Application Plugin function will be called
-    and will attempt to read the APPLICATION_GIT_SHA environment variable to populate the value.
+    and will attempt to read the GIT_SHA environment variable to populate the value.
 
   This plugin exposes the following metric groups:
   - `:application_versions_manual_metrics`
@@ -50,6 +50,7 @@ defmodule PromEx.Plugins.Application do
     otp_app = Keyword.fetch!(opts, :otp_app)
     apps = Keyword.get(opts, :deps, :all)
     git_sha_mfa = Keyword.get(opts, :git_sha_mfa, {__MODULE__, :git_sha, []})
+    # TODO: Add git_author_mfa support
 
     [
       Manual.build(
@@ -116,12 +117,12 @@ defmodule PromEx.Plugins.Application do
 
   @doc false
   def git_sha do
-    case System.fetch_env("APPLICATION_GIT_SHA") do
+    case System.fetch_env("GIT_SHA") do
       {:ok, git_sha} ->
         git_sha
 
       :error ->
-        Logger.warn("APPLICATION_GIT_SHA has not been defined")
+        Logger.warn("GIT_SHA has not been defined")
         "Git SHA not available"
     end
   end
