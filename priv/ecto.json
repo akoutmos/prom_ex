@@ -28,7 +28,7 @@
       {
         "datasource": "-- Grafana --",
         "enable": true,
-        "hide": false,
+        "hide": true,
         "iconColor": "#FF9830",
         "limit": 100,
         "name": "PromEx service stop",
