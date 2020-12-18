@@ -13,7 +13,7 @@
       {
         "datasource": "-- Grafana --",
         "enable": true,
-        "hide": false,
+        "hide": true,
         "iconColor": "#73BF69",
         "limit": 100,
         "name": "PromEx service start",
