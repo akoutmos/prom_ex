@@ -1,8 +1,6 @@
 defmodule PromEx.LifecycleAnnotatorTest do
   use ExUnit.Case, async: false
 
-  import ExUnit.CaptureLog
-
   alias PromEx.LifecycleAnnotator
 
   defmodule DefaultPromExSetUp do
