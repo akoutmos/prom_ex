@@ -56,7 +56,7 @@ defmodule PromEx.DashboardUploaderTest do
         auth_token: "random_token",
         datasource_id: "prometheus",
         folder_name: "Web App Dashboards",
-        annotate_app_lifecycle: true
+        annotate_app_lifecycle: false
       ]
     )
 
