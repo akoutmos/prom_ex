@@ -959,11 +959,6 @@
     "list": [
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "elixir_app",
-          "value": "elixir_app"
-        },
         "datasource": "prometheus",
         "definition": "label_values(prom_ex_status_info, job)",
         "hide": 0,
@@ -985,11 +980,6 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "elixir_app:4000",
-          "value": "elixir_app:4000"
-        },
         "datasource": "prometheus",
         "definition": "label_values(prom_ex_status_info, instance)",
         "hide": 0,
