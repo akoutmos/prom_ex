@@ -58,6 +58,7 @@ defmodule PromEx.MixProject do
       {:ecto, ">= 3.5.0", optional: true},
 
       # PromEx development related dependencies
+      {:bypass, "~> 2.1", only: :test},
       {:ex_doc, "~> 0.22", only: :dev},
       {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
       {:doctor, "~> 0.15.0", only: :dev},
