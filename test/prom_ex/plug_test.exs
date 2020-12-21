@@ -22,6 +22,7 @@ defmodule PromEx.PlugTest do
 
   setup_all do
     System.put_env("GIT_SHA", "395459c")
+    System.put_env("GIT_AUTHOR", "Alex")
     Application.put_env(:prom_ex, Test.Repo, telemetry_prefix: [:test, :repo])
 
     []
@@ -70,6 +71,7 @@ defmodule PromEx.PlugTest do
       assert response.status == 200
       assert response.resp_body =~ "prom_ex_application_primary_info"
       assert response.resp_body =~ "395459c"
+      assert response.resp_body =~ "Alex"
     end
 
     test "should return the metrics if the supervisor is running at a configured path" do
@@ -80,6 +82,7 @@ defmodule PromEx.PlugTest do
       assert response.status == 200
       assert response.resp_body =~ "prom_ex_application_primary_info"
       assert response.resp_body =~ "395459c"
+      assert response.resp_body =~ "Alex"
     end
 
     test "should not alter the conn struct if the path does not equal the init opts" do

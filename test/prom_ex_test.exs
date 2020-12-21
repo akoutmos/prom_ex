@@ -41,6 +41,7 @@ defmodule PromExTest do
 
   setup_all do
     System.put_env("GIT_SHA", "395459c")
+    System.put_env("GIT_AUTHOR", "Alex")
     Application.put_env(:prom_ex, Test.Repo, telemetry_prefix: [:test, :repo])
 
     []
@@ -93,6 +94,10 @@ defmodule PromExTest do
       assert DefaultPromExSetUp
              |> PromEx.get_metrics()
              |> String.contains?("395459c")
+
+      assert DefaultPromExSetUp
+             |> PromEx.get_metrics()
+             |> String.contains?("Alex")
 
       assert DefaultPromExSetUp
              |> PromEx.get_metrics()

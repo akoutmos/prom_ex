@@ -25,6 +25,7 @@ defmodule PromEx.MetricsServer.PlugTest do
 
   setup_all do
     System.put_env("GIT_SHA", "395459c")
+    System.put_env("GIT_AUTHOR", "Alex")
     Application.put_env(:prom_ex, Test.Repo, telemetry_prefix: [:test, :repo])
 
     []
@@ -67,6 +68,7 @@ defmodule PromEx.MetricsServer.PlugTest do
       assert response.status == 200
       assert response.resp_body =~ "prom_ex_application_primary_info"
       assert response.resp_body =~ "395459c"
+      assert response.resp_body =~ "Alex"
     end
 
     test "should return a 401 if the request has an invalid basic token" do
@@ -112,6 +114,7 @@ defmodule PromEx.MetricsServer.PlugTest do
       assert response.status == 200
       assert response.resp_body =~ "prom_ex_application_primary_info"
       assert response.resp_body =~ "395459c"
+      assert response.resp_body =~ "Alex"
     end
 
     test "should return a 401 if the request has an invalid bearer token" do
@@ -149,6 +152,7 @@ defmodule PromEx.MetricsServer.PlugTest do
       assert response.status == 200
       assert response.resp_body =~ "prom_ex_application_primary_info"
       assert response.resp_body =~ "395459c"
+      assert response.resp_body =~ "Alex"
     end
 
     test "should give a 404 if the request route does not match the configured route" do

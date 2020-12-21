@@ -15,6 +15,10 @@ defmodule PromEx.Plugins.Application do
     application's Git SHA at the time of deployment. By default, an Application Plugin function will be called
     and will attempt to read the GIT_SHA environment variable to populate the value.
 
+  - `git_author_mfa`: This option is OPTIONAL and defines an MFA that will be called in order to fetch the
+    application's last Git commit author at the time of deployment. By default, an Application Plugin function
+    will be called and will attempt to read the GIT_AUTHOR environment variable to populate the value.
+
   This plugin exposes the following metric groups:
   - `:application_versions_manual_metrics`
 
@@ -50,12 +54,12 @@ defmodule PromEx.Plugins.Application do
     otp_app = Keyword.fetch!(opts, :otp_app)
     apps = Keyword.get(opts, :deps, :all)
     git_sha_mfa = Keyword.get(opts, :git_sha_mfa, {__MODULE__, :git_sha, []})
-    # TODO: Add git_author_mfa support
+    git_author_mfa = Keyword.get(opts, :git_author_mfa, {__MODULE__, :git_author, []})
 
     [
       Manual.build(
         :application_versions_manual_metrics,
-        {__MODULE__, :apps_running, [otp_app, apps, git_sha_mfa]},
+        {__MODULE__, :apps_running, [otp_app, apps, git_sha_mfa, git_author_mfa]},
         [
           # Capture information regarding the primary application (i.e the user's application)
           last_value(
@@ -82,6 +86,15 @@ defmodule PromEx.Plugins.Application do
             description: "The application's Git SHA at the time of deployment.",
             measurement: :status,
             tags: [:sha]
+          ),
+
+          # Capture application Git author using user provided MFA
+          last_value(
+            [otp_app | [:application, :git_author, :info]],
+            event_name: [otp_app | [:application, :git_author, :info]],
+            description: "The application's author of the last Git commit at the time of deployment.",
+            measurement: :status,
+            tags: [:author]
           )
         ]
       )
@@ -128,7 +141,19 @@ defmodule PromEx.Plugins.Application do
   end
 
   @doc false
-  def apps_running(otp_app, apps, git_sha_mfa) do
+  def git_author do
+    case System.fetch_env("GIT_AUTHOR") do
+      {:ok, git_sha} ->
+        git_sha
+
+      :error ->
+        Logger.warn("GIT_AUTHOR has not been defined")
+        "Git author not available"
+    end
+  end
+
+  @doc false
+  def apps_running(otp_app, apps, git_sha_mfa, git_author_mfa) do
     started_apps =
       Application.started_applications()
       |> Enum.map(fn {app, _description, version} ->
@@ -194,6 +219,16 @@ defmodule PromEx.Plugins.Application do
       [otp_app | [:application, :git_sha, :info]],
       %{status: 1},
       %{sha: git_sha}
+    )
+
+    # Publish Git author data
+    {module, function, args} = git_author_mfa
+    git_author = apply(module, function, args)
+
+    :telemetry.execute(
+      [otp_app | [:application, :git_author, :info]],
+      %{status: 1},
+      %{author: git_author}
     )
   end
 end
