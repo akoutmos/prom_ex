@@ -96,6 +96,9 @@ defmodule PromEx do
   @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
   @type measurements_mfa() :: {module(), atom(), list()}
 
+  @type plugin_definition() :: module() | {module(), keyword()}
+  @type dashboard_definition() :: {atom(), String.t()} | {atom(), String.t(), keyword()}
+
   @doc """
   A simple pass-through to fetch all of the currently configured metrics. This is
   primarily used by the exporter plug to fetch all of the metrics so that they
@@ -111,8 +114,8 @@ defmodule PromEx do
   end
 
   @callback init_opts :: PromEx.Config.t()
-  @callback plugins :: list()
-  @callback dashboards :: list()
+  @callback plugins :: [plugin_definition()]
+  @callback dashboards :: [dashboard_definition()]
 
   defmacro __using__(opts) do
     # Get calling module name
