@@ -21,6 +21,13 @@ defmodule PromEx.DashboardUploaderTest do
     end
 
     @impl true
+    def dashboard_assigns do
+      [
+        datasource_id: "prometheus"
+      ]
+    end
+
+    @impl true
     def dashboards do
       [{:prom_ex, "application.json"}]
     end
