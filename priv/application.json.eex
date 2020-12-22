@@ -50,7 +50,7 @@
   "links": [],
   "panels": [
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of time that the application has been running.",
       "fieldConfig": {
         "defaults": {
@@ -108,7 +108,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The data is populated by the PromEx Application plugin and provides information regarding your application's dependencies.",
       "fieldConfig": {
         "defaults": {
@@ -257,7 +257,7 @@
       "type": "table"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The name of the primary application that is running.",
       "fieldConfig": {
         "defaults": {
@@ -313,7 +313,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The Git SHA of the application.",
       "fieldConfig": {
         "defaults": {
@@ -369,7 +369,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The author of the application's last Git commit.",
       "fieldConfig": {
         "defaults": {
@@ -425,7 +425,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The version of the primary application that is running.",
       "fieldConfig": {
         "defaults": {
@@ -481,7 +481,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of modules loaded by the primary application that is running.",
       "fieldConfig": {
         "defaults": {
@@ -545,7 +545,7 @@
     "list": [
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, job)",
         "hide": 0,
         "includeAll": false,
@@ -566,7 +566,7 @@
       },
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, instance)",
         "hide": 0,
         "includeAll": false,

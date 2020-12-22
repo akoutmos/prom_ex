@@ -83,7 +83,17 @@ defmodule PromEx.DashboardRenderer do
   end
 
   def render_dashboard(%__MODULE__{file_type: :eex, assigns: assigns, file_contents: contents} = dashboard_render) do
-    %{dashboard_render | rendered_file: EEx.eval_string(contents, assigns)}
+    case EEx.eval_string(contents, assigns: assigns) do
+      nil ->
+        %{
+          dashboard_render
+          | valid_file?: false,
+            error: {:invalid_eex_template, "Failed to render EEx dashboard template due to missing assigns."}
+        }
+
+      rendered_file ->
+        %{dashboard_render | rendered_file: rendered_file}
+    end
   end
 
   @doc """

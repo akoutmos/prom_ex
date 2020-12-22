@@ -64,7 +64,7 @@
       "type": "row"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The time the connection spent waiting before being checked out for the query.",
       "fieldConfig": {
         "defaults": {
@@ -120,7 +120,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The time spent waiting to check out a database connection.",
       "fieldConfig": {
         "defaults": {
@@ -176,7 +176,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The time spent decoding the data received from the database.",
       "fieldConfig": {
         "defaults": {
@@ -232,7 +232,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The time spent executing the query. This value is the average time across all query types (SELECT, DELETE, etc).",
       "fieldConfig": {
         "defaults": {
@@ -288,7 +288,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The name of the Ecto Repo module",
       "fieldConfig": {
         "defaults": {
@@ -350,7 +350,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The host of the database that the Repo is connected to.",
       "fieldConfig": {
         "defaults": {
@@ -412,7 +412,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The name of the database that the Repo is connected to.",
       "fieldConfig": {
         "defaults": {
@@ -474,7 +474,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The pool size that the repo was initialized with.",
       "fieldConfig": {
         "defaults": {
@@ -536,7 +536,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The timeout duration that the Repo was initialized with.",
       "fieldConfig": {
         "defaults": {
@@ -616,7 +616,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average request time per path per status code per HTTP method.",
       "fieldConfig": {
         "defaults": {
@@ -721,7 +721,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the request time spread across all Repo query executions (regardless of query type).",
       "fieldConfig": {
         "defaults": {
@@ -785,7 +785,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average response size per path per status code per HTTP method.",
       "fieldConfig": {
         "defaults": {
@@ -891,7 +891,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the number of results returned from the database (summed up across all operations and sources).",
       "fieldConfig": {
         "defaults": {
@@ -959,7 +959,7 @@
     "list": [
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, job)",
         "hide": 0,
         "includeAll": false,
@@ -980,7 +980,7 @@
       },
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, instance)",
         "hide": 0,
         "includeAll": false,
@@ -1001,7 +1001,7 @@
       },
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(ecto_repo_init_status_info, repo)",
         "hide": 0,
         "includeAll": false,

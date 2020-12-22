@@ -64,7 +64,7 @@
       "type": "row"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
       "fieldConfig": {
         "defaults": {
@@ -128,7 +128,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A percentage of responses that resulted in 400s or 500s over the past 24 hours.",
       "fieldConfig": {
         "defaults": {
@@ -192,7 +192,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of data transferred by Phoenix in a 24 hour rolling window.",
       "fieldConfig": {
         "defaults": {
@@ -248,7 +248,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of requests received by Phoenix in a 24 hour rolling window.",
       "fieldConfig": {
         "defaults": {
@@ -304,7 +304,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the previous hour of requests.",
       "fieldConfig": {
         "defaults": {
@@ -369,7 +369,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A percentage of responses that resulted in 400s or 500s over the past hour.",
       "fieldConfig": {
         "defaults": {
@@ -434,7 +434,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of data transferred by Phoenix in the past hour.",
       "fieldConfig": {
         "defaults": {
@@ -490,7 +490,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of requests received by Phoenix in the past hour.",
       "fieldConfig": {
         "defaults": {
@@ -572,7 +572,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the request time spread across all requests (regardless of path).",
       "fieldConfig": {
         "defaults": {
@@ -644,7 +644,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the response payload size spread across all requests (regardless of path).",
       "fieldConfig": {
         "defaults": {
@@ -708,7 +708,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average request time per path per status code per HTTP method.",
       "fieldConfig": {
         "defaults": {
@@ -805,7 +805,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average response size per path per status code per HTTP method.",
       "fieldConfig": {
         "defaults": {
@@ -902,7 +902,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Shows the number of requests coming into certain paths and the resulting response codes.",
       "fieldConfig": {
         "defaults": {
@@ -999,7 +999,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The aggregate response status of all the requests.",
       "fieldConfig": {
         "defaults": {
@@ -1120,7 +1120,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "How many channel joins have occurred over time.",
       "fieldConfig": {
         "defaults": {
@@ -1223,7 +1223,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the request time spread across all channel events.",
       "fieldConfig": {
         "defaults": {
@@ -1287,7 +1287,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average response time for a channel message.",
       "fieldConfig": {
         "defaults": {
@@ -1388,7 +1388,7 @@
     "list": [
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, job)",
         "hide": 0,
         "includeAll": false,
@@ -1409,7 +1409,7 @@
       },
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, instance)",
         "hide": 0,
         "includeAll": false,

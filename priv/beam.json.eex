@@ -64,7 +64,7 @@
       "type": "row"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of time that has passed since the system has started.",
       "fieldConfig": {
         "defaults": {
@@ -119,7 +119,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of memory currently allocated by the BEAM.",
       "fieldConfig": {
         "defaults": {
@@ -181,7 +181,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of atoms currently in the atom table.",
       "fieldConfig": {
         "defaults": {
@@ -243,7 +243,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of running BEAM processes currently running.",
       "fieldConfig": {
         "defaults": {
@@ -305,7 +305,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of currently active ports.",
       "fieldConfig": {
         "defaults": {
@@ -367,7 +367,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of currently allocated ETS tables.",
       "fieldConfig": {
         "defaults": {
@@ -447,7 +447,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Stats on the current memory usage.",
       "fieldConfig": {
         "defaults": {
@@ -589,7 +589,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of bytes sent and received through ports.",
       "fieldConfig": {
         "defaults": {
@@ -708,7 +708,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of garbage collection events that are occuring and the number of bytes reclaimed",
       "fieldConfig": {
         "defaults": {
@@ -837,7 +837,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of context switches that have occured along with the number of reductions.",
       "fieldConfig": {
         "defaults": {
@@ -966,7 +966,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Statistics regarding the normal scheduler.",
       "fieldConfig": {
         "defaults": {
@@ -1086,7 +1086,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Statistics regarding the dirty schedulers.",
       "fieldConfig": {
         "defaults": {
@@ -1206,7 +1206,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of atoms currently in the atom table",
       "fieldConfig": {
         "defaults": {
@@ -1318,7 +1318,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of active ports.",
       "fieldConfig": {
         "defaults": {
@@ -1429,7 +1429,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of running BEAM processes.",
       "fieldConfig": {
         "defaults": {
@@ -1540,7 +1540,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of active ETS tables.",
       "fieldConfig": {
         "defaults": {
@@ -1661,7 +1661,7 @@
       "type": "row"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The OTP major version running the application.",
       "fieldConfig": {
         "defaults": {
@@ -1714,7 +1714,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The size of Erlang term words in bytes.",
       "fieldConfig": {
         "defaults": {
@@ -1767,7 +1767,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of logical processors in the system.",
       "fieldConfig": {
         "defaults": {
@@ -1820,7 +1820,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of logical processors available in the system.",
       "fieldConfig": {
         "defaults": {
@@ -1873,7 +1873,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of logical processors online in the system.",
       "fieldConfig": {
         "defaults": {
@@ -1926,7 +1926,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Shows the various options that OTP was compiled with.",
       "fieldConfig": {
         "defaults": {
@@ -2073,7 +2073,7 @@
       "type": "table"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Shows information regarding the system limits of the BEAM instance.",
       "fieldConfig": {
         "defaults": {
@@ -2214,7 +2214,7 @@
       "type": "table"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Shows information regarding the schedulers configured for the BEAM instance.",
       "fieldConfig": {
         "defaults": {
@@ -2376,7 +2376,7 @@
     "list": [
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, job)",
         "hide": 0,
         "includeAll": false,
@@ -2397,7 +2397,7 @@
       },
       {
         "allValue": null,
-        "datasource": "prometheus",
+        "datasource": "<%= @datasource_id %>",
         "definition": "label_values(prom_ex_status_info, instance)",
         "hide": 0,
         "includeAll": false,
