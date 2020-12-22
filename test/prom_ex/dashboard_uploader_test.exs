@@ -54,7 +54,6 @@ defmodule PromEx.DashboardUploaderTest do
       grafana: [
         host: endpoint_url(bypass.port),
         auth_token: "random_token",
-        datasource_id: "prometheus",
         folder_name: "Web App Dashboards",
         annotate_app_lifecycle: false
       ]
@@ -81,7 +80,8 @@ defmodule PromEx.DashboardUploaderTest do
                    DashboardUploader,
                    [
                      name: DefaultPromExSetUp.__dashboard_uploader_name__(),
-                     prom_ex_module: DefaultPromExSetUp
+                     prom_ex_module: DefaultPromExSetUp,
+                     default_dashboard_opts: []
                    ]
                  },
                  restart: :temporary

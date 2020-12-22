@@ -7,34 +7,48 @@ defmodule PromEx do
   interface can be achieved and so that leveraging multiple plugins is
   effortless from the user's point of view.
 
-  To use PromEx you need to define a module that uses the PromEx library. When using
-  PromEx you have a few options available to you. For example, you can do the
-  following:
+  To use PromEx you need to define a module that uses the PromEx library. This module
+  will also need to have some application config set for it similarly to how Ecto does.
+  For example, for a PromEx module defined like so:
 
   ```elixir
   defmodule MyApp.PromEx do
-    use PromEx,
-      otp_app: :web_app,
-      delay_manual_start: :no_delay,
-      drop_metrics_groups: [],
-      upload_dashboards_on_start: true
+    use PromEx,  otp_app: :web_app
 
     ...
   end
   ```
 
-  The options that you can pass to PromEx are outlined in the following section. In order to
-  tell PromEx what plugins you would like to use and what dashboards you would like PromEx to
-  upload for you, implement the `plugins/0` and `dashboards/0` callbacks respectively. Each
-  plugin also has an accompanying Grafana dashboard that you can leverage to plot all of the
-  plugin captured data.
+  You would have an application configuration set like so:
+
+  ```elixir
+  config :my_app, MyApp.PromEx,
+    manual_metrics_start_delay: :no_delay,
+    drop_metrics_groups: [],
+    grafana: [
+      host: System.get_env("GRAFANA_HOST", "http://grafana:3000"),
+      auth_token: System.get_env("GRAFANA_TOKEN", ""),
+      upload_dashboards_on_start: true,
+      folder_name: "My App Dashboards",
+      annotate_app_lifecycle: true
+    ]
+  ```
+
+  The options that you can pass to PromEx macro are outlined in the following section. In order
+  to tell PromEx what plugins you would like to use and what dashboards you would like PromEx
+  to upload for you, implement the `plugins/0` and `dashboards/0` callbacks respectively. The
+  `dashboard_assigns/0` callback will be used when your EEx template Grafana dashboards are
+  rendered so that the dashboards that are created for your application coincide with the PromEx
+  configuration for the application. If your dashboards are not EEx templates, then the dashboard
+  assigns are not passed through. Each plugin also has an accompanying Grafana dashboard that you
+  can leverage to plot all of the plugin captured data.
 
   In order to expose captured metrics, you can leverage the PromEx provided Plug `PromEx.Plug`.
   See the `PromEx.Plug` documentation modules for specifics on how to use it.
 
   ## Options
 
-  * `:otp_app` - This is a required option and is used by PromEx to fetch the application
+  * `:otp_app` - This is a REQUIRED field and is used by PromEx to fetch the application
     configuration values for the various PromEx caputure modules. Make sure that this value
     matches the `:app` value in `project/0` from your `mix.exs` file. If you use the PromEx
     `mix prom_ex.create` mix task this will be done automatically for you.
@@ -46,20 +60,20 @@ defmodule PromEx do
   Foundational metrics:
     - [X] `PromEx.Plugins.Application` Application related informational metrics
     - [X] `PromEx.Plugins.Beam` BEAM virtual machine metrics
+    - [ ] Operating System (http://erlang.org/doc/man/os_mon_app.html)
 
   Library metrics:
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
 
   Upcoming Elixir library metrics:
     - [X] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
-    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
-    - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
     - [ ] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
-    - [ ] Operating System (http://erlang.org/doc/man/os_mon_app.html)
+    - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
+    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
 
   Backlog Elixir library metrics:
     - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
-    - [ ] PhoenixLiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
+    - [ ] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
@@ -97,7 +111,7 @@ defmodule PromEx do
   @type measurements_mfa() :: {module(), atom(), list()}
 
   @type plugin_definition() :: module() | {module(), keyword()}
-  @type dashboard_definition() :: {atom(), String.t()} | {atom(), String.t(), keyword()}
+  @type dashboard_definition() :: {atom(), String.t()}
 
   @doc """
   A simple pass-through to fetch all of the currently configured metrics. This is
@@ -115,6 +129,7 @@ defmodule PromEx do
 
   @callback init_opts :: PromEx.Config.t()
   @callback plugins :: [plugin_definition()]
+  @callback dashboard_assigns :: keyword()
   @callback dashboards :: [dashboard_definition()]
 
   defmacro __using__(opts) do
@@ -158,8 +173,9 @@ defmodule PromEx do
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
 
-        # Default plugin opts
+        # Default plugin and dashboard opts
         default_plugin_opts = [otp_app: unquote(otp_app)]
+        default_dashboard_opts = [otp_app: unquote(otp_app)]
 
         # Configure each of the desired plugins
         plugins =
@@ -180,6 +196,7 @@ defmodule PromEx do
           |> PromEx.dashboard_uploader_child_spec(
             grafana_config,
             __MODULE__,
+            default_dashboard_opts,
             unquote(dashboard_uploader_name)
           )
           |> PromEx.metrics_server_child_spec(
@@ -209,6 +226,10 @@ defmodule PromEx do
       @doc false
       @impl true
       def plugins, do: []
+
+      @doc false
+      @impl true
+      def dashboard_assigns, do: []
 
       @doc false
       @impl true
@@ -341,20 +362,26 @@ defmodule PromEx do
   end
 
   @doc false
-  def dashboard_uploader_child_spec(acc, %{upload_dashboards_on_start: true}, prom_ex_module, process_name) do
+  def dashboard_uploader_child_spec(
+        acc,
+        %{upload_dashboards_on_start: true},
+        prom_ex_module,
+        default_dashboard_opts,
+        process_name
+      ) do
     spec = {
       PromEx.DashboardUploader,
-      name: process_name, prom_ex_module: prom_ex_module
+      name: process_name, prom_ex_module: prom_ex_module, default_dashboard_opts: default_dashboard_opts
     }
 
     [spec | acc]
   end
 
-  def dashboard_uploader_child_spec(acc, %{upload_dashboards_on_start: false}, _, _) do
+  def dashboard_uploader_child_spec(acc, %{upload_dashboards_on_start: false}, _, _, _) do
     acc
   end
 
-  def dashboard_uploader_child_spec(acc, :disabled, _, _) do
+  def dashboard_uploader_child_spec(acc, :disabled, _, _, _) do
     acc
   end
 

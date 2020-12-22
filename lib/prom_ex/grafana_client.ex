@@ -20,21 +20,14 @@ defmodule PromEx.GrafanaClient do
   """
   @spec upload_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t(), opts :: keyword()) ::
           handler_respose()
-  def upload_dashboard(%Connection{} = grafana_conn, dashboard_file_path, opts \\ []) do
-    case File.read(dashboard_file_path) do
-      {:ok, dashboard_contents} ->
-        headers = grafana_headers(:post, grafana_conn.auth_token)
-        payload = generate_payload(dashboard_contents, Keyword.merge(opts, overwrite: true))
+  def upload_dashboard(%Connection{} = grafana_conn, dashboard_contents, opts \\ []) do
+    headers = grafana_headers(:post, grafana_conn.auth_token)
+    payload = generate_payload(dashboard_contents, Keyword.merge(opts, overwrite: true))
 
-        :post
-        |> Finch.build("#{grafana_conn.base_url}/api/dashboards/db", headers, payload)
-        |> Finch.request(grafana_conn.finch_process)
-        |> handle_create_dashboard_response()
-
-      {:error, reason} ->
-        Logger.warn("Failed to read file #{dashboard_file_path} because of reason: #{inspect(reason)}")
-        {:error, :invalid_dashboard}
-    end
+    :post
+    |> Finch.build("#{grafana_conn.base_url}/api/dashboards/db", headers, payload)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_create_dashboard_response()
   end
 
   @doc """
@@ -42,25 +35,18 @@ defmodule PromEx.GrafanaClient do
   If the ID does not exist in Grafana an error tuple will be returned.
   """
   @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) :: handler_respose()
-  def get_dashboard(%Connection{} = grafana_conn, dashboard_file_path) do
-    case File.read(dashboard_file_path) do
-      {:ok, dashboard_contents} ->
-        headers = grafana_headers(:get, grafana_conn.auth_token)
+  def get_dashboard(%Connection{} = grafana_conn, dashboard_contents) do
+    headers = grafana_headers(:get, grafana_conn.auth_token)
 
-        dashboard_uid =
-          dashboard_contents
-          |> Jason.decode!()
-          |> Map.get("uid")
+    dashboard_uid =
+      dashboard_contents
+      |> Jason.decode!()
+      |> Map.get("uid")
 
-        :get
-        |> Finch.build("#{grafana_conn.base_url}/api/dashboards/uid/#{dashboard_uid}", headers)
-        |> Finch.request(grafana_conn.finch_process)
-        |> handle_create_dashboard_response()
-
-      {:error, reason} ->
-        Logger.warn("Failed to read file #{dashboard_file_path} because of reason: #{inspect(reason)}")
-        {:error, :invalid_dashboard}
-    end
+    :get
+    |> Finch.build("#{grafana_conn.base_url}/api/dashboards/uid/#{dashboard_uid}", headers)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_create_dashboard_response()
   end
 
   @doc """

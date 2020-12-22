@@ -9,8 +9,7 @@ defmodule PromEx.ConfigTest do
                Config.build(
                  grafana: [
                    host: "http://grafana:3000/",
-                   auth_token: "abcd",
-                   datasource_id: "prometheus"
+                   auth_token: "abcd"
                  ]
                )
 
@@ -18,8 +17,7 @@ defmodule PromEx.ConfigTest do
                Config.build(
                  grafana: [
                    host: "http://grafana:3000//////",
-                   auth_token: "abcd",
-                   datasource_id: "prometheus"
+                   auth_token: "abcd"
                  ]
                )
 
@@ -27,8 +25,7 @@ defmodule PromEx.ConfigTest do
                Config.build(
                  grafana: [
                    host: "http://grafana:3000",
-                   auth_token: "abcd",
-                   datasource_id: "prometheus"
+                   auth_token: "abcd"
                  ]
                )
     end

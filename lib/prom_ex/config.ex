@@ -30,7 +30,6 @@ defmodule PromEx.Config do
     grafana: [
       host: "http://localhost:3000",
       auth_token: "<YOUR_AUTH_TOKEN_HERE>",
-      datasource_id: "<YOUR_DATASOURCE_ID_HERE>",
       upload_dashboards_on_start: true # This is an optional setting and will default to `true`
     ]
     ```
@@ -87,12 +86,6 @@ defmodule PromEx.Config do
 
     * `:auth_token` - The auth token that was created in Grafana so that PromEx can upload dashboards
       via the API.
-
-    * `:datasource_id` - When configuring a datasource in Grafana, you allocate an ID to each datasource.
-      This datasource is required by the queries that populate the graphs so that Grafana knows what backing
-      time-series data store to communicate with. Given that PromEx works with Prometheus, you'll need
-      to tell PromEx what the ID of the Prometheus datasource is in Grafana. This value is required so that
-      the PromQL queries can be directed to the correct Prometheus instance.
 
     * `:upload_dashboards_on_start` - Using the config values that you set in your application config
       (`config.exs`, `dev.exs`, `prod.exs`, etc) PromEx will attempt to upload your Dashboards to
@@ -200,7 +193,6 @@ defmodule PromEx.Config do
     %{
       host: grafana_opts |> get_grafana_config(:host) |> normalize_host(),
       auth_token: get_grafana_config(grafana_opts, :auth_token),
-      datasource_id: get_grafana_config(grafana_opts, :datasource_id),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
       folder_name: Keyword.get(grafana_opts, :folder_name, :default),
       annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false)

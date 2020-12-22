@@ -11,8 +11,7 @@ defmodule PromEx.DashboardUploader do
   ```elixir
   config :web_app, WebApp.PromEx,
     grafana_host: "<YOUR HOST ADDRESS>",
-    grafana_auth_token: "<YOUR GRAFANA AUTH TOKEN>",
-    grafana_datasource_id: "<THE ID OF THE PROMETHEUS DATA SOURCE>"
+    grafana_auth_token: "<YOUR GRAFANA AUTH TOKEN>"
   ```
   """
 
@@ -20,7 +19,7 @@ defmodule PromEx.DashboardUploader do
 
   require Logger
 
-  alias PromEx.{GrafanaClient, GrafanaClient.Connection}
+  alias PromEx.{DashboardRenderer, GrafanaClient, GrafanaClient.Connection}
 
   @doc """
   Used to start the DashboardUploader process
@@ -34,22 +33,27 @@ defmodule PromEx.DashboardUploader do
   end
 
   @impl true
-  def init(%{prom_ex_module: prom_ex_module}) do
-    state = %{prom_ex_module: prom_ex_module}
-
+  def init(state) do
     {:ok, state, {:continue, :upload_grafana_dashboards}}
   end
 
   @impl true
-  def handle_continue(:upload_grafana_dashboards, %{prom_ex_module: prom_ex_module}) do
+  def handle_continue(:upload_grafana_dashboards, state) do
+    %{
+      prom_ex_module: prom_ex_module,
+      default_dashboard_opts: default_dashboard_opts
+    } = state
+
     %PromEx.Config{
       grafana_config: %{
         host: grafana_host,
         auth_token: grafana_auth_token,
-        datasource_id: _grafana_datasource_id,
         folder_name: folder_name
       }
     } = prom_ex_module.init_opts()
+
+    default_assigns = default_dashboard_opts
+    user_provided_assigns = prom_ex_module.dashboard_assigns()
 
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
@@ -67,19 +71,22 @@ defmodule PromEx.DashboardUploader do
 
     # Iterate over all the configured dashboards and upload them
     prom_ex_module.dashboards()
-    |> Enum.each(fn
-      full_path when is_binary(full_path) ->
-        upload_dashboard(full_path, grafana_conn, upload_opts)
+    |> Enum.each(fn dashboard ->
+      dashboard
+      |> DashboardRenderer.build()
+      |> DashboardRenderer.merge_assigns(default_assigns)
+      |> DashboardRenderer.merge_assigns(user_provided_assigns)
+      |> DashboardRenderer.render_dashboard()
+      |> DashboardRenderer.decode_dashboard()
+      |> case do
+        %DashboardRenderer{valid_json?: true, rendered_file: rendered_dashboard, full_path: full_path} ->
+          upload_dashboard(rendered_dashboard, grafana_conn, upload_opts, full_path)
 
-      {app, dashboard_path} ->
-        priv_path =
-          app
-          |> :code.priv_dir()
-          |> :erlang.list_to_binary()
-
-        priv_path
-        |> Path.join(dashboard_path)
-        |> upload_dashboard(grafana_conn, upload_opts)
+        %DashboardRenderer{full_path: path, error: error} ->
+          Logger.info(
+            "The dashboard definition for #{inspect(path)} is invalid due to the following error: #{inspect(error)}"
+          )
+      end
     end)
 
     # No longer need this short-lived Finch process
@@ -91,8 +98,8 @@ defmodule PromEx.DashboardUploader do
     {:stop, :normal, :ok}
   end
 
-  defp upload_dashboard(full_dashboard_path, grafana_conn, upload_opts) do
-    case GrafanaClient.upload_dashboard(grafana_conn, full_dashboard_path, upload_opts) do
+  defp upload_dashboard(dashboard_contents, grafana_conn, upload_opts, full_dashboard_path) do
+    case GrafanaClient.upload_dashboard(grafana_conn, dashboard_contents, upload_opts) do
       {:ok, _response_payload} ->
         Logger.info("PromEx.DashboardUploader successfully uploaded #{full_dashboard_path} to Grafana.")
 
