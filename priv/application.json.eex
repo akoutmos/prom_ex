@@ -20,7 +20,7 @@
         "showIn": 0,
         "tags": [
           "prom_ex",
-          "web_app",
+          "<%= @otp_app %>",
           "start"
         ],
         "type": "tags"
@@ -35,7 +35,7 @@
         "showIn": 0,
         "tags": [
           "prom_ex",
-          "web_app",
+          "<%= @otp_app %>",
           "stop"
         ],
         "type": "tags"
