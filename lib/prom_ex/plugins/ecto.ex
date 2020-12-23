@@ -42,6 +42,7 @@ defmodule PromEx.Plugins.Ecto do
   @impl true
   def event_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
+    metric_prefix = PromEx.metric_prefix(otp_app, :ecto)
 
     repo_event_prefixes =
       opts
@@ -65,8 +66,8 @@ defmodule PromEx.Plugins.Ecto do
 
     # Event metrics definitions
     [
-      init_metrics(),
-      query_metrics()
+      init_metrics(metric_prefix),
+      query_metrics(metric_prefix)
     ]
   end
 
@@ -77,12 +78,12 @@ defmodule PromEx.Plugins.Ecto do
     |> Enum.map(&(&1 |> Macro.underscore() |> String.to_atom()))
   end
 
-  defp init_metrics do
+  defp init_metrics(metric_prefix) do
     Event.build(
       :ecto_init_event_metrics,
       [
         last_value(
-          [:ecto, :repo, :init, :status, :info],
+          metric_prefix ++ [:repo, :init, :status, :info],
           event_name: @init_event,
           description: "Information regarding the initialized repo.",
           measurement: fn _measurements -> 1 end,
@@ -90,7 +91,7 @@ defmodule PromEx.Plugins.Ecto do
           tag_values: &ecto_init_tag_values/1
         ),
         last_value(
-          [:ecto, :repo, :init, :pool, :size],
+          metric_prefix ++ [:repo, :init, :pool, :size],
           event_name: @init_event,
           description: "The configured pool size value for the repo.",
           measurement: fn _measurements, %{opts: opts} ->
@@ -100,7 +101,7 @@ defmodule PromEx.Plugins.Ecto do
           tag_values: &ecto_init_tag_values/1
         ),
         last_value(
-          [:ecto, :repo, :init, :timeout, :duration],
+          metric_prefix ++ [:repo, :init, :timeout, :duration],
           event_name: @init_event,
           description: "The configured timeout value for the repo.",
           measurement: fn _measurements, %{opts: opts} ->
@@ -113,13 +114,13 @@ defmodule PromEx.Plugins.Ecto do
     )
   end
 
-  defp query_metrics do
+  defp query_metrics(metric_prefix) do
     Event.build(
       :ecto_query_event_metrics,
       [
         # Capture the db connection idle time
         distribution(
-          [:ecto, :repo, :query, :idle, :time, :milliseconds],
+          metric_prefix ++ [:repo, :query, :idle, :time, :milliseconds],
           event_name: @query_event,
           measurement: :idle_time,
           description: "The time the connection spent waiting before being checked out for the query.",
@@ -133,7 +134,7 @@ defmodule PromEx.Plugins.Ecto do
 
         # Capture the db connection queue time
         distribution(
-          [:ecto, :repo, :query, :queue, :time, :milliseconds],
+          metric_prefix ++ [:repo, :query, :queue, :time, :milliseconds],
           event_name: @query_event,
           measurement: :queue_time,
           description: "The time spent waiting to check out a database connection.",
@@ -147,7 +148,7 @@ defmodule PromEx.Plugins.Ecto do
 
         # Capture the db query decode time
         distribution(
-          [:ecto, :repo, :query, :decode, :time, :milliseconds],
+          metric_prefix ++ [:repo, :query, :decode, :time, :milliseconds],
           event_name: @query_event,
           measurement: :decode_time,
           description: "The time spent decoding the data received from the database.",
@@ -161,7 +162,7 @@ defmodule PromEx.Plugins.Ecto do
 
         # Capture the query execution time
         distribution(
-          [:ecto, :repo, :query, :execution, :time, :milliseconds],
+          metric_prefix ++ [:repo, :query, :execution, :time, :milliseconds],
           event_name: @query_event,
           measurement: :query_time,
           description: "The time spent executing the query.",
@@ -175,7 +176,7 @@ defmodule PromEx.Plugins.Ecto do
 
         # Capture the number of results returned
         distribution(
-          [:ecto, :repo, :query, :results, :returned],
+          metric_prefix ++ [:repo, :query, :results, :returned],
           event_name: @query_event,
           measurement: fn _measurement, %{result: result} ->
             normalize_results_returned(result)
