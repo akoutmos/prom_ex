@@ -41,8 +41,8 @@ defmodule PromEx.DashboardRenderer do
   This is more so for convenience so that you don't need to write out `.eex` everywhere
   given that all PromEx 1st party dashboards are EEx templates.
   """
-  @spec build({atom(), String.t()}) :: __MODULE__.t()
-  def build({otp_app, dashboard_relative_path}) do
+  @spec build(otp_app :: atom(), dashboard_relative_path :: String.t()) :: __MODULE__.t()
+  def build(otp_app, dashboard_relative_path) do
     base_def = %__MODULE__{
       otp_app: otp_app,
       relative_path: dashboard_relative_path,
@@ -61,8 +61,14 @@ defmodule PromEx.DashboardRenderer do
       File.exists?(dashboard_full_path_eex) ->
         read_file(base_def, :eex, dashboard_full_path_eex)
 
-      File.exists?(dashboard_full_path) ->
+      File.exists?(dashboard_full_path) and String.ends_with?(dashboard_full_path, ".eex") ->
+        read_file(base_def, :eex, dashboard_full_path)
+
+      File.exists?(dashboard_full_path) and String.ends_with?(dashboard_full_path, ".json") ->
         read_file(base_def, :json, dashboard_full_path)
+
+      File.exists?(dashboard_full_path) ->
+        %{base_def | valid_file?: false, error: {:file_read_error, :invalid_file_type}}
 
       true ->
         %{base_def | valid_file?: false, error: {:file_read_error, :file_not_found}}

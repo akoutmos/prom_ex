@@ -272,29 +272,37 @@ defmodule PromEx do
       end
 
       @doc false
-      def __manual_metrics_name__ do
-        unquote(manual_metrics_name)
+      def __grafana_dashboard_uid__(dashboard_otp_app, dashboard_path) do
+        otp_app_name =
+          unquote(otp_app)
+          |> Atom.to_string()
+
+        module_name = Atom.to_string(__MODULE__)
+        dashboard_otp_app_name = Atom.to_string(dashboard_otp_app)
+
+        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}"
+
+        # Grafana limits us to 40 character UIDs...so taking the MD5 of
+        # a complete unique identifier to use as the UID
+        :md5
+        |> :crypto.hash(string_uid)
+        |> Base.encode16()
       end
 
       @doc false
-      def __metrics_collector_name__ do
-        unquote(metrics_collector_name)
-      end
+      def __manual_metrics_name__, do: unquote(manual_metrics_name)
 
       @doc false
-      def __dashboard_uploader_name__ do
-        unquote(dashboard_uploader_name)
-      end
+      def __metrics_collector_name__, do: unquote(metrics_collector_name)
 
       @doc false
-      def __metrics_server_name__ do
-        unquote(metrics_server_name)
-      end
+      def __dashboard_uploader_name__, do: unquote(dashboard_uploader_name)
 
       @doc false
-      def __lifecycle_annotator_name__ do
-        unquote(lifecycle_annotator_name)
-      end
+      def __metrics_server_name__, do: unquote(metrics_server_name)
+
+      @doc false
+      def __lifecycle_annotator_name__, do: unquote(lifecycle_annotator_name)
 
       defoverridable PromEx
     end

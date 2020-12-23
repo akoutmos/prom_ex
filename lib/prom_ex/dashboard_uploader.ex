@@ -53,7 +53,6 @@ defmodule PromEx.DashboardUploader do
     } = prom_ex_module.init_opts()
 
     default_assigns = default_dashboard_opts
-    user_provided_assigns = prom_ex_module.dashboard_assigns()
 
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
@@ -73,11 +72,7 @@ defmodule PromEx.DashboardUploader do
     prom_ex_module.dashboards()
     |> Enum.each(fn dashboard ->
       dashboard
-      |> DashboardRenderer.build()
-      |> DashboardRenderer.merge_assigns(default_assigns)
-      |> DashboardRenderer.merge_assigns(user_provided_assigns)
-      |> DashboardRenderer.render_dashboard()
-      |> DashboardRenderer.decode_dashboard()
+      |> handle_dashboard_render(default_assigns, prom_ex_module)
       |> case do
         %DashboardRenderer{valid_json?: true, rendered_file: rendered_dashboard, full_path: full_path} ->
           upload_dashboard(rendered_dashboard, grafana_conn, upload_opts, full_path)
@@ -96,6 +91,33 @@ defmodule PromEx.DashboardUploader do
 
     # Kill the uploader process as there is no more work to do
     {:stop, :normal, :ok}
+  end
+
+  defp handle_dashboard_render({otp_app, dashboard_relative_path}, default_assigns, prom_ex_module) do
+    handle_dashboard_render({otp_app, dashboard_relative_path, []}, default_assigns, prom_ex_module)
+  end
+
+  defp handle_dashboard_render({otp_app, dashboard_relative_path, dashboard_opts}, default_assigns, prom_ex_module) do
+    user_provided_assigns = prom_ex_module.dashboard_assigns()
+
+    default_title =
+      prom_ex_module.__otp_app__()
+      |> Atom.to_string()
+      |> Macro.camelize()
+
+    default_dashboard_assigns = [
+      uid: prom_ex_module.__grafana_dashboard_uid__(otp_app, dashboard_relative_path),
+      title: "#{default_title} - PromEx Application Dashboard"
+    ]
+
+    otp_app
+    |> DashboardRenderer.build(dashboard_relative_path)
+    |> DashboardRenderer.merge_assigns(default_assigns)
+    |> DashboardRenderer.merge_assigns(user_provided_assigns)
+    |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
+    |> DashboardRenderer.merge_assigns(dashboard_opts)
+    |> DashboardRenderer.render_dashboard()
+    |> DashboardRenderer.decode_dashboard()
   end
 
   defp upload_dashboard(dashboard_contents, grafana_conn, upload_opts, full_dashboard_path) do
