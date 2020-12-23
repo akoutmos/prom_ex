@@ -18,7 +18,7 @@ defmodule PromEx.Plugins.PromExTest do
 
   describe "manual_metrics/1" do
     test "should return the correct number of metrics" do
-      assert %Manual{} = PromEx.manual_metrics([])
+      assert %Manual{} = PromEx.manual_metrics(otp_app: :prom_ex)
     end
   end
 end
