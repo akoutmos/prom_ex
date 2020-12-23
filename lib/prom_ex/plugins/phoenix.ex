@@ -55,14 +55,17 @@ defmodule PromEx.Plugins.Phoenix do
 
   @impl true
   def event_metrics(opts) do
+    otp_app = Keyword.fetch!(opts, :otp_app)
+    metric_prefix = PromEx.metric_prefix(otp_app, :phoenix)
+
     # Event metrics definitions
     [
-      http_events(opts),
-      channel_events()
+      http_events(metric_prefix, opts),
+      channel_events(metric_prefix)
     ]
   end
 
-  defp http_events(opts) do
+  defp http_events(metric_prefix, opts) do
     # Fetch user options
     phoenix_router = Keyword.fetch!(opts, :router)
     event_prefix = Keyword.get(opts, :event_prefix, [:phoenix, :endpoint])
@@ -76,7 +79,7 @@ defmodule PromEx.Plugins.Phoenix do
       [
         # Capture request duration information
         distribution(
-          [:phoenix, :http, :request, :duration, :milliseconds],
+          metric_prefix ++ [:http, :request, :duration, :milliseconds],
           event_name: phoenix_stop_event,
           measurement: :duration,
           description: "The time it takes for the application to respond to HTTP requests.",
@@ -90,7 +93,7 @@ defmodule PromEx.Plugins.Phoenix do
 
         # Capture response payload size information
         distribution(
-          [:phoenix, :http, :response, :size, :bytes],
+          metric_prefix ++ [:http, :response, :size, :bytes],
           event_name: phoenix_stop_event,
           description: "The size of the HTTP response payload.",
           reporter_options: [
@@ -106,7 +109,7 @@ defmodule PromEx.Plugins.Phoenix do
 
         # Capture the number of requests that have been serviced
         counter(
-          [:phoenix, :http, :requests, :total],
+          metric_prefix ++ [:http, :requests, :total],
           event_name: phoenix_stop_event,
           description: "The number of requests have been serviced.",
           tag_values: get_conn_tags(phoenix_router),
@@ -116,13 +119,13 @@ defmodule PromEx.Plugins.Phoenix do
     )
   end
 
-  defp channel_events do
+  defp channel_events(metric_prefix) do
     Event.build(
       :phoenix_channel_event_metrics,
       [
         # Capture the number of channel joins that have occured
         counter(
-          [:phoenix, :channel, :joined, :total],
+          metric_prefix ++ [:channel, :joined, :total],
           event_name: [:phoenix, :channel_joined],
           description: "The number of channel joins that have occured.",
           tag_values: fn %{result: result, socket: %Socket{transport: transport}} ->
@@ -136,7 +139,7 @@ defmodule PromEx.Plugins.Phoenix do
 
         # Capture channel handle_in duration
         distribution(
-          [:phoenix, :channel, :handled_in, :duration, :milliseconds],
+          metric_prefix ++ [:channel, :handled_in, :duration, :milliseconds],
           event_name: [:phoenix, :channel_handled_in],
           measurement: :duration,
           description: "The time it takes for the application to respond to channel messages.",

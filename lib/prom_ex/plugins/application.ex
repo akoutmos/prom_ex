@@ -55,6 +55,7 @@ defmodule PromEx.Plugins.Application do
     apps = Keyword.get(opts, :deps, :all)
     git_sha_mfa = Keyword.get(opts, :git_sha_mfa, {__MODULE__, :git_sha, []})
     git_author_mfa = Keyword.get(opts, :git_author_mfa, {__MODULE__, :git_author, []})
+    metric_prefix = PromEx.metric_prefix(otp_app, :application)
 
     [
       Manual.build(
@@ -63,7 +64,7 @@ defmodule PromEx.Plugins.Application do
         [
           # Capture information regarding the primary application (i.e the user's application)
           last_value(
-            [otp_app | [:application, :primary, :info]],
+            metric_prefix ++ [:primary, :info],
             event_name: [otp_app | [:application, :primary, :info]],
             description: "Information regarding the primary application.",
             measurement: :status,
@@ -72,7 +73,7 @@ defmodule PromEx.Plugins.Application do
 
           # Capture information regarding the application dependencies (i.e the user's libs)
           last_value(
-            [otp_app | [:application, :dependency, :info]],
+            metric_prefix ++ [:dependency, :info],
             event_name: [otp_app | [:application, :dependency, :info]],
             description: "Information regarding the application's dependencies.",
             measurement: :status,
@@ -81,7 +82,7 @@ defmodule PromEx.Plugins.Application do
 
           # Capture application Git SHA using user provided MFA
           last_value(
-            [otp_app | [:application, :git_sha, :info]],
+            metric_prefix ++ [:git_sha, :info],
             event_name: [otp_app | [:application, :git_sha, :info]],
             description: "The application's Git SHA at the time of deployment.",
             measurement: :status,
@@ -90,7 +91,7 @@ defmodule PromEx.Plugins.Application do
 
           # Capture application Git author using user provided MFA
           last_value(
-            [otp_app | [:application, :git_author, :info]],
+            metric_prefix ++ [:git_author, :info],
             event_name: [otp_app | [:application, :git_author, :info]],
             description: "The application's author of the last Git commit at the time of deployment.",
             measurement: :status,
@@ -105,6 +106,7 @@ defmodule PromEx.Plugins.Application do
   def polling_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
+    metric_prefix = PromEx.metric_prefix(otp_app, :application)
 
     Polling.build(
       :application_time_polling_metrics,
@@ -112,7 +114,7 @@ defmodule PromEx.Plugins.Application do
       {__MODULE__, :execute_time_metrics, []},
       [
         last_value(
-          [otp_app | [:application, :uptime, :milliseconds, :count]],
+          metric_prefix ++ [:uptime, :milliseconds, :count],
           event_name: [:prom_ex, :plugin, :application, :uptime, :count],
           description: "The total number of wall clock milliseconds that have passed since the application started.",
           measurement: :count,

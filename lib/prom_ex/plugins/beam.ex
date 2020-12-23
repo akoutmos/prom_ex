@@ -51,6 +51,8 @@ defmodule PromEx.Plugins.Beam do
   @impl true
   def polling_metrics(opts) do
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
+    otp_app = Keyword.fetch!(opts, :otp_app)
+    metric_prefix = PromEx.metric_prefix(otp_app, :beam)
 
     # TODO: Investigate Microstate accounting metrics
     # http://erlang.org/doc/man/erlang.html#statistics_microstate_accounting
@@ -60,24 +62,27 @@ defmodule PromEx.Plugins.Beam do
     # :erlang.system_info(:allocator)
 
     [
-      memory_metrics(poll_rate),
-      mnesia_metrics(poll_rate),
-      distribution_metrics(poll_rate),
-      beam_internal_metrics(poll_rate)
+      memory_metrics(metric_prefix, poll_rate),
+      mnesia_metrics(metric_prefix, poll_rate),
+      distribution_metrics(metric_prefix, poll_rate),
+      beam_internal_metrics(metric_prefix, poll_rate)
     ]
   end
 
   @impl true
-  def manual_metrics(_opts) do
+  def manual_metrics(opts) do
+    otp_app = Keyword.fetch!(opts, :otp_app)
+    metric_prefix = PromEx.metric_prefix(otp_app, :beam)
+
     [
-      beam_cpu_topology_info(),
-      beam_system_limits_info(),
-      beam_system_info(),
-      beam_scheduler_info()
+      beam_cpu_topology_info(metric_prefix),
+      beam_system_limits_info(metric_prefix),
+      beam_system_info(metric_prefix),
+      beam_scheduler_info(metric_prefix)
     ]
   end
 
-  defp distribution_metrics(poll_rate) do
+  defp distribution_metrics(_metric_prefix, poll_rate) do
     Polling.build(
       :beam_distribution_polling_metrics,
       poll_rate,
@@ -86,7 +91,7 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp mnesia_metrics(poll_rate) do
+  defp mnesia_metrics(_metric_prefix, poll_rate) do
     Polling.build(
       :beam_mnesia_polling_metrics,
       poll_rate,
@@ -95,53 +100,53 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp beam_internal_metrics(poll_rate) do
+  defp beam_internal_metrics(metric_prefix, poll_rate) do
     Polling.build(
       :beam_internal_polling_metrics,
       poll_rate,
       {__MODULE__, :execute_internal_metrics, []},
       [
         last_value(
-          [:beam, :stats, :active_task, :count],
+          metric_prefix ++ [:stats, :active_task, :count],
           event_name: [:prom_ex, :plugin, :beam, :active_task, :count],
           description: "The number of processes and ports that are ready to run, or are currently running.",
           measurement: :count,
           tags: [:type]
         ),
         last_value(
-          [:beam, :stats, :run_queue, :count],
+          metric_prefix ++ [:stats, :run_queue, :count],
           event_name: [:prom_ex, :plugin, :beam, :run_queue, :count],
           description: "The number of processes and ports that are ready to run and are in the run queue.",
           measurement: :count,
           tags: [:type]
         ),
         last_value(
-          [:beam, :stats, :context_switch, :count],
+          metric_prefix ++ [:stats, :context_switch, :count],
           event_name: [:prom_ex, :plugin, :beam, :context_switch, :count],
           description: "The total number of context switches since the system started.",
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :reduction, :count],
+          metric_prefix ++ [:stats, :reduction, :count],
           event_name: [:prom_ex, :plugin, :beam, :reduction, :count],
           description: "The total number of reductions since the system started.",
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :gc, :count],
+          metric_prefix ++ [:stats, :gc, :count],
           event_name: [:prom_ex, :plugin, :beam, :gc, :count],
           description: "The total number of garbage collections since the system started.",
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :gc, :reclaimed, :bytes],
+          metric_prefix ++ [:stats, :gc, :reclaimed, :bytes],
           event_name: [:prom_ex, :plugin, :beam, :gc, :bytes_reclaimed],
           description: "The total number of bytes reclaimed since the system started.",
           measurement: :count,
           unit: :byte
         ),
         last_value(
-          [:beam, :stats, :port_io, :byte, :count],
+          metric_prefix ++ [:stats, :port_io, :byte, :count],
           event_name: [:prom_ex, :plugin, :beam, :port_io, :count],
           description: "The total number of bytes sent and received through ports since the system started.",
           measurement: :count,
@@ -149,32 +154,32 @@ defmodule PromEx.Plugins.Beam do
           unit: :byte
         ),
         last_value(
-          [:beam, :stats, :uptime, :milliseconds, :count],
+          metric_prefix ++ [:stats, :uptime, :milliseconds, :count],
           event_name: [:prom_ex, :plugin, :beam, :uptime, :count],
           description: "The total number of wall clock milliseconds that have passed since the system started.",
           measurement: :count,
           unit: :millisecond
         ),
         last_value(
-          [:beam, :stats, :port, :count],
+          metric_prefix ++ [:stats, :port, :count],
           event_name: [:prom_ex, :plugin, :beam, :port, :count],
           description: "A count of how many ports are currently active.",
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :process, :count],
+          metric_prefix ++ [:stats, :process, :count],
           event_name: [:prom_ex, :plugin, :beam, :process, :count],
           description: "A count of how many Erlang processes are currently running.",
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :atom, :count],
+          metric_prefix ++ [:stats, :atom, :count],
           event_name: [:prom_ex, :plugin, :beam, :atom, :count],
           description: "A count of how many atoms are currently allocated.",
           measurement: :count
         ),
         last_value(
-          [:beam, :stats, :ets, :count],
+          metric_prefix ++ [:stats, :ets, :count],
           event_name: [:prom_ex, :plugin, :beam, :ets, :count],
           description: "A count of how many ETS tables currently exist.",
           measurement: :count
@@ -183,37 +188,37 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp beam_system_info do
+  defp beam_system_info(metric_prefix) do
     Manual.build(
       :beam_system_info_manual_metrics,
       {__MODULE__, :execute_system_info, []},
       [
         last_value(
-          [:beam, :system, :version, :info],
+          metric_prefix ++ [:system, :version, :info],
           event_name: [:prom_ex, :plugin, :beam, :version],
           description: "The OTP release major version.",
           measurement: :version
         ),
         last_value(
-          [:beam, :system, :smp_support, :info],
+          metric_prefix ++ [:system, :smp_support, :info],
           event_name: [:prom_ex, :plugin, :beam, :smp_support],
           description: "Whether the BEAM instance has been compiled with SMP support.",
           measurement: :enabled
         ),
         last_value(
-          [:beam, :system, :thread_support, :info],
+          metric_prefix ++ [:system, :thread_support, :info],
           event_name: [:prom_ex, :plugin, :beam, :thread_support],
           description: "Whether the BEAM instance has been compiled with threading support.",
           measurement: :enabled
         ),
         last_value(
-          [:beam, :system, :time_correction_support, :info],
+          metric_prefix ++ [:system, :time_correction_support, :info],
           event_name: [:prom_ex, :plugin, :beam, :time_correction_support],
           description: "Whether the BEAM instance has time correction support.",
           measurement: :enabled
         ),
         last_value(
-          [:beam, :system, :word_size_bytes, :info],
+          metric_prefix ++ [:system, :word_size_bytes, :info],
           event_name: [:prom_ex, :plugin, :beam, :word_size_bytes],
           description: "The size of Erlang term words in bytes.",
           measurement: :size
@@ -222,37 +227,37 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp beam_scheduler_info do
+  defp beam_scheduler_info(metric_prefix) do
     Manual.build(
       :beam_scheduler_manual_metrics,
       {__MODULE__, :execute_scheduler_info, []},
       [
         last_value(
-          [:beam, :system, :dirty_cpu_schedulers, :info],
+          metric_prefix ++ [:system, :dirty_cpu_schedulers, :info],
           event_name: [:prom_ex, :plugin, :beam, :dirty_cpu_schedulers],
           description: "The total number of dirty CPU scheduler threads used by the BEAM.",
           measurement: :quantity
         ),
         last_value(
-          [:beam, :system, :dirty_cpu_schedulers_online, :info],
+          metric_prefix ++ [:system, :dirty_cpu_schedulers_online, :info],
           event_name: [:prom_ex, :plugin, :beam, :dirty_cpu_schedulers_online],
           description: "The total number of dirty CPU schedulers that are online.",
           measurement: :quantity
         ),
         last_value(
-          [:beam, :system, :dirty_io_schedulers, :info],
+          metric_prefix ++ [:system, :dirty_io_schedulers, :info],
           event_name: [:prom_ex, :plugin, :beam, :dirty_io_schedulers],
           description: "The total number of dirty I/O schedulers used to execute I/O bound native functions.",
           measurement: :quantity
         ),
         last_value(
-          [:beam, :system, :schedulers, :info],
+          metric_prefix ++ [:system, :schedulers, :info],
           event_name: [:prom_ex, :plugin, :beam, :schedulers],
           description: "The number of scheduler threads in use by the BEAM.",
           measurement: :quantity
         ),
         last_value(
-          [:beam, :system, :schedulers_online, :info],
+          metric_prefix ++ [:system, :schedulers_online, :info],
           event_name: [:prom_ex, :plugin, :beam, :schedulers_online],
           description: "The number of scheduler threads that are online.",
           measurement: :quantity
@@ -261,25 +266,25 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp beam_cpu_topology_info do
+  defp beam_cpu_topology_info(metric_prefix) do
     Manual.build(
       :beam_cpu_topology_manual_metrics,
       {__MODULE__, :execute_cpu_topology_info, []},
       [
         last_value(
-          [:beam, :system, :logical_processors, :info],
+          metric_prefix ++ [:system, :logical_processors, :info],
           event_name: [:prom_ex, :plugin, :beam, :logical_processors],
           description: "The total number of logical processors on the host machine.",
           measurement: :quantity
         ),
         last_value(
-          [:beam, :system, :logical_processors_available, :info],
+          metric_prefix ++ [:system, :logical_processors_available, :info],
           event_name: [:prom_ex, :plugin, :beam, :logical_processors_available],
           description: "The total number of logical processors available to the BEAM.",
           measurement: :quantity
         ),
         last_value(
-          [:beam, :system, :logical_processors_online, :info],
+          metric_prefix ++ [:system, :logical_processors_online, :info],
           event_name: [:prom_ex, :plugin, :beam, :logical_processors_online],
           description: "The total number of logical processors online on the host machine.",
           measurement: :quantity
@@ -288,38 +293,38 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp beam_system_limits_info do
+  defp beam_system_limits_info(metric_prefix) do
     Manual.build(
       :beam_system_limits_manual_metrics,
       {__MODULE__, :execute_system_limits_info, []},
       [
         last_value(
-          [:beam, :system, :ets_limit, :info],
+          metric_prefix ++ [:system, :ets_limit, :info],
           event_name: [:prom_ex, :plugin, :beam, :ets_limit],
           description:
             "The maximum number of ETS tables allowed (this is partially obsolete given that the number of ETS tables is limited by available memory).",
           measurement: :limit
         ),
         last_value(
-          [:beam, :system, :port_limit, :info],
+          metric_prefix ++ [:system, :port_limit, :info],
           event_name: [:prom_ex, :plugin, :beam, :port_limit],
           description: "The maximum number of ports that can simultaneously exist on the BEAM instance.",
           measurement: :limit
         ),
         last_value(
-          [:beam, :system, :process_limit, :info],
+          metric_prefix ++ [:system, :process_limit, :info],
           event_name: [:prom_ex, :plugin, :beam, :process_limit],
           description: "The maximum number of processes that can simultaneously exist on the BEAM instance.",
           measurement: :limit
         ),
         last_value(
-          [:beam, :system, :thread_pool_size, :info],
+          metric_prefix ++ [:system, :thread_pool_size, :info],
           event_name: [:prom_ex, :plugin, :beam, :thread_pool_size],
           description: "The number of async threads in the async threads pool used for async driver calls.",
           measurement: :size
         ),
         last_value(
-          [:beam, :system, :atom_limit, :info],
+          metric_prefix ++ [:system, :atom_limit, :info],
           event_name: [:prom_ex, :plugin, :beam, :atom_limit],
           description: "The maximum number of atoms allowed.",
           measurement: :limit
@@ -328,7 +333,7 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp memory_metrics(poll_rate) do
+  defp memory_metrics(metric_prefix, poll_rate) do
     Polling.build(
       :beam_memory_polling_metrics,
       poll_rate,
@@ -336,7 +341,7 @@ defmodule PromEx.Plugins.Beam do
       [
         # Capture the total memory allocated to the entire Erlang VM (or BEAM for short)
         last_value(
-          [:beam, :memory, :allocated, :bytes],
+          metric_prefix ++ [:memory, :allocated, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated.",
           measurement: :total,
@@ -345,7 +350,7 @@ defmodule PromEx.Plugins.Beam do
 
         # Capture the total memory allocated to atoms
         last_value(
-          [:beam, :memory, :atom, :total, :bytes],
+          metric_prefix ++ [:memory, :atom, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for atoms.",
           measurement: :atom,
@@ -354,7 +359,7 @@ defmodule PromEx.Plugins.Beam do
 
         # Capture the total memory allocated to binaries
         last_value(
-          [:beam, :memory, :binary, :total, :bytes],
+          metric_prefix ++ [:memory, :binary, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for binaries.",
           measurement: :binary,
@@ -363,7 +368,7 @@ defmodule PromEx.Plugins.Beam do
 
         # Capture the total memory allocated to Erlang code
         last_value(
-          [:beam, :memory, :code, :total, :bytes],
+          metric_prefix ++ [:memory, :code, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for Erlang code.",
           measurement: :code,
@@ -372,7 +377,7 @@ defmodule PromEx.Plugins.Beam do
 
         # Capture the total memory allocated to ETS tables
         last_value(
-          [:beam, :memory, :ets, :total, :bytes],
+          metric_prefix ++ [:memory, :ets, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated for ETS tables.",
           measurement: :ets,
@@ -381,7 +386,7 @@ defmodule PromEx.Plugins.Beam do
 
         # Capture the total memory allocated to Erlang processes
         last_value(
-          [:beam, :memory, :processes, :total, :bytes],
+          metric_prefix ++ [:memory, :processes, :total, :bytes],
           event_name: @memory_event,
           description: "The total amount of memory currently allocated to Erlang processes.",
           measurement: :processes,

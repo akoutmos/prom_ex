@@ -41,7 +41,6 @@ defmodule PromEx.LifecycleAnnotatorTest do
       grafana: [
         host: endpoint_url(bypass.port),
         auth_token: "random_token",
-        datasource_id: "prometheus",
         folder_name: "Web App Dashboards",
         upload_dashboards_on_start: false,
         annotate_app_lifecycle: true

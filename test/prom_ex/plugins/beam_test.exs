@@ -11,13 +11,13 @@ defmodule PromEx.Plugins.BeamTest do
 
   describe "polling_metrics/1" do
     test "should return the correct number of metrics" do
-      assert length(Beam.polling_metrics([])) == 4
+      assert length(Beam.polling_metrics(otp_app: :prom_ex)) == 4
     end
   end
 
   describe "manual_metrics/1" do
     test "should return the correct number of metrics" do
-      assert length(Beam.manual_metrics([])) == 4
+      assert length(Beam.manual_metrics(otp_app: :prom_ex)) == 4
     end
   end
 end

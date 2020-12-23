@@ -20,7 +20,7 @@
         "showIn": 0,
         "tags": [
           "prom_ex",
-          "web_app",
+          "<%= @otp_app %>",
           "start"
         ],
         "type": "tags"
@@ -35,7 +35,7 @@
         "showIn": 0,
         "tags": [
           "prom_ex",
-          "web_app",
+          "<%= @otp_app %>",
           "stop"
         ],
         "type": "tags"
@@ -64,7 +64,7 @@
       "type": "row"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
       "fieldConfig": {
         "defaults": {
@@ -115,7 +115,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -128,7 +128,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A percentage of responses that resulted in 400s or 500s over the past 24 hours.",
       "fieldConfig": {
         "defaults": {
@@ -179,7 +179,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -192,7 +192,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of data transferred by Phoenix in a 24 hour rolling window.",
       "fieldConfig": {
         "defaults": {
@@ -235,7 +235,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -248,7 +248,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of requests received by Phoenix in a 24 hour rolling window.",
       "fieldConfig": {
         "defaults": {
@@ -291,7 +291,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -304,7 +304,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the previous hour of requests.",
       "fieldConfig": {
         "defaults": {
@@ -356,7 +356,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -369,7 +369,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A percentage of responses that resulted in 400s or 500s over the past hour.",
       "fieldConfig": {
         "defaults": {
@@ -421,7 +421,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -434,7 +434,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of data transferred by Phoenix in the past hour.",
       "fieldConfig": {
         "defaults": {
@@ -477,7 +477,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -490,7 +490,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The amount of requests received by Phoenix in the past hour.",
       "fieldConfig": {
         "defaults": {
@@ -533,7 +533,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -572,7 +572,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the request time spread across all requests (regardless of path).",
       "fieldConfig": {
         "defaults": {
@@ -597,7 +597,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -644,7 +644,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the response payload size spread across all requests (regardless of path).",
       "fieldConfig": {
         "defaults": {
@@ -669,7 +669,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -708,7 +708,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average request time per path per status code per HTTP method.",
       "fieldConfig": {
         "defaults": {
@@ -753,7 +753,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -805,7 +805,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average response size per path per status code per HTTP method.",
       "fieldConfig": {
         "defaults": {
@@ -850,7 +850,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -902,7 +902,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "Shows the number of requests coming into certain paths and the resulting response codes.",
       "fieldConfig": {
         "defaults": {
@@ -947,7 +947,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -999,7 +999,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The aggregate response status of all the requests.",
       "fieldConfig": {
         "defaults": {
@@ -1042,19 +1042,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "2xx",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(phoenix_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "4xx",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(phoenix_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "5xx",
           "refId": "C"
@@ -1120,7 +1120,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "How many channel joins have occurred over time.",
       "fieldConfig": {
         "defaults": {
@@ -1163,7 +1163,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(phoenix_channel_joined_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_phoenix_channel_joined_total{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
@@ -1223,7 +1223,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the request time spread across all channel events.",
       "fieldConfig": {
         "defaults": {
@@ -1248,7 +1248,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1287,7 +1287,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average response time for a channel message.",
       "fieldConfig": {
         "defaults": {
@@ -1332,7 +1332,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(phoenix_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(phoenix_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1388,15 +1388,15 @@
     "list": [
       {
         "allValue": null,
-        "datasource": "prometheus",
-        "definition": "label_values(prom_ex_status_info, job)",
+        "datasource": "<%= @datasource_id %>",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(prom_ex_status_info, job)",
+        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1409,15 +1409,15 @@
       },
       {
         "allValue": null,
-        "datasource": "prometheus",
-        "definition": "label_values(prom_ex_status_info, instance)",
+        "datasource": "<%= @datasource_id %>",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(prom_ex_status_info, instance)",
+        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1495,7 +1495,7 @@
     ]
   },
   "timezone": "",
-  "title": "PromEx - Phoenix Dashboard",
-  "uid": "prom_ex_phoenix_dashboard",
+  "title": "<%= @title %>",
+  "uid": "<%= @uid %>",
   "version": 1
 }
