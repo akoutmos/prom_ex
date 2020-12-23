@@ -1087,7 +1087,7 @@
     ]
   },
   "timezone": "",
-  "title": "PromEx - Ecto Dashboard",
-  "uid": "prom_ex_ecto_dashboard",
+  "title": "<%= @title %>",
+  "uid": "<%= @uid %>",
   "version": 1
 }

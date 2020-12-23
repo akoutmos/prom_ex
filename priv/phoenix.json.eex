@@ -1495,7 +1495,7 @@
     ]
   },
   "timezone": "",
-  "title": "PromEx - Phoenix Dashboard",
-  "uid": "prom_ex_phoenix_dashboard",
+  "title": "<%= @title %>",
+  "uid": "<%= @uid %>",
   "version": 1
 }
