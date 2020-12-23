@@ -473,6 +473,11 @@ defmodule PromEx do
     acc
   end
 
+  @doc false
+  def metric_prefix(otp_app, plug_in) do
+    [otp_app, :prom_ex, plug_in]
+  end
+
   defp generate_telemetry_poller_child_spec(prom_ex_module, pollable_metrics) do
     pollable_metrics
     |> Enum.group_by(fn %Polling{poll_rate: poll_rate} ->
