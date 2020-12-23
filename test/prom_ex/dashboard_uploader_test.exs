@@ -23,6 +23,7 @@ defmodule PromEx.DashboardUploaderTest do
     @impl true
     def dashboard_assigns do
       [
+        otp_app: :prom_ex,
         datasource_id: "prometheus"
       ]
     end
