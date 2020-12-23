@@ -168,7 +168,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -507,37 +507,37 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Total Usage",
           "refId": "A"
         },
         {
-          "expr": "beam_memory_atom_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_atom_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Atoms",
           "refId": "B"
         },
         {
-          "expr": "beam_memory_binary_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_binary_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Binaries",
           "refId": "C"
         },
         {
-          "expr": "beam_memory_code_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_code_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Code",
           "refId": "D"
         },
         {
-          "expr": "beam_memory_ets_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_ets_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "ETS",
           "refId": "E"
         },
         {
-          "expr": "beam_memory_processes_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_processes_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Processes",
           "refId": "F"
@@ -1701,7 +1701,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_version_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_system_version_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1754,7 +1754,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_word_size_bytes_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_system_word_size_bytes_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1807,7 +1807,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_logical_processors_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_system_logical_processors_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1860,7 +1860,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_logical_processors_available_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_system_logical_processors_available_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1913,7 +1913,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_system_logical_processors_online_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_system_logical_processors_online_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -2036,7 +2036,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"beam_system_thread_support_info|beam_system_smp_support_info|beam_system_time_correction_support_info\", job=\"$job\", instance=\"$instance\"}",
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_beam_system_thread_support_info|<%= @otp_app %>_prom_ex_beam_system_smp_support_info|<%= @otp_app %>_prom_ex_beam_system_time_correction_support_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2177,7 +2177,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"beam_system_ets_limit_info|beam_system_port_limit_info|beam_system_process_limit_info|beam_system_atom_limit_info\", job=\"$job\", instance=\"$instance\"}",
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_beam_system_ets_limit_info|<%= @otp_app %>_prom_ex_beam_system_port_limit_info|<%= @otp_app %>_prom_ex_beam_system_process_limit_info|<%= @otp_app %>_prom_ex_beam_system_atom_limit_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -2331,7 +2331,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"beam_system_dirty_cpu_schedulers_info|beam_system_dirty_cpu_schedulers_online_info|beam_system_dirty_io_schedulers_info|beam_system_schedulers_info|beam_system_schedulers_online_info\", job=\"$job\", instance=\"$instance\"}",
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_beam_system_dirty_cpu_schedulers_info|<%= @otp_app %>_prom_ex_beam_system_dirty_cpu_schedulers_online_info|<%= @otp_app %>_prom_ex_beam_system_dirty_io_schedulers_info|<%= @otp_app %>_prom_ex_beam_system_schedulers_info|<%= @otp_app %>_prom_ex_beam_system_schedulers_online_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
