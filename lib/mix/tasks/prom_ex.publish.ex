@@ -59,11 +59,7 @@ defmodule Mix.Tasks.PromEx.Publish do
     Process.flag(:trap_exit, true)
 
     # Start the DashboardUploader
-    otp_app =
-      Mix.Project.config()
-      |> Keyword.get(:app)
-
-    default_dashboard_opts = [otp_app: otp_app]
+    default_dashboard_opts = [otp_app: prom_ex_module.__otp_app__()]
 
     {:ok, pid} =
       DashboardUploader.start_link(
