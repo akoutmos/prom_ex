@@ -106,7 +106,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_stats_uptime_milliseconds_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_uptime_milliseconds_count{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -230,7 +230,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -292,7 +292,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -354,7 +354,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -416,7 +416,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -650,13 +650,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "0 - irate(beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"input\"}[$interval])",
+          "expr": "0 - irate(<%= @otp_app %>_prom_ex_beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"input\"}[$interval])",
           "interval": "",
           "legendFormat": "Data Received",
           "refId": "A"
         },
         {
-          "expr": "0 + irate(beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"output\"}[$interval])",
+          "expr": "0 + irate(<%= @otp_app %>_prom_ex_beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"output\"}[$interval])",
           "interval": "",
           "legendFormat": "Data Sent",
           "refId": "B"
@@ -778,13 +778,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(beam_stats_gc_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_gc_count{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "Garbage Collections",
           "refId": "A"
         },
         {
-          "expr": "irate(beam_stats_gc_reclaimed_bytes{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_gc_reclaimed_bytes{job=\"$job\", instance=\"$instance\"}[$interval])",
           "instant": false,
           "interval": "",
           "legendFormat": "Bytes Reclaimed",
@@ -907,13 +907,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(beam_stats_reduction_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_reduction_count{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "Reductions",
           "refId": "A"
         },
         {
-          "expr": "irate(beam_stats_context_switch_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_context_switch_count{job=\"$job\", instance=\"$instance\"}[$interval])",
           "instant": false,
           "interval": "",
           "legendFormat": "Context Switches",
@@ -1027,13 +1027,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}[$interval])",
           "interval": "",
           "legendFormat": "Normal Tasks",
           "refId": "A"
         },
         {
-          "expr": "0 - irate(beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}[$interval])",
+          "expr": "0 - irate(<%= @otp_app %>_prom_ex_beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}[$interval])",
           "instant": false,
           "interval": "",
           "legendFormat": "Normal Run Queue",
@@ -1147,13 +1147,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
           "interval": "",
           "legendFormat": "Dirty Tasks",
           "refId": "C"
         },
         {
-          "expr": "0 - irate(beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
+          "expr": "0 - irate(<%= @otp_app %>_prom_ex_beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}[$interval])",
           "instant": false,
           "interval": "",
           "legendFormat": "Dirty Run Queue",
@@ -1266,7 +1266,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active ports",
           "refId": "A"
@@ -1377,7 +1377,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active Ports",
           "refId": "A"
@@ -1488,7 +1488,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active Processes",
           "refId": "A"
@@ -1599,7 +1599,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @otp_app %>_prom_ex_beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active ETS Tables",
           "refId": "A"
