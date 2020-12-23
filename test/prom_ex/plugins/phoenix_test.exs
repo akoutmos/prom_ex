@@ -5,7 +5,7 @@ defmodule PromEx.Plugins.PhoenixTest do
 
   describe "event_metrics/1" do
     test "should return the correct number of metrics" do
-      assert length(Phoenix.event_metrics(router: Some.Module)) == 2
+      assert length(Phoenix.event_metrics(otp_app: :prom_ex, router: Some.Module)) == 2
     end
   end
 
