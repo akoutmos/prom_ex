@@ -105,9 +105,15 @@ defmodule PromEx.DashboardUploader do
       |> Atom.to_string()
       |> Macro.camelize()
 
+    default_dashboard_name =
+      dashboard_relative_path
+      |> Path.basename()
+      |> normalize_file_name()
+      |> Macro.camelize()
+
     default_dashboard_assigns = [
       uid: prom_ex_module.__grafana_dashboard_uid__(otp_app, dashboard_relative_path),
-      title: "#{default_title} - PromEx Application Dashboard"
+      title: "#{default_title} - PromEx #{default_dashboard_name} Dashboard"
     ]
 
     otp_app
@@ -118,6 +124,16 @@ defmodule PromEx.DashboardUploader do
     |> DashboardRenderer.merge_assigns(dashboard_opts)
     |> DashboardRenderer.render_dashboard()
     |> DashboardRenderer.decode_dashboard()
+  end
+
+  defp normalize_file_name(path) do
+    if Path.extname(path) == "" do
+      path
+    else
+      path
+      |> Path.rootname()
+      |> normalize_file_name()
+    end
   end
 
   defp upload_dashboard(dashboard_contents, grafana_conn, upload_opts, full_dashboard_path) do
