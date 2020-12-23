@@ -1,11 +1,31 @@
 defmodule Mix.Tasks.PromEx.Create do
   @moduledoc """
-  This will generate a PromEx config module in the appropriate place
+  This Mix Task generates a PromEx config module in your project. This config
+  file acts as a starting point with instructions on how to set up PromEx
+  in your application, some default PromEx metrics plugins, and their
+  accompanying dashboards.
+
+
+  The following CLI flags are supported:
+  ```
+  -d, --datasource  The datasource that the dashboards will be reading from to populate
+                    their time series data. This `datasource` value should align with
+                    what is configured in Grafana from the Prometheus instance's
+                    `datasource_id`.
+
+  -o, -otp_app      The OTP application that PromEx is being installed in. This
+                    should be provided as the snake case atom (minus the leading
+                    colon). For example, if the `:app` value in your `mix.exs` file
+                    is `:my_cool_app`, this argument should be provided as `my_cool_app`.
+                    By default PromEx will read your `mix.exs` file to determine the OTP
+                    application value so this is an OPTIONAL argument.
   """
 
   use Mix.Task
 
   alias Mix.Shell.IO
+
+  @shortdoc "Generates a PromEx configuration module"
 
   @impl true
   def run(args) do
@@ -13,14 +33,21 @@ defmodule Mix.Tasks.PromEx.Create do
     Mix.Task.run("compile")
 
     # Get CLI args
-    otp_app =
+    %{otp_app: otp_app, datasource: datasource_id} =
       args
       |> parse_options()
-      |> Map.get_lazy(:otp_app, fn ->
+      |> Map.put_new_lazy(:otp_app, fn ->
         Mix.Project.config()
         |> Keyword.get(:app)
         |> Atom.to_string()
       end)
+      |> case do
+        %{otp_app: _otp_app, datasource: _datasource_id} = required_args ->
+          required_args
+
+        _ ->
+          raise "Missing required arguments. Run mix help prom_ex.create for usage instructions"
+      end
 
     # Generate relevant path info
     project_root = File.cwd!()
@@ -41,7 +68,7 @@ defmodule Mix.Tasks.PromEx.Create do
 
     if write_file do
       # Write out the config file
-      create_config_file(path, otp_app)
+      create_config_file(path, otp_app, datasource_id)
       IO.info("Successfully wrote out #{path}")
 
       first_line = "| Be sure to follow the @moduledoc instructions in #{Macro.camelize(otp_app)}.PromEx |"
@@ -56,8 +83,8 @@ defmodule Mix.Tasks.PromEx.Create do
   end
 
   defp parse_options(args) do
-    cli_options = [otp_app: :string]
-    cli_aliases = [o: :otp_app]
+    cli_options = [otp_app: :string, datasource: :string]
+    cli_aliases = [o: :otp_app, d: :datasource]
 
     args
     |> OptionParser.parse(aliases: cli_aliases, strict: cli_options)
@@ -70,9 +97,14 @@ defmodule Mix.Tasks.PromEx.Create do
     end
   end
 
-  defp create_config_file(path, otp_app) do
+  defp create_config_file(path, otp_app, datasource_id) do
     module_name = Macro.camelize(otp_app)
-    assigns = [module_name: module_name, otp_app: otp_app]
+
+    assigns = [
+      datasource_id: datasource_id,
+      module_name: module_name,
+      otp_app: otp_app
+    ]
 
     module_template =
       prom_ex_module_template()
@@ -89,48 +121,48 @@ defmodule Mix.Tasks.PromEx.Create do
       Be sure to add the following to finish setting up PromEx:
 
       1. Update your configuration (config.exs, dev.exs, prod.exs, releases.exs, etc) to
-      configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
-      more details regarding configuring PromEx:
-      ```
-        config :<%= @otp_app %>, <%= @module_name %>.PromEx,
-          manual_metrics_start_delay: :no_delay,
-          drop_metrics_groups: [],
-          grafana: :disabled,
-          metrics_server: :disabled
-      ```
+         configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
+         more details regarding configuring PromEx:
+         ```
+           config :<%= @otp_app %>, <%= @module_name %>.PromEx,
+             manual_metrics_start_delay: :no_delay,
+             drop_metrics_groups: [],
+             grafana: :disabled,
+             metrics_server: :disabled
+         ```
 
       2. Add this module to your application supervision tree. It should be one of the first
          things that is started so that no Telemetry events are missed. For example, if PromEx
          is started after your Repo module, you will miss Ecto's init events and the dashbaords
          will be missing some data points:
-      ```
-      def start(_type, _args) do
-        children = [
-          <%= @module_name %>.PromEx,
+         ```
+         def start(_type, _args) do
+           children = [
+             <%= @module_name %>.PromEx,
 
-          ...
-        ]
+             ...
+           ]
 
-        ...
-      end
-      ```
+           ...
+         end
+         ```
 
       3. Update your `endpoint.ex` file to expose your metrics (or configure a standalone
-      server using the `:metrics_server` config options). Be sure to put this plug before
-      your `Plug.Telemetry` entry so that you can avoid having calls to your `/metrics`
-      endpoint create their own metrics and logs which can pollute your logs/metrics given
-      that Prometheus will scrape at a regular interval and that can get noisy:
-      ```
-      defmodule <%= @module_name %>Web.Endpoint do
-        use Phoenix.Endpoint, otp_app: :<%= @otp_app %>
+         server using the `:metrics_server` config options). Be sure to put this plug before
+         your `Plug.Telemetry` entry so that you can avoid having calls to your `/metrics`
+         endpoint create their own metrics and logs which can pollute your logs/metrics given
+         that Prometheus will scrape at a regular interval and that can get noisy:
+         ```
+         defmodule <%= @module_name %>Web.Endpoint do
+           use Phoenix.Endpoint, otp_app: :<%= @otp_app %>
 
-        ...
+           ...
 
-        plug PromEx.Plug, prom_ex_module: <%= @module_name %>.PromEx
+           plug PromEx.Plug, prom_ex_module: <%= @module_name %>.PromEx
 
-        ...
-      end
-      ```
+           ...
+         end
+         ```
       \"\"\"
 
       use PromEx, otp_app: :<%= @otp_app %>
@@ -146,6 +178,13 @@ defmodule Mix.Tasks.PromEx.Create do
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromEx
+        ]
+      end
+
+      @impl true
+      def dashboard_assigns do
+        [
+          datasource_id: "<%= @datasource_id %>"
         ]
       end
 

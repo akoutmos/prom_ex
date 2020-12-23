@@ -31,7 +31,7 @@ to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 0.1.11-alpha"}
+    {:prom_ex, "~> 0.1.12-beta"}
   ]
 end
 ```
@@ -100,7 +100,7 @@ that you need to do to start leveraging PromEx along with the built-in plugins i
 task:
 
 ```
-$ mix prom_ex.create
+$ mix prom_ex.create --datasource YOUR_PROMETHEUS_DATASOURCE_ID
 ```
 
 Then add the generated module to your `application.ex` file supervision tree:
