@@ -1,9 +1,5 @@
 unless Code.ensure_loaded?(Phoenix) do
-  raise "Attempting to use PromEx Phoenix plugin when Phoenix has not been installed"
-end
-
-unless Code.ensure_loaded?(Plug) do
-  raise "Attempting to use PromEx Phoenix plugin when Plug has not been installed"
+  raise "Attempting to use the PromEx Phoenix plugin when Phoenix has not been installed"
 end
 
 defmodule PromEx.Plugins.Phoenix do

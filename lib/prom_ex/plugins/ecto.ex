@@ -1,5 +1,5 @@
 unless Code.ensure_loaded?(Ecto) do
-  raise "Attempting to use PromEx Ecto plugin when Ecto has not been installed"
+  raise "Attempting to use the PromEx Ecto plugin when Ecto has not been installed"
 end
 
 defmodule PromEx.Plugins.Ecto do

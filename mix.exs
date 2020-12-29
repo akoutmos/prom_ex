@@ -56,6 +56,7 @@ defmodule PromEx.MixProject do
       {:phoenix, ">= 1.5.0", optional: true},
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
+      {:oban, ">= 2.3.0", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},

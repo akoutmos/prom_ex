@@ -78,10 +78,10 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 | `PromEx.Plugins.Beam`            | Beta         | Collect metrics regarding the BEAM virtual machine     |
 | `PromEx.Plugins.Phoenix`         | Beta         | Collect request metrics emitted by Phoenix             |
 | `PromEx.Plugins.Ecto`            | Beta         | Collect query metrics emitted by Ecto                  |
+| `PromEx.Plugins.Oban`            | Coming soon  | Collect queue processing metrics emitted by Oban       |
 | `PromEx.Plugins.PhoenixLiveView` | Coming soon  | Collect metrics emitted by Phoenix LiveView            |
 | `PromEx.Plugins.Absinthe`        | Coming soon  | Collect GraphQL metrics emitted by Absinthe            |
 | `PromEx.Plugins.Broadway`        | Coming soon  | Collect message processing metrics emitted by Broadway |
-| `PromEx.Plugins.Oban`            | Coming soon  | Collect queue processing metrics emitted by Oban       |
 | `PromEx.Plugins.Finch`           | Coming soon  | Collect HTTP request metrics emitted by Finch          |
 | `PromEx.Plugins.Redix`           | Coming soon  | Collect Redis request metrics emitted by Redix         |
 | More to come...                  |              |                                                        |
