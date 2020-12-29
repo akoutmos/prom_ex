@@ -52,8 +52,6 @@ defmodule PromEx.DashboardUploader do
       }
     } = prom_ex_module.init_opts()
 
-    default_assigns = default_dashboard_opts
-
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
     Finch.start_link(name: finch_name)
@@ -72,7 +70,7 @@ defmodule PromEx.DashboardUploader do
     prom_ex_module.dashboards()
     |> Enum.each(fn dashboard ->
       dashboard
-      |> handle_dashboard_render(default_assigns, prom_ex_module)
+      |> handle_dashboard_render(default_dashboard_opts, prom_ex_module)
       |> case do
         %DashboardRenderer{valid_json?: true, rendered_file: rendered_dashboard, full_path: full_path} ->
           upload_dashboard(rendered_dashboard, grafana_conn, upload_opts, full_path)
