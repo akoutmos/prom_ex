@@ -183,7 +183,7 @@ else
 
     @impl true
     def event_metrics(_opts) do
-      raise "You are attempting to use the PromEx Phoenix plugin but Phoenix has not been installed"
+      PromEx.Plugin.no_dep_raise(__MODULE__, "Phoenix")
     end
   end
 end

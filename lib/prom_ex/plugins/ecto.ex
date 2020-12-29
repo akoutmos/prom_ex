@@ -252,7 +252,7 @@ else
 
     @impl true
     def event_metrics(_opts) do
-      raise "You are attempting to use the PromEx Ecto plugin but Ecto has not been installed"
+      PromEx.Plugin.no_dep_raise(__MODULE__, "Ecto")
     end
   end
 end

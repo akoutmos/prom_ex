@@ -68,7 +68,7 @@ else
 
     @impl true
     def event_metrics(_opts) do
-      raise "You are attempting to use the PromEx Oban plugin but Oban has not been installed"
+      PromEx.Plugin.no_dep_raise(__MODULE__, "Oban")
     end
   end
 end

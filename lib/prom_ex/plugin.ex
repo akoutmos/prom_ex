@@ -73,4 +73,9 @@ defmodule PromEx.Plugin do
       defoverridable PromEx.Plugin
     end
   end
+
+  @doc false
+  def no_dep_raise(module, dep) do
+    raise("You are attempting to use the #{inspect(module)} plugin but #{dep} is currently not a project dependency")
+  end
 end
