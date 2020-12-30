@@ -44,11 +44,21 @@ if Code.ensure_loaded?(Oban) do
     use PromEx.Plugin
 
     @impl true
+    def manual_metrics(opts) do
+      otp_app = Keyword.fetch!(opts, :otp_app)
+      metric_prefix = PromEx.metric_prefix(otp_app, :oban)
+
+      # Config details
+      []
+    end
+
+    @impl true
     def event_metrics(opts) do
       oban_queues = Keyword.get(opts, :queues, :all_queues)
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = PromEx.metric_prefix(otp_app, :oban)
 
+      # Job processing details
       []
     end
 
@@ -58,6 +68,7 @@ if Code.ensure_loaded?(Oban) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = PromEx.metric_prefix(otp_app, :oban)
 
+      # Queue length details
       []
     end
   end

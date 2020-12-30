@@ -56,7 +56,8 @@ defmodule WebApp.PromEx do
       PromEx.Plugins.Application,
       PromEx.Plugins.Beam,
       {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
-      {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]}
+      {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
+      PromEx.Plugins.Oban
 
       # Add your own PromEx metrics plugins
       # WebApp.Users.PromEx

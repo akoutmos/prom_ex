@@ -5,6 +5,7 @@ defmodule WebApp.Application do
 
   use Application
 
+  @impl true
   def start(_type, _args) do
     children = [
       WebApp.PromEx,
@@ -18,9 +19,11 @@ defmodule WebApp.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: WebApp.PubSub},
       # Start the Endpoint (http/https)
-      WebAppWeb.Endpoint
-      # Start a worker by calling: WebApp.Worker.start_link(arg)
-      # {WebApp.Worker, arg}
+      WebAppWeb.Endpoint,
+      # Work queue
+      {Oban, oban_config()},
+      # Work generator
+      WebApp.RandomWorkGenerator
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -31,8 +34,13 @@ defmodule WebApp.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  @impl true
   def config_change(changed, _new, removed) do
     WebAppWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp oban_config do
+    Application.get_env(:web_app, Oban)
   end
 end

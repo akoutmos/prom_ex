@@ -67,9 +67,8 @@ defmodule PromEx do
 
   Upcoming Elixir library metrics:
     - [X] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
-    - [ ] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
+    - [O] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
-    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
 
   Backlog Elixir library metrics:
     - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)

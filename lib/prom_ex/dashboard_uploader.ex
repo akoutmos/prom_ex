@@ -141,6 +141,15 @@ defmodule PromEx.DashboardUploader do
 
       {:error, reason} ->
         Logger.warn("PromEx.DashboardUploader failed to upload #{full_dashboard_path} to Grafana: #{inspect(reason)}")
+
+      error ->
+        Logger.error(
+          "PromEx.DashboardUploader (#{inspect(self())}) failed upload dashboards to Grafana (#{grafana_conn.base_url}) because: #{
+            inspect(error)
+          }"
+        )
+
+        Process.exit(self(), :normal)
     end
   end
 
@@ -155,6 +164,15 @@ defmodule PromEx.DashboardUploader do
         {:error, :not_found} ->
           {:ok, folder_details} = GrafanaClient.create_folder(grafana_conn, folder_uid, folder_name)
           folder_details
+
+        error ->
+          Logger.error(
+            "PromEx.DashboardUploader (#{inspect(self())}) failed to retrieve the dashboard folderId from Grafana (#{
+              grafana_conn.base_url
+            }) because: #{inspect(error)}"
+          )
+
+          Process.exit(self(), :normal)
       end
 
     # Update the folder if the name is not up to date with the config
