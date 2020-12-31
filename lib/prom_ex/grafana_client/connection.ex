@@ -1,7 +1,7 @@
 defmodule PromEx.GrafanaClient.Connection do
   @moduledoc """
   This struct encapsulates all of the data necessary
-  to connect to a grafana instance.
+  to connect to a Grafana instance.
   """
 
   @type t :: %__MODULE__{

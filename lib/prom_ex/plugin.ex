@@ -14,7 +14,7 @@ defmodule PromEx.Plugin do
   }
 
   @doc """
-  The event_metrics/1 callback returns the configured event based metrics that the
+  The `c:event_metrics/1` callback returns the configured event based metrics that the
   plugin exposes. If the plugin does not expose any event style metrics, there is a
   default implementation of this function that returns an empty list. In other words,
   if your plugin does not expose any event style metrics, there is no action needed
@@ -26,7 +26,7 @@ defmodule PromEx.Plugin do
   @callback event_metrics(keyword()) :: [Event.t()] | Event.t()
 
   @doc """
-  The polling_metrics/1 callback returns the configured polling based metrics that the
+  The `c:polling_metrics/1` callback returns the configured polling based metrics that the
   plugin exposes. If the plugin does not expose any polling style metrics, there is a
   default implementation of this function that returns an empty list. In other words,
   if your plugin does not expose any polling style metrics, there is no action needed
@@ -38,7 +38,7 @@ defmodule PromEx.Plugin do
   @callback polling_metrics(keyword()) :: [Polling.t()] | Polling.t()
 
   @doc """
-  The manual_metrics/1 callback returns the configured manual based metrics that the
+  The `c:manual_metrics/1` callback returns the configured manual based metrics that the
   plugin exposes. If the plugin does not expose any manual style metrics, there is a
   default implementation of this function that returns an empty list. In other words,
   if your plugin does not expose any manual style metrics, there is no action needed

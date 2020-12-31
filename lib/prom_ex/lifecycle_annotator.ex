@@ -3,7 +3,7 @@ defmodule PromEx.LifecycleAnnotator do
   This GenServer is responsible to keeping track of the life cycle
   of the application and sending annotation requests to Grafana
   when the application starts and when it terminates. It will
-  include things like in the message:
+  include things in the message like:
 
     - Hostname
     - OTP app name
@@ -19,7 +19,7 @@ defmodule PromEx.LifecycleAnnotator do
   alias PromEx.{GrafanaClient, GrafanaClient.Connection}
 
   @doc """
-  Used to start the ManualMetricsManager process
+  Used to start the `PromEx.LifecycleAnnotator` process.
   """
   @spec start_link(opts :: keyword()) :: GenServer.on_start()
   def start_link(opts) do
