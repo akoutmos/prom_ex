@@ -1,6 +1,6 @@
 defmodule Mix.Tasks.PromEx.Publish do
   @moduledoc """
-  This will publish dashboards to grafana for a PromEx module.
+  This will publish dashboards to Grafana for a PromEx module.
   """
 
   use Mix.Task

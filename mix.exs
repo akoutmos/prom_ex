@@ -99,10 +99,9 @@ defmodule PromEx.MixProject do
 
   defp copy_files(_) do
     # Set up directory structure
-    File.mkdir("./doc/guides")
-    File.mkdir("./doc/guides/images")
+    File.mkdir_p!("./doc/guides/images")
 
     # Copy over files
-    File.cp("./guides/images/logo.svg", "./doc/guides/images/logo.svg")
+    File.cp!("./guides/images/logo.svg", "./doc/guides/images/logo.svg")
   end
 end

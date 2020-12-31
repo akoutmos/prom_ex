@@ -7,7 +7,7 @@ defmodule Mix.Tasks.PromEx.Create do
 
 
   The following CLI flags are supported:
-  ```
+  ```md
   -d, --datasource  The datasource that the dashboards will be reading from to populate
                     their time series data. This `datasource` value should align with
                     what is configured in Grafana from the Prometheus instance's
@@ -19,6 +19,7 @@ defmodule Mix.Tasks.PromEx.Create do
                     is `:my_cool_app`, this argument should be provided as `my_cool_app`.
                     By default PromEx will read your `mix.exs` file to determine the OTP
                     application value so this is an OPTIONAL argument.
+  ```
   """
 
   use Mix.Task

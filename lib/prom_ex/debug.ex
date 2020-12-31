@@ -7,8 +7,7 @@ defmodule PromEx.Debug do
   """
 
   @doc """
-  Use this function to attach a debugger handler to a certain telemetry event. This
-  function will also return the
+  Use this function to attach a debugger handler to a certain telemetry event.
   """
   @spec attach_debugger(PromEx.telemetry_metrics() | list()) :: :ok | PromEx.telemetry_metrics()
   def attach_debugger(%_{event_name: event_name} = telemetry_metric_def) do

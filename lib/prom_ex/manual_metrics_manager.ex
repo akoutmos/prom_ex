@@ -12,7 +12,7 @@ defmodule PromEx.ManualMetricsManager do
   require Logger
 
   @doc """
-  Used to start the ManualMetricsManager process
+  Used to start the `PromEx.ManualMetricsManager` process
   """
   @spec start_link(opts :: keyword()) :: GenServer.on_start()
   def start_link(opts) do

@@ -103,8 +103,8 @@ defmodule PromEx.DashboardRenderer do
   end
 
   @doc """
-  This function will decode the JSON dashboard using Jason. If any errors occur during the decoding process,
-  the struct will be marked as having invalid json.
+  This function will decode the JSON dashboard using `Jason`. If any errors occur during the decoding process,
+  the struct will be marked as having invalid JSON.
   """
   @spec decode_dashboard(__MODULE__.t()) :: __MODULE__.t()
   def decode_dashboard(%__MODULE__{valid_file?: false} = dashboard_render) do
@@ -122,7 +122,7 @@ defmodule PromEx.DashboardRenderer do
   end
 
   @doc """
-  This function will merge in the provided assigns to the structs assigns. These assigns will
+  This function will merge in the provided assigns to the struct's assigns. These assigns will
   then be used during the `render_dashboard/1` call to render any EEx template statements.
   """
   @spec merge_assigns(__MODULE__.t(), keyword()) :: __MODULE__.t()

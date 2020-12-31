@@ -34,7 +34,7 @@ defmodule PromEx.BucketGenerator do
   end
 
   @doc """
-  Create a linear set of buckets based on the provided parameters.
+  Create an exponential set of buckets based on the provided parameters.
 
   ## Examples
 
