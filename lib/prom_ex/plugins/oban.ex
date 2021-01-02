@@ -435,7 +435,7 @@ if Code.ensure_loaded?(Oban) do
         plugins: plugins_string_list,
         prefix: config.prefix,
         queues: queues_string_list,
-        repo: config.repo,
+        repo: normalize_module_name(config.repo),
         timezone: config.timezone
       }
     end
