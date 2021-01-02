@@ -47,7 +47,12 @@ if Code.ensure_loaded?(Oban) do
 
     import Ecto.Query, only: [group_by: 3, select: 3]
 
+    # Oban events
     @init_event [:oban, :supervisor, :init]
+    @job_complete_event [:oban, :job, :stop]
+    @job_exception_event [:oban, :job, :exception]
+
+    # PromEx Oban proxy events
     @init_event_queue_limit_proxy [:prom_ex, :oban, :queue, :limit, :proxy]
 
     @impl true
@@ -62,8 +67,8 @@ if Code.ensure_loaded?(Oban) do
       set_up_init_proxy_event(metric_prefix)
 
       [
-        oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter)
-        # oban_job_event_metrics(metric_prefix)
+        oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter),
+        oban_job_event_metrics(metric_prefix, keep_function_filter)
       ]
     end
 
@@ -109,32 +114,124 @@ if Code.ensure_loaded?(Oban) do
       end)
     end
 
-    defp handle_oban_queue_polling_metrics(oban_supervisor, config) do
-      query =
-        Oban.Job
-        |> group_by([j], [j.queue, j.state])
-        |> select([j], {j.queue, j.state, count(j.id)})
+    defp oban_job_event_metrics(metric_prefix, keep_function_filter) do
+      job_attempt_buckets = [1, 2, 3, 5, 10]
+      job_duration_buckets = [1, 50, 100, 250, 500, 1_000, 5_000, 10_000]
 
-      config
-      |> Oban.Repo.all(query)
-      |> Enum.each(fn {queue, state, count} ->
-        measurements = %{count: count}
-        metadata = %{name: normalize_module_name(oban_supervisor), queue: queue, state: state}
-
-        :telemetry.execute([:prom_ex, :plugin, :oban, :queue, :length, :count], measurements, metadata)
-      end)
+      Event.build(
+        :oban_job_event_metrics,
+        [
+          distribution(
+            metric_prefix ++ [:job, :processing, :duration, :milliseconds],
+            event_name: @job_complete_event,
+            measurement: :duration,
+            description: "The amount of time it takes to processes an Oban job.",
+            reporter_options: [
+              buckets: job_duration_buckets
+            ],
+            tag_values: &job_complete_tag_values/1,
+            tags: [:name, :queue, :state, :worker],
+            unit: {:native, :millisecond},
+            keep: keep_function_filter
+          ),
+          distribution(
+            metric_prefix ++ [:job, :queue, :time, :milliseconds],
+            event_name: @job_complete_event,
+            measurement: :queue_time,
+            description: "The amount of time that the Oban job was waiting in queue for processing.",
+            reporter_options: [
+              buckets: job_duration_buckets
+            ],
+            tag_values: &job_complete_tag_values/1,
+            tags: [:name, :queue, :state, :worker],
+            unit: {:native, :millisecond},
+            keep: keep_function_filter
+          ),
+          distribution(
+            metric_prefix ++ [:job, :complete, :attempts],
+            event_name: @job_complete_event,
+            measurement: fn _measurement, %{attempt: attempt} ->
+              attempt
+            end,
+            description: "The number of times a job was attempted prior to completing.",
+            reporter_options: [
+              buckets: job_attempt_buckets
+            ],
+            tag_values: &job_complete_tag_values/1,
+            tags: [:name, :queue, :state, :worker],
+            unit: {:native, :millisecond},
+            keep: keep_function_filter
+          ),
+          distribution(
+            metric_prefix ++ [:job, :exception, :duration, :milliseconds],
+            event_name: @job_exception_event,
+            measurement: :duration,
+            description: "The amount of time it took to process a job the encountered an exception.",
+            reporter_options: [
+              buckets: job_duration_buckets
+            ],
+            tag_values: &job_exception_tag_values/1,
+            tags: [:name, :queue, :state, :worker, :kind, :error],
+            unit: {:native, :millisecond},
+            keep: keep_function_filter
+          ),
+          distribution(
+            metric_prefix ++ [:job, :exception, :queue, :time, :milliseconds],
+            event_name: @job_exception_event,
+            measurement: :queue_time,
+            description:
+              "The amount of time that the Oban job was waiting in queue for processing prior to resulting in an exception.",
+            reporter_options: [
+              buckets: job_duration_buckets
+            ],
+            tag_values: &job_exception_tag_values/1,
+            tags: [:name, :queue, :state, :worker, :kind, :error],
+            unit: {:native, :millisecond},
+            keep: keep_function_filter
+          ),
+          distribution(
+            metric_prefix ++ [:job, :exception, :attempts],
+            event_name: @job_exception_event,
+            measurement: fn _measurement, %{attempt: attempt} ->
+              attempt
+            end,
+            description: "The number of times a job was attempted prior to throwing an exception.",
+            reporter_options: [
+              buckets: job_attempt_buckets
+            ],
+            tag_values: &job_exception_tag_values/1,
+            tags: [:name, :queue, :state, :worker],
+            unit: {:native, :millisecond},
+            keep: keep_function_filter
+          )
+        ]
+      )
     end
 
-    defp get_oban_supervisors(opts) do
-      opts
-      |> Keyword.get(:oban_supervisors, [Oban])
-      |> case do
-        supervisors when is_list(supervisors) ->
-          MapSet.new(supervisors)
+    defp job_complete_tag_values(metadata) do
+      %{
+        name: normalize_module_name(metadata.config.name),
+        queue: metadata.job.queue,
+        state: metadata.state,
+        worker: metadata.worker
+      }
+    end
 
-        _ ->
-          raise "Invalid :oban_supervisors option value."
-      end
+    defp job_exception_tag_values(metadata) do
+      error =
+        case metadata.error do
+          %error_type{} -> normalize_module_name(error_type)
+          _ -> "Undefined"
+        end
+
+      %{
+        name: normalize_module_name(metadata.config.name),
+        queue: metadata.job.queue,
+        state: metadata.state,
+        worker: metadata.worker,
+        kind: metadata.kind,
+        error: error
+      }
     end
 
     defp oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter) do
@@ -205,6 +302,34 @@ if Code.ensure_loaded?(Oban) do
           )
         ]
       )
+    end
+
+    defp handle_oban_queue_polling_metrics(oban_supervisor, config) do
+      query =
+        Oban.Job
+        |> group_by([j], [j.queue, j.state])
+        |> select([j], {j.queue, j.state, count(j.id)})
+
+      config
+      |> Oban.Repo.all(query)
+      |> Enum.each(fn {queue, state, count} ->
+        measurements = %{count: count}
+        metadata = %{name: normalize_module_name(oban_supervisor), queue: queue, state: state}
+
+        :telemetry.execute([:prom_ex, :plugin, :oban, :queue, :length, :count], measurements, metadata)
+      end)
+    end
+
+    defp get_oban_supervisors(opts) do
+      opts
+      |> Keyword.get(:oban_supervisors, [Oban])
+      |> case do
+        supervisors when is_list(supervisors) ->
+          MapSet.new(supervisors)
+
+        _ ->
+          raise "Invalid :oban_supervisors option value."
+      end
     end
 
     defp keep_oban_instance_metrics(oban_supervisors) do
