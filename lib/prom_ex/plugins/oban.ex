@@ -51,6 +51,10 @@ if Code.ensure_loaded?(Oban) do
     @init_event [:oban, :supervisor, :init]
     @job_complete_event [:oban, :job, :stop]
     @job_exception_event [:oban, :job, :exception]
+    @producer_complete_event [:oban, :producer, :stop]
+    @producer_exception_event [:oban, :producer, :exception]
+    @circuit_breaker_trip_event [:oban, :circuit, :trip]
+    @circuit_breaker_open_event [:oban, :circuit, :open]
 
     # PromEx Oban proxy events
     @init_event_queue_limit_proxy [:prom_ex, :oban, :queue, :limit, :proxy]
@@ -68,7 +72,9 @@ if Code.ensure_loaded?(Oban) do
 
       [
         oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter),
-        oban_job_event_metrics(metric_prefix, keep_function_filter)
+        oban_job_event_metrics(metric_prefix, keep_function_filter),
+        oban_producer_event_metrics(metric_prefix, keep_function_filter),
+        oban_circuit_breaker_event_metrics(metric_prefix, keep_function_filter)
       ]
     end
 
@@ -112,6 +118,37 @@ if Code.ensure_loaded?(Oban) do
             :skip
         end
       end)
+    end
+
+    def oban_circuit_breaker_event_metrics(metric_prefix, keep_function_filter) do
+      Event.build(
+        :oban_circuit_breaker_event_metrics,
+        [
+          counter(
+            metric_prefix ++ [:circuit, :trip, :total],
+            event_name: @circuit_breaker_trip_event,
+            description: "The number of circuit breaker events that have occured",
+            tag_values: &circuit_breaker_trip_tag_values/1,
+            tags: [:name, :circuit_breaker],
+            keep: keep_function_filter
+          ),
+          counter(
+            metric_prefix ++ [:circuit, :open, :total],
+            event_name: @circuit_breaker_open_event,
+            description: "The number of circuit open events that have occured.",
+            tag_values: &circuit_breaker_trip_tag_values/1,
+            tags: [:name, :circuit_breaker],
+            keep: keep_function_filter
+          )
+        ]
+      )
+    end
+
+    defp circuit_breaker_trip_tag_values(metadata) do
+      %{
+        name: normalize_module_name(metadata.config.name),
+        circuit_breaker: normalize_module_name(metadata.name)
+      }
     end
 
     defp oban_job_event_metrics(metric_prefix, keep_function_filter) do
@@ -208,6 +245,30 @@ if Code.ensure_loaded?(Oban) do
       )
     end
 
+    defp oban_producer_event_metrics(metric_prefix, keep_function_filter) do
+      Event.build(
+        :oban_producer_event_metrics,
+        [
+          counter(
+            metric_prefix ++ [:producer, :total],
+            event_name: @producer_complete_event,
+            description: "The number of jobs that have either been dispatched or descheduled.",
+            tag_values: &producer_tag_values/1,
+            tags: [:action, :queue, :name],
+            keep: keep_function_filter
+          ),
+          counter(
+            metric_prefix ++ [:producer, :exception, :total],
+            event_name: @producer_exception_event,
+            description: "The number of jobs that have resulted in an exception when attempted to be enqueued.",
+            tag_values: &producer_tag_values/1,
+            tags: [:action, :queue, :name],
+            keep: keep_function_filter
+          )
+        ]
+      )
+    end
+
     defp job_complete_tag_values(metadata) do
       %{
         name: normalize_module_name(metadata.config.name),
@@ -231,6 +292,14 @@ if Code.ensure_loaded?(Oban) do
         worker: metadata.worker,
         kind: metadata.kind,
         error: error
+      }
+    end
+
+    defp producer_tag_values(metadata) do
+      %{
+        action: metadata.action,
+        queue: metadata.queue,
+        name: normalize_module_name(metadata.config.name)
       }
     end
 
