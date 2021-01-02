@@ -127,7 +127,7 @@ if Code.ensure_loaded?(Oban) do
           counter(
             metric_prefix ++ [:circuit, :trip, :total],
             event_name: @circuit_breaker_trip_event,
-            description: "The number of circuit breaker events that have occured",
+            description: "The number of circuit breaker events that have occurred",
             tag_values: &circuit_breaker_trip_tag_values/1,
             tags: [:name, :circuit_breaker],
             keep: keep_function_filter
@@ -135,7 +135,7 @@ if Code.ensure_loaded?(Oban) do
           counter(
             metric_prefix ++ [:circuit, :open, :total],
             event_name: @circuit_breaker_open_event,
-            description: "The number of circuit open events that have occured.",
+            description: "The number of circuit open events that have occurred.",
             tag_values: &circuit_breaker_trip_tag_values/1,
             tags: [:name, :circuit_breaker],
             keep: keep_function_filter
