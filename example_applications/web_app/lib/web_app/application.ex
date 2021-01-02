@@ -8,20 +8,27 @@ defmodule WebApp.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # PromEx modules
       WebApp.PromEx,
       WebApp.Limited.PromEx,
+
+      # Work queue
+      {Oban, oban_config()},
+      {Oban, oban_super_secret_config()},
 
       # Start the Ecto repository
       WebApp.Repo,
       WebApp.Repo2,
+
       # Start the Telemetry supervisor
       WebAppWeb.Telemetry,
+
       # Start the PubSub system
       {Phoenix.PubSub, name: WebApp.PubSub},
+
       # Start the Endpoint (http/https)
       WebAppWeb.Endpoint,
-      # Work queue
-      {Oban, oban_config()},
+
       # Work generator
       WebApp.RandomWorkGenerator
     ]
@@ -42,5 +49,9 @@ defmodule WebApp.Application do
 
   defp oban_config do
     Application.get_env(:web_app, Oban)
+  end
+
+  defp oban_super_secret_config do
+    Application.get_env(:web_app, Oban.SuperSecret)
   end
 end

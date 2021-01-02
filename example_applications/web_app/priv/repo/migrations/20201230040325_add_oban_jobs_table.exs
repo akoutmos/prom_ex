@@ -3,6 +3,7 @@ defmodule WebApp.Repo.Migrations.AddObanJobsTable do
 
   def up do
     Oban.Migrations.up()
+    Oban.Migrations.up(prefix: "secret")
   end
 
   # We specify `version: 1` in `down`, ensuring that we'll roll all the way back down if
