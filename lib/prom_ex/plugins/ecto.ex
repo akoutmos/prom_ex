@@ -8,9 +8,9 @@ if Code.ensure_loaded?(Ecto) do
     This plugin supports the following options:
     - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (e.g. :my_cool_app).
 
-    - `repo`: This is an OPTIONAL option and is a list with the full module name of your Ecto R
-      epos (e.g [MyApp.Repo]). If you do not provide this value, PromEx will attempt to resolve your
-      Repo modules via the `:ecto_repos` configuration on your OTP app.
+    - `repos`: This is an OPTIONAL option and is a list with the full module name of your Ecto Repos (e.g [MyApp.Repo]).
+       If you do not provide this value, PromEx will attempt to resolve your Repo modules via the
+       `:ecto_repos` configuration on your OTP app.
 
     This plugin exposes the following metric groups:
     - `:ecto_init_event_metrics`

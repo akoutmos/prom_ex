@@ -5,12 +5,18 @@ if Code.ensure_loaded?(Oban) do
     and also from internal polling jobs to monitor queue sizes
 
     This plugin supports the following options:
-    - `queues`: This is a OPTIONAL option and is a list of all the queues that this plugin should monitor. By default,
-      this plugin will look at your Oban config and monitor all of the configured queues.
+    - `oban_supervisors`: This is an OPTIONAL option and it allows you to specify what Oban instances should have their events
+      tracked. By default all Oban instances will have their events tracked and this setting will have a value of `:all`.
+      If for example you give you Oban supervisors the names `Oban.PublicJobs` and `Oban.PrivateJobs` and you only want to
+      capture metrics on `Oban.PrivateJobs`, you would pass `[Oban.PrivateJobs]` as this option.
+
+    - `queues`: This is a OPTIONAL option and is a list of all the queues (as atoms) that this plugin should monitor. By
+      default, this plugin will capture metrics on all Oban queues and it this setting will have a value of `:all`.
 
     - `poll_rate`: This is option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
     This plugin exposes the following metric groups:
+    - `:oban_init_event_metrics`
     - `:oban_job_event_metrics`
     - `:oban_producer_event_metrics`
     - `:oban_circuit_event_metrics`
@@ -38,38 +44,195 @@ if Code.ensure_loaded?(Oban) do
       end
     end
     ```
-
     """
 
     use PromEx.Plugin
 
-    @impl true
-    def manual_metrics(opts) do
-      otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :oban)
-
-      # Config details
-      []
-    end
+    @init_event [:oban, :supervisor, :init]
+    @init_event_queue_limit_proxy [:prom_ex, :oban, :queue, :limit, :proxy]
 
     @impl true
     def event_metrics(opts) do
-      oban_queues = Keyword.get(opts, :queues, :all_queues)
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = PromEx.metric_prefix(otp_app, :oban)
 
-      # Job processing details
-      []
+      oban_supervisors =
+        opts
+        |> Keyword.get(:oban_supervisors, :all)
+        |> case do
+          supervisors when is_list(supervisors) ->
+            MapSet.new(supervisors)
+
+          :all ->
+            :all
+
+          _ ->
+            raise "Invalid :oban_supervisors option value."
+        end
+
+      keep_function_filter = keep_oban_instance_metrics(oban_supervisors)
+
+      # oban_queues = Keyword.get(opts, :queues, :all)
+
+      # Set up event proxies
+      set_up_init_proxy_event(metric_prefix)
+
+      [
+        oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter)
+        # oban_job_event_metrics(metric_prefix)
+      ]
     end
 
     @impl true
-    def polling_metrics(opts) do
-      poll_rate = Keyword.get(opts, :poll_rate, 5_000)
-      otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :oban)
+    def polling_metrics(_opts) do
+      # otp_app = Keyword.fetch!(opts, :otp_app)
+      # metric_prefix = PromEx.metric_prefix(otp_app, :oban)
+      # poll_rate = Keyword.get(opts, :poll_rate, 5_000)
 
       # Queue length details
       []
+    end
+
+    defp oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter) do
+      Event.build(
+        :oban_init_event_metrics,
+        [
+          last_value(
+            metric_prefix ++ [:init, :status, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:name, :node, :plugins, :prefix, :queues, :repo, :timezone],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :circuit, :backoff, :milliseconds],
+            event_name: @init_event,
+            description: "The Oban supervisor's circuit backoff value.",
+            measurement: fn _measurements, %{config: config} ->
+              config.circuit_backoff
+            end,
+            tags: [:name],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :shutdown, :grace, :period, :milliseconds],
+            event_name: @init_event,
+            description: "The Oban supervisor's shutdown grace period value.",
+            measurement: fn _measurements, %{config: config} ->
+              config.shutdown_grace_period
+            end,
+            tags: [:name],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :poll, :interval, :milliseconds],
+            event_name: @init_event,
+            description: "The Oban supervisor's poll interval value.",
+            measurement: fn _measurements, %{config: config} ->
+              config.poll_interval
+            end,
+            tags: [:name],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :dispatch, :cooldown, :milliseconds],
+            event_name: @init_event,
+            description: "The Oban supervisor's dispatch cooldown value.",
+            measurement: fn _measurements, %{config: config} ->
+              config.dispatch_cooldown
+            end,
+            tags: [:name],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :queue, :concurrency, :limit],
+            event_name: @init_event_queue_limit_proxy,
+            description: "The concurrency limits of each of the Oban queue.",
+            measurement: :limit,
+            tags: [:name, :queue],
+            tag_values: &oban_init_queues_tag_values/1,
+            keep: keep_function_filter
+          )
+        ]
+      )
+    end
+
+    defp keep_oban_instance_metrics(:all) do
+      fn _ -> true end
+    end
+
+    defp keep_oban_instance_metrics(oban_supervisors) do
+      fn
+        %{config: %{name: name}} ->
+          MapSet.member?(oban_supervisors, name)
+
+        %{name: name} ->
+          MapSet.member?(oban_supervisors, name)
+
+        _ ->
+          false
+      end
+    end
+
+    defp oban_init_tag_values(%{config: config}) do
+      plugins_string_list =
+        config.plugins
+        |> Enum.map(fn plugin ->
+          plugin
+          |> Atom.to_string()
+          |> String.trim_leading("Elixir.")
+        end)
+        |> Enum.join(", ")
+
+      queues_string_list =
+        config.queues
+        |> Enum.map(fn {queue, _queue_opts} ->
+          Atom.to_string(queue)
+        end)
+        |> Enum.join(", ")
+
+      %{
+        name: config.name |> Atom.to_string() |> String.trim_leading("Elixir."),
+        node: config.node,
+        plugins: plugins_string_list,
+        prefix: config.prefix,
+        queues: queues_string_list,
+        repo: config.repo,
+        timezone: config.timezone
+      }
+    end
+
+    defp oban_init_queues_tag_values(%{name: name, queue: queue}) do
+      %{
+        name: name |> Atom.to_string() |> String.trim_leading("Elixir."),
+        queue: queue
+      }
+    end
+
+    defp set_up_init_proxy_event(prefix) do
+      :telemetry.attach(
+        [:prom_ex, :oban, :proxy] ++ prefix,
+        @init_event,
+        fn _event_name, _event_measurement, event_metadata, _config ->
+          Enum.each(event_metadata.config.queues, fn {queue, queue_opts} ->
+            limit = Keyword.get(queue_opts, :limit, 0)
+
+            metadata = %{
+              queue: queue,
+              name: event_metadata.config.name
+            }
+
+            :telemetry.execute(@init_event_queue_limit_proxy, %{limit: limit}, metadata)
+          end)
+        end,
+        %{}
+      )
     end
   end
 else

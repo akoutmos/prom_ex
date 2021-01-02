@@ -141,15 +141,6 @@ defmodule PromEx.DashboardUploader do
 
       {:error, reason} ->
         Logger.warn("PromEx.DashboardUploader failed to upload #{full_dashboard_path} to Grafana: #{inspect(reason)}")
-
-      error ->
-        Logger.error(
-          "PromEx.DashboardUploader (#{inspect(self())}) failed upload dashboards to Grafana (#{grafana_conn.base_url}) because: #{
-            inspect(error)
-          }"
-        )
-
-        Process.exit(self(), :normal)
     end
   end
 

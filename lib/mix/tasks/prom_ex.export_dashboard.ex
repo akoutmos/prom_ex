@@ -109,11 +109,11 @@ defmodule Mix.Tasks.PromEx.ExportDashboard do
     handle_export(cli_args, prom_ex_module, dashboard_render)
   end
 
-  def handle_export(%{stdout: true}, _prom_ex_module, dashboard_render) do
+  defp handle_export(%{stdout: true}, _prom_ex_module, dashboard_render) do
     IO.puts(dashboard_render.rendered_file)
   end
 
-  def handle_export(%{file_path: file_path}, prom_ex_module, dashboard_render) do
+  defp handle_export(%{file_path: file_path}, prom_ex_module, dashboard_render) do
     priv_path =
       prom_ex_module.__otp_app__()
       |> :code.priv_dir()
@@ -124,7 +124,7 @@ defmodule Mix.Tasks.PromEx.ExportDashboard do
     File.write!(full_path, dashboard_render.rendered_file)
   end
 
-  def handle_export(_cli_args, _prom_ex_module, _dashboard_render) do
+  defp handle_export(_cli_args, _prom_ex_module, _dashboard_render) do
     raise "You must specify either a file path to write the dashboard to, or provide the --stdout flag to print to STDOUT"
   end
 
