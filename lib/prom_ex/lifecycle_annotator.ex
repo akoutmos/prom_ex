@@ -92,7 +92,16 @@ defmodule PromEx.LifecycleAnnotator do
 
     annotation_details = generate_annotation_details(state)
     annotation_text = ["#{to_string(otp_app)} is starting up\n" | annotation_details] |> Enum.join("\n")
-    GrafanaClient.create_annotation(grafana_conn, ["prom_ex", to_string(otp_app), "start"], annotation_text)
+
+    grafana_conn
+    |> GrafanaClient.create_annotation(["prom_ex", to_string(otp_app), "start"], annotation_text)
+    |> case do
+      {:ok, _response_payload} ->
+        Logger.info("PromEx.LifecycleAnnotator successfully created start annotation in Grafana.")
+
+      {:error, reason} ->
+        Logger.warn("PromEx.LifecycleAnnotator failed to create start annotation in Grafana: #{inspect(reason)}")
+    end
 
     {:noreply, state}
   end
@@ -113,7 +122,16 @@ defmodule PromEx.LifecycleAnnotator do
 
     annotation_details = generate_annotation_details(state)
     annotation_text = ["#{to_string(otp_app)} is shutting down\n" | annotation_details] |> Enum.join("\n")
-    GrafanaClient.create_annotation(grafana_conn, ["prom_ex", to_string(otp_app), "stop"], annotation_text)
+
+    grafana_conn
+    |> GrafanaClient.create_annotation(["prom_ex", to_string(otp_app), "stop"], annotation_text)
+    |> case do
+      {:ok, _response_payload} ->
+        Logger.info("PromEx.LifecycleAnnotator successfully created stop annotation in Grafana.")
+
+      {:error, reason} ->
+        Logger.warn("PromEx.LifecycleAnnotator failed to create stop annotation in Grafana: #{inspect(reason)}")
+    end
 
     :ok
   end
