@@ -65,10 +65,181 @@
     },
     {
       "datasource": "prometheus",
-      "description": "The Oban instance for which the presented metrics were captured from",
+      "description": "The number of jobs processed across all queues and states.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 45,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(increase(web_app_prom_ex_oban_job_processing_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Processed Jobs",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The number of jobs that resulted in an error across all queues.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 46,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(increase(web_app_prom_ex_oban_job_exception_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Job Errors",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The number of jobs that have been enqueued.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 47,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(increase(web_app_prom_ex_oban_producer_total{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Jobs Enqueued",
+      "type": "stat"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The configuration of the selected Oban instance",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "displayMode": "auto"
+          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -80,33 +251,50 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Oban Instance"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 135
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Node"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 142
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 6,
+        "w": 8,
         "x": 0,
-        "y": 1
+        "y": 7
       },
-      "id": 38,
+      "id": 49,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
-          "fields": "/^name$/",
-          "values": false
-        },
-        "textMode": "auto"
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "web_app_prom_ex_oban_init_status_info{job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "expr": "{__name__=\"web_app_prom_ex_oban_init_status_info\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "format": "table",
+          "instant": true,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -114,8 +302,147 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Oban Instance",
-      "type": "stat"
+      "title": "Oban Configuration",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "name": "Oban Instance",
+              "node": "Node",
+              "plugins": "Configured Plugins",
+              "prefix": "Postgres Schema",
+              "queues": "Configured Queues",
+              "repo": "Ecto Repo",
+              "timezone": "Timezone"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "prometheus",
+      "description": "The configuration of the selected Oban instance",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "displayMode": "auto"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Config Setting"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "from": "",
+                    "id": 0,
+                    "text": "Circuit Backoff",
+                    "to": "",
+                    "type": 1,
+                    "value": "web_app_prom_ex_oban_init_circuit_backoff_milliseconds"
+                  },
+                  {
+                    "from": "",
+                    "id": 1,
+                    "text": "Cooldown",
+                    "to": "",
+                    "type": 1,
+                    "value": "web_app_prom_ex_oban_init_dispatch_cooldown_milliseconds"
+                  },
+                  {
+                    "from": "",
+                    "id": 2,
+                    "text": "Poll Interval",
+                    "to": "",
+                    "type": 1,
+                    "value": "web_app_prom_ex_oban_init_poll_interval_milliseconds"
+                  },
+                  {
+                    "from": "",
+                    "id": 3,
+                    "text": "Shutdown Grace Period",
+                    "to": "",
+                    "type": 1,
+                    "value": "web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 7
+      },
+      "id": 50,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "{__name__=~\"web_app_prom_ex_oban_init_circuit_backoff_milliseconds|web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds|web_app_prom_ex_oban_init_poll_interval_milliseconds|web_app_prom_ex_oban_init_dispatch_cooldown_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Oban Configuration",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": false,
+              "instance": true,
+              "job": true,
+              "name": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Time Value",
+              "__name__": "Config Setting"
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": "prometheus",
@@ -139,10 +466,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 1
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 7
       },
       "id": 36,
       "options": {
@@ -174,794 +501,656 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
-      "description": "The configured circuit backoff value for the Oban supervisor.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "decimals": 1,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 0,
-        "y": 9
-      },
-      "id": 32,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "web_app_prom_ex_oban_init_circuit_backoff_milliseconds{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Circuit Backoff",
-      "type": "stat"
-    },
-    {
-      "datasource": "prometheus",
-      "description": "The configured circuit shutdown grace period value for the Oban supervisor.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "decimals": 1,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 3,
-        "y": 9
-      },
-      "id": 33,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Shutdown Grace Period",
-      "type": "stat"
-    },
-    {
-      "datasource": "prometheus",
-      "description": "The configured poll interval value for the Oban supervisor.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "decimals": 1,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 6,
-        "y": 9
-      },
-      "id": 34,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "web_app_prom_ex_oban_init_poll_interval_milliseconds{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Poll Interval",
-      "type": "stat"
-    },
-    {
-      "datasource": "prometheus",
-      "description": "The configured dispatch cooldown value for the Oban supervisor.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "decimals": 1,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 3,
-        "x": 9,
-        "y": 9
-      },
-      "id": 35,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "web_app_prom_ex_oban_init_dispatch_cooldown_milliseconds{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Dispatch Cooldown",
-      "type": "stat"
-    },
-    {
-      "collapsed": true,
+      "collapsed": false,
       "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 13
       },
       "id": 2,
-      "panels": [
-        {
-          "cards": {
-            "cardPadding": null,
-            "cardRound": null
-          },
-          "color": {
-            "cardColor": "#b4ff00",
-            "colorScale": "sqrt",
-            "colorScheme": "interpolateOranges",
-            "exponent": 0.5,
-            "mode": "spectrum"
-          },
-          "dataFormat": "tsbuckets",
-          "datasource": "prometheus",
-          "description": "A heatmap showing the request time spread across all requests (regardless of path).",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 13,
-            "w": 12,
-            "x": 0,
-            "y": 10
-          },
-          "heatmap": {},
-          "hideZeroBuckets": true,
-          "highlightCards": true,
-          "id": 6,
-          "legend": {
-            "show": true
-          },
-          "pluginVersion": "7.1.3",
-          "reverseYBuckets": false,
-          "targets": [
-            {
-              "expr": "sum(irate(web_app_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
-              "format": "heatmap",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "{{ le }}",
-              "refId": "A"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Request Time",
-          "tooltip": {
-            "show": true,
-            "showHistogram": true
-          },
-          "type": "heatmap",
-          "xAxis": {
-            "show": true
-          },
-          "xBucketNumber": null,
-          "xBucketSize": null,
-          "yAxis": {
-            "decimals": null,
-            "format": "ms",
-            "logBase": 1,
-            "max": null,
-            "min": null,
-            "show": true,
-            "splitFactor": null
-          },
-          "yBucketBound": "auto",
-          "yBucketNumber": null,
-          "yBucketSize": null
-        },
-        {
-          "cards": {
-            "cardPadding": null,
-            "cardRound": null
-          },
-          "color": {
-            "cardColor": "#b4ff00",
-            "colorScale": "sqrt",
-            "colorScheme": "interpolateOranges",
-            "exponent": 0.5,
-            "mode": "spectrum"
-          },
-          "dataFormat": "tsbuckets",
-          "datasource": "prometheus",
-          "description": "A heatmap showing the response payload size spread across all requests (regardless of path).",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 13,
-            "w": 12,
-            "x": 12,
-            "y": 10
-          },
-          "heatmap": {},
-          "hideZeroBuckets": true,
-          "highlightCards": true,
-          "id": 12,
-          "legend": {
-            "show": true
-          },
-          "pluginVersion": "7.1.3",
-          "reverseYBuckets": false,
-          "targets": [
-            {
-              "expr": "sum(irate(web_app_prom_ex_phoenix_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
-              "format": "heatmap",
-              "hide": false,
-              "interval": "",
-              "legendFormat": "{{ le }}",
-              "refId": "A"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Response Payload Size",
-          "tooltip": {
-            "show": true,
-            "showHistogram": true
-          },
-          "type": "heatmap",
-          "xAxis": {
-            "show": true
-          },
-          "xBucketNumber": null,
-          "xBucketSize": null,
-          "yAxis": {
-            "decimals": null,
-            "format": "decbytes",
-            "logBase": 1,
-            "max": null,
-            "min": null,
-            "show": true,
-            "splitFactor": null
-          },
-          "yBucketBound": "auto",
-          "yBucketNumber": null,
-          "yBucketSize": null
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "description": "The average request time per path per status code per HTTP method.",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 13,
-            "w": 12,
-            "x": 0,
-            "y": 23
-          },
-          "hiddenSeries": false,
-          "id": 11,
-          "legend": {
-            "alignAsTable": true,
-            "avg": false,
-            "current": true,
-            "hideEmpty": false,
-            "hideZero": false,
-            "max": true,
-            "min": false,
-            "rightSide": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "nullPointMode": "null as zero",
-          "percentage": false,
-          "pluginVersion": "7.1.3",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "sum(irate(web_app_prom_ex_phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(web_app_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
-              "interval": "",
-              "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Average HTTP Request Time",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "ms",
-              "label": "Response Time",
-              "logBase": 1,
-              "max": null,
-              "min": "0",
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "description": "The average response size per path per status code per HTTP method.",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 13,
-            "w": 12,
-            "x": 12,
-            "y": 23
-          },
-          "hiddenSeries": false,
-          "id": 13,
-          "legend": {
-            "alignAsTable": true,
-            "avg": false,
-            "current": true,
-            "hideEmpty": false,
-            "hideZero": false,
-            "max": true,
-            "min": false,
-            "rightSide": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "nullPointMode": "null as zero",
-          "percentage": false,
-          "pluginVersion": "7.1.3",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "sum(irate(web_app_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(web_app_prom_ex_phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
-              "interval": "",
-              "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Average HTTP Response Size",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "decbytes",
-              "label": "Response Size",
-              "logBase": 1,
-              "max": null,
-              "min": "0",
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "description": "Shows the number of requests coming into certain paths and the resulting response codes.",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 13,
-            "w": 12,
-            "x": 0,
-            "y": 36
-          },
-          "hiddenSeries": false,
-          "id": 8,
-          "legend": {
-            "alignAsTable": true,
-            "avg": false,
-            "current": true,
-            "hideEmpty": false,
-            "hideZero": false,
-            "max": true,
-            "min": false,
-            "rightSide": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "nullPointMode": "null as zero",
-          "percentage": false,
-          "pluginVersion": "7.1.3",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "irate(web_app_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
-              "interval": "",
-              "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Path Requests",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "locale",
-              "label": "Requests",
-              "logBase": 1,
-              "max": null,
-              "min": "0",
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": false
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "prometheus",
-          "description": "The aggregate response status of all the requests.",
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
-          },
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 13,
-            "w": 12,
-            "x": 12,
-            "y": 36
-          },
-          "hiddenSeries": false,
-          "id": 10,
-          "legend": {
-            "alignAsTable": true,
-            "avg": false,
-            "current": true,
-            "max": true,
-            "min": false,
-            "rightSide": true,
-            "show": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 1,
-          "nullPointMode": "null as zero",
-          "percentage": false,
-          "pluginVersion": "7.1.3",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "sum(irate(web_app_prom_ex_phoenix_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-              "interval": "",
-              "legendFormat": "2xx",
-              "refId": "A"
-            },
-            {
-              "expr": "sum(irate(web_app_prom_ex_phoenix_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-              "interval": "",
-              "legendFormat": "4xx",
-              "refId": "B"
-            },
-            {
-              "expr": "sum(irate(web_app_prom_ex_phoenix_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-              "interval": "",
-              "legendFormat": "5xx",
-              "refId": "C"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Response Status Codes",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": "Requests",
-              "logBase": 1,
-              "max": null,
-              "min": "0",
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        }
-      ],
+      "panels": [],
       "title": "Job Processing Details",
       "type": "row"
     },
     {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "prometheus",
+      "description": "A heatmap showing the time it took to process jobs across all queues.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 6,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Job Processing Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "prometheus",
+      "description": "A heatmap showing how long jobs are waiting in queue for processing.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 12,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Job Queue Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 27
+      },
+      "hiddenSeries": false,
+      "id": 11,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(web_app_prom_ex_oban_job_processing_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_processing_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "interval": "",
+          "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Job Processing Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": "Response Time",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The average time a job waited in queue for processing.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "hiddenSeries": false,
+      "id": 44,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(web_app_prom_ex_oban_job_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "interval": "",
+          "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Job Queue Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": "Response Time",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "hiddenSeries": false,
+      "id": 51,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(web_app_prom_ex_oban_job_complete_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_complete_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "interval": "",
+          "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Job Attempts",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "locale",
+          "label": "Job Attempts",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "The average response size per path per status code per HTTP method.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 40
+      },
+      "hiddenSeries": false,
+      "id": 13,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(irate(web_app_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(web_app_prom_ex_phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "interval": "",
+          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average HTTP Response Size",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "decbytes",
+          "label": "Response Size",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "description": "Shows the number of requests coming into certain paths and the resulting response codes.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 53
+      },
+      "hiddenSeries": false,
+      "id": 8,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(web_app_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "interval": "",
+          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Path Requests",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "locale",
+          "label": "Requests",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
       "collapsed": true,
       "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 66
       },
       "id": 4,
       "panels": [
@@ -984,7 +1173,7 @@
             "h": 13,
             "w": 12,
             "x": 0,
-            "y": 19
+            "y": 54
           },
           "hiddenSeries": false,
           "id": 15,
@@ -1085,7 +1274,7 @@
             "h": 13,
             "w": 12,
             "x": 12,
-            "y": 19
+            "y": 54
           },
           "heatmap": {},
           "hideZeroBuckets": true,
@@ -1151,7 +1340,7 @@
             "h": 13,
             "w": 12,
             "x": 0,
-            "y": 32
+            "y": 67
           },
           "hiddenSeries": false,
           "id": 17,
@@ -1240,15 +1429,15 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 67
       },
       "id": 30,
       "panels": [],
-      "title": "Producer title",
+      "title": "Producer Details",
       "type": "row"
     }
   ],
-  "refresh": "",
+  "refresh": false,
   "schemaVersion": 26,
   "style": "dark",
   "tags": [],

@@ -196,7 +196,6 @@ if Code.ensure_loaded?(Oban) do
             ],
             tag_values: &job_complete_tag_values/1,
             tags: [:name, :queue, :state, :worker],
-            unit: {:native, :millisecond},
             keep: keep_function_filter
           ),
           distribution(
@@ -238,7 +237,6 @@ if Code.ensure_loaded?(Oban) do
             ],
             tag_values: &job_exception_tag_values/1,
             tags: [:name, :queue, :state, :worker],
-            unit: {:native, :millisecond},
             keep: keep_function_filter
           )
         ]
@@ -307,6 +305,69 @@ if Code.ensure_loaded?(Oban) do
       Event.build(
         :oban_init_event_metrics,
         [
+          last_value(
+            metric_prefix ++ [:init, :name, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:name],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :node, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:node],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :plugins, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:plugins],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :prefix, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:prefix],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :queues, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:queues],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :repo, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:repo],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
+          last_value(
+            metric_prefix ++ [:init, :timezone, :info],
+            event_name: @init_event,
+            description: "Information regarding the initialized oban supervisor.",
+            measurement: fn _measurements -> 1 end,
+            tags: [:timezone],
+            tag_values: &oban_init_tag_values/1,
+            keep: keep_function_filter
+          ),
           last_value(
             metric_prefix ++ [:init, :status, :info],
             event_name: @init_event,
