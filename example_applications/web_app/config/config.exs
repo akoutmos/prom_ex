@@ -26,9 +26,9 @@ config :web_app, Oban,
   repo: WebApp.Repo,
   plugins: [Oban.Plugins.Pruner],
   queues: [
-    default: 10,
-    events: 50,
-    media: 20
+    default: 5,
+    events: 25,
+    media: 10
   ]
 
 # Configures the endpoint

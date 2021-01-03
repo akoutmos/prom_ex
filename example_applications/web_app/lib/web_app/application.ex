@@ -12,13 +12,13 @@ defmodule WebApp.Application do
       WebApp.PromEx,
       WebApp.Limited.PromEx,
 
-      # Work queue
-      {Oban, oban_config()},
-      {Oban, oban_super_secret_config()},
-
       # Start the Ecto repository
       WebApp.Repo,
       WebApp.Repo2,
+
+      # Work queue
+      {Oban, oban_config()},
+      {Oban, oban_super_secret_config()},
 
       # Start the Telemetry supervisor
       WebAppWeb.Telemetry,

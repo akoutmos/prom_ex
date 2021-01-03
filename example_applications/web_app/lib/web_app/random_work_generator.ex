@@ -21,7 +21,7 @@ defmodule WebApp.RandomWorkGenerator do
   @impl true
   def handle_info(:do_work, state) do
     # Enqueue work
-    # enqueue_default_prefix()
+    enqueue_default_prefix()
     enqueue_secret_prefix()
 
     schedule_work()
@@ -98,7 +98,7 @@ defmodule WebApp.RandomWorkGenerator do
 
       1..random_amount
       |> Enum.each(fn _ ->
-        random_sleep = Enum.random(100..2_000)
+        random_sleep = Enum.random(10..5_000)
 
         job =
           %{sleep_time: random_sleep}
@@ -114,7 +114,7 @@ defmodule WebApp.RandomWorkGenerator do
 
       1..random_amount
       |> Enum.each(fn _ ->
-        random_sleep = Enum.random(100..2_000)
+        random_sleep = Enum.random(10..5_000)
 
         job =
           %{sleep_time: random_sleep}
@@ -130,7 +130,7 @@ defmodule WebApp.RandomWorkGenerator do
 
       1..random_amount
       |> Enum.each(fn _ ->
-        random_sleep = Enum.random(100..2_000)
+        random_sleep = Enum.random(10..5_000)
 
         job =
           %{sleep_time: random_sleep}
