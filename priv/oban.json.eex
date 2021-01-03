@@ -43,7 +43,7 @@
     ]
   },
   "description": "All the data that is presented here is captured by the PromEx Oban plugin (https://github.com/akoutmos/prom_ex/blob/master/lib/prom_ex/plugins/oban.ex)",
-  "editable": true,
+  "editable": false,
   "gnetId": null,
   "graphTooltip": 1,
   "id": 5,
