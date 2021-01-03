@@ -787,7 +787,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "Execution Time",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -884,7 +884,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "In Queue Time",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1236,7 +1236,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "Execution Time",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1333,7 +1333,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "In Queue Time",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -2410,7 +2410,7 @@
       "yaxes": [
         {
           "format": "short",
-          "label": "Number of Circuit Trips",
+          "label": "Number of Circuit Opens",
           "logBase": 1,
           "max": null,
           "min": "0",
