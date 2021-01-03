@@ -42,7 +42,7 @@
       }
     ]
   },
-  "description": "All the data that is presented here is captured by the PromEx Phoenix plugin (https://github.com/akoutmos/prom_ex/blob/master/lib/prom_ex/plugins/phoenix.ex)",
+  "description": "All the data that is presented here is captured by the PromEx Oban plugin (https://github.com/akoutmos/prom_ex/blob/master/lib/prom_ex/plugins/oban.ex)",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
@@ -1029,7 +1029,7 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the time it took to process jobs across all queues.",
+      "description": "A heatmap showing the time it took to process jobs across all queues that resulted in an error.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1101,7 +1101,7 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing how long jobs are waiting in queue for processing.",
+      "description": "A heatmap showing how long jobs are waiting in queue for processing that resulted in an error.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1165,7 +1165,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
+      "description": "The average time it took to process jobs per queue that resulted in an error.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1262,7 +1262,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average time a job waited in queue for processing.",
+      "description": "The average time a job waited in queue for processing prior to resulting in an error.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1359,7 +1359,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
+      "description": "The average time it took to process jobs per queue that resulted in an error.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -2050,7 +2050,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of producer events that resulted in jobs being descheduled.",
+      "description": "The number of descheduled producer events that resulted in errors.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -2143,7 +2143,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of producer events that resulted in jobs being descheduled.",
+      "description": "The number of dispatch producer events that resulted in errors.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -2183,7 +2183,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"dispatch\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2193,7 +2193,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Job Descheduling Errors",
+      "title": "Job Dispatching Errors",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2250,7 +2250,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of producer events that resulted in jobs being dispatched.",
+      "description": "The number of circuit breaker trip events that occured along with what component tripped the breaker.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -2343,7 +2343,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of producer events that resulted in jobs being dispatched.",
+      "description": "The number of circuit breaker open events that occured along with what component tripped the breaker.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
