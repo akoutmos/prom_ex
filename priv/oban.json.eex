@@ -20,7 +20,7 @@
         "showIn": 0,
         "tags": [
           "prom_ex",
-          "web_app",
+          "<%= @otp_app %>",
           "start"
         ],
         "type": "tags"
@@ -35,7 +35,7 @@
         "showIn": 0,
         "tags": [
           "prom_ex",
-          "web_app",
+          "<%= @otp_app %>",
           "stop"
         ],
         "type": "tags"
@@ -65,7 +65,7 @@
       "type": "row"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The configuration of the selected Oban instance",
       "fieldConfig": {
         "defaults": {
@@ -102,7 +102,7 @@
                     "text": "Circuit Backoff",
                     "to": "",
                     "type": 1,
-                    "value": "web_app_prom_ex_oban_init_circuit_backoff_milliseconds"
+                    "value": "<%= @otp_app %>_prom_ex_oban_init_circuit_backoff_milliseconds"
                   },
                   {
                     "from": "",
@@ -110,7 +110,7 @@
                     "text": "Cooldown",
                     "to": "",
                     "type": 1,
-                    "value": "web_app_prom_ex_oban_init_dispatch_cooldown_milliseconds"
+                    "value": "<%= @otp_app %>_prom_ex_oban_init_dispatch_cooldown_milliseconds"
                   },
                   {
                     "from": "",
@@ -118,7 +118,7 @@
                     "text": "Global Poll Interval",
                     "to": "",
                     "type": 1,
-                    "value": "web_app_prom_ex_oban_init_poll_interval_milliseconds"
+                    "value": "<%= @otp_app %>_prom_ex_oban_init_poll_interval_milliseconds"
                   },
                   {
                     "from": "",
@@ -126,7 +126,7 @@
                     "text": "Shutdown Grace Period",
                     "to": "",
                     "type": 1,
-                    "value": "web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds"
+                    "value": "<%= @otp_app %>_prom_ex_oban_init_shutdown_grace_period_milliseconds"
                   }
                 ]
               }
@@ -147,7 +147,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"web_app_prom_ex_oban_init_circuit_backoff_milliseconds|web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds|web_app_prom_ex_oban_init_poll_interval_milliseconds|web_app_prom_ex_oban_init_dispatch_cooldown_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_oban_init_circuit_backoff_milliseconds|<%= @otp_app %>_prom_ex_oban_init_shutdown_grace_period_milliseconds|<%= @otp_app %>_prom_ex_oban_init_poll_interval_milliseconds|<%= @otp_app %>_prom_ex_oban_init_dispatch_cooldown_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -180,7 +180,7 @@
       "type": "table"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs in each queue that are in the available state.",
       "fieldConfig": {
         "defaults": {
@@ -231,7 +231,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "web_app_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
+          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "{{ queue }}",
@@ -244,7 +244,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The configuration of the selected Oban instance",
       "fieldConfig": {
         "defaults": {
@@ -279,7 +279,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=\"web_app_prom_ex_oban_init_status_info\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "expr": "{__name__=\"<%= @otp_app %>_prom_ex_oban_init_status_info\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -317,7 +317,7 @@
       "type": "table"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The configured concurrency limits for each of the queues under the Oban supervisor.",
       "fieldConfig": {
         "defaults": {
@@ -352,7 +352,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "web_app_prom_ex_oban_init_queue_concurrency_limit{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
+          "expr": "<%= @otp_app %>_prom_ex_oban_init_queue_concurrency_limit{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -385,7 +385,7 @@
       "type": "table"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs processed across all queues and states.",
       "fieldConfig": {
         "defaults": {
@@ -429,7 +429,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(web_app_prom_ex_oban_job_processing_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -441,7 +441,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs that resulted in an error across all queues.",
       "fieldConfig": {
         "defaults": {
@@ -485,7 +485,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(web_app_prom_ex_oban_job_exception_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -497,7 +497,7 @@
       "type": "stat"
     },
     {
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs that have been enqueued.",
       "fieldConfig": {
         "defaults": {
@@ -541,7 +541,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(web_app_prom_ex_oban_producer_total{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_producer_total{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -579,7 +579,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the time it took to process jobs across all queues.",
       "fieldConfig": {
         "defaults": {
@@ -604,7 +604,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -651,7 +651,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing how long jobs are waiting in queue for processing.",
       "fieldConfig": {
         "defaults": {
@@ -676,7 +676,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -715,7 +715,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
       "fieldConfig": {
         "defaults": {
@@ -760,7 +760,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_job_processing_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_processing_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -812,7 +812,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average time a job waited in queue for processing.",
       "fieldConfig": {
         "defaults": {
@@ -857,7 +857,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_job_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -909,7 +909,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
       "fieldConfig": {
         "defaults": {
@@ -954,7 +954,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_job_complete_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_complete_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_complete_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_complete_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1028,7 +1028,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing the time it took to process jobs across all queues.",
       "fieldConfig": {
         "defaults": {
@@ -1053,7 +1053,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1100,7 +1100,7 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "A heatmap showing how long jobs are waiting in queue for processing.",
       "fieldConfig": {
         "defaults": {
@@ -1125,7 +1125,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1164,7 +1164,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
       "fieldConfig": {
         "defaults": {
@@ -1209,7 +1209,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_job_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ error }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1261,7 +1261,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average time a job waited in queue for processing.",
       "fieldConfig": {
         "defaults": {
@@ -1306,7 +1306,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_job_exception_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_exception_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_exception_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_exception_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ error }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1358,7 +1358,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The average time it took to process jobs per queue. This will include jobs that ended with a successful, snoozed, or discarded state.",
       "fieldConfig": {
         "defaults": {
@@ -1403,7 +1403,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_job_exception_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(web_app_prom_ex_oban_job_exception_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_exception_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_exception_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1469,7 +1469,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs marked as available in each queue.",
       "fieldConfig": {
         "defaults": {
@@ -1512,7 +1512,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "web_app_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
+          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1564,7 +1564,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs marked as completed in each queue.",
       "fieldConfig": {
         "defaults": {
@@ -1607,7 +1607,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "web_app_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"completed\"}",
+          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"completed\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1659,7 +1659,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs marked as executing in each queue.",
       "fieldConfig": {
         "defaults": {
@@ -1702,7 +1702,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "web_app_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"executing\"}",
+          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"executing\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1754,7 +1754,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of jobs marked as retryable in each queue.",
       "fieldConfig": {
         "defaults": {
@@ -1797,7 +1797,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "web_app_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"retryable\"}",
+          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"retryable\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1863,7 +1863,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of producer events that resulted in jobs being descheduled.",
       "fieldConfig": {
         "defaults": {
@@ -1904,7 +1904,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_producer_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1956,7 +1956,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of producer events that resulted in jobs being dispatched.",
       "fieldConfig": {
         "defaults": {
@@ -1997,7 +1997,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_producer_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"dispatch\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"dispatch\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2049,7 +2049,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of producer events that resulted in jobs being descheduled.",
       "fieldConfig": {
         "defaults": {
@@ -2090,7 +2090,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2142,7 +2142,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of producer events that resulted in jobs being descheduled.",
       "fieldConfig": {
         "defaults": {
@@ -2183,7 +2183,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(web_app_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2249,7 +2249,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of producer events that resulted in jobs being dispatched.",
       "fieldConfig": {
         "defaults": {
@@ -2290,7 +2290,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(web_app_prom_ex_oban_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "increase(<%= @otp_app %>_prom_ex_oban_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ circuit_breaker }}",
           "refId": "A"
@@ -2342,7 +2342,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of producer events that resulted in jobs being dispatched.",
       "fieldConfig": {
         "defaults": {
@@ -2383,7 +2383,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(web_app_prom_ex_oban_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "increase(<%= @otp_app %>_prom_ex_oban_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ circuit_breaker }}",
           "refId": "A"
@@ -2444,15 +2444,15 @@
           "text": "elixir_app",
           "value": "elixir_app"
         },
-        "datasource": "prometheus",
-        "definition": "label_values(web_app_prom_ex_prom_ex_status_info, job)",
+        "datasource": "<%= @datasource_id %>",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(web_app_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -2470,15 +2470,15 @@
           "text": "elixir_app_one:4000",
           "value": "elixir_app_one:4000"
         },
-        "datasource": "prometheus",
-        "definition": "label_values(web_app_prom_ex_prom_ex_status_info, instance)",
+        "datasource": "<%= @datasource_id %>",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(web_app_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -2491,32 +2491,16 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "Oban",
-          "value": "Oban"
-        },
-        "datasource": "prometheus",
-        "definition": "label_values(web_app_prom_ex_oban_init_status_info, name)",
+        "datasource": "<%= @datasource_id %>",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_oban_init_status_info, name)",
         "hide": 0,
         "includeAll": false,
         "label": "Oban Instance",
         "multi": false,
         "name": "oban",
-        "options": [
-          {
-            "selected": true,
-            "text": "Oban",
-            "value": "Oban"
-          },
-          {
-            "selected": false,
-            "text": "Oban.SuperSecret",
-            "value": "Oban.SuperSecret"
-          }
-        ],
-        "query": "label_values(web_app_prom_ex_oban_init_status_info, name)",
-        "refresh": 0,
+        "options": [],
+        "query": "label_values(<%= @otp_app %>_prom_ex_oban_init_status_info, name)",
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
