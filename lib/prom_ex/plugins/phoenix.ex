@@ -154,7 +154,7 @@ if Code.ensure_loaded?(Phoenix) do
             %{route: path, plug: controller, plug_opts: action} ->
               %{
                 path: path,
-                controller: controller,
+                controller: normalize_module_name(controller),
                 action: action
               }
 
@@ -175,6 +175,14 @@ if Code.ensure_loaded?(Phoenix) do
           Logger.warn("Could not resolve path for request")
       end
     end
+
+    defp normalize_module_name(name) when is_atom(name) do
+      name
+      |> Atom.to_string()
+      |> String.trim_leading("Elixir.")
+    end
+
+    defp normalize_module_name(name), do: name
   end
 else
   defmodule PromEx.Plugins.Phoenix do
