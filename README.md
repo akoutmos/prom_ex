@@ -6,7 +6,7 @@ Status](https://coveralls.io/repos/github/akoutmos/prom_ex/badge.svg?branch=mast
 
 <img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx" style="margin-left:33%">
 
-An Elixir Prometheus metrics collection library built on top of Telemetry
+Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries.
 
 <br>
 
