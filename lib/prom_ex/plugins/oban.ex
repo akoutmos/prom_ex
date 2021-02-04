@@ -146,7 +146,7 @@ if Code.ensure_loaded?(Oban) do
 
     defp circuit_breaker_trip_tag_values(metadata) do
       %{
-        name: normalize_module_name(metadata.config.name),
+        name: normalize_module_name(metadata.conf.name),
         circuit_breaker: normalize_module_name(metadata.name)
       }
     end
@@ -252,7 +252,7 @@ if Code.ensure_loaded?(Oban) do
             event_name: @producer_complete_event,
             description: "The number of jobs that have either been dispatched or descheduled.",
             tag_values: &producer_tag_values/1,
-            tags: [:action, :queue, :name],
+            tags: [:queue, :name],
             keep: keep_function_filter
           ),
           counter(
@@ -260,7 +260,7 @@ if Code.ensure_loaded?(Oban) do
             event_name: @producer_exception_event,
             description: "The number of jobs that have resulted in an exception when attempted to be enqueued.",
             tag_values: &producer_tag_values/1,
-            tags: [:action, :queue, :name],
+            tags: [:queue, :name],
             keep: keep_function_filter
           )
         ]
@@ -269,7 +269,7 @@ if Code.ensure_loaded?(Oban) do
 
     defp job_complete_tag_values(metadata) do
       %{
-        name: normalize_module_name(metadata.config.name),
+        name: normalize_module_name(metadata.conf.name),
         queue: metadata.job.queue,
         state: metadata.state,
         worker: metadata.worker
@@ -284,7 +284,7 @@ if Code.ensure_loaded?(Oban) do
         end
 
       %{
-        name: normalize_module_name(metadata.config.name),
+        name: normalize_module_name(metadata.conf.name),
         queue: metadata.job.queue,
         state: metadata.state,
         worker: metadata.worker,
@@ -295,9 +295,8 @@ if Code.ensure_loaded?(Oban) do
 
     defp producer_tag_values(metadata) do
       %{
-        action: metadata.action,
         queue: metadata.queue,
-        name: normalize_module_name(metadata.config.name)
+        name: normalize_module_name(metadata.conf.name)
       }
     end
 
@@ -318,7 +317,7 @@ if Code.ensure_loaded?(Oban) do
             metric_prefix ++ [:init, :circuit, :backoff, :milliseconds],
             event_name: @init_event,
             description: "The Oban supervisor's circuit backoff value.",
-            measurement: fn _measurements, %{config: config} ->
+            measurement: fn _measurements, %{conf: config} ->
               config.circuit_backoff
             end,
             tags: [:name],
@@ -329,19 +328,8 @@ if Code.ensure_loaded?(Oban) do
             metric_prefix ++ [:init, :shutdown, :grace, :period, :milliseconds],
             event_name: @init_event,
             description: "The Oban supervisor's shutdown grace period value.",
-            measurement: fn _measurements, %{config: config} ->
+            measurement: fn _measurements, %{conf: config} ->
               config.shutdown_grace_period
-            end,
-            tags: [:name],
-            tag_values: &oban_init_tag_values/1,
-            keep: keep_function_filter
-          ),
-          last_value(
-            metric_prefix ++ [:init, :poll, :interval, :milliseconds],
-            event_name: @init_event,
-            description: "The Oban supervisor's poll interval value.",
-            measurement: fn _measurements, %{config: config} ->
-              config.poll_interval
             end,
             tags: [:name],
             tag_values: &oban_init_tag_values/1,
@@ -351,7 +339,7 @@ if Code.ensure_loaded?(Oban) do
             metric_prefix ++ [:init, :dispatch, :cooldown, :milliseconds],
             event_name: @init_event,
             description: "The Oban supervisor's dispatch cooldown value.",
-            measurement: fn _measurements, %{config: config} ->
+            measurement: fn _measurements, %{conf: config} ->
               config.dispatch_cooldown
             end,
             tags: [:name],
@@ -401,7 +389,7 @@ if Code.ensure_loaded?(Oban) do
 
     defp keep_oban_instance_metrics(oban_supervisors) do
       fn
-        %{config: %{name: name}} ->
+        %{conf: %{name: name}} ->
           MapSet.member?(oban_supervisors, name)
 
         %{name: name} ->
@@ -412,7 +400,7 @@ if Code.ensure_loaded?(Oban) do
       end
     end
 
-    defp oban_init_tag_values(%{config: config}) do
+    defp oban_init_tag_values(%{conf: config}) do
       plugins_string_list =
         config.plugins
         |> Enum.map(fn plugin ->
@@ -433,8 +421,7 @@ if Code.ensure_loaded?(Oban) do
         plugins: plugins_string_list,
         prefix: config.prefix,
         queues: queues_string_list,
-        repo: normalize_module_name(config.repo),
-        timezone: config.timezone
+        repo: normalize_module_name(config.repo)
       }
     end
 
@@ -450,12 +437,12 @@ if Code.ensure_loaded?(Oban) do
         [:prom_ex, :oban, :proxy] ++ prefix,
         @init_event,
         fn _event_name, _event_measurement, event_metadata, _config ->
-          Enum.each(event_metadata.config.queues, fn {queue, queue_opts} ->
+          Enum.each(event_metadata.conf.queues, fn {queue, queue_opts} ->
             limit = Keyword.get(queue_opts, :limit, 0)
 
             metadata = %{
               queue: queue,
-              name: event_metadata.config.name
+              name: event_metadata.conf.name
             }
 
             :telemetry.execute(@init_event_queue_limit_proxy, %{limit: limit}, metadata)
