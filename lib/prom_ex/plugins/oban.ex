@@ -309,7 +309,7 @@ if Code.ensure_loaded?(Oban) do
             event_name: @init_event,
             description: "Information regarding the initialized oban supervisor.",
             measurement: fn _measurements -> 1 end,
-            tags: [:name, :node, :plugins, :prefix, :queues, :repo, :timezone],
+            tags: [:name, :node, :plugins, :prefix, :queues, :repo],
             tag_values: &oban_init_tag_values/1,
             keep: keep_function_filter
           ),
