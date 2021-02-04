@@ -268,8 +268,17 @@ if Code.ensure_loaded?(Oban) do
     end
 
     defp job_complete_tag_values(metadata) do
+      config =
+        case metadata do
+          %{config: config} ->
+            config
+
+          %{conf: config} ->
+            config
+        end
+
       %{
-        name: normalize_module_name(metadata.conf.name),
+        name: normalize_module_name(config.name),
         queue: metadata.job.queue,
         state: metadata.state,
         worker: metadata.worker
@@ -283,8 +292,17 @@ if Code.ensure_loaded?(Oban) do
           _ -> "Undefined"
         end
 
+      config =
+        case metadata do
+          %{config: config} ->
+            config
+
+          %{conf: config} ->
+            config
+        end
+
       %{
-        name: normalize_module_name(metadata.conf.name),
+        name: normalize_module_name(config.name),
         queue: metadata.job.queue,
         state: metadata.state,
         worker: metadata.worker,
