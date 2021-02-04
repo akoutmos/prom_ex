@@ -48,7 +48,7 @@ defmodule WebApp.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:faker, "~> 0.16"},
-      {:oban, github: "akoutmos/oban", branch: :master, override: true},
+      {:oban, "~> 2.4.2"},
       # {:prom_ex, "~> 0.1.12-beta"}
       {:prom_ex, github: "akoutmos/prom_ex", branch: :oban_plugin}
       # {:prom_ex, path: "../../"}
