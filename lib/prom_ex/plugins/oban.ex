@@ -247,18 +247,42 @@ if Code.ensure_loaded?(Oban) do
       Event.build(
         :oban_producer_event_metrics,
         [
-          counter(
-            metric_prefix ++ [:producer, :total],
+          distribution(
+            metric_prefix ++ [:producer, :duration, :milliseconds],
             event_name: @producer_complete_event,
-            description: "The number of jobs that have either been dispatched or descheduled.",
+            measurement: :duration,
+            description: "How long it took to dispatch the job.",
+            reporter_options: [
+              buckets: [1, 50, 100, 250, 500, 1_000, 5_000, 10_000]
+            ],
+            unit: {:native, :millisecond},
             tag_values: &producer_tag_values/1,
             tags: [:queue, :name],
             keep: keep_function_filter
           ),
-          counter(
-            metric_prefix ++ [:producer, :exception, :total],
+          distribution(
+            metric_prefix ++ [:producer, :dispatched, :count],
+            event_name: @producer_complete_event,
+            measurement: fn _measurement, %{dispatched_count: count} ->
+              count
+            end,
+            description: "The number of jobs that were dispatched.",
+            reporter_options: [
+              buckets: [5, 10, 25, 50, 100]
+            ],
+            tag_values: &producer_tag_values/1,
+            tags: [:queue, :name],
+            keep: keep_function_filter
+          ),
+          distribution(
+            metric_prefix ++ [:producer, :exception, :duration, :milliseconds],
             event_name: @producer_exception_event,
-            description: "The number of jobs that have resulted in an exception when attempted to be enqueued.",
+            measurement: :duration,
+            description: "How long it took for the producer to raise an exception.",
+            reporter_options: [
+              buckets: [1, 50, 100, 250, 500, 1_000, 5_000, 10_000]
+            ],
+            unit: {:native, :millisecond},
             tag_values: &producer_tag_values/1,
             tags: [:queue, :name],
             keep: keep_function_filter
