@@ -46,8 +46,7 @@
   "editable": false,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 5,
-  "iteration": 1609648718248,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -308,8 +307,7 @@
               "plugins": "Configured Plugins",
               "prefix": "Postgres Schema",
               "queues": "Configured Queues",
-              "repo": "Ecto Repo",
-              "timezone": "Timezone"
+              "repo": "Ecto Repo"
             }
           }
         }
@@ -1859,12 +1857,156 @@
       "type": "row"
     },
     {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "<%= @datasource_id %>",
+      "description": "A heatmap showing how long jobs to be dispatched.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 121
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 73,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_producer_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Producer Dispatch Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "<%= @datasource_id %>",
+      "description": "A heatmap showing the number of jobs that were dispatched.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 121
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 74,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Producer Dispatch Count",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "locale",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of producer events that resulted in jobs being descheduled.",
+      "description": "The average amount of time it took to dispatch jobs to each queue.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1877,7 +2019,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 121
+        "y": 134
       },
       "hiddenSeries": false,
       "id": 67,
@@ -1904,7 +2046,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_producer_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1914,7 +2056,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Descheduled Jobs",
+      "title": "Average Dispatch Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1930,7 +2072,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "ms",
           "label": "Number of Jobs",
           "logBase": 1,
           "max": null,
@@ -1957,7 +2099,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of producer events that resulted in jobs being dispatched.",
+      "description": "The average number of jobs dispatched to each queue.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1970,10 +2112,10 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 121
+        "y": 134
       },
       "hiddenSeries": false,
-      "id": 68,
+      "id": 75,
       "legend": {
         "avg": false,
         "current": false,
@@ -1997,7 +2139,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"dispatch\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2007,7 +2149,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Dispatched Jobs",
+      "title": "Average Dispatch Count",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2050,7 +2192,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of descheduled producer events that resulted in errors.",
+      "description": "The average amount of time it took to encounter an encounter an error.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -2063,10 +2205,10 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 134
+        "y": 147
       },
       "hiddenSeries": false,
-      "id": 69,
+      "id": 76,
       "legend": {
         "avg": false,
         "current": false,
@@ -2090,7 +2232,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"deschedule\"}[$interval])",
+          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_producer_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2100,7 +2242,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Job Descheduling Errors",
+      "title": "Average Exception Duration",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2116,100 +2258,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
-          "label": "Number of Jobs",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "<%= @datasource_id %>",
-      "description": "The number of dispatch producer events that resulted in errors.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 12,
-        "y": 134
-      },
-      "hiddenSeries": false,
-      "id": 71,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "percentage": false,
-      "pluginVersion": "7.1.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_total{job=\"$job\", instance=\"$instance\", name=\"$oban\", action=\"dispatch\"}[$interval])",
-          "interval": "",
-          "legendFormat": "{{ queue }}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Job Dispatching Errors",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
+          "format": "ms",
           "label": "Number of Jobs",
           "logBase": 1,
           "max": null,
@@ -2237,7 +2286,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 147
+        "y": 160
       },
       "id": 65,
       "panels": [],
@@ -2263,7 +2312,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 148
+        "y": 161
       },
       "hiddenSeries": false,
       "id": 70,
@@ -2356,7 +2405,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 148
+        "y": 161
       },
       "hiddenSeries": false,
       "id": 72,
