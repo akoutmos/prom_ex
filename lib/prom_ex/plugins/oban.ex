@@ -144,10 +144,17 @@ if Code.ensure_loaded?(Oban) do
       )
     end
 
-    defp circuit_breaker_trip_tag_values(metadata) do
+    defp circuit_breaker_trip_tag_values(%{name: name, config: conf}) do
       %{
-        name: normalize_module_name(metadata.conf.name),
-        circuit_breaker: normalize_module_name(metadata.name)
+        name: normalize_module_name(conf.name),
+        circuit_breaker: normalize_module_name(name)
+      }
+    end
+
+    defp circuit_breaker_trip_tag_values(%{name: name, conf: conf}) do
+      %{
+        name: normalize_module_name(conf.name),
+        circuit_breaker: normalize_module_name(name)
       }
     end
 
