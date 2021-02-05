@@ -27,7 +27,7 @@ defmodule PromEx.GrafanaClient do
     :post
     |> Finch.build("#{grafana_conn.base_url}/api/dashboards/db", headers, payload)
     |> Finch.request(grafana_conn.finch_process)
-    |> handle_create_dashboard_response()
+    |> handle_grafana_response()
   end
 
   @doc """
@@ -46,7 +46,7 @@ defmodule PromEx.GrafanaClient do
     :get
     |> Finch.build("#{grafana_conn.base_url}/api/dashboards/uid/#{dashboard_uid}", headers)
     |> Finch.request(grafana_conn.finch_process)
-    |> handle_create_dashboard_response()
+    |> handle_grafana_response()
   end
 
   @doc """
@@ -66,7 +66,7 @@ defmodule PromEx.GrafanaClient do
     :post
     |> Finch.build("#{grafana_conn.base_url}/api/folders", headers, payload)
     |> Finch.request(grafana_conn.finch_process)
-    |> handle_create_dashboard_response()
+    |> handle_grafana_response()
   end
 
   @doc """
@@ -86,7 +86,7 @@ defmodule PromEx.GrafanaClient do
     :put
     |> Finch.build("#{grafana_conn.base_url}/api/folders/#{folder_uid}", headers, payload)
     |> Finch.request(grafana_conn.finch_process)
-    |> handle_create_dashboard_response()
+    |> handle_grafana_response()
   end
 
   @doc """
@@ -99,7 +99,7 @@ defmodule PromEx.GrafanaClient do
     :get
     |> Finch.build("#{grafana_conn.base_url}/api/folders/#{folder_id}", headers)
     |> Finch.request(grafana_conn.finch_process)
-    |> handle_create_dashboard_response()
+    |> handle_grafana_response()
   end
 
   @doc """
@@ -119,10 +119,10 @@ defmodule PromEx.GrafanaClient do
     :post
     |> Finch.build("#{grafana_conn.base_url}/api/annotations", headers, payload)
     |> Finch.request(grafana_conn.finch_process)
-    |> handle_create_dashboard_response()
+    |> handle_grafana_response()
   end
 
-  defp handle_create_dashboard_response(finch_response) do
+  defp handle_grafana_response(finch_response) do
     case finch_response do
       {:ok, %Finch.Response{status: 200, body: body}} ->
         {:ok, Jason.decode!(body)}
@@ -136,7 +136,10 @@ defmodule PromEx.GrafanaClient do
       {:ok, %Finch.Response{status: 412}} ->
         {:error, :already_exists}
 
-      {:error, _reason} = error ->
+      {:error, %Mint.TransportError{} = mint_error_reason} ->
+        {:error, Exception.message(mint_error_reason)}
+
+      {:error, _unknown_reason} = error ->
         error
     end
   end

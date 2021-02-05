@@ -11,6 +11,7 @@ defmodule PromEx.Plugins.Beam do
 
   This plugin exposes the following metric groups:
   - `:beam_memory_polling_metrics`
+  - `:beam_internal_polling_metrics`
   - `:beam_cpu_topology_manual_metrics`
   - `:beam_system_limits_manual_metrics`
   - `:beam_system_info_manual_metrics`

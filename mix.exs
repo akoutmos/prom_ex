@@ -21,7 +21,7 @@ defmodule PromEx.MixProject do
         "coveralls.travis": :test
       ],
       dialyzer: [
-        plt_add_apps: [:plug, :phoenix, :telemetry_metrics, :mix],
+        plt_add_apps: [:ecto, :mix, :oban, :phoenix, :plug, :telemetry_metrics],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
       package: package(),
@@ -56,6 +56,7 @@ defmodule PromEx.MixProject do
       {:phoenix, ">= 1.5.0", optional: true},
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
+      {:oban, ">= 2.4.0", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},

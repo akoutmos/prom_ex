@@ -63,17 +63,16 @@ defmodule PromEx do
     - [ ] Operating System (http://erlang.org/doc/man/os_mon_app.html)
 
   Library metrics:
+    - [X] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
+    - [X] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
 
   Upcoming Elixir library metrics:
-    - [X] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
-    - [ ] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
+    - [ ] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
-    - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
 
   Backlog Elixir library metrics:
     - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
-    - [ ] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)

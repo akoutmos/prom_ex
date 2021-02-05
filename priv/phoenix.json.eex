@@ -753,7 +753,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -850,7 +850,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"

@@ -11,6 +11,26 @@ config :web_app,
   ecto_repos: [WebApp.Repo, WebApp.Repo2],
   generators: [binary_id: true]
 
+config :web_app, Oban.SuperSecret,
+  repo: WebApp.Repo,
+  name: Oban.SuperSecret,
+  prefix: "secret",
+  plugins: [Oban.Plugins.Pruner],
+  queues: [
+    default: 10,
+    events: 50,
+    media: 20
+  ]
+
+config :web_app, Oban,
+  repo: WebApp.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [
+    default: 5,
+    events: 25,
+    media: 10
+  ]
+
 # Configures the endpoint
 config :web_app, WebAppWeb.Endpoint,
   url: [host: "localhost"],

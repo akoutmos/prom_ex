@@ -5,22 +5,32 @@ defmodule WebApp.Application do
 
   use Application
 
+  @impl true
   def start(_type, _args) do
     children = [
+      # PromEx modules
       WebApp.PromEx,
       WebApp.Limited.PromEx,
 
       # Start the Ecto repository
       WebApp.Repo,
       WebApp.Repo2,
+
+      # Work queue
+      {Oban, oban_config()},
+      {Oban, oban_super_secret_config()},
+
       # Start the Telemetry supervisor
       WebAppWeb.Telemetry,
+
       # Start the PubSub system
       {Phoenix.PubSub, name: WebApp.PubSub},
+
       # Start the Endpoint (http/https)
-      WebAppWeb.Endpoint
-      # Start a worker by calling: WebApp.Worker.start_link(arg)
-      # {WebApp.Worker, arg}
+      WebAppWeb.Endpoint,
+
+      # Work generator
+      WebApp.RandomWorkGenerator
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -31,8 +41,17 @@ defmodule WebApp.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  @impl true
   def config_change(changed, _new, removed) do
     WebAppWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp oban_config do
+    Application.get_env(:web_app, Oban)
+  end
+
+  defp oban_super_secret_config do
+    Application.get_env(:web_app, Oban.SuperSecret)
   end
 end

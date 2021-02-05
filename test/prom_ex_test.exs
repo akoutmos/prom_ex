@@ -21,7 +21,7 @@ defmodule PromExTest do
   defmodule DefaultPromExSetUp do
     use PromEx, otp_app: :prom_ex
 
-    alias PromEx.Plugins.{Application, Beam, Ecto, Phoenix}
+    alias PromEx.Plugins.{Application, Beam, Ecto, Oban, Phoenix}
 
     @impl true
     def plugins do
@@ -29,7 +29,8 @@ defmodule PromExTest do
         {Application, otp_app: :prom_ex},
         {Phoenix, router: TestApp.Router},
         {Beam, poll_rate: 500},
-        {Ecto, otp_app: :prom_ex, repos: [Test.Repo]}
+        {Ecto, otp_app: :prom_ex, repos: [Test.Repo]},
+        {Oban, poll_rate: 10_000, oban_supervisors: []}
       ]
     end
 
@@ -54,7 +55,7 @@ defmodule PromExTest do
       config = DefaultPromExSetUp.init_opts()
 
       assert module_dashboards == [prom_ex: "application.json"]
-      assert length(module_plugins) == 4
+      assert length(module_plugins) == 5
       assert Map.get(config, :manual_metrics_start_delay) == :no_delay
       assert Map.get(config, :drop_metrics_groups) == MapSet.new([])
       assert Map.get(config, :grafana_config) == :disabled

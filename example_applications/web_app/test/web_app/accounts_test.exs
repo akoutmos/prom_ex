@@ -6,8 +6,20 @@ defmodule WebApp.AccountsTest do
   describe "users" do
     alias WebApp.Accounts.User
 
-    @valid_attrs %{age: 42, first_name: "some first_name", last_name: "some last_name", points: 42}
-    @update_attrs %{age: 43, first_name: "some updated first_name", last_name: "some updated last_name", points: 43}
+    @valid_attrs %{
+      age: 42,
+      first_name: "some first_name",
+      last_name: "some last_name",
+      points: 42
+    }
+
+    @update_attrs %{
+      age: 43,
+      first_name: "some updated first_name",
+      last_name: "some updated last_name",
+      points: 43
+    }
+
     @invalid_attrs %{age: nil, first_name: nil, last_name: nil, points: nil}
 
     def user_fixture(attrs \\ %{}) do

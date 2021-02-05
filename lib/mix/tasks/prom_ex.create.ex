@@ -168,17 +168,19 @@ defmodule Mix.Tasks.PromEx.Create do
 
       use PromEx, otp_app: :<%= @otp_app %>
 
+      alias PromEx.Plugins
+
       @impl true
       def plugins do
         [
           # PromEx built in plugins
-          PromEx.Plugins.Application,
-          PromEx.Plugins.Beam,
-          {PromEx.Plugins.Phoenix, router: <%= @module_name %>Web.Router},
-          PromEx.Plugins.Ecto
+          Plugins.Application,
+          Plugins.Beam,
+          {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
+          Plugins.Ecto
 
           # Add your own PromEx metrics plugins
-          # <%= @module_name %>.Users.PromEx
+          # <%= @module_name %>.Users.PromExPlugin
         ]
       end
 
