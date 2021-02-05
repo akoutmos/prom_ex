@@ -31,7 +31,7 @@ to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 0.1.12-beta"}
+    {:prom_ex, "~> 0.1.13-beta"}
   ]
 end
 ```
