@@ -435,7 +435,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Processed Jobs",
+      "title": "Processed Jobs (by $interval interval)",
       "type": "stat"
     },
     {
@@ -491,7 +491,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Job Errors",
+      "title": "Job Errors (by $interval interval)",
       "type": "stat"
     },
     {
@@ -539,7 +539,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_producer_total{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -547,7 +547,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Jobs Enqueued",
+      "title": "Jobs Enqueued (by $interval interval)",
       "type": "stat"
     },
     {
