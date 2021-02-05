@@ -8,9 +8,9 @@ internal application metrics, the same patterns apply.
 In order for PromEx to be able to load the appropriate metrics from your plugins, your modules need to leverage the
 `PromEx` behaviour. This behaviour defines 3 optional callbacks. Those callbacks are:
 
--   `event_metrics/1`
--   `polling_metrics/1`
--   `manual_metrics/1`
+- `event_metrics/1`
+- `polling_metrics/1`
+- `manual_metrics/1`
 
 Each of these callbacks is supposed to return a list of metrics of that type. For example, `polling_metrics/1` needs to
 return a list of `PromEx.MetricTypes.Polling` structs (a single struct is also an acceptable return). By doing this, you
@@ -26,7 +26,7 @@ of `Telemetry.Metrics` structs (`distribution`, `counter`, `last_value`, and `su
 
 ```elixir
 defmodule MyApp.PromEx.Plugins.MyPhoenix do
-  use PromEx
+  use PromEx.Plugin
 
   @impl true
   def event_metrics(opts) do
@@ -68,7 +68,7 @@ you will capture the desired data point. The following example from `PromEx.Plug
 
 ```elixir
 defmodule PromEx.Plugins.Beam do
-  use PromEx
+  use PromEx.Plugin
 
   @memory_event [:prom_ex, :plugin, :beam, :memory]
 
@@ -124,7 +124,7 @@ call to `PromEx.ManualMetricsManager.refresh_metrics/1`. An example of this can 
 
 ```elixir
 defmodule PromEx.Plugins.Application do
-  use PromEx
+  use PromEx.Plugin
 
   @impl true
   def manual_metrics(opts) do

@@ -28,7 +28,7 @@ if Code.ensure_loaded?(Oban) do
       def plugins do
         [
           ...
-          {PromEx.Plugins.Oban, queues: [:default, :media, :events], poll_rate: 10_000}
+          {PromEx.Plugins.Oban, oban_supervisors: [Oban, Oban.AnotherSupervisor], poll_rate: 10_000}
         ]
       end
 
