@@ -37,10 +37,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
 
     use PromEx.Plugin
 
-    require Logger
-
-    alias Phoenix.Socket
-    alias Plug.Conn
+    alias Phoenix.LiveView.Socket
 
     @live_view_mount_stop [:phoenix, :live_view, :mount, :stop]
     @live_view_mount_exception [:phoenix, :live_view, :mount, :exception]
@@ -48,11 +45,13 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     @live_view_handle_event_stop [:phoenix, :live_view, :handle_event, :stop]
     @live_view_handle_event_exception [:phoenix, :live_view, :handle_event, :exception]
 
-    @live_view_handle_params_stop [:phoenix, :live_view, :handle_params, :stop]
-    @live_view_handle_params_exception [:phoenix, :live_view, :handle_params, :exception]
+    # Coming soon
+    # @live_view_handle_params_stop [:phoenix, :live_view, :handle_params, :stop]
+    # @live_view_handle_params_exception [:phoenix, :live_view, :handle_params, :exception]
 
-    @live_component_handle_event_stop [:phoenix, :live_component, :handle_event, :stop]
-    @live_component_handle_event_exception [:phoenix, :live_component, :handle_event, :exception]
+    # Coming soon
+    # @live_component_handle_event_stop [:phoenix, :live_component, :handle_event, :stop]
+    # @live_component_handle_event_exception [:phoenix, :live_component, :handle_event, :exception]
 
     @impl true
     def event_metrics(opts) do
@@ -80,7 +79,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
             reporter_options: [
               buckets: bucket_intervals
             ],
-            tag_values: &get_socket_tags/1,
+            tag_values: &get_mount_socket_tags/1,
             tags: [:action, :module],
             unit: {:native, :millisecond}
           ),
@@ -93,35 +92,89 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
             reporter_options: [
               buckets: bucket_intervals
             ],
-            tag_values: &get_socket_exception_tags/1,
+            tag_values: &get_mount_socket_exception_tags/1,
             tags: [:action, :module, :kind, :reason],
+            unit: {:native, :millisecond}
+          ),
+          distribution(
+            metric_prefix ++ [:handle_event, :duration, :milliseconds],
+            event_name: @live_view_handle_event_stop,
+            measurement: :duration,
+            description: "The time it takes for the live view to complete the handle_event callback.",
+            reporter_options: [
+              buckets: bucket_intervals
+            ],
+            tag_values: &get_handle_event_socket_tags/1,
+            tags: [:event, :action, :module],
+            unit: {:native, :millisecond}
+          ),
+          distribution(
+            metric_prefix ++ [:handle_event, :exception, :duration, :milliseconds],
+            event_name: @live_view_handle_event_exception,
+            measurement: :duration,
+            description:
+              "The time it takes for the live view to complete the handle_event callback that resulted in an exception.",
+            reporter_options: [
+              buckets: bucket_intervals
+            ],
+            tag_values: &get_handle_event_exception_socket_tags/1,
+            tags: [:event, :action, :module, :kind, :reason],
             unit: {:native, :millisecond}
           )
         ]
       )
     end
 
-    defp live_component_event_metrics(metric_prefix) do
+    defp live_component_event_metrics(_metric_prefix) do
       Event.build(
         :phoenix_live_view_component_event_metrics,
         []
       )
     end
 
-    defp get_socket_tags(%{socket: socket = %Phoenix.LiveView.Socket{}}) do
+    defp get_handle_event_exception_socket_tags(%{socket: socket = %Socket{}} = metadata) do
       %{
-        action: Map.get(socket.assigns, :live_action, :unknown),
-        module: socket.assigns |> Map.get(:live_module, :unknown) |> normalize_module_name()
+        event: metadata.event,
+        action: get_live_view_action(socket),
+        module: get_live_view_module(socket),
+        kind: metadata.kind,
+        reason: metadata.reason
       }
     end
 
-    defp get_socket_exception_tags(%{socket: socket = %Phoenix.LiveView.Socket{}, kind: kind, reason: reason}) do
+    defp get_handle_event_socket_tags(%{socket: socket = %Socket{}} = metadata) do
       %{
-        action: Map.get(socket.assigns, :live_action, :unknown),
-        module: socket.assigns |> Map.get(:live_module, :unknown) |> normalize_module_name(),
+        event: metadata.event,
+        action: get_live_view_action(socket),
+        module: get_live_view_module(socket)
+      }
+    end
+
+    defp get_mount_socket_tags(%{socket: socket = %Socket{}}) do
+      %{
+        action: get_live_view_action(socket),
+        module: get_live_view_module(socket)
+      }
+    end
+
+    defp get_mount_socket_exception_tags(%{socket: socket = %Socket{}, kind: kind, reason: reason}) do
+      %{
+        action: get_live_view_action(socket),
+        module: get_live_view_module(socket),
         kind: kind,
         reason: reason
       }
+    end
+
+    defp get_live_view_module(%Socket{} = socket) do
+      socket.assigns
+      |> Map.get(:live_module, :unknown)
+      |> normalize_module_name()
+    end
+
+    defp get_live_view_action(%Socket{} = socket) do
+      socket.assigns
+      |> Map.get(:live_action, :unknown)
     end
 
     defp normalize_module_name(name) when is_atom(name) do

@@ -26,10 +26,10 @@ defmodule PromEx.Debug do
       random_id,
       event_name,
       fn event_name, event_measurement, event_metadata, config ->
-        IO.inspect(event_name, label: "---- EVENT NAME ----")
-        IO.inspect(event_measurement, label: "---- EVENT MEASUREMENT ----")
-        IO.inspect(event_metadata, label: "---- EVENT METADATA ----")
-        IO.inspect(config, label: "---- CONFIG ----")
+        IO.inspect(event_name, label: "---- EVENT NAME ----", limit: :infinity, structs: false)
+        IO.inspect(event_measurement, label: "---- EVENT MEASUREMENT ----", limit: :infinity, structs: false)
+        IO.inspect(event_metadata, label: "---- EVENT METADATA ----", limit: :infinity, structs: false)
+        IO.inspect(config, label: "---- CONFIG ----", limit: :infinity, structs: false)
       end,
       config
     )
@@ -53,10 +53,10 @@ defmodule PromEx.Debug do
       random_id,
       event,
       fn event_name, event_measurement, event_metadata, config ->
-        IO.inspect(event_name, label: "---- EVENT NAME ----")
-        IO.inspect(event_measurement, label: "---- EVENT MEASUREMENT ----")
-        IO.inspect(event_metadata, label: "---- EVENT METADATA ----")
-        IO.inspect(config, label: "---- CONFIG ----")
+        IO.inspect(event_name, label: "---- EVENT NAME ----", limit: :infinity, structs: false)
+        IO.inspect(event_measurement, label: "---- EVENT MEASUREMENT ----", limit: :infinity, structs: false)
+        IO.inspect(event_metadata, label: "---- EVENT METADATA ----", limit: :infinity, structs: false)
+        IO.inspect(config, label: "---- CONFIG ----", limit: :infinity, structs: false)
       end,
       config
     )
