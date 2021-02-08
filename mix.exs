@@ -54,6 +54,7 @@ defmodule PromEx.MixProject do
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.5.0", optional: true},
+      {:phoenix_live_view, ">= 0.14.0", optional: true},
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
