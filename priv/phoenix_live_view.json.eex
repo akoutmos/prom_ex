@@ -42,7 +42,7 @@
       }
     ]
   },
-  "description": "All the data that is presented here is captured by the PromEx Phoenix plugin (https://github.com/akoutmos/prom_ex/blob/master/lib/prom_ex/plugins/phoenix.ex)",
+  "description": "All the data that is presented here is captured by the PromEx Phoenix LiveView plugin (https://github.com/akoutmos/prom_ex/blob/master/lib/prom_ex/plugins/phoenix_live_view.ex)",
   "editable": false,
   "gnetId": null,
   "graphTooltip": 1,
@@ -65,89 +65,26 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
+      "description": "A percentage of mount callbacks that successfully executed.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 70
-              },
-              {
-                "color": "green",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 0,
-        "y": 1
-      },
-      "id": 21,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Apdex Score (Last 24h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of responses that resulted in 400s or 500s over the past 24 hours.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
                 "color": "#EAB839",
-                "value": 1
+                "value": 80
               },
               {
-                "color": "red",
-                "value": 5
+                "color": "green",
+                "value": 95
               }
             ]
           },
@@ -156,15 +93,15 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
-        "x": 6,
+        "x": 0,
         "y": 1
       },
       "id": 22,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -179,7 +116,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) / (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -188,71 +125,16 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Error Percentage (Last 24h)",
+      "title": "Mount Callback Success Rate (last 24h)",
       "type": "stat"
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The amount of data transferred by Phoenix in a 24 hour rolling window.",
+      "description": "The amount of LiveView mounts that have occurred in the last 24 hours.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 1
-      },
-      "id": 24,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Data Transferred (Last 24h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The amount of requests received by Phoenix in a 24 hour rolling window.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -268,77 +150,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
-        "x": 18,
+        "x": 6,
         "y": 1
       },
       "id": 23,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Total Requests Received (Last 24h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the previous hour of requests.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "noValue": "No data available",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 70
-              },
-              {
-                "color": "green",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 0,
-        "y": 9
-      },
-      "id": 25,
       "options": {
         "colorMode": "value",
         "graphMode": "none",
@@ -356,7 +173,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -365,31 +182,31 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Apdex Score (Last 1h)",
+      "title": "Total LiveView Mounts (Last 24h)",
       "type": "stat"
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of responses that resulted in 400s or 500s over the past hour.",
+      "description": "A percentage of handle_event callbacks that successfully executed.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
+          "decimals": 1,
           "mappings": [],
-          "noValue": "No data available",
           "thresholds": {
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
                 "color": "#EAB839",
-                "value": 1
+                "value": 80
               },
               {
-                "color": "red",
-                "value": 5
+                "color": "green",
+                "value": 95
               }
             ]
           },
@@ -398,71 +215,15 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 9
-      },
-      "id": 26,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Error Percentage (Last 1h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The amount of data transferred by Phoenix in the past hour.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
         "x": 12,
-        "y": 9
+        "y": 1
       },
-      "id": 27,
+      "id": 35,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -477,7 +238,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) / (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -486,15 +247,16 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Data Transferred (Last 1h)",
+      "title": "Handle Event Callback Success Rate (last 24h)",
       "type": "stat"
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The amount of requests received by Phoenix in the past hour.",
+      "description": "The amount of LiveView handle_events that have occurred in the last 24 hours.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -510,12 +272,77 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
         "x": 18,
-        "y": 9
+        "y": 1
       },
-      "id": 28,
+      "id": 33,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total LiveView Handle Events (Last 24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "A percentage of mount callbacks that successfully executed.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "id": 31,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -533,7 +360,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) / (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -542,7 +369,186 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Total Requests Received (Last 1h)",
+      "title": "Mount Callback Success Rate (last 1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The amount of LiveView mounts that have occurred in the last hour.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total LiveView Mounts (Last 1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "A percentage of mount callbacks that successfully executed.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 95
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 6
+      },
+      "id": 36,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) / (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])))",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Mount Callback Success Rate (last 1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The amount of LiveView handle_events that have occurred in the last hour.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 6
+      },
+      "id": 34,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^Value$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total LiveView Handle Events (Last 1h)",
       "type": "stat"
     },
     {
@@ -552,156 +558,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 11
       },
       "id": 2,
       "panels": [],
-      "title": "HTTP Details",
+      "title": "Mount Callback Details",
       "type": "row"
-    },
-    {
-      "cards": {
-        "cardPadding": null,
-        "cardRound": null
-      },
-      "color": {
-        "cardColor": "#b4ff00",
-        "colorScale": "sqrt",
-        "colorScheme": "interpolateOranges",
-        "exponent": 0.5,
-        "mode": "spectrum"
-      },
-      "dataFormat": "tsbuckets",
-      "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the request time spread across all requests (regardless of path).",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 0,
-        "y": 18
-      },
-      "heatmap": {},
-      "hideZeroBuckets": true,
-      "highlightCards": true,
-      "id": 6,
-      "legend": {
-        "show": true
-      },
-      "pluginVersion": "7.1.3",
-      "reverseYBuckets": false,
-      "targets": [
-        {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
-          "format": "heatmap",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{ le }}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Request Time",
-      "tooltip": {
-        "show": true,
-        "showHistogram": true
-      },
-      "type": "heatmap",
-      "xAxis": {
-        "show": true
-      },
-      "xBucketNumber": null,
-      "xBucketSize": null,
-      "yAxis": {
-        "decimals": null,
-        "format": "ms",
-        "logBase": 1,
-        "max": null,
-        "min": null,
-        "show": true,
-        "splitFactor": null
-      },
-      "yBucketBound": "auto",
-      "yBucketNumber": null,
-      "yBucketSize": null
-    },
-    {
-      "cards": {
-        "cardPadding": null,
-        "cardRound": null
-      },
-      "color": {
-        "cardColor": "#b4ff00",
-        "colorScale": "sqrt",
-        "colorScheme": "interpolateOranges",
-        "exponent": 0.5,
-        "mode": "spectrum"
-      },
-      "dataFormat": "tsbuckets",
-      "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the response payload size spread across all requests (regardless of path).",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 12,
-        "y": 18
-      },
-      "heatmap": {},
-      "hideZeroBuckets": true,
-      "highlightCards": true,
-      "id": 12,
-      "legend": {
-        "show": true
-      },
-      "pluginVersion": "7.1.3",
-      "reverseYBuckets": false,
-      "targets": [
-        {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
-          "format": "heatmap",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{ le }}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Response Payload Size",
-      "tooltip": {
-        "show": true,
-        "showHistogram": true
-      },
-      "type": "heatmap",
-      "xAxis": {
-        "show": true
-      },
-      "xBucketNumber": null,
-      "xBucketSize": null,
-      "yAxis": {
-        "decimals": null,
-        "format": "decbytes",
-        "logBase": 1,
-        "max": null,
-        "min": null,
-        "show": true,
-        "splitFactor": null
-      },
-      "yBucketBound": "auto",
-      "yBucketNumber": null,
-      "yBucketSize": null
     },
     {
       "aliasColors": {},
@@ -709,7 +571,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average request time per path per status code per HTTP method.",
+      "description": "The average time it took to complete the mount callback function.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -722,7 +584,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 12
       },
       "hiddenSeries": false,
       "id": 11,
@@ -753,9 +615,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module)",
+          "instant": false,
           "interval": "",
-          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
+          "legendFormat": "({{ action }}) {{ module }}",
           "refId": "A"
         }
       ],
@@ -763,7 +626,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average HTTP Request Time",
+      "title": "Average Execution Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -780,7 +643,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -806,7 +669,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average response size per path per status code per HTTP method.",
+      "description": "The average time it took to get through the mount callback function when an error was encountered.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -819,10 +682,10 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 12
       },
       "hiddenSeries": false,
-      "id": 13,
+      "id": 29,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -850,9 +713,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, kind, reason) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, kind, reason)",
+          "instant": false,
           "interval": "",
-          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
+          "legendFormat": "({{ action }}) {{ module }} :: ({{kind}} -> {{reason}})",
           "refId": "A"
         }
       ],
@@ -860,7 +724,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average HTTP Response Size",
+      "title": "Average Exception Execution Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -876,321 +740,8 @@
       },
       "yaxes": [
         {
-          "format": "decbytes",
-          "label": "Response Size",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "<%= @datasource_id %>",
-      "description": "Shows the number of requests coming into certain paths and the resulting response codes.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 0,
-        "y": 44
-      },
-      "hiddenSeries": false,
-      "id": 8,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "hideEmpty": false,
-        "hideZero": false,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pluginVersion": "7.1.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
-          "interval": "",
-          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Path Requests",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "locale",
-          "label": "Requests",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "<%= @datasource_id %>",
-      "description": "The aggregate response status of all the requests.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 12,
-        "y": 44
-      },
-      "hiddenSeries": false,
-      "id": 10,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pluginVersion": "7.1.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-          "interval": "",
-          "legendFormat": "2xx",
-          "refId": "A"
-        },
-        {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-          "interval": "",
-          "legendFormat": "4xx",
-          "refId": "B"
-        },
-        {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-          "interval": "",
-          "legendFormat": "5xx",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Response Status Codes",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "Requests",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 57
-      },
-      "id": 4,
-      "panels": [],
-      "title": "Channel Details",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "<%= @datasource_id %>",
-      "description": "How many channel joins have occurred over time.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 0,
-        "y": 58
-      },
-      "hiddenSeries": false,
-      "id": 15,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pluginVersion": "7.1.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "irate(<%= @otp_app %>_prom_ex_phoenix_channel_joined_total{job=\"$job\", instance=\"$instance\"}[$interval])",
-          "interval": "",
-          "legendFormat": "{{ transport }} :: {{ result }}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Channel Join Events",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "Channel joins",
+          "format": "ms",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1224,7 +775,7 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the request time spread across all channel events.",
+      "description": "A heatmap showing the time it took to get through the mount callback.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1234,13 +785,13 @@
       "gridPos": {
         "h": 13,
         "w": 12,
-        "x": 12,
-        "y": 58
+        "x": 0,
+        "y": 25
       },
       "heatmap": {},
       "hideZeroBuckets": true,
       "highlightCards": true,
-      "id": 16,
+      "id": 6,
       "legend": {
         "show": true
       },
@@ -1248,7 +799,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1258,7 +809,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Channel Message Handle Time",
+      "title": "Execution Time",
       "tooltip": {
         "show": true,
         "showHistogram": true
@@ -1283,12 +834,98 @@
       "yBucketSize": null
     },
     {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "<%= @datasource_id %>",
+      "description": "A heatmap showing the time it took to get through the mount callback when an exception was encountered.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 30,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exception Execution Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 38,
+      "panels": [],
+      "title": "Handle Event Callback Details",
+      "type": "row"
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average response time for a channel message.",
+      "description": "The average time it took to complete the handle_event callback function.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1301,10 +938,10 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 71
+        "y": 39
       },
       "hiddenSeries": false,
-      "id": 17,
+      "id": 39,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -1332,9 +969,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, event) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, event)",
+          "instant": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "({{ action }}) {{ module }} :: {{ event }}",
           "refId": "A"
         }
       ],
@@ -1342,7 +980,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average Channel Response Time",
+      "title": "Average Execution Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1359,7 +997,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1378,6 +1016,248 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "<%= @datasource_id %>",
+      "description": "The average time it took to get through the handle_event callback function.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 39
+      },
+      "hiddenSeries": false,
+      "id": 40,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason)",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "({{ action }}) {{ module }} :: ({{kind}} -> {{reason}})",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Exception Execution Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "<%= @datasource_id %>",
+      "description": "A heatmap showing the time it took to get through the mount callback.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 52
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 41,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Execution Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "<%= @datasource_id %>",
+      "description": "A heatmap showing the time it took to get through the handle_event callback when an exception was encountered.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 52
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 42,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Exception Execution Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
     }
   ],
   "refresh": "5s",
