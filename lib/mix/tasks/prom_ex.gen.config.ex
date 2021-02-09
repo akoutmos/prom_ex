@@ -21,11 +21,11 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
   ```
   """
 
+  @shortdoc "Generates a PromEx configuration module"
+
   use Mix.Task
 
   alias Mix.Shell.IO
-
-  @shortdoc "Generates a PromEx configuration module"
 
   @impl true
   def run(args) do
