@@ -19,6 +19,17 @@ defmodule WebAppWeb.PageLive do
 
   @impl true
   def handle_event("suggest", %{"q" => query}, socket) do
+    case Enum.random([0, 1, 2]) do
+      1 ->
+        Process.sleep(250)
+
+      2 ->
+        Process.sleep(500)
+
+      val ->
+        Process.sleep(1_000 / val)
+    end
+
     {:noreply, assign(socket, results: search(query), query: query)}
   end
 
