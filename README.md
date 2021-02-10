@@ -79,7 +79,7 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 | `PromEx.Plugins.Phoenix`         | Beta        | Collect request metrics emitted by Phoenix             |
 | `PromEx.Plugins.Ecto`            | Beta        | Collect query metrics emitted by Ecto                  |
 | `PromEx.Plugins.Oban`            | Beta        | Collect queue processing metrics emitted by Oban       |
-| `PromEx.Plugins.PhoenixLiveView` | In progress | Collect metrics emitted by Phoenix LiveView            |
+| `PromEx.Plugins.PhoenixLiveView` | Beta        | Collect metrics emitted by Phoenix LiveView            |
 | `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
 | `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
 | `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
