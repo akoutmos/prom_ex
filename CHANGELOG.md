@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The `mix prom_ex.create` mix task has been renamed to `mix prom_ex.gen_config` to align to ecosystem tooling
+- The `mix prom_ex.export_dashboard` mix task has been renamed to `mix prom_ex.dashboard.export`
+- The `mix prom_ex.publish` mix task has been renamed to `mix prom_ex.dashboard.publish`
+- The `mix prom_ex.lint` mix task has been renamed to `mix prom_ex.dashboard.lint`
+- Fixed dialyzer supervisor error
+- Added error messaging when attempting to publish dashboards to Grafana but Grafana configuration is disabled
 
 ## [0.1.13-beta] - 2021-02-04
 
