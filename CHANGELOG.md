@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.14-beta] - 2021-02-09
+
+### Added
+
+- LiveView metrics plugin and dashboard
+
 ### Changed
 
 - The `mix prom_ex.create` mix task has been renamed to `mix prom_ex.gen_config` to align to ecosystem tooling
