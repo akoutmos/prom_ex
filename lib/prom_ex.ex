@@ -211,7 +211,7 @@ defmodule PromEx do
           )
           |> Enum.reverse()
 
-        Supervisor.init(children, strategy: :one_for_one, name: __MODULE__)
+        Supervisor.init(children, strategy: :one_for_one)
       end
 
       @doc false
