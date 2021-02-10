@@ -1,10 +1,9 @@
-defmodule Mix.Tasks.PromEx.Create do
+defmodule Mix.Tasks.PromEx.Gen.Config do
   @moduledoc """
   This Mix Task generates a PromEx config module in your project. This config
   file acts as a starting point with instructions on how to set up PromEx
   in your application, some default PromEx metrics plugins, and their
   accompanying dashboards.
-
 
   The following CLI flags are supported:
   ```md
@@ -22,11 +21,11 @@ defmodule Mix.Tasks.PromEx.Create do
   ```
   """
 
+  @shortdoc "Generates a PromEx configuration module"
+
   use Mix.Task
 
   alias Mix.Shell.IO
-
-  @shortdoc "Generates a PromEx configuration module"
 
   @impl true
   def run(args) do

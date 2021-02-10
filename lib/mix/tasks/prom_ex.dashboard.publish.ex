@@ -1,7 +1,9 @@
-defmodule Mix.Tasks.PromEx.Publish do
+defmodule Mix.Tasks.PromEx.Dashboard.Publish do
   @moduledoc """
   This will publish dashboards to Grafana for a PromEx module.
   """
+
+  @shortdoc "Upload dashboards to Grafana"
 
   use Mix.Task
 
@@ -27,6 +29,7 @@ defmodule Mix.Tasks.PromEx.Publish do
       {:error, reason} ->
         raise "#{prom_ex_module} is not a valid PromEx module because #{inspect(reason)}"
     end
+    |> check_grafana_configuration()
     |> upload_dashboards(uploader_process_name, timeout)
   end
 
@@ -52,6 +55,14 @@ defmodule Mix.Tasks.PromEx.Publish do
       |> Macro.camelize()
       |> Kernel.<>(".PromEx")
     end)
+  end
+
+  defp check_grafana_configuration(prom_ex_module) do
+    if prom_ex_module.init_opts().grafana_config == :disabled do
+      raise "#{prom_ex_module} has the Grafana option disabled. Please update your configuration and rerun."
+    end
+
+    prom_ex_module
   end
 
   defp upload_dashboards(prom_ex_module, uploader_process_name, timeout) do

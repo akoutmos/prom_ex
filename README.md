@@ -31,7 +31,7 @@ to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 0.1.13-beta"}
+    {:prom_ex, "~> 0.1.14-beta"}
   ]
 end
 ```
@@ -79,9 +79,9 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 | `PromEx.Plugins.Phoenix`         | Beta        | Collect request metrics emitted by Phoenix             |
 | `PromEx.Plugins.Ecto`            | Beta        | Collect query metrics emitted by Ecto                  |
 | `PromEx.Plugins.Oban`            | Beta        | Collect queue processing metrics emitted by Oban       |
-| `PromEx.Plugins.PhoenixLiveView` | Coming soon | Collect metrics emitted by Phoenix LiveView            |
-| `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
+| `PromEx.Plugins.PhoenixLiveView` | Beta        | Collect metrics emitted by Phoenix LiveView            |
 | `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
+| `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
 | `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
 | `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix         |
 | More to come...                  |             |                                                        |
@@ -100,7 +100,7 @@ that you need to do to start leveraging PromEx along with the built-in plugins i
 task:
 
 ```
-$ mix prom_ex.create --datasource YOUR_PROMETHEUS_DATASOURCE_ID
+$ mix prom_ex.gen.config --datasource YOUR_PROMETHEUS_DATASOURCE_ID
 ```
 
 Then add the generated module to your `application.ex` file supervision tree:

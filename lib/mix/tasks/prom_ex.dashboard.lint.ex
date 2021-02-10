@@ -1,8 +1,10 @@
-defmodule Mix.Tasks.PromEx.Lint do
+defmodule Mix.Tasks.PromEx.Dashboard.Lint do
   @moduledoc """
   This will lint Grafana dashboards to ensure that PromEx dashboards
   meeting certain requirements.
   """
+
+  @shortdoc "Lint Grafana dashboard definitions for common problems"
 
   use Mix.Task
 

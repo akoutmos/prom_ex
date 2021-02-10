@@ -162,7 +162,7 @@ defmodule PromEx do
         Supervisor.start_link(__MODULE__, [], name: __MODULE__)
       end
 
-      @impl true
+      @impl Supervisor
       def init(_) do
         # Get module init options from module callback
         %PromEx.Config{
@@ -211,11 +211,11 @@ defmodule PromEx do
           )
           |> Enum.reverse()
 
-        Supervisor.init(children, strategy: :one_for_one, name: __MODULE__)
+        Supervisor.init(children, strategy: :one_for_one)
       end
 
       @doc false
-      @impl true
+      @impl PromEx
       def init_opts do
         unquote(otp_app)
         |> Application.get_env(__MODULE__, [])
@@ -223,15 +223,15 @@ defmodule PromEx do
       end
 
       @doc false
-      @impl true
+      @impl PromEx
       def plugins, do: []
 
       @doc false
-      @impl true
+      @impl PromEx
       def dashboard_assigns, do: []
 
       @doc false
-      @impl true
+      @impl PromEx
       def dashboards, do: []
 
       @doc false

@@ -1,8 +1,10 @@
-defmodule Mix.Tasks.PromEx.ExportDashboard do
+defmodule Mix.Tasks.PromEx.Dashboard.Export do
   @moduledoc """
   This will render a PromEx dashboard either to STDOUT or to a file depending on
   the CLI arguments that are provided.
   """
+
+  @shortdoc "Export a rendered dashboard to STDOUT or a file"
 
   use Mix.Task
 

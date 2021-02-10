@@ -4,7 +4,7 @@ defmodule PromEx.MixProject do
   def project do
     [
       app: :prom_ex,
-      version: "0.1.13-beta",
+      version: "0.1.14-beta",
       elixir: "~> 1.10",
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",
@@ -54,6 +54,7 @@ defmodule PromEx.MixProject do
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.5.0", optional: true},
+      {:phoenix_live_view, ">= 0.14.0", optional: true},
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
