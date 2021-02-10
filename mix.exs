@@ -105,5 +105,6 @@ defmodule PromEx.MixProject do
 
     # Copy over files
     File.cp!("./guides/images/logo.svg", "./doc/guides/images/logo.svg")
+    File.cp!("./guides/images/dashboards_preview.png", "./doc/guides/images/dashboards_preview.png")
   end
 end
