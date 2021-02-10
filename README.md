@@ -4,7 +4,7 @@
 Status](https://github.com/akoutmos/prom_ex/workflows/PromEx%20CI/badge.svg)](https://github.com/akoutmos/prom_ex/actions) [![Coverage
 Status](https://coveralls.io/repos/github/akoutmos/prom_ex/badge.svg?branch=master)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
 
-<img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx" style="margin-left:33%">
+<img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo" style="margin-left:33%">
 
 Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries.
 
@@ -88,7 +88,7 @@ PromEx provides a few utilities to you in order to accomplish this goal:
 
 ### Grafana Dashboards
 
-<img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx">
+<img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx Dashboards">
 
 PromEx comes with a custom tailored Grafana Dashboard per Plugin. [Click here](https://hexdocs.pm/prom_ex/grafana-dashboards.html)
 to check out sample screenshots of each Plugin specific Grafana Dashbaord.
@@ -166,94 +166,104 @@ with all of the options that they provide.
 ### Performance Concerns
 
 You may think to yourself that with all these metrics being collected and scraped, that the performance of your
-application my be negatively impacted. Luckily PromEx is built upon the solid foundation established by the `Telemetry`,
+application may be negatively impacted. Luckily PromEx is built upon the solid foundation established by the `Telemetry`,
 `TelemetryMetrics`, and the `TelemetryMetricsPrometheus` projects. These libraries were designed to be as lightweight
 and performant as possible. From some basic stress tests that I have run, I have been unable to observe any meaningful
-or measurable performance reduction (thank you OTP and particularly ETS ;)). Here are six sample stress tests using
-[wrk2](https://github.com/giltene/wrk2) with PromEx enabled and disabled with the following configuration:
+performance reduction (thank you OTP and particularly ETS ;)). Below are the results from a recent stress test using
+ApacheBench:
 
-```elixir
-defmodule WebApp.PromEx
-  use PromEx, otp_app: :web_app
-
-  @impl true
-  def plugins do
-    [
-      {PromEx.Plugins.Application, otp_app: :web_app},
-      PromEx.Plugins.Beam,
-      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router}
-    ]
-  end
-end
-```
-
-With out PromEx metrics collection:
+#### With PromEx metrics collection
 
 ```terminal
-$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
-Running 10s test @ http://localhost:4000/
-  5 threads and 50 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.25ms    1.02ms  22.00ms   71.90%
-    Req/Sec       -nan      -nan   0.00      0.00%
-  10003 requests in 10.01s, 38.60MB read
-Requests/sec:    999.78
-Transfer/sec:      3.86MB
+$ ./benchmarks/ab-graph.sh -u http://localhost:4000 -n 1000 -c 50 -k
+Server Software:        Cowboy
+Server Hostname:        localhost
+Server Port:            4000
 
-$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
-Running 10s test @ http://localhost:4000/
-  5 threads and 50 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.15ms    0.92ms  15.06ms   67.75%
-    Req/Sec       -nan      -nan   0.00      0.00%
-  10002 requests in 10.00s, 38.59MB read
-Requests/sec:    999.73
-Transfer/sec:      3.86MB
+Document Path:          /
+Document Length:        3389 bytes
 
-$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
-Running 10s test @ http://localhost:4000/
-  5 threads and 50 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.23ms    1.31ms  29.82ms   84.14%
-    Req/Sec       -nan      -nan   0.00      0.00%
-  10001 requests in 10.00s, 38.59MB read
-Requests/sec:    999.82
-Transfer/sec:      3.86MB
+Concurrency Level:      50
+Time taken for tests:   4.144 seconds
+Complete requests:      1000
+Failed requests:        0
+Keep-Alive requests:    1000
+Total transferred:      4060000 bytes
+HTML transferred:       3389000 bytes
+Requests per second:    241.32 [#/sec] (mean)
+Time per request:       207.191 [ms] (mean)
+Time per request:       4.144 [ms] (mean, across all concurrent requests)
+Transfer rate:          956.81 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.2      0       1
+Processing:    39  202  24.3    203     264
+Waiting:       38  202  24.3    203     264
+Total:         39  202  24.2    203     264
+
+Percentage of the requests served within a certain time (ms)
+  50%    203
+  66%    210
+  75%    215
+  80%    218
+  90%    227
+  95%    237
+  98%    246
+  99%    255
+ 100%    264 (longest request)
 ```
 
-With PromEx metrics collection:
+#### Without PromEx metrics collection
 
 ```terminal
-$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
-Running 10s test @ http://localhost:4000/
-  5 threads and 50 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.55ms    1.69ms  36.86ms   94.40%
-    Req/Sec       -nan      -nan   0.00      0.00%
-  9999 requests in 10.00s, 38.58MB read
-Requests/sec:   1000.11
-Transfer/sec:      3.86MB
+$ ./benchmarks/ab-graph.sh -u http://localhost:4000 -n 1000 -c 50 -k
+Server Software:        Cowboy
+Server Hostname:        localhost
+Server Port:            4000
 
-$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
-Running 10s test @ http://localhost:4000/
-  5 threads and 50 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.42ms    1.56ms  31.58ms   90.48%
-    Req/Sec       -nan      -nan   0.00      0.00%
-  10004 requests in 10.00s, 38.60MB read
-Requests/sec:    999.93
-Transfer/sec:      3.86MB
+Document Path:          /
+Document Length:        3389 bytes
 
-$ wrk2 -t5 -c50 -R 1000 -d10s 'http://localhost:4000/'
-Running 10s test @ http://localhost:4000/
-  5 threads and 50 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.39ms    1.09ms  18.56ms   72.96%
-    Req/Sec       -nan      -nan   0.00      0.00%
-  10001 requests in 10.00s, 38.59MB read
-Requests/sec:    999.81
-Transfer/sec:      3.86MB
+Concurrency Level:      50
+Time taken for tests:   4.156 seconds
+Complete requests:      1000
+Failed requests:        0
+Keep-Alive requests:    1000
+Total transferred:      4060000 bytes
+HTML transferred:       3389000 bytes
+Requests per second:    240.59 [#/sec] (mean)
+Time per request:       207.822 [ms] (mean)
+Time per request:       4.156 [ms] (mean, across all concurrent requests)
+Transfer rate:          953.90 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:    38  202  23.1    205     267
+Waiting:       37  202  23.1    205     267
+Total:         38  202  23.0    205     267
+
+Percentage of the requests served within a certain time (ms)
+  50%    205
+  66%    211
+  75%    215
+  80%    219
+  90%    226
+  95%    232
+  98%    238
+  99%    246
+ 100%    267 (longest request)
 ```
+
+#### Plotting the stress test results
+
+In the spirit of visualizing performance characteristics, the percentile data from the ApacheBench stress tests has been
+overlaid and plotted using Gnuplot (thanks to https://github.com/juanluisbaptiste/apachebench-graphs for making
+gnuplotting a lot more streamlined :)). As we can see, the charts track each other more or less 1:1 except for the
+slowest 5% of requests where we see a slight performance hit.
+
+<img align="center" width="100%" src="guides/images/apache_bench_stress_test.png" alt="PromEx Stress Test">
 
 ### Attribution
 
