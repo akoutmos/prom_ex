@@ -1,7 +1,7 @@
 # PromEx
 
 <p align="center">
-  <img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo" style="margin-left:33%">
+  <img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo"">
 </p>
 
 <p align="center">
