@@ -1,12 +1,26 @@
 # PromEx
 
-[![Hex.pm](https://img.shields.io/hexpm/v/prom_ex.svg)](http://hex.pm/packages/prom_ex) [![Build
-Status](https://github.com/akoutmos/prom_ex/workflows/PromEx%20CI/badge.svg)](https://github.com/akoutmos/prom_ex/actions) [![Coverage
-Status](https://coveralls.io/repos/github/akoutmos/prom_ex/badge.svg?branch=master)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
+<p align="center">
+  <img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo" style="margin-left:33%">
+</p>
 
-<img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo" style="margin-left:33%">
+<p align="center">
+  Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries
+</p>
 
-Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries.
+<p align="center">
+  <a href="https://hex.pm/packages/prom_ex">
+    <img alt="Hex.pm" src="https://img.shields.io/hexpm/v/prom_ex?style=for-the-badge">
+  </a>
+  
+  <a href="https://github.com/akoutmos/prom_ex/actions">
+    <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
+  </a>
+  
+  <a href="https://coveralls.io/github/akoutmos/prom_ex?branch=master">
+    <img alt="Coveralls github branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
+  </a>
+</p>
 
 <br>
 
