@@ -1,6 +1,7 @@
 <!--START-->
 <p align="center">
-  <img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo">
+  <img align="center" width="40%" src="guides/images/logo.svg" alt="PromEx Logo">
+  <img align="center" width="40%" src="guides/images/logo_text.png" alt="PromEx Logo">
 </p>
 
 <p align="center">
