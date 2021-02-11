@@ -1,7 +1,6 @@
-# PromEx
-
+<!--START-->
 <p align="center">
-  <img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo" style="margin-left:33%">
+  <img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo">
 </p>
 
 <p align="center">
@@ -12,17 +11,18 @@
   <a href="https://hex.pm/packages/prom_ex">
     <img alt="Hex.pm" src="https://img.shields.io/hexpm/v/prom_ex?style=for-the-badge">
   </a>
-  
+
   <a href="https://github.com/akoutmos/prom_ex/actions">
     <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
   </a>
-  
+
   <a href="https://coveralls.io/github/akoutmos/prom_ex?branch=master">
     <img alt="Coveralls github branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
   </a>
 </p>
 
 <br>
+<!--END-->
 
 # Contents
 
