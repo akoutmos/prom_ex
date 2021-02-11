@@ -1,14 +1,29 @@
-<br>
-<img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo" style="margin-left:33%">
-<img align="center" width="70%" src="guides/images/logo_text.png" alt="PromEx Logo" style="margin-left:15%">
-<br>
-<div align="center">Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries</div>
-<br>
---------------------
+<!--START-->
+<p align="center">
+  <img align="center" width="40%" src="guides/images/logo.svg" alt="PromEx Logo">
+  <img align="center" width="40%" src="guides/images/logo_text.png" alt="PromEx Logo">
+</p>
 
-[![Hex.pm](https://img.shields.io/hexpm/v/prom_ex?style=for-the-badge)](http://hex.pm/packages/prom_ex)
-[![Build Status](https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge)](https://github.com/akoutmos/prom_ex/actions)
-[![Coverage Status](https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
+<p align="center">
+  Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries
+</p>
+
+<p align="center">
+  <a href="https://hex.pm/packages/prom_ex">
+    <img alt="Hex.pm" src="https://img.shields.io/hexpm/v/prom_ex?style=for-the-badge">
+  </a>
+
+  <a href="https://github.com/akoutmos/prom_ex/actions">
+    <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
+  </a>
+
+  <a href="https://coveralls.io/github/akoutmos/prom_ex?branch=master">
+    <img alt="Coveralls github branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
+  </a>
+</p>
+
+<br>
+<!--END-->
 
 # Contents
 
