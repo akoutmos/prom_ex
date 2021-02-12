@@ -283,9 +283,10 @@ slowest 5% of requests where we see a slight performance hit.
 
 ### Attribution
 
-It wouldn't be right to not include somewhere in this project a "thanks" to the various projects that
+It wouldn't be right to not include somewhere in this project a "thank you" to the various projects and people that
 helped make this possible:
 
 - The various projects available in [BEAM Telemetry](https://github.com/beam-telemetry)
 - All of the Prometheus libraries that Ilya Khaprov ([@deadtrickster](https://github.com/deadtrickster)) maintains
 - The logo for the project is an edited version of an SVG image from the [unDraw project](https://undraw.co/)
+- Juan Luis Baptiste for the nifty ApacheBench+Gnuplot shell scripts [apachebench-graphs](https://github.com/juanluisbaptiste/apachebench-graphs)
