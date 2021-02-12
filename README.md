@@ -37,11 +37,8 @@
 
 ## Installation
 
-This library is still under active development with changing API contracts and forked dependencies...use at your own
-risk for now :).
-
-[Available in Hex](https://hex.pm/packages/prom_ex), the package can be installed by adding `prom_ex`
-to your list of dependencies in `mix.exs`:
+[Available in Hex](https://hex.pm/packages/prom_ex), the package can be installed by adding `prom_ex` to your list of
+dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -56,11 +53,11 @@ Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/pr
 ### Design Philosophy
 
 With the widespread adoption of the Telemetry library and the other libraries in the [BEAM Telemetry GitHub
-Org](https://github.com/beam-telemetry), we have reached a point where we have a consistent means of surfacing
-application and library metrics. This allows us to have a great level of insight into our applications and dependencies
-given that they all leverage the same fundamental tooling. The goal of this project is to provide a "Plug-in" style
-library where you can easily add new plug-ins to surface metrics so that Prometheus can scrape them. Ideally, this
-project acts as the "Metrics" pillar in your application (in reference to [The Three Pillars of
+Org](https://github.com/beam-telemetry), we have reached a point in the Elixir ecosystem where we have a consistent
+means of surfacing application and library metrics. This allows us to have a great level of insight into our
+applications and dependencies given that they all leverage the same fundamental tooling. The goal of this project is to
+provide a "Plug-in" style library where you can easily add new plug-ins to surface metrics so that Prometheus can scrape
+them. Ideally, this project acts as the "Metrics" pillar in your application (in reference to [The Three Pillars of
 Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/ch04.html)).
 
 To this end, while PromEx does provide a certain level of configurability (like the polling rate, starting behaviour for
@@ -72,18 +69,21 @@ Instead, if there things that you don't agree with or that are incompatible with
 plugin and want to edit how the PromEx plugins react to Telemetry events, it is recommended that you fork the plugin in
 question and edit it to your specific use case. If you think that the community can benefit for your changes, do not
 hesitate to make a PR and I'll be sure to review it. This is not to say that event configurability will never come to
-PromEx, but I want to make sure that the public facing API is clean and straightforward and not bogged down with
-configuration. That and the Grafana dashboards would then have to become templatized to accommodate all this
-configurability.
+PromEx, but I want to make sure that the public facing API is clean and straightforward and not bogged down with too
+much configuration. In addition, the Grafana dashboards would then have to have a lot of templatized logic to
+accommodate all this configurability (something which has been a pain-point in the Helm community for example).
 
-PromEx provides a few utilities to you in order to accomplish this goal:
+PromEx provides the following utilities to you in order to achieve your observability goals:
 
 - The `PromEx.Plug` module that can be used in your Phoenix or Plug application to expose the collected metrics
+- A standalone HTTP metrics server if Phoenix is not a dependency in your project
 - A Mix task to upload the provided complimentary Grafana dashboards
 - A Mix task to create a PromEx metrics capture module
 - A behaviour that defines the contract for PromEx plug-ins
 - A behaviour that defines the functionality of a PromEx metrics capture module
 - Grafana dashboards tailored to each specific Plugin so that metrics work out of the box with dashboards
+- Grafana API support to create/upload to dashboard folders and to create graph annotations to mark events in Grafana
+- EEx Grafana dashboard templates so you can dynamically tweak dashboards prior to uploading
 
 ### Available Plugins
 
@@ -118,7 +118,9 @@ task:
 $ mix prom_ex.gen.config --datasource YOUR_PROMETHEUS_DATASOURCE_ID
 ```
 
-Then add the generated module to your `application.ex` file supervision tree:
+Then add the generated module to your `application.ex` file supervision tree (be sure to add it to the top of the
+supervisor children list so that you do not miss any init-style events from other processes like Ecto.Repo for
+example):
 
 ```elixir
 defmodule MyCoolApp.Application do
@@ -126,9 +128,9 @@ defmodule MyCoolApp.Application do
 
   def start(_type, _args) do
     children = [
-      ...
+      MyCoolApp.PromEx,
 
-      MyCoolApp.PromEx
+      ...
     ]
 
     opts = [strategy: :one_for_one, name: MyCoolApp.Supervisor]
@@ -171,7 +173,6 @@ $ curl localhost:4000/metrics
 my_cool_app_application_dependency_info{modules="69",name="hex",version="0.20.5"} 1
 my_cool_app_application_dependency_info{modules="1",name="connection",version="1.0.4"} 1
 my_cool_app_application_dependency_info{modules="4",name="telemetry_poller",version="0.5.1"} 1
-...
 ...
 ```
 
