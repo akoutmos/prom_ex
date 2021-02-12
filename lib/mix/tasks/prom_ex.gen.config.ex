@@ -12,7 +12,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
                     what is configured in Grafana from the Prometheus instance's
                     `datasource_id`.
 
-  -o, -otp_app      The OTP application that PromEx is being installed in. This
+  -o, --otp_app     The OTP application that PromEx is being installed in. This
                     should be provided as the snake case atom (minus the leading
                     colon). For example, if the `:app` value in your `mix.exs` file
                     is `:my_cool_app`, this argument should be provided as `my_cool_app`.
