@@ -275,9 +275,11 @@ Percentage of the requests served within a certain time (ms)
 #### Plotting the stress test results
 
 In the spirit of visualizing performance characteristics, the percentile data from the ApacheBench stress tests has been
-overlaid and plotted using Gnuplot (thanks to https://github.com/juanluisbaptiste/apachebench-graphs for making
-gnuplotting a lot more streamlined :)). As we can see, the charts track each other more or less 1:1 except for the
-slowest 5% of requests where we see a slight performance hit.
+overlaid and plotted using Gnuplot (thanks to
+[apachebench-graphs](https://github.com/juanluisbaptiste/apachebench-graphs) for making Gnuplot-ing a lot more
+streamlined :)). As we can see, the distributions track each other more or less 1:1 except for the slowest 5-10% of requests where
+we see a slight performance hit. In other words, 90% of the time there was no measurable performance overhead in the
+instrumented application.
 
 <img align="center" width="100%" src="guides/images/apache_bench_stress_test.png" alt="PromEx Stress Test">
 
