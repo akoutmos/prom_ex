@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.15-beta] - 2021-02-12
+
+### Added
+
+- Screenshots of all dashboards
+- Tests for mix gen config task
+
+### Changed
+
+- Updated documentation
+
 ## [0.1.14-beta] - 2021-02-09
 
 ### Added
