@@ -77,17 +77,11 @@ defmodule PromEx.MixProject do
       extras: [
         "README.md",
         "guides/howtos/Writing PromEx Plugins.md",
-        "guides/gallery/All.md",
-        "guides/gallery/Application.md",
-        "guides/gallery/Beam.md",
-        "guides/gallery/Ecto.md",
-        "guides/gallery/Oban.md",
-        "guides/gallery/Phoenix.md",
-        "guides/gallery/Phoenix LiveView.md"
+        "guides/gallery/All.md"
       ],
       groups_for_extras: [
         "How-To's": ~r/guides\/howtos\/.?/,
-        "Dashboard Gallery": ~r/guides\/gallery\/.?/
+        Grafana: ~r/guides\/gallery\/.?/
       ]
     ]
   end
@@ -115,11 +109,12 @@ defmodule PromEx.MixProject do
     # Set up directory structure
     File.mkdir_p!("./doc/guides/images")
 
-    # Copy over files
-    File.cp!("./guides/images/logo.svg", "./doc/guides/images/logo.svg")
-    File.cp!("./guides/images/logo_text.png", "./doc/guides/images/logo_text.png")
-    File.cp!("./guides/images/apache_bench_stress_test.png", "./doc/guides/images/apache_bench_stress_test.png")
-    File.cp!("./guides/images/dashboards_preview.png", "./doc/guides/images/dashboards_preview.png")
+    # Copy over image files
+    "./guides/images/"
+    |> File.ls!()
+    |> Enum.each(fn image_file ->
+      File.cp!("./guides/images/#{image_file}", "./doc/guides/images/#{image_file}")
+    end)
 
     # Clean up previous file massaging
     File.rm!("./README.md")

@@ -10,7 +10,7 @@ services:
       mix local.rebar --force &&
       mix deps.get &&
       mix ecto.setup &&
-      mix prom_ex.publish &&
+      mix prom_ex.dashboard.publish &&
       exec mix phx.server'
     ports:
       - '4000:4000'
@@ -45,7 +45,7 @@ services:
       mix local.rebar --force &&
       mix deps.get &&
       mix ecto.setup &&
-      mix prom_ex.publish &&
+      mix prom_ex.dashboard.publish &&
       exec mix phx.server'
     ports:
       - '4100:4000'
