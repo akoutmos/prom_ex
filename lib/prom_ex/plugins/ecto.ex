@@ -68,6 +68,11 @@ if Code.ensure_loaded?(Ecto) do
       ]
     end
 
+    @doc false
+    def handle_event(_event_name, event_measurement, event_metadata, _config) do
+      :telemetry.execute(@query_event, event_measurement, event_metadata)
+    end
+
     # Generate the default telemetry prefix
     defp telemetry_prefix(repo) do
       repo
@@ -200,9 +205,7 @@ if Code.ensure_loaded?(Ecto) do
         :telemetry.attach(
           [:prom_ex, :ecto, :proxy] ++ telemetry_prefix,
           query_event,
-          fn _event_name, event_measurement, event_metadata, _config ->
-            :telemetry.execute(@query_event, event_measurement, event_metadata)
-          end,
+          &__MODULE__.handle_event/4,
           %{}
         )
       end)
