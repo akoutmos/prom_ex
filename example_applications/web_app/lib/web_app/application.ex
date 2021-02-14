@@ -8,6 +8,9 @@ defmodule WebApp.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # Recorder Supervisor
+      WebApp.RecorderSupervisor,
+
       # PromEx modules
       WebApp.PromEx,
       WebApp.Limited.PromEx,
