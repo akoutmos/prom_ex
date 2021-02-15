@@ -165,7 +165,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
          ```
 
       4. Update the list of plugins in the `plugins/0` function return list to reflect your
-         particular application. Also update the list of dashboards that are to be uploaded
+         application's dependencies. Also update the list of dashboards that are to be uploaded
          to Grafana in the `dashboards/0` function.
       \"\"\"
 
@@ -178,7 +178,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
         [
           # PromEx built in plugins
           Plugins.Application,
-          Plugins.Beam,
+          Plugins.Beam
           # {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
           # Plugins.Ecto,
           # Plugins.Oban
@@ -200,7 +200,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
         [
           # PromEx built in Grafana dashboards
           {:prom_ex, "application.json"},
-          {:prom_ex, "beam.json"},
+          {:prom_ex, "beam.json"}
           # {:prom_ex, "phoenix.json"},
           # {:prom_ex, "ecto.json"},
           # {:prom_ex, "oban.json"}
