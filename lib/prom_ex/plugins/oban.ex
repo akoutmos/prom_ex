@@ -144,6 +144,20 @@ if Code.ensure_loaded?(Oban) do
       )
     end
 
+    @doc false
+    def handle_proxy_init_event(_event_name, _event_measurement, event_metadata, _config) do
+      Enum.each(event_metadata.conf.queues, fn {queue, queue_opts} ->
+        limit = Keyword.get(queue_opts, :limit, 0)
+
+        metadata = %{
+          queue: queue,
+          name: event_metadata.conf.name
+        }
+
+        :telemetry.execute(@init_event_queue_limit_proxy, %{limit: limit}, metadata)
+      end)
+    end
+
     defp circuit_breaker_trip_tag_values(%{name: name, config: conf}) do
       %{
         name: normalize_module_name(conf.name),
@@ -489,18 +503,7 @@ if Code.ensure_loaded?(Oban) do
       :telemetry.attach(
         [:prom_ex, :oban, :proxy] ++ prefix,
         @init_event,
-        fn _event_name, _event_measurement, event_metadata, _config ->
-          Enum.each(event_metadata.conf.queues, fn {queue, queue_opts} ->
-            limit = Keyword.get(queue_opts, :limit, 0)
-
-            metadata = %{
-              queue: queue,
-              name: event_metadata.conf.name
-            }
-
-            :telemetry.execute(@init_event_queue_limit_proxy, %{limit: limit}, metadata)
-          end)
-        end,
+        &__MODULE__.handle_proxy_init_event/4,
         %{}
       )
     end

@@ -25,7 +25,7 @@ defmodule PromEx.TelemetryMetricsPrometheus.Core.Counter do
            :telemetry.attach(
              handler_id,
              metric.event_name,
-             &handle_event/4,
+             &__MODULE__.handle_event/4,
              %{
                keep: metric.keep,
                metric_name: "",

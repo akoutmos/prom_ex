@@ -25,12 +25,7 @@ defmodule PromEx.Debug do
     :telemetry.attach(
       random_id,
       event_name,
-      fn event_name, event_measurement, event_metadata, config ->
-        IO.inspect(event_name, label: "---- EVENT NAME ----", limit: :infinity, structs: false)
-        IO.inspect(event_measurement, label: "---- EVENT MEASUREMENT ----", limit: :infinity, structs: false)
-        IO.inspect(event_metadata, label: "---- EVENT METADATA ----", limit: :infinity, structs: false)
-        IO.inspect(config, label: "---- CONFIG ----", limit: :infinity, structs: false)
-      end,
+      &__MODULE__.handle_event/4,
       config
     )
 
@@ -52,15 +47,19 @@ defmodule PromEx.Debug do
     :telemetry.attach(
       random_id,
       event,
-      fn event_name, event_measurement, event_metadata, config ->
-        IO.inspect(event_name, label: "---- EVENT NAME ----", limit: :infinity, structs: false)
-        IO.inspect(event_measurement, label: "---- EVENT MEASUREMENT ----", limit: :infinity, structs: false)
-        IO.inspect(event_metadata, label: "---- EVENT METADATA ----", limit: :infinity, structs: false)
-        IO.inspect(config, label: "---- CONFIG ----", limit: :infinity, structs: false)
-      end,
+      &__MODULE__.handle_event/4,
       config
     )
 
     :ok
+  end
+
+  @doc false
+  @spec handle_event([atom], map, map, any) :: any
+  def handle_event(event_name, event_measurement, event_metadata, config) do
+    IO.inspect(event_name, label: "---- EVENT NAME ----", limit: :infinity, structs: false)
+    IO.inspect(event_measurement, label: "---- EVENT MEASUREMENT ----", limit: :infinity, structs: false)
+    IO.inspect(event_metadata, label: "---- EVENT METADATA ----", limit: :infinity, structs: false)
+    IO.inspect(config, label: "---- CONFIG ----", limit: :infinity, structs: false)
   end
 end
