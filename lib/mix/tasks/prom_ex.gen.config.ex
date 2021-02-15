@@ -163,6 +163,10 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
            ...
          end
          ```
+
+      4. Update the list of plugins in the `plugins/0` function return list to reflect your
+         particular application. Also update the list of dashboards that are to be uploaded
+         to Grafana in the `dashboards/0` function.
       \"\"\"
 
       use PromEx, otp_app: :<%= @otp_app %>
@@ -175,8 +179,9 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           # PromEx built in plugins
           Plugins.Application,
           Plugins.Beam,
-          {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
-          Plugins.Ecto
+          # {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
+          # Plugins.Ecto,
+          # Plugins.Oban
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromExPlugin
@@ -193,11 +198,12 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
       @impl true
       def dashboards do
         [
-          # PromEx built in dashboard definitions. Remove dashboards that you do not need
+          # PromEx built in Grafana dashboards
           {:prom_ex, "application.json"},
           {:prom_ex, "beam.json"},
-          {:prom_ex, "phoenix.json"},
-          {:prom_ex, "ecto.json"}
+          # {:prom_ex, "phoenix.json"},
+          # {:prom_ex, "ecto.json"},
+          # {:prom_ex, "oban.json"}
 
           # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
           # {:<%= @otp_app %>, "/grafana_dashboards/user_metrics.json"}

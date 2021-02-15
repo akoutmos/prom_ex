@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.15-beta] - 2021-02-12
 
+### Changed
+
+- Updated mix gen config task to comment out plugins that require dependencies
+- Updated documentation
+
 ### Added
 
 - Screenshots of all dashboards
