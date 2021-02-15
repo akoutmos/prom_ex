@@ -69,7 +69,7 @@ if Code.ensure_loaded?(Ecto) do
     end
 
     @doc false
-    def handle_event(_event_name, event_measurement, event_metadata, _config) do
+    def handle_proxy_query_event(_event_name, event_measurement, event_metadata, _config) do
       :telemetry.execute(@query_event, event_measurement, event_metadata)
     end
 
@@ -205,7 +205,7 @@ if Code.ensure_loaded?(Ecto) do
         :telemetry.attach(
           [:prom_ex, :ecto, :proxy] ++ telemetry_prefix,
           query_event,
-          &__MODULE__.handle_event/4,
+          &__MODULE__.handle_proxy_query_event/4,
           %{}
         )
       end)

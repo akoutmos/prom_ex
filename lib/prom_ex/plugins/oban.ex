@@ -145,7 +145,7 @@ if Code.ensure_loaded?(Oban) do
     end
 
     @doc false
-    def handle_event(_event_name, _event_measurement, event_metadata, _config) do
+    def handle_proxy_init_event(_event_name, _event_measurement, event_metadata, _config) do
       Enum.each(event_metadata.conf.queues, fn {queue, queue_opts} ->
         limit = Keyword.get(queue_opts, :limit, 0)
 
@@ -503,7 +503,7 @@ if Code.ensure_loaded?(Oban) do
       :telemetry.attach(
         [:prom_ex, :oban, :proxy] ++ prefix,
         @init_event,
-        &__MODULE__.handle_event/4,
+        &__MODULE__.handle_proxy_init_event/4,
         %{}
       )
     end
