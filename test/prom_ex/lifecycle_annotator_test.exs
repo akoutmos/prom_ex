@@ -24,6 +24,8 @@ defmodule PromEx.LifecycleAnnotatorTest do
     end
   end
 
+  @moduletag :capture_log
+
   setup do
     bypass = Bypass.open()
     {:ok, bypass: bypass}
