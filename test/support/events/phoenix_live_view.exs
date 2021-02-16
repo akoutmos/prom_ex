@@ -1,7 +1,7 @@
 [
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 518187700},
+    measurements: %{duration: 518_187_700},
     metadata: %{
       params: %{},
       session: %{"_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg"},
@@ -47,7 +47,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 9852700},
+    measurements: %{duration: 9_852_700},
     metadata: %{
       params: %{},
       session: %{
@@ -105,8 +105,7 @@
           connect_info: %{},
           connect_params: %{}
         },
-        redirected: {:live, :redirect,
-         %{kind: :push, to: "/dashboard/nonode%40nohost/home"}},
+        redirected: {:live, :redirect, %{kind: :push, to: "/dashboard/nonode%40nohost/home"}},
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
@@ -116,7 +115,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 1570300},
+    measurements: %{duration: 1_570_300},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "home"},
       session: %{
@@ -155,8 +154,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:current, "Home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -193,24 +191,24 @@
             phoenix_version: '1.5.7',
             system_architecture: 'x86_64-pc-linux-gnu'
           },
-          system_limits: %{atoms: 1048576, ports: 1048576, processes: 262144},
+          system_limits: %{atoms: 1_048_576, ports: 1_048_576, processes: 262_144},
           system_usage: %{
             atoms: 26119,
             cpu_run_queue: 0,
-            io: {4250008, 12727780},
+            io: {4_250_008, 12_727_780},
             memory: %{
-              atom: 793529,
-              binary: 2445888,
-              code: 18502140,
-              ets: 2139656,
-              other: 20187275,
-              process: 12928768,
-              total: 56997256
+              atom: 793_529,
+              binary: 2_445_888,
+              code: 18_502_140,
+              ets: 2_139_656,
+              other: 20_187_275,
+              process: 12_928_768,
+              total: 56_997_256
             },
             ports: 33,
             processes: 447,
             total_run_queue: 0,
-            uptime: 246734
+            uptime: 246_734
           }
         },
         changed: %{
@@ -254,7 +252,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 3097000},
+    measurements: %{duration: 3_097_000},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "home"},
       session: %{
@@ -293,8 +291,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:current, "Home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -331,24 +328,24 @@
             phoenix_version: '1.5.7',
             system_architecture: 'x86_64-pc-linux-gnu'
           },
-          system_limits: %{atoms: 1048576, ports: 1048576, processes: 262144},
+          system_limits: %{atoms: 1_048_576, ports: 1_048_576, processes: 262_144},
           system_usage: %{
             atoms: 26236,
             cpu_run_queue: 1,
-            io: {4293620, 13202331},
+            io: {4_293_620, 13_202_331},
             memory: %{
-              atom: 793529,
-              binary: 3980976,
-              code: 18649543,
-              ets: 2756560,
-              other: 20239496,
-              process: 13375752,
-              total: 59795856
+              atom: 793_529,
+              binary: 3_980_976,
+              code: 18_649_543,
+              ets: 2_756_560,
+              other: 20_239_496,
+              process: 13_375_752,
+              total: 59_795_856
             },
             ports: 36,
             processes: 476,
             total_run_queue: 1,
-            uptime: 248128
+            uptime: 248_128
           }
         },
         changed: %{
@@ -396,7 +393,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 13033300},
+    measurements: %{duration: 13_033_300},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "metrics"},
       session: %{
@@ -435,8 +432,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:current, "Metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -494,8 +490,7 @@
             "_mounts" => 0
           }
         },
-        redirected: {:live, :redirect,
-         %{kind: :push, to: "/dashboard/nonode%40nohost/metrics?nav=phoenix"}},
+        redirected: {:live, :redirect, %{kind: :push, to: "/dashboard/nonode%40nohost/metrics?nav=phoenix"}},
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
@@ -505,7 +500,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 2126300},
+    measurements: %{duration: 2_126_300},
     metadata: %{
       params: %{
         "nav" => "phoenix",
@@ -548,8 +543,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:current, "Metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -618,7 +612,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 14130600},
+    measurements: %{duration: 14_130_600},
     metadata: %{
       params: %{
         "nav" => "phoenix",
@@ -661,8 +655,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:current, "Metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -689,10 +682,10 @@
                description: nil,
                event_name: [:phoenix, :endpoint, :stop],
                keep: nil,
-               measurement: #Function<4.113557904/1 in Telemetry.Metrics.maybe_convert_measurement/2>,
+               measurement: nil,
                name: [:phoenix, :endpoint, :stop, :duration],
                reporter_options: [],
-               tag_values: #Function<0.113557904/1 in Telemetry.Metrics.default_metric_options/0>,
+               tag_values: nil,
                tags: [],
                unit: :millisecond
              }, 0},
@@ -701,10 +694,10 @@
                description: nil,
                event_name: [:phoenix, :router_dispatch, :stop],
                keep: nil,
-               measurement: #Function<4.113557904/1 in Telemetry.Metrics.maybe_convert_measurement/2>,
+               measurement: nil,
                name: [:phoenix, :router_dispatch, :stop, :duration],
                reporter_options: [],
-               tag_values: #Function<0.113557904/1 in Telemetry.Metrics.default_metric_options/0>,
+               tag_values: nil,
                tags: [:route],
                unit: :millisecond
              }, 1}
@@ -760,7 +753,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 4767700},
+    measurements: %{duration: 4_767_700},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "request_logger"},
       session: %{
@@ -798,8 +791,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:current, "Request Logger"},
               {:enabled, "Applications", "applications"},
@@ -857,11 +849,12 @@
             "_mounts" => 0
           }
         },
-        redirected: {:live, :redirect,
-         %{
-           kind: :push,
-           to: "/dashboard/nonode%40nohost/request_logger?stream=gQhG"
-         }},
+        redirected:
+          {:live, :redirect,
+           %{
+             kind: :push,
+             to: "/dashboard/nonode%40nohost/request_logger?stream=gQhG"
+           }},
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
@@ -871,7 +864,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 273200},
+    measurements: %{duration: 273_200},
     metadata: %{
       params: %{
         "node" => "nonode@nohost",
@@ -917,8 +910,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:current, "Request Logger"},
               {:enabled, "Applications", "applications"},
@@ -1001,7 +993,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 438100},
+    measurements: %{duration: 438_100},
     metadata: %{
       params: %{
         "node" => "nonode@nohost",
@@ -1047,8 +1039,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:current, "Request Logger"},
               {:enabled, "Applications", "applications"},
@@ -1135,7 +1126,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 445000},
+    measurements: %{duration: 445_000},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "applications"},
       session: %{
@@ -1173,8 +1164,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:current, "Applications"},
@@ -1242,7 +1232,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 226400},
+    measurements: %{duration: 226_400},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "processes"},
       session: %{
@@ -1280,8 +1270,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -1349,7 +1338,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 899800},
+    measurements: %{duration: 899_800},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "ports"},
       session: %{
@@ -1387,8 +1376,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -1456,7 +1444,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 224400},
+    measurements: %{duration: 224_400},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "sockets"},
       session: %{
@@ -1494,8 +1482,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -1563,7 +1550,7 @@
   },
   %{
     event: [:phoenix, :live_view, :mount, :stop],
-    measurements: %{duration: 228400},
+    measurements: %{duration: 228_400},
     metadata: %{
       params: %{"node" => "nonode@nohost", "page" => "ets"},
       session: %{
@@ -1601,8 +1588,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -1684,8 +1670,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -1721,8 +1706,7 @@
             __struct__: Phoenix.LiveDashboard.PageLive,
             links: [
               {:enabled, "Home", "home"},
-              {:disabled, "OS Data",
-               "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
+              {:disabled, "OS Data", "https://hexdocs.pm/phoenix_live_dashboard/os_mon.html"},
               {:enabled, "Metrics", "metrics"},
               {:enabled, "Request Logger", "request_logger"},
               {:enabled, "Applications", "applications"},
@@ -1746,11 +1730,12 @@
         },
         connected?: true,
         endpoint: WebAppWeb.Endpoint,
-        fingerprints: {227320755574966542928855689574751129292,
-         %{
-           0 => {77296526119445402596027652037673309434, %{}},
-           2 => 160877180433664204857386761564767392078
-         }},
+        fingerprints:
+          {227_320_755_574_966_542_928_855_689_574_751_129_292,
+           %{
+             0 => {77_296_526_119_445_402_596_027_652_037_673_309_434, %{}},
+             2 => 160_877_180_433_664_204_857_386_761_564_767_392_078
+           }},
         host_uri: %{
           __struct__: URI,
           authority: nil,
