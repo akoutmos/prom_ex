@@ -16,12 +16,18 @@ defmodule WebApp.RecorderSupervisor do
 
   defp configure_child({module, args}) do
     metrics =
-      [:event_metrics, :manual_metrics, :polling_metrics]
+      [
+        :event_metrics,
+        :manual_metrics,
+        :polling_metrics
+      ]
       |> Enum.flat_map(&get_metrics(module, &1, args))
       |> MapSet.new()
       |> MapSet.to_list()
 
-    Supervisor.child_spec({WebApp.Recorder, metrics}, id: Module.concat(module, Recorder))
+    name = Module.concat(module, Recorder)
+
+    Supervisor.child_spec({WebApp.Recorder, metrics: metrics, name: name}, id: name)
   end
 
   defp configure_child(module) do
@@ -31,12 +37,9 @@ defmodule WebApp.RecorderSupervisor do
   defp get_metrics(module, type, args) do
     module
     |> apply(type, [[{:otp_app, :web_app} | args]])
-    |> case do
-      %{} = metric -> [metric]
-      metrics -> metrics
-    end
+    |> List.wrap()
     |> Enum.flat_map(fn %{metrics: metrics} ->
-      Enum.map(metrics, & &1.name)
+      Enum.map(metrics, & &1.event_name)
     end)
   end
 end
