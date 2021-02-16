@@ -2,8 +2,8 @@ defmodule PromEx.Test.Support.Metrics do
   @moduledoc false
 
   @doc false
-  @spec read(atom | String.t()) :: [String.t()]
-  def read(plugin) do
+  @spec read_expected(atom | String.t()) :: [String.t()]
+  def read_expected(plugin) do
     [File.cwd!(), "test", "support", "metrics", "#{plugin}.txt"]
     |> Path.join()
     |> File.read!()

@@ -10,8 +10,6 @@ defmodule PromEx.Plugins.ApplicationTest do
   defmodule WebApp.PromEx do
     use PromEx, otp_app: :web_app
 
-    alias PromEx.Plugins.Application
-
     @impl true
     def plugins do
       [{Application, otp_app: :web_app}]
@@ -27,7 +25,7 @@ defmodule PromEx.Plugins.ApplicationTest do
       |> PromEx.get_metrics()
       |> Metrics.sort()
 
-    assert metrics == Metrics.read(:application)
+    assert metrics == Metrics.read_expected(:application)
   end
 
   describe "event_metrics/1" do
