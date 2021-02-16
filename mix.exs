@@ -77,6 +77,7 @@ defmodule PromEx.MixProject do
       extras: [
         "README.md",
         "guides/howtos/Writing PromEx Plugins.md",
+        "guides/howtos/Telemetry.md",
         "guides/gallery/All.md"
       ],
       groups_for_extras: [
