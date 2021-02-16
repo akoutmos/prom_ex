@@ -5,6 +5,8 @@ defmodule WebApp.Recorder do
 
   use GenServer
 
+  @max_count 20
+
   # Client
   @doc false
   def start_link(opts) do
@@ -35,11 +37,13 @@ defmodule WebApp.Recorder do
     {:noreply, state}
   end
 
-  def handle_cast({:track, _}, %{count: 100} = state) do
+  @impl GenServer
+  def handle_cast({:track, _}, %{count: @max_count} = state) do
     :telemetry.detach(state.handler_id)
     {:noreply, %{state | handler_id: nil}}
   end
 
+  @impl GenServer
   def handle_cast({:track, metric}, state) do
     {:noreply, %{state | count: state.count + 1, events: [metric | state.events]}}
   end

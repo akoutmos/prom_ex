@@ -3,6 +3,32 @@ defmodule PromEx.Plugins.ApplicationTest do
 
   alias PromEx.MetricTypes.Polling
   alias PromEx.Plugins.Application
+  alias PromEx.Test.Support.{Events, Metrics}
+
+  @moduletag :capture_log
+
+  defmodule WebApp.PromEx do
+    use PromEx, otp_app: :web_app
+
+    alias PromEx.Plugins.Application
+
+    @impl true
+    def plugins do
+      [{Application, otp_app: :web_app}]
+    end
+  end
+
+  test "telemetry events are accumulated" do
+    start_supervised!(WebApp.PromEx)
+    Events.execute_all(:application)
+
+    metrics =
+      WebApp.PromEx
+      |> PromEx.get_metrics()
+      |> Metrics.sort()
+
+    assert metrics == Metrics.read(:application)
+  end
 
   describe "event_metrics/1" do
     test "should return the correct number of metrics" do
