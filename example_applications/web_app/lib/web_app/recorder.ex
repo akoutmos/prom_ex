@@ -5,7 +5,7 @@ defmodule WebApp.Recorder do
 
   use GenServer
 
-  @max_count 20
+  @max_count 100
 
   # Client
   @doc false
