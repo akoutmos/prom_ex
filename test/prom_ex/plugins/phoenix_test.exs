@@ -9,7 +9,7 @@ defmodule PromEx.Plugins.PhoenixTest do
 
     @impl true
     def plugins do
-      [{Phoenix, router: WebAppWeb.Router}]
+      [{Phoenix, router: TestApp.Router}]
     end
   end
 

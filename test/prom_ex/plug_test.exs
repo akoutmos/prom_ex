@@ -48,6 +48,7 @@ defmodule PromEx.PlugTest do
   describe "call/2" do
     setup [:set_up_app_env, :setup_prom_ex_module]
 
+    @tag :capture_log
     test "should return a 503 if the metrics supervisor is not accessible" do
       stop_supervised(DefaultPromExSetUp)
 
