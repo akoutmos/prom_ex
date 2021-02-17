@@ -9,7 +9,7 @@ defmodule PromEx.MixProject do
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",
       homepage_url: "https://hex.pm/packages/prom_ex",
-      description: "A Plug-in style Prometheus metrics collection library built on top of Telemetry",
+      description: "Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
