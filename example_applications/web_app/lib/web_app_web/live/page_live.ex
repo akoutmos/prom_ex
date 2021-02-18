@@ -3,7 +3,7 @@ defmodule WebAppWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    case Enum.random([0, 1, 2]) do
+    case Enum.random([0, 1, 2, 3, 4]) do
       1 ->
         Process.sleep(250)
 
@@ -11,7 +11,7 @@ defmodule WebAppWeb.PageLive do
         Process.sleep(500)
 
       val ->
-        Process.sleep(1_000 / val)
+        Process.sleep(floor(1_000 / val))
     end
 
     {:ok, assign(socket, query: "", results: %{})}
@@ -19,7 +19,7 @@ defmodule WebAppWeb.PageLive do
 
   @impl true
   def handle_event("suggest", %{"q" => query}, socket) do
-    case Enum.random([0, 1, 2]) do
+    case Enum.random([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) do
       1 ->
         Process.sleep(250)
 
@@ -27,7 +27,7 @@ defmodule WebAppWeb.PageLive do
         Process.sleep(500)
 
       val ->
-        Process.sleep(1_000 / val)
+        Process.sleep(floor(1_000 / val))
     end
 
     {:noreply, assign(socket, results: search(query), query: query)}

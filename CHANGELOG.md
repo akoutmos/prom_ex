@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2021-02-19
+
+- First stable release. Public facing API is now considered stable
+
 ## [0.1.15-beta] - 2021-02-12
 
 ### Changed

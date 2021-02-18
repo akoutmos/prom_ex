@@ -4,7 +4,7 @@ defmodule PromEx.MixProject do
   def project do
     [
       app: :prom_ex,
-      version: "0.1.15-beta",
+      version: "1.0.0",
       elixir: "~> 1.10",
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",

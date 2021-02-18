@@ -308,7 +308,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 3,
         "x": 0,
         "y": 9
@@ -316,7 +316,7 @@
       "id": 21,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -370,7 +370,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 3,
         "x": 3,
         "y": 9
@@ -378,7 +378,7 @@
       "id": 26,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -432,7 +432,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 3,
         "x": 6,
         "y": 9
@@ -494,7 +494,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 3,
         "x": 9,
         "y": 9
@@ -502,7 +502,7 @@
       "id": 27,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -526,7 +526,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Repo Pool Size",
+      "title": "Pool Size",
       "transformations": [
         {
           "id": "labelsToFields",
@@ -556,7 +556,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 4,
         "w": 3,
         "x": 12,
         "y": 9
@@ -564,7 +564,7 @@
       "id": 28,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -588,7 +588,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Repo Timeout Duration",
+      "title": "Timeout Duration",
       "transformations": [
         {
           "id": "labelsToFields",
@@ -604,7 +604,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 13
       },
       "id": 2,
       "panels": [],
@@ -630,7 +630,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 14
       },
       "hiddenSeries": false,
       "id": 11,
@@ -733,7 +733,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 18
+        "y": 14
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -799,7 +799,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 27
       },
       "hiddenSeries": false,
       "id": 13,
@@ -903,7 +903,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 27
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -1083,7 +1083,11 @@
   },
   "timepicker": {
     "refresh_intervals": [
-      "5s"
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m"
     ]
   },
   "timezone": "",
