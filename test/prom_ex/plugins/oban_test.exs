@@ -1,6 +1,8 @@
 defmodule PromEx.Plugins.ObanTest do
   use ExUnit.Case, async: true
 
+  alias PromEx.MetricTypes.Polling
+  alias PromEx.Plugins.Oban, as: ObanPlugin
   alias PromEx.Test.Support.{Events, Metrics}
 
   defmodule WebApp.PromEx do
@@ -24,5 +26,23 @@ defmodule PromEx.Plugins.ObanTest do
       |> Metrics.sort()
 
     assert metrics == Metrics.read_expected(:oban)
+  end
+
+  describe "event_metrics/1" do
+    test "should return the correct number of metrics" do
+      assert [_, _, _, _] = ObanPlugin.event_metrics(otp_app: :prom_ex)
+    end
+  end
+
+  describe "polling_metrics/1" do
+    test "should return the correct number of metrics" do
+      assert %Polling{} = ObanPlugin.polling_metrics(otp_app: :prom_ex)
+    end
+  end
+
+  describe "manual_metrics/1" do
+    test "should return the correct number of metrics" do
+      assert [] == ObanPlugin.manual_metrics([])
+    end
   end
 end
