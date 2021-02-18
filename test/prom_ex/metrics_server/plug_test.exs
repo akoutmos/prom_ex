@@ -7,6 +7,8 @@ defmodule PromEx.MetricsServer.PlugTest do
   alias Plug.Conn
   alias PromEx.MetricsServer
 
+  @moduletag :capture_log
+
   defmodule DefaultPromExSetUp do
     use PromEx, otp_app: :prom_ex
 

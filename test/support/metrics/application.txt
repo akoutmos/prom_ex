@@ -1,0 +1,66 @@
+# HELP web_app_prom_ex_application_git_author_info The application's author of the last Git commit at the time of deployment.
+# TYPE web_app_prom_ex_application_git_author_info gauge
+web_app_prom_ex_application_git_author_info{author="Alex Koutmos"} 1
+# HELP web_app_prom_ex_application_git_sha_info The application's Git SHA at the time of deployment.
+# TYPE web_app_prom_ex_application_git_sha_info gauge
+web_app_prom_ex_application_git_sha_info{sha="0fa5476"} 1
+# HELP web_app_prom_ex_application_dependency_info Information regarding the application's dependencies.
+# TYPE web_app_prom_ex_application_dependency_info gauge
+web_app_prom_ex_application_dependency_info{modules="5",name="plug_crypto",version="1.2.0"} 1
+web_app_prom_ex_application_dependency_info{modules="2",name="nimble_pool",version="0.2.3"} 1
+web_app_prom_ex_application_dependency_info{modules="20",name="cowlib",version="2.9.1"} 1
+web_app_prom_ex_application_dependency_info{modules="24",name="jason",version="1.2.2"} 1
+web_app_prom_ex_application_dependency_info{modules="11",name="runtime_tools",version="1.14"} 1
+web_app_prom_ex_application_dependency_info{modules="1",name="connection",version="1.1.0"} 1
+web_app_prom_ex_application_dependency_info{modules="67",name="inets",version="7.1.3.3"} 1
+web_app_prom_ex_application_dependency_info{modules="24",name="mint",version="1.2.1"} 1
+web_app_prom_ex_application_dependency_info{modules="39",name="phoenix_live_dashboard",version="0.2.10"} 1
+web_app_prom_ex_application_dependency_info{modules="6",name="eex",version="1.10.4"} 1
+web_app_prom_ex_application_dependency_info{modules="82",name="phoenix",version="1.5.7"} 1
+web_app_prom_ex_application_dependency_info{modules="4",name="phoenix_live_reload",version="1.3.0"} 1
+web_app_prom_ex_application_dependency_info{modules="92",name="mix",version="1.10.4"} 1
+web_app_prom_ex_application_dependency_info{modules="102",name="faker",version="0.16.0"} 1
+web_app_prom_ex_application_dependency_info{modules="95",name="ecto",version="3.5.7"} 1
+web_app_prom_ex_application_dependency_info{modules="62",name="plug",version="1.11.0"} 1
+web_app_prom_ex_application_dependency_info{modules="1",name="cowboy_telemetry",version="0.3.1"} 1
+web_app_prom_ex_application_dependency_info{modules="3",name="nimble_options",version="0.3.5"} 1
+web_app_prom_ex_application_dependency_info{modules="6",name="decimal",version="2.0.0"} 1
+web_app_prom_ex_application_dependency_info{modules="7",name="file_system",version="0.2.9"} 1
+web_app_prom_ex_application_dependency_info{modules="7",name="telemetry_metrics",version="0.6.0"} 1
+web_app_prom_ex_application_dependency_info{modules="91",name="kernel",version="6.5.2.1"} 1
+web_app_prom_ex_application_dependency_info{modules="81",name="hex",version="0.21.1"} 1
+web_app_prom_ex_application_dependency_info{modules="2",name="mime",version="1.5.0"} 1
+web_app_prom_ex_application_dependency_info{modules="25",name="gettext",version="0.18.2"} 1
+web_app_prom_ex_application_dependency_info{modules="1",name="castore",version="0.1.9"} 1
+web_app_prom_ex_application_dependency_info{modules="14",name="ranch",version="1.7.1"} 1
+web_app_prom_ex_application_dependency_info{modules="5",name="plug_cowboy",version="2.4.1"} 1
+web_app_prom_ex_application_dependency_info{modules="37",name="prom_ex",version="0.1.14-beta"} 1
+web_app_prom_ex_application_dependency_info{modules="12",name="logger",version="1.10.4"} 1
+web_app_prom_ex_application_dependency_info{modules="43",name="oban",version="2.4.3"} 1
+web_app_prom_ex_application_dependency_info{modules="2",name="crypto",version="4.6.5.2"} 1
+web_app_prom_ex_application_dependency_info{modules="12",name="phoenix_pubsub",version="2.0.0"} 1
+web_app_prom_ex_application_dependency_info{modules="58",name="ssl",version="9.6.2.3"} 1
+web_app_prom_ex_application_dependency_info{modules="1",name="asn1",version="5.0.12"} 1
+web_app_prom_ex_application_dependency_info{modules="4",name="telemetry",version="0.4.2"} 1
+web_app_prom_ex_application_dependency_info{modules="21",name="phoenix_html",version="2.14.3"} 1
+web_app_prom_ex_application_dependency_info{modules="31",name="ecto_sql",version="3.5.4"} 1
+web_app_prom_ex_application_dependency_info{modules="33",name="phoenix_live_view",version="0.14.8"} 1
+web_app_prom_ex_application_dependency_info{modules="25",name="cowboy",version="2.8.0"} 1
+web_app_prom_ex_application_dependency_info{modules="51",name="compiler",version="7.5.4.3"} 1
+web_app_prom_ex_application_dependency_info{modules="82",name="postgrex",version="0.15.8"} 1
+web_app_prom_ex_application_dependency_info{modules="9",name="finch",version="0.5.2"} 1
+web_app_prom_ex_application_dependency_info{modules="22",name="db_connection",version="2.3.1"} 1
+web_app_prom_ex_application_dependency_info{modules="4",name="telemetry_poller",version="0.5.1"} 1
+web_app_prom_ex_application_dependency_info{modules="15",name="phoenix_ecto",version="4.2.1"} 1
+web_app_prom_ex_application_dependency_info{modules="83",name="stdlib",version="3.12.1"} 1
+web_app_prom_ex_application_dependency_info{modules="9",name="public_key",version="1.7.2"} 1
+web_app_prom_ex_application_dependency_info{modules="243",name="elixir",version="1.10.4"} 1
+# HELP web_app_prom_ex_application_primary_info Information regarding the primary application.
+# TYPE web_app_prom_ex_application_primary_info gauge
+web_app_prom_ex_application_primary_info{modules="28",name="web_app",version="0.1.0"} 0
+# HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
+# TYPE web_app_prom_ex_prom_ex_status_info gauge
+web_app_prom_ex_prom_ex_status_info 1
+# HELP web_app_prom_ex_application_uptime_milliseconds_count The total number of wall clock milliseconds that have passed since the application started.
+# TYPE web_app_prom_ex_application_uptime_milliseconds_count gauge
+web_app_prom_ex_application_uptime_milliseconds_count 7744

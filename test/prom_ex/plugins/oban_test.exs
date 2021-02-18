@@ -1,48 +1,48 @@
-defmodule PromEx.Plugins.ApplicationTest do
+defmodule PromEx.Plugins.ObanTest do
   use ExUnit.Case, async: true
 
   alias PromEx.MetricTypes.Polling
-  alias PromEx.Plugins.Application
+  alias PromEx.Plugins.Oban, as: ObanPlugin
   alias PromEx.Test.Support.{Events, Metrics}
-
-  @moduletag :capture_log
 
   defmodule WebApp.PromEx do
     use PromEx, otp_app: :web_app
 
     @impl true
     def plugins do
-      [{Application, otp_app: :web_app}]
+      [{PromEx.Plugins.Oban, oban_supervisors: [Oban]}]
     end
   end
 
   test "telemetry events are accumulated" do
+    start_supervised!({Registry, keys: :unique, name: Oban.Registry})
     start_supervised!(WebApp.PromEx)
-    Events.execute_all(:application)
+
+    Events.execute_all(:oban)
 
     metrics =
       WebApp.PromEx
       |> PromEx.get_metrics()
       |> Metrics.sort()
 
-    assert metrics == Metrics.read_expected(:application)
+    assert metrics == Metrics.read_expected(:oban)
   end
 
   describe "event_metrics/1" do
     test "should return the correct number of metrics" do
-      assert Application.event_metrics(otp_app: :test) == []
+      assert [_, _, _, _] = ObanPlugin.event_metrics(otp_app: :prom_ex)
     end
   end
 
   describe "polling_metrics/1" do
     test "should return the correct number of metrics" do
-      assert %Polling{} = Application.polling_metrics(otp_app: :test)
+      assert %Polling{} = ObanPlugin.polling_metrics(otp_app: :prom_ex)
     end
   end
 
   describe "manual_metrics/1" do
     test "should return the correct number of metrics" do
-      assert length(Application.manual_metrics(otp_app: :test)) == 1
+      assert [] == ObanPlugin.manual_metrics([])
     end
   end
 end

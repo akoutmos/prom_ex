@@ -9,5 +9,14 @@ end
 defmodule TestApp.Router do
   use Phoenix.Router
 
-  get("/users", TestApp.UserController, :index)
+  import Phoenix.LiveView.Router
+
+  scope "/", TestApp do
+    live("/", PageLive, :index)
+    get("/users", UserController, :index)
+    get("/users/:id", UserController, :show)
+    post("/users/:id/action/level-up", UserController, :level_up)
+    post("/users", UserController, :create)
+    delete("/users/:id", UserController, :delete)
+  end
 end
