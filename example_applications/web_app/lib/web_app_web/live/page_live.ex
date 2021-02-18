@@ -11,7 +11,7 @@ defmodule WebAppWeb.PageLive do
         Process.sleep(500)
 
       val ->
-        Process.sleep(1_000 / val)
+        Process.sleep(floor(1_000 / val))
     end
 
     {:ok, assign(socket, query: "", results: %{})}
@@ -27,7 +27,7 @@ defmodule WebAppWeb.PageLive do
         Process.sleep(500)
 
       val ->
-        Process.sleep(1_000 / val)
+        Process.sleep(floor(1_000 / val))
     end
 
     {:noreply, assign(socket, results: search(query), query: query)}
