@@ -1070,7 +1070,7 @@
           "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason)",
           "instant": false,
           "interval": "",
-          "legendFormat": "({{ action }}) {{ module }} :: ({{kind}} -> {{reason}})",
+          "legendFormat": "({{ action }}) {{ module }} :: {{event}} ({{kind}} -> {{reason}})",
           "refId": "A"
         }
       ],
