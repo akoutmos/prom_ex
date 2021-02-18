@@ -1,0 +1,114 @@
+# HELP web_app_prom_ex_beam_system_schedulers_online_info The number of scheduler threads that are online.
+# TYPE web_app_prom_ex_beam_system_schedulers_online_info gauge
+web_app_prom_ex_beam_system_schedulers_online_info 2
+# HELP web_app_prom_ex_beam_system_schedulers_info The number of scheduler threads in use by the BEAM.
+# TYPE web_app_prom_ex_beam_system_schedulers_info gauge
+web_app_prom_ex_beam_system_schedulers_info 2
+# HELP web_app_prom_ex_beam_system_dirty_io_schedulers_info The total number of dirty I/O schedulers used to execute I/O bound native functions.
+# TYPE web_app_prom_ex_beam_system_dirty_io_schedulers_info gauge
+web_app_prom_ex_beam_system_dirty_io_schedulers_info 10
+# HELP web_app_prom_ex_beam_system_dirty_cpu_schedulers_online_info The total number of dirty CPU schedulers that are online.
+# TYPE web_app_prom_ex_beam_system_dirty_cpu_schedulers_online_info gauge
+web_app_prom_ex_beam_system_dirty_cpu_schedulers_online_info 2
+# HELP web_app_prom_ex_beam_system_dirty_cpu_schedulers_info The total number of dirty CPU scheduler threads used by the BEAM.
+# TYPE web_app_prom_ex_beam_system_dirty_cpu_schedulers_info gauge
+web_app_prom_ex_beam_system_dirty_cpu_schedulers_info 2
+# HELP web_app_prom_ex_beam_system_word_size_bytes_info The size of Erlang term words in bytes.
+# TYPE web_app_prom_ex_beam_system_word_size_bytes_info gauge
+web_app_prom_ex_beam_system_word_size_bytes_info 8
+# HELP web_app_prom_ex_beam_system_time_correction_support_info Whether the BEAM instance has time correction support.
+# TYPE web_app_prom_ex_beam_system_time_correction_support_info gauge
+web_app_prom_ex_beam_system_time_correction_support_info 1
+# HELP web_app_prom_ex_beam_system_thread_support_info Whether the BEAM instance has been compiled with threading support.
+# TYPE web_app_prom_ex_beam_system_thread_support_info gauge
+web_app_prom_ex_beam_system_thread_support_info 1
+# HELP web_app_prom_ex_beam_system_smp_support_info Whether the BEAM instance has been compiled with SMP support.
+# TYPE web_app_prom_ex_beam_system_smp_support_info gauge
+web_app_prom_ex_beam_system_smp_support_info 1
+# HELP web_app_prom_ex_beam_system_version_info The OTP release major version.
+# TYPE web_app_prom_ex_beam_system_version_info gauge
+web_app_prom_ex_beam_system_version_info 22
+# HELP web_app_prom_ex_beam_system_atom_limit_info The maximum number of atoms allowed.
+# TYPE web_app_prom_ex_beam_system_atom_limit_info gauge
+web_app_prom_ex_beam_system_atom_limit_info 1048576
+# HELP web_app_prom_ex_beam_system_thread_pool_size_info The number of async threads in the async threads pool used for async driver calls.
+# TYPE web_app_prom_ex_beam_system_thread_pool_size_info gauge
+web_app_prom_ex_beam_system_thread_pool_size_info 1
+# HELP web_app_prom_ex_beam_system_process_limit_info The maximum number of processes that can simultaneously exist on the BEAM instance.
+# TYPE web_app_prom_ex_beam_system_process_limit_info gauge
+web_app_prom_ex_beam_system_process_limit_info 262144
+# HELP web_app_prom_ex_beam_system_port_limit_info The maximum number of ports that can simultaneously exist on the BEAM instance.
+# TYPE web_app_prom_ex_beam_system_port_limit_info gauge
+web_app_prom_ex_beam_system_port_limit_info 1048576
+# HELP web_app_prom_ex_beam_system_ets_limit_info The maximum number of ETS tables allowed (this is partially obsolete given that the number of ETS tables is limited by available memory).
+# TYPE web_app_prom_ex_beam_system_ets_limit_info gauge
+web_app_prom_ex_beam_system_ets_limit_info 8192
+# HELP web_app_prom_ex_beam_system_logical_processors_online_info The total number of logical processors online on the host machine.
+# TYPE web_app_prom_ex_beam_system_logical_processors_online_info gauge
+web_app_prom_ex_beam_system_logical_processors_online_info 2
+# HELP web_app_prom_ex_beam_system_logical_processors_available_info The total number of logical processors available to the BEAM.
+# TYPE web_app_prom_ex_beam_system_logical_processors_available_info gauge
+web_app_prom_ex_beam_system_logical_processors_available_info 2
+# HELP web_app_prom_ex_beam_system_logical_processors_info The total number of logical processors on the host machine.
+# TYPE web_app_prom_ex_beam_system_logical_processors_info gauge
+web_app_prom_ex_beam_system_logical_processors_info 2
+# HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
+# TYPE web_app_prom_ex_prom_ex_status_info gauge
+web_app_prom_ex_prom_ex_status_info 1
+# HELP web_app_prom_ex_beam_stats_ets_count A count of how many ETS tables currently exist.
+# TYPE web_app_prom_ex_beam_stats_ets_count gauge
+web_app_prom_ex_beam_stats_ets_count 115
+# HELP web_app_prom_ex_beam_stats_atom_count A count of how many atoms are currently allocated.
+# TYPE web_app_prom_ex_beam_stats_atom_count gauge
+web_app_prom_ex_beam_stats_atom_count 25390
+# HELP web_app_prom_ex_beam_stats_process_count A count of how many Erlang processes are currently running.
+# TYPE web_app_prom_ex_beam_stats_process_count gauge
+web_app_prom_ex_beam_stats_process_count 478
+# HELP web_app_prom_ex_beam_stats_port_count A count of how many ports are currently active.
+# TYPE web_app_prom_ex_beam_stats_port_count gauge
+web_app_prom_ex_beam_stats_port_count 33
+# HELP web_app_prom_ex_beam_stats_uptime_milliseconds_count The total number of wall clock milliseconds that have passed since the system started.
+# TYPE web_app_prom_ex_beam_stats_uptime_milliseconds_count gauge
+web_app_prom_ex_beam_stats_uptime_milliseconds_count 22745
+# HELP web_app_prom_ex_beam_stats_port_io_byte_count The total number of bytes sent and received through ports since the system started.
+# TYPE web_app_prom_ex_beam_stats_port_io_byte_count gauge
+web_app_prom_ex_beam_stats_port_io_byte_count{type="input"} 324167
+web_app_prom_ex_beam_stats_port_io_byte_count{type="output"} 765025
+# HELP web_app_prom_ex_beam_stats_gc_reclaimed_bytes The total number of bytes reclaimed since the system started.
+# TYPE web_app_prom_ex_beam_stats_gc_reclaimed_bytes gauge
+web_app_prom_ex_beam_stats_gc_reclaimed_bytes 211602568
+# HELP web_app_prom_ex_beam_stats_gc_count The total number of garbage collections since the system started.
+# TYPE web_app_prom_ex_beam_stats_gc_count gauge
+web_app_prom_ex_beam_stats_gc_count 10228
+# HELP web_app_prom_ex_beam_stats_reduction_count The total number of reductions since the system started.
+# TYPE web_app_prom_ex_beam_stats_reduction_count gauge
+web_app_prom_ex_beam_stats_reduction_count 75368589
+# HELP web_app_prom_ex_beam_stats_context_switch_count The total number of context switches since the system started.
+# TYPE web_app_prom_ex_beam_stats_context_switch_count gauge
+web_app_prom_ex_beam_stats_context_switch_count 112035
+# HELP web_app_prom_ex_beam_stats_run_queue_count The number of processes and ports that are ready to run and are in the run queue.
+# TYPE web_app_prom_ex_beam_stats_run_queue_count gauge
+web_app_prom_ex_beam_stats_run_queue_count{type="normal"} 1
+web_app_prom_ex_beam_stats_run_queue_count{type="dirty"} 0
+# HELP web_app_prom_ex_beam_stats_active_task_count The number of processes and ports that are ready to run, or are currently running.
+# TYPE web_app_prom_ex_beam_stats_active_task_count gauge
+web_app_prom_ex_beam_stats_active_task_count{type="dirty"} 0
+web_app_prom_ex_beam_stats_active_task_count{type="normal"} 2
+# HELP web_app_prom_ex_beam_memory_processes_total_bytes The total amount of memory currently allocated to Erlang processes.
+# TYPE web_app_prom_ex_beam_memory_processes_total_bytes gauge
+web_app_prom_ex_beam_memory_processes_total_bytes 11342296
+# HELP web_app_prom_ex_beam_memory_ets_total_bytes The total amount of memory currently allocated for ETS tables.
+# TYPE web_app_prom_ex_beam_memory_ets_total_bytes gauge
+web_app_prom_ex_beam_memory_ets_total_bytes 2479712
+# HELP web_app_prom_ex_beam_memory_code_total_bytes The total amount of memory currently allocated for Erlang code.
+# TYPE web_app_prom_ex_beam_memory_code_total_bytes gauge
+web_app_prom_ex_beam_memory_code_total_bytes 17715269
+# HELP web_app_prom_ex_beam_memory_binary_total_bytes The total amount of memory currently allocated for binaries.
+# TYPE web_app_prom_ex_beam_memory_binary_total_bytes gauge
+web_app_prom_ex_beam_memory_binary_total_bytes 2828016
+# HELP web_app_prom_ex_beam_memory_atom_total_bytes The total amount of memory currently allocated for atoms.
+# TYPE web_app_prom_ex_beam_memory_atom_total_bytes gauge
+web_app_prom_ex_beam_memory_atom_total_bytes 752561
+# HELP web_app_prom_ex_beam_memory_allocated_bytes The total amount of memory currently allocated.
+# TYPE web_app_prom_ex_beam_memory_allocated_bytes gauge
+web_app_prom_ex_beam_memory_allocated_bytes 55016136

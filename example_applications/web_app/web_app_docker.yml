@@ -1,4 +1,4 @@
-version: '3.3'
+version: "3.3"
 
 services:
   elixir_app_one:
@@ -13,9 +13,9 @@ services:
       mix prom_ex.dashboard.publish &&
       exec mix phx.server'
     ports:
-      - '4000:4000'
-      - '4021:4021'
-      - '4022:4022'
+      - "4000:4000"
+      - "4021:4021"
+      - "4022:4022"
     depends_on:
       - postgres
       - grafana
@@ -48,9 +48,9 @@ services:
       mix prom_ex.dashboard.publish &&
       exec mix phx.server'
     ports:
-      - '4100:4000'
-      - '4121:4021'
-      - '4122:4022'
+      - "4100:4000"
+      - "4121:4021"
+      - "4122:4022"
     depends_on:
       - postgres
       - grafana

@@ -23,6 +23,7 @@ defmodule WebAppWeb.Router do
   scope "/", WebAppWeb do
     pipe_through :api
 
+    resources "/events", EventController, only: [:index]
     get "/users", UserController, :index
     get "/users/:id", UserController, :show
     post "/users/:id/action/level-up", UserController, :level_up
