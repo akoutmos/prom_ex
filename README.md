@@ -89,12 +89,12 @@ PromEx provides the following utilities to you in order to achieve your observab
 
 | Plugin                           | Status      | Description                                            |
 | -------------------------------- | ----------- | ------------------------------------------------------ |
-| `PromEx.Plugins.Application`     | Beta        | Collect metrics on your application dependencies       |
-| `PromEx.Plugins.Beam`            | Beta        | Collect metrics regarding the BEAM virtual machine     |
-| `PromEx.Plugins.Phoenix`         | Beta        | Collect request metrics emitted by Phoenix             |
-| `PromEx.Plugins.Ecto`            | Beta        | Collect query metrics emitted by Ecto                  |
-| `PromEx.Plugins.Oban`            | Beta        | Collect queue processing metrics emitted by Oban       |
-| `PromEx.Plugins.PhoenixLiveView` | Beta        | Collect metrics emitted by Phoenix LiveView            |
+| `PromEx.Plugins.Application`     | Stable      | Collect metrics on your application dependencies       |
+| `PromEx.Plugins.Beam`            | Stable      | Collect metrics regarding the BEAM virtual machine     |
+| `PromEx.Plugins.Phoenix`         | Stable      | Collect request metrics emitted by Phoenix             |
+| `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                  |
+| `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban       |
+| `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView            |
 | `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
 | `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
 | `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
