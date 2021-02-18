@@ -50,8 +50,8 @@ defmodule WebApp.MixProject do
       {:faker, "~> 0.16"},
       {:oban, "~> 2.4.2"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
-      {:prom_ex, "~> 0.1.15-beta"}
-      # {:prom_ex, github: "akoutmos/prom_ex", branch: :master}
+      {:prom_ex, "~> 1.0.0"}
+      # {:prom_ex, github: "akoutmos/prom_ex", branch: "stable-release-prep"}
       # {:prom_ex, path: "../../"}
     ]
   end
