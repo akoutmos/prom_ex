@@ -112,7 +112,8 @@ to check out sample screenshots of each Plugin specific Grafana Dashbaord.
 
 The goal of PromEx is to have metrics set up be as simple and streamlined as possible. In that spirit, all
 that you need to do to start leveraging PromEx along with the built-in plugins is to run the following mix
-task:
+task (the `YOUR_PROMETHEUS_DATASOURCE_ID` value should align with what is configured in Grafana as the name of the
+Prometheus data source):
 
 ```
 $ mix prom_ex.gen.config --datasource YOUR_PROMETHEUS_DATASOURCE_ID
@@ -178,6 +179,22 @@ my_cool_app_application_dependency_info{modules="4",name="telemetry_poller",vers
 
 Be sure to check out the module docs for each plugin that you choose to use to ensure that you are familiar
 with all of the options that they provide.
+
+### Security Concerns
+
+By default, you can set up a Prometheus scrape target without providing any security authorization configuration. As a
+result, PromEx does not enforce any security precautions by default, and it is up to you to secure your `/metrics`
+endpoint to ensure that people are not seeing sensitive information (sort of like Phoenix LiveDashboard where you need
+to set up your own basic auth plug to guard access).
+
+There are a couple of solutions to this problem:
+
+1. If your application is behind a load balancer or an API gateway, you can block access for any external requests to
+   `/metrics` (or whatever route you chose to expose metrics over).
+
+2. If your application is public facing, you can leverage the [Unplug](https://hex.pm/packages/unplug) library that I
+   maintain in order to only execute the `PromEx.Plug` plug when the incoming request fulfills your configured
+   requirements (see the [PromEx.Plug HexDocs](https://hexdocs.pm/prom_ex/1.0.0/PromEx.Plug.html) for an example).
 
 ### Performance Concerns
 
