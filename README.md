@@ -14,11 +14,15 @@
   </a>
 
   <a href="https://github.com/akoutmos/prom_ex/actions">
-    <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
+    <img alt="GitHub Workflow Status (master)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
   </a>
 
   <a href="https://coveralls.io/github/akoutmos/prom_ex?branch=master">
-    <img alt="Coveralls github branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
+    <img alt="Coveralls master branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
+  </a>
+
+  <a href="https://elixir-lang.slack.com/archives/C01NZ0FBFSR">
+    <img alt="Elixir Slack Channel" src="https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack">
   </a>
 </p>
 
