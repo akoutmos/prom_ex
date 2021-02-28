@@ -66,12 +66,10 @@ defmodule PromEx do
     - [X] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
     - [X] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
-
-  Upcoming Elixir library metrics:
-    - [ ] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
-    - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
+    - [X] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
 
   Backlog Elixir library metrics:
+    - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
     - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
