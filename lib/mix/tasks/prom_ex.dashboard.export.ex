@@ -94,8 +94,6 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
       |> Macro.camelize()
 
     default_dashboard_assigns = [
-      otp_app: prom_ex_module.__otp_app__(),
-      uid: prom_ex_module.__grafana_dashboard_uid__(:prom_ex, cli_args.dashboard),
       title: "#{default_title} - PromEx #{default_dashboard_name} Dashboard"
     ]
 
@@ -104,7 +102,7 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
       |> DashboardRenderer.build(cli_args.dashboard)
       |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
       |> DashboardRenderer.merge_assigns(cli_args.assigns)
-      |> DashboardRenderer.render_dashboard()
+      |> DashboardRenderer.render_dashboard(prom_ex_module)
       |> DashboardRenderer.decode_dashboard()
       |> check_dashboard_render()
 

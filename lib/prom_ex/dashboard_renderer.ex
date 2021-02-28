@@ -9,8 +9,6 @@ defmodule PromEx.DashboardRenderer do
   @type t :: %__MODULE__{
           file_type: :eex | :json | nil,
           relative_path: String.t(),
-          full_path: String.t(),
-          otp_app: atom(),
           assigns: keyword() | nil,
           file_contents: String.t(),
           rendered_file: String.t() | nil,
@@ -79,16 +77,30 @@ defmodule PromEx.DashboardRenderer do
   Renders the dashboard. If it is an EEx file then the PromEx module assigns are passed. Else
   if it is a raw json file then it is passed through untouched.
   """
-  @spec render_dashboard(__MODULE__.t()) :: __MODULE__.t()
-  def render_dashboard(%__MODULE__{valid_file?: false} = dashboard_render) do
+  @spec render_dashboard(__MODULE__.t(), prom_ex_module :: module()) :: __MODULE__.t()
+  def render_dashboard(%__MODULE__{valid_file?: false} = dashboard_render, _) do
     dashboard_render
   end
 
-  def render_dashboard(%__MODULE__{file_type: :json} = dashboard_render) do
+  def render_dashboard(%__MODULE__{file_type: :json} = dashboard_render, _) do
     %{dashboard_render | rendered_file: dashboard_render.file_contents}
   end
 
-  def render_dashboard(%__MODULE__{file_type: :eex, assigns: assigns, file_contents: contents} = dashboard_render) do
+  def render_dashboard(%__MODULE__{assigns: assigns} = dashboard_render, prom_ex_module) do
+    configured_title = Keyword.fetch!(assigns, :title)
+
+    non_configurable_assigns = [
+      uid:
+        prom_ex_module.__grafana_dashboard_uid__(
+          dashboard_render.otp_app,
+          dashboard_render.relative_path,
+          configured_title
+        )
+    ]
+
+    %__MODULE__{file_type: :eex, assigns: assigns, file_contents: contents} =
+      merge_assigns(dashboard_render, non_configurable_assigns)
+
     case EEx.eval_string(contents, assigns: assigns) do
       nil ->
         %{

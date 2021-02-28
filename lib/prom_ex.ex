@@ -271,7 +271,7 @@ defmodule PromEx do
       end
 
       @doc false
-      def __grafana_dashboard_uid__(dashboard_otp_app, dashboard_path) do
+      def __grafana_dashboard_uid__(dashboard_otp_app, dashboard_path, dashboard_title) do
         otp_app_name =
           unquote(otp_app)
           |> Atom.to_string()
@@ -279,7 +279,7 @@ defmodule PromEx do
         module_name = Atom.to_string(__MODULE__)
         dashboard_otp_app_name = Atom.to_string(dashboard_otp_app)
 
-        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}"
+        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}:#{dashboard_title}"
 
         # Grafana limits us to 40 character UIDs...so taking the MD5 of
         # a complete unique identifier to use as the UID

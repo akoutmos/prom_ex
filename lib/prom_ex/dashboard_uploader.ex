@@ -95,7 +95,11 @@ defmodule PromEx.DashboardUploader do
     handle_dashboard_render({otp_app, dashboard_relative_path, []}, default_assigns, prom_ex_module)
   end
 
-  defp handle_dashboard_render({otp_app, dashboard_relative_path, dashboard_opts}, default_assigns, prom_ex_module) do
+  defp handle_dashboard_render(
+         {dashboard_otp_app, dashboard_relative_path, dashboard_opts},
+         default_assigns,
+         prom_ex_module
+       ) do
     user_provided_assigns = prom_ex_module.dashboard_assigns()
 
     default_title =
@@ -110,17 +114,16 @@ defmodule PromEx.DashboardUploader do
       |> Macro.camelize()
 
     default_dashboard_assigns = [
-      uid: prom_ex_module.__grafana_dashboard_uid__(otp_app, dashboard_relative_path),
       title: "#{default_title} - PromEx #{default_dashboard_name} Dashboard"
     ]
 
-    otp_app
+    dashboard_otp_app
     |> DashboardRenderer.build(dashboard_relative_path)
     |> DashboardRenderer.merge_assigns(default_assigns)
     |> DashboardRenderer.merge_assigns(user_provided_assigns)
     |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
     |> DashboardRenderer.merge_assigns(dashboard_opts)
-    |> DashboardRenderer.render_dashboard()
+    |> DashboardRenderer.render_dashboard(prom_ex_module)
     |> DashboardRenderer.decode_dashboard()
   end
 

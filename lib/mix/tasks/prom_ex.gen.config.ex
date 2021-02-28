@@ -181,7 +181,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           Plugins.Beam
           # {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
           # Plugins.Ecto,
-          # Plugins.Oban
+          # Plugins.Oban,
+          # Plugins.PhoenixLiveView
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromExPlugin
