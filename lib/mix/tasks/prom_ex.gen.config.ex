@@ -46,7 +46,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           required_args
 
         _ ->
-          raise "Missing required arguments. Run mix help prom_ex.create for usage instructions"
+          raise "Missing required arguments. Run mix help prom_ex.gen.config for usage instructions"
       end
 
     # Generate relevant path info
