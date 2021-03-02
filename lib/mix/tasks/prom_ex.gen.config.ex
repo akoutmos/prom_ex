@@ -124,11 +124,11 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
          configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
          more details regarding configuring PromEx:
          ```
-           config :<%= @otp_app %>, <%= @module_name %>.PromEx,
-             manual_metrics_start_delay: :no_delay,
-             drop_metrics_groups: [],
-             grafana: :disabled,
-             metrics_server: :disabled
+         config :<%= @otp_app %>, <%= @module_name %>.PromEx,
+           manual_metrics_start_delay: :no_delay,
+           drop_metrics_groups: [],
+           grafana: :disabled,
+           metrics_server: :disabled
          ```
 
       2. Add this module to your application supervision tree. It should be one of the first
