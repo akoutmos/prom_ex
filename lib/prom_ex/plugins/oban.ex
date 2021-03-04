@@ -514,6 +514,8 @@ if Code.ensure_loaded?(Oban) do
       |> String.trim_leading("Elixir.")
     end
 
+    defp normalize_module_name({name, _options}), do: normalize_module_name(name)
+
     defp normalize_module_name(name), do: name
   end
 else
