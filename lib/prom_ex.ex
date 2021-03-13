@@ -506,9 +506,7 @@ defmodule PromEx do
 
       {
         :telemetry_poller,
-        name: Module.concat([prom_ex_module, Poller, uniqe_poll_value]),
-        measurements: measurements,
-        period: poll_rate
+        name: Module.concat([prom_ex_module, Poller, uniqe_poll_value]), measurements: measurements, period: poll_rate
       }
     end)
   end
