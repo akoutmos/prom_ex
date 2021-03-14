@@ -139,6 +139,12 @@ relevant event/polling/manual metrics. Be sure to check out the 1st party PromEx
 plugins are written and how to collect the different types of datapoints (also checkout the [Writing PromEx Plugins
 ](https://hexdocs.pm/prom_ex/writing-promex-plugins.html) guide).
 
+As a side note, PromEx will attach its own Telemetry handlers to events inorder to capture Prometheus compatible
+metrics and so any datapoints that are added to your `telemetry.ex` file (if you are using LiveDashboard) will
+not show up in PromEx. One of the benefits of the Telemetry library is that you can have an arbitrary number of
+event handlers attached to Telemetry events and so LiveDashboard and PromEx can operate in the same application
+without any issues.
+
 ## Design Philosophy
 
 With the widespread adoption of the Telemetry library and the other libraries in the [BEAM Telemetry GitHub
