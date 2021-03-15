@@ -108,7 +108,7 @@ defmodule PromEx do
   @type measurements_mfa() :: {module(), atom(), list()}
 
   @type plugin_definition() :: module() | {module(), keyword()}
-  @type dashboard_definition() :: {atom(), String.t()}
+  @type dashboard_definition() :: {atom(), String.t()} | {atom(), String.t(), keyword(String.t())}
 
   @doc """
   A simple pass-through to fetch all of the currently configured metrics. This is
