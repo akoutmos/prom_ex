@@ -82,6 +82,8 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
   end
 
   defp render_dashboard(prom_ex_module, cli_args) do
+    user_provided_assigns = prom_ex_module.dashboard_assigns()
+
     default_title =
       prom_ex_module.__otp_app__()
       |> Atom.to_string()
@@ -103,6 +105,7 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
       :prom_ex
       |> DashboardRenderer.build(cli_args.dashboard)
       |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
+      |> DashboardRenderer.merge_assigns(user_provided_assigns)
       |> DashboardRenderer.merge_assigns(cli_args.assigns)
       |> DashboardRenderer.render_dashboard()
       |> DashboardRenderer.decode_dashboard()
