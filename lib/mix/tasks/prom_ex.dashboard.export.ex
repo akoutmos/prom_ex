@@ -2,6 +2,28 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
   @moduledoc """
   This will render a PromEx dashboard either to STDOUT or to a file depending on
   the CLI arguments that are provided.
+
+  The following CLI flags are supported:
+  ```md
+  -d, --dashboard  The name of the dashboard that you would like to export from PromEx.
+                   For example, if you would like to export the Ecto dashboard, provide
+                   the value `ecto.json`.
+
+  -m, --module     The PromEx module which will be used to render the dashboards.
+                   This is needed to fetch any relevant assigns from the
+                   `c:PromEx.dashboard_assigns/0` callback
+
+  -s, --std_out    A boolean flag denoting that the rendered dashboard should be output
+                   to STDOUT.
+
+  -f, --file_path  If you would like the write the generated JSON dashboard definition
+                   to a file, you can provide a relative file path in the project's
+                   `priv` directory.
+
+  -a, --assign     Any additional assigns you would like to pass to the dashboard for
+                   rendering. You are able to pass multiple assigns by passing multiple
+                   --assign arguments. For example: `--assign some=thing --assign another=thing`.
+  ```
   """
 
   @shortdoc "Export a rendered dashboard to STDOUT or a file"
@@ -82,6 +104,8 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
   end
 
   defp render_dashboard(prom_ex_module, cli_args) do
+    user_provided_assigns = prom_ex_module.dashboard_assigns()
+
     default_title =
       prom_ex_module.__otp_app__()
       |> Atom.to_string()
@@ -95,7 +119,6 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
 
     default_dashboard_assigns = [
       otp_app: prom_ex_module.__otp_app__(),
-      uid: prom_ex_module.__grafana_dashboard_uid__(:prom_ex, cli_args.dashboard),
       title: "#{default_title} - PromEx #{default_dashboard_name} Dashboard"
     ]
 
@@ -103,8 +126,9 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
       :prom_ex
       |> DashboardRenderer.build(cli_args.dashboard)
       |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
+      |> DashboardRenderer.merge_assigns(user_provided_assigns)
       |> DashboardRenderer.merge_assigns(cli_args.assigns)
-      |> DashboardRenderer.render_dashboard()
+      |> DashboardRenderer.render_dashboard(prom_ex_module)
       |> DashboardRenderer.decode_dashboard()
       |> check_dashboard_render()
 

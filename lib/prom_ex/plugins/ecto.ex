@@ -6,7 +6,8 @@ if Code.ensure_loaded?(Ecto) do
     variable dropdowns for the repo value will be broken.
 
     This plugin supports the following options:
-    - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (e.g. :my_cool_app).
+    - `otp_app`: This is an OPTIONAL option and is the name of you application in snake case (e.g. :my_cool_app). By
+      default the otp_app set for the prom_ex module that this plugin is defined in is used.
 
     - `repos`: This is an OPTIONAL option and is a list with the full module name of your Ecto Repos (e.g [MyApp.Repo]).
        If you do not provide this value, PromEx will attempt to resolve your Repo modules via the
