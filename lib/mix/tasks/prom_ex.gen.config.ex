@@ -181,7 +181,9 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           Plugins.Beam
           # {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
           # Plugins.Ecto,
-          # Plugins.Oban
+          # Plugins.Oban,
+          # Plugins.PhoenixLiveView,
+          # Plugins.Broadway
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromExPlugin
@@ -203,7 +205,9 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           {:prom_ex, "beam.json"}
           # {:prom_ex, "phoenix.json"},
           # {:prom_ex, "ecto.json"},
-          # {:prom_ex, "oban.json"}
+          # {:prom_ex, "oban.json"},
+          # {:prom_ex, "phoenix_live_view.json"},
+          # {:prom_ex, "broadway.json"}
 
           # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
           # {:<%= @otp_app %>, "/grafana_dashboards/user_metrics.json"}

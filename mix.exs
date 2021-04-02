@@ -58,7 +58,7 @@ defmodule PromEx.MixProject do
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
-      {:broadway, ">= 0.6.0", optional: true},
+      {:broadway, github: "dashbitco/broadway", branch: :master, optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},

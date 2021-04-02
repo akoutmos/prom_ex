@@ -1,6 +1,6 @@
 %{
   "blankable": {:hex, :blankable, "1.0.0", "89ab564a63c55af117e115144e3b3b57eb53ad43ba0f15553357eb283e0ed425", [:mix], [], "hexpm", "7cf11aac0e44f4eedbee0c15c1d37d94c090cb72a8d9fddf9f7aec30f9278899"},
-  "broadway": {:hex, :broadway, "0.6.2", "ef8e0d257420c72f0e600958cf95556835d9921ad14be333493083226458791a", [:mix], [{:gen_stage, "~> 1.0", [hex: :gen_stage, repo: "hexpm", optional: false]}, {:telemetry, "~> 0.4.0", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm", "f4f93704304a736c984cd6ed884f697415f68eb50906f4dc5d641926366ad8fa"},
+  "broadway": {:git, "https://github.com/dashbitco/broadway.git", "5581bfda923d45ffffc6a4084266a1bf46649816", [branch: :master]},
   "bunt": {:hex, :bunt, "0.2.0", "951c6e801e8b1d2cbe58ebbd3e616a869061ddadcc4863d0a2182541acae9a38", [:mix], [], "hexpm", "7af5c7e09fe1d40f76c8e4f9dd2be7cebd83909f31fee7cd0e9eadc567da8353"},
   "bypass": {:hex, :bypass, "2.1.0", "909782781bf8e20ee86a9cabde36b259d44af8b9f38756173e8f5e2e1fabb9b1", [:mix], [{:plug, "~> 1.7", [hex: :plug, repo: "hexpm", optional: false]}, {:plug_cowboy, "~> 2.0", [hex: :plug_cowboy, repo: "hexpm", optional: false]}, {:ranch, "~> 1.3", [hex: :ranch, repo: "hexpm", optional: false]}], "hexpm", "d9b5df8fa5b7a6efa08384e9bbecfe4ce61c77d28a4282f79e02f1ef78d96b80"},
   "castore": {:hex, :castore, "0.1.8", "1b61eaba71bb755b756ac42d4741f4122f8beddb92456a84126d6177ec0af1fc", [:mix], [], "hexpm", "23ab8305baadb057bc689adc0088309f808cb2247dc9a48b87849bb1d242bb6c"},

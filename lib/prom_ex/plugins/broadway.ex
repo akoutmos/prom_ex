@@ -7,6 +7,7 @@ if Code.ensure_loaded?(Broadway) do
     - `placeholder`: This is a placeholder
 
     This plugin exposes the following metric groups:
+    - `:broadway_init_event_metrics`
     - `:broadway_message_event_metrics`
     - `:broadway_batch_event_metrics`
 
@@ -38,6 +39,7 @@ if Code.ensure_loaded?(Broadway) do
 
     require Logger
 
+    @init_topology_event [:broadway, :topology, :init]
     @message_stop_event [:broadway, :processor, :message, :stop]
     @message_exception_event [:broadway, :processor, :message, :exception]
     @batch_stop_event [:broadway, :consumer, :stop]
@@ -49,9 +51,30 @@ if Code.ensure_loaded?(Broadway) do
 
       # Event metrics definitions
       [
+        topology_init_events(metric_prefix),
         handle_message_events(metric_prefix),
         handle_batch_events(metric_prefix)
       ]
+    end
+
+    defp topology_init_events(metric_prefix) do
+      Event.build(
+        :broadway_init_event_metrics,
+        [
+          last_value(
+            metric_prefix ++ [:init, :status, :info],
+            event_name: @init_topology_event,
+            measurement: fn _measurements -> 1 end,
+            description: "The topology configuration data that was provided to Broadway.",
+            tags: [:name],
+            tag_values: fn %{config: config_opts} ->
+              full_configuration = NimbleOptions.validate!(config_opts, Broadway.Options.definition()) |> IO.inspect()
+
+              []
+            end
+          )
+        ]
+      )
     end
 
     defp handle_message_events(metric_prefix) do
