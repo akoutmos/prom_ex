@@ -1,4 +1,4 @@
-example_applications/* linguist-documentation
+example_applications/** linguist-documentation
 
-test/support/events/* linguist-generated=true
-test/support/metrics/* linguist-generated=true
+test/support/events/** linguist-generated=true
+test/support/metrics/** linguist-generated=true
