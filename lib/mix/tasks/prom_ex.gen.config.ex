@@ -46,7 +46,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           required_args
 
         _ ->
-          raise "Missing required arguments. Run mix help prom_ex.create for usage instructions"
+          raise "Missing required arguments. Run mix help prom_ex.gen.config for usage instructions"
       end
 
     # Generate relevant path info
@@ -124,11 +124,11 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
          configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
          more details regarding configuring PromEx:
          ```
-           config :<%= @otp_app %>, <%= @module_name %>.PromEx,
-             manual_metrics_start_delay: :no_delay,
-             drop_metrics_groups: [],
-             grafana: :disabled,
-             metrics_server: :disabled
+         config :<%= @otp_app %>, <%= @module_name %>.PromEx,
+           manual_metrics_start_delay: :no_delay,
+           drop_metrics_groups: [],
+           grafana: :disabled,
+           metrics_server: :disabled
          ```
 
       2. Add this module to your application supervision tree. It should be one of the first
@@ -182,7 +182,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           # {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
           # Plugins.Ecto,
           # Plugins.Oban,
-          # PromEx.Plugins.PhoenixLiveView
+          # Plugins.PhoenixLiveView
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromExPlugin

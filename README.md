@@ -14,11 +14,15 @@
   </a>
 
   <a href="https://github.com/akoutmos/prom_ex/actions">
-    <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
+    <img alt="GitHub Workflow Status (master)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
   </a>
 
   <a href="https://coveralls.io/github/akoutmos/prom_ex?branch=master">
-    <img alt="Coveralls github branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
+    <img alt="Coveralls master branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
+  </a>
+
+  <a href="https://elixir-lang.slack.com/archives/C01NZ0FBFSR">
+    <img alt="Elixir Slack Channel" src="https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack">
   </a>
 </p>
 
@@ -28,6 +32,8 @@
 # Contents
 
 - [Installation](#installation)
+- [Setting Up PromEx](#setting-up-promex)
+- [Adding Your Metrics](#adding-your-metrics)
 - [Design Philosophy](#design-philosophy)
 - [Available Plugins](#available-plugins)
 - [Grafana Dashboards](#grafana-dashboards)
@@ -44,72 +50,14 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 1.0.0"}
+    {:prom_ex, "~> 1.0.1"}
   ]
 end
 ```
 
 Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/prom_ex).
 
-### Design Philosophy
-
-With the widespread adoption of the Telemetry library and the other libraries in the [BEAM Telemetry GitHub
-Org](https://github.com/beam-telemetry), we have reached a point in the Elixir ecosystem where we have a consistent
-means of surfacing application and library metrics. This allows us to have a great level of insight into our
-applications and dependencies given that they all leverage the same fundamental tooling. The goal of this project is to
-provide a "Plug-in" style library where you can easily add new plug-ins to surface metrics so that Prometheus can scrape
-them. Ideally, this project acts as the "Metrics" pillar in your application (in reference to [The Three Pillars of
-Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/ch04.html)).
-
-To this end, while PromEx does provide a certain level of configurability (like the polling rate, starting behaviour for
-manual metrics and all the options that the plugins receive), the goal is not to make an infinitely configurable tool.
-For example, you are not able to edit the names/descriptions of Prometheus metrics via plugin options or even the tags
-that are attached to the data points.
-
-Instead, if there things that you don't agree with or that are incompatible with your usage of a certain 1st party
-plugin and want to edit how the PromEx plugins react to Telemetry events, it is recommended that you fork the plugin in
-question and edit it to your specific use case. If you think that the community can benefit for your changes, do not
-hesitate to make a PR and I'll be sure to review it. This is not to say that event configurability will never come to
-PromEx, but I want to make sure that the public facing API is clean and straightforward and not bogged down with too
-much configuration. In addition, the Grafana dashboards would then have to have a lot of templatized logic to
-accommodate all this configurability (something which has been a pain-point in the Helm community for example).
-
-PromEx provides the following utilities to you in order to achieve your observability goals:
-
-- The `PromEx.Plug` module that can be used in your Phoenix or Plug application to expose the collected metrics
-- A standalone HTTP metrics server if Phoenix is not a dependency in your project
-- A Mix task to upload the provided complimentary Grafana dashboards
-- A Mix task to create a PromEx metrics capture module
-- A behaviour that defines the contract for PromEx plug-ins
-- A behaviour that defines the functionality of a PromEx metrics capture module
-- Grafana dashboards tailored to each specific Plugin so that metrics work out of the box with dashboards
-- Grafana API support to create/upload to dashboard folders and to create graph annotations to mark events in Grafana
-- EEx Grafana dashboard templates so you can dynamically tweak dashboards prior to uploading
-
-### Available Plugins
-
-| Plugin                           | Status      | Description                                            |
-| -------------------------------- | ----------- | ------------------------------------------------------ |
-| `PromEx.Plugins.Application`     | Stable      | Collect metrics on your application dependencies       |
-| `PromEx.Plugins.Beam`            | Stable      | Collect metrics regarding the BEAM virtual machine     |
-| `PromEx.Plugins.Phoenix`         | Stable      | Collect request metrics emitted by Phoenix             |
-| `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                  |
-| `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban       |
-| `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView            |
-| `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
-| `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
-| `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
-| `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix         |
-| More to come...                  |             |                                                        |
-
-### Grafana Dashboards
-
-<img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx Dashboards">
-
-Each PromEx plugin comes with a custom tailored Grafana Dashboard. [Click here](https://hexdocs.pm/prom_ex/all.html)
-to check out sample screenshots of each Plugin specific Grafana Dashbaord.
-
-### Setting Up Metrics
+## Setting Up PromEx
 
 The goal of PromEx is to have metrics set up be as simple and streamlined as possible. In that spirit, all
 that you need to do to start leveraging PromEx along with the built-in plugins is to run the following mix
@@ -181,7 +129,83 @@ my_cool_app_application_dependency_info{modules="4",name="telemetry_poller",vers
 Be sure to check out the module docs for each plugin that you choose to use to ensure that you are familiar
 with all of the options that they provide.
 
-### Security Concerns
+## Adding Your Metrics
+
+While PromEx provides plugins for a lot of the popular community libraries, you can also leverage it to collect
+metrics specific to your application. Similarly to how you use the PromEx Ecto plugin to collect metrics
+relevant to Ecto, you can write your own plugin to collect metrics specific to your application. In fact, the same
+tools that PromEx uses for its plugins are what you should use to create your own application specific plugins.
+
+To write your own PromEx plugin, create a module that implements the `PromEx.Plugin` behaviour and collect the
+relevant event/polling/manual metrics. Be sure to check out the 1st party PromEx plugins as a reference for how
+plugins are written and how to collect the different types of datapoints (also checkout the [Writing PromEx Plugins
+](https://hexdocs.pm/prom_ex/writing-promex-plugins.html) guide).
+
+As a side note, PromEx will attach its own Telemetry handlers to events inorder to capture Prometheus compatible
+metrics and so any datapoints that are added to your `telemetry.ex` file (if you are using LiveDashboard) will
+not show up in PromEx. One of the benefits of the Telemetry library is that you can have an arbitrary number of
+event handlers attached to Telemetry events and so LiveDashboard and PromEx can operate in the same application
+without any issues.
+
+## Design Philosophy
+
+With the widespread adoption of the Telemetry library and the other libraries in the [BEAM Telemetry GitHub
+Org](https://github.com/beam-telemetry), we have reached a point in the Elixir ecosystem where we have a consistent
+means of surfacing application and library metrics. This allows us to have a great level of insight into our
+applications and dependencies given that they all leverage the same fundamental tooling. The goal of this project is to
+provide a "Plug-in" style library where you can easily add new plug-ins to surface metrics so that Prometheus can scrape
+them. Ideally, this project acts as the "Metrics" pillar in your application (in reference to [The Three Pillars of
+Observability](https://www.oreilly.com/library/view/distributed-systems-observability/9781492033431/ch04.html)).
+
+To this end, while PromEx does provide a certain level of configurability (like the polling rate, starting behaviour for
+manual metrics and all the options that the plugins receive), the goal is not to make an infinitely configurable tool.
+For example, you are not able to edit the names/descriptions of Prometheus metrics via plugin options or even the tags
+that are attached to the data points.
+
+Instead, if there things that you don't agree with or that are incompatible with your usage of a certain 1st party
+plugin and want to edit how the PromEx plugins react to Telemetry events, it is recommended that you fork the plugin in
+question and edit it to your specific use case. If you think that the community can benefit for your changes, do not
+hesitate to make a PR and I'll be sure to review it. This is not to say that event configurability will never come to
+PromEx, but I want to make sure that the public facing API is clean and straightforward and not bogged down with too
+much configuration. In addition, the Grafana dashboards would then have to have a lot of templatized logic to
+accommodate all this configurability (something which has been a pain-point in the Helm community for example).
+
+PromEx provides the following utilities to you in order to achieve your observability goals:
+
+- The `PromEx.Plug` module that can be used in your Phoenix or Plug application to expose the collected metrics
+- A standalone HTTP metrics server if Phoenix is not a dependency in your project
+- A Mix task to upload the provided complimentary Grafana dashboards
+- A Mix task to create a PromEx metrics capture module
+- A behaviour that defines the contract for PromEx plug-ins
+- A behaviour that defines the functionality of a PromEx metrics capture module
+- Grafana dashboards tailored to each specific Plugin so that metrics work out of the box with dashboards
+- Grafana API support to create/upload to dashboard folders and to create graph annotations to mark events in Grafana
+- EEx Grafana dashboard templates so you can dynamically tweak dashboards prior to uploading
+
+## Available Plugins
+
+| Plugin                           | Status      | Description                                            |
+| -------------------------------- | ----------- | ------------------------------------------------------ |
+| `PromEx.Plugins.Application`     | Stable      | Collect metrics on your application dependencies       |
+| `PromEx.Plugins.Beam`            | Stable      | Collect metrics regarding the BEAM virtual machine     |
+| `PromEx.Plugins.Phoenix`         | Stable      | Collect request metrics emitted by Phoenix             |
+| `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                  |
+| `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban       |
+| `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView            |
+| `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
+| `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
+| `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
+| `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix         |
+| More to come...                  |             |                                                        |
+
+## Grafana Dashboards
+
+<img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx Dashboards">
+
+Each PromEx plugin comes with a custom tailored Grafana Dashboard. [Click here](https://hexdocs.pm/prom_ex/all.html)
+to check out sample screenshots of each Plugin specific Grafana Dashbaord.
+
+## Security Concerns
 
 By default, you can set up a Prometheus scrape target without providing any security authorization configuration. As a
 result, PromEx does not enforce any security precautions by default, and it is up to you to secure your `/metrics`
@@ -197,7 +221,7 @@ There are a couple of solutions to this problem:
    maintain in order to only execute the `PromEx.Plug` plug when the incoming request fulfills your configured
    requirements (see the [PromEx.Plug HexDocs](https://hexdocs.pm/prom_ex/1.0.0/PromEx.Plug.html) for an example).
 
-### Performance Concerns
+## Performance Concerns
 
 You may think to yourself that with all these metrics being collected and scraped, that the performance of your
 application may be negatively impacted. Luckily PromEx is built upon the solid foundation established by the `Telemetry`,
@@ -206,7 +230,7 @@ and performant as possible. From some basic stress tests that I have run, I have
 performance reduction (thank you OTP and particularly ETS ;)). Below are the results from a recent stress test using
 ApacheBench:
 
-#### With PromEx metrics collection
+### With PromEx metrics collection
 
 ```terminal
 $ ./benchmarks/ab-graph.sh -u http://localhost:4000 -n 1000 -c 50 -k
@@ -248,7 +272,7 @@ Percentage of the requests served within a certain time (ms)
  100%    264 (longest request)
 ```
 
-#### Without PromEx metrics collection
+### Without PromEx metrics collection
 
 ```terminal
 $ ./benchmarks/ab-graph.sh -u http://localhost:4000 -n 1000 -c 50 -k
@@ -290,7 +314,7 @@ Percentage of the requests served within a certain time (ms)
  100%    267 (longest request)
 ```
 
-#### Plotting the stress test results
+### Plotting the stress test results
 
 In the spirit of visualizing performance characteristics, the percentile data from the ApacheBench stress tests has been
 overlaid and plotted using Gnuplot (thanks to
@@ -301,7 +325,7 @@ instrumented application.
 
 <img align="center" width="100%" src="guides/images/apache_bench_stress_test.png" alt="PromEx Stress Test">
 
-### Attribution
+## Attribution
 
 It wouldn't be right to not include somewhere in this project a "thank you" to the various projects and people that
 helped make this possible:

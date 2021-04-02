@@ -83,6 +83,12 @@ defmodule PromExTest do
       assert is_pid(poller_5000)
       refute is_pid(dashboard_uploader_pid)
 
+      # Ensure period is set correctly
+      poller_500_state = :sys.get_state(poller_500)
+      assert poller_500_state[:period] == 500
+      poller_5000_state = :sys.get_state(poller_5000)
+      assert poller_5000_state[:period] == 5000
+
       # Validate that the running processes have the correct names
       assert DefaultPromExSetUp.__manual_metrics_name__() == DefaultPromExSetUp.ManualMetricsManager
       assert DefaultPromExSetUp.__metrics_collector_name__() == DefaultPromExSetUp.Metrics

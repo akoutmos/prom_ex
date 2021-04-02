@@ -66,12 +66,10 @@ defmodule PromEx do
     - [X] Ecto (https://hexdocs.pm/ecto/Ecto.Repo.html#module-telemetry-events)
     - [X] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
-
-  Upcoming Elixir library metrics:
-    - [ ] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
-    - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
+    - [X] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
 
   Backlog Elixir library metrics:
+    - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
     - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
@@ -110,7 +108,7 @@ defmodule PromEx do
   @type measurements_mfa() :: {module(), atom(), list()}
 
   @type plugin_definition() :: module() | {module(), keyword()}
-  @type dashboard_definition() :: {atom(), String.t()}
+  @type dashboard_definition() :: {atom(), String.t()} | {atom(), String.t(), keyword(String.t())}
 
   @doc """
   A simple pass-through to fetch all of the currently configured metrics. This is
@@ -271,7 +269,7 @@ defmodule PromEx do
       end
 
       @doc false
-      def __grafana_dashboard_uid__(dashboard_otp_app, dashboard_path) do
+      def __grafana_dashboard_uid__(dashboard_otp_app, dashboard_path, dashboard_title) do
         otp_app_name =
           unquote(otp_app)
           |> Atom.to_string()
@@ -279,7 +277,7 @@ defmodule PromEx do
         module_name = Atom.to_string(__MODULE__)
         dashboard_otp_app_name = Atom.to_string(dashboard_otp_app)
 
-        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}"
+        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}:#{dashboard_title}"
 
         # Grafana limits us to 40 character UIDs...so taking the MD5 of
         # a complete unique identifier to use as the UID
@@ -508,9 +506,7 @@ defmodule PromEx do
 
       {
         :telemetry_poller,
-        name: Module.concat([prom_ex_module, Poller, uniqe_poll_value]),
-        measurements: measurements,
-        poll_rate: poll_rate
+        name: Module.concat([prom_ex_module, Poller, uniqe_poll_value]), measurements: measurements, period: poll_rate
       }
     end)
   end
