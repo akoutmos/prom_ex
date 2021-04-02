@@ -18,7 +18,7 @@ defmodule PromEx.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test,
-        "coveralls.travis": :test
+        "coveralls.github": :test
       ],
       dialyzer: [
         plt_add_apps: [:ecto, :mix, :oban, :phoenix, :plug, :telemetry_metrics],
