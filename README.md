@@ -37,7 +37,6 @@
 - [Design Philosophy](#design-philosophy)
 - [Available Plugins](#available-plugins)
 - [Grafana Dashboards](#grafana-dashboards)
-- [Setting Up Metrics](#setting-up-metrics)
 - [Security Concerns](#security-concerns)
 - [Performance Concerns](#performance-concerns)
 - [Attribution](#attribution)
