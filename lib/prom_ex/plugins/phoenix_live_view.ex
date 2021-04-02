@@ -5,7 +5,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     mount, handle_event, and handle_params callbacks for live views and live components.
 
     This plugin supports the following options:
-
+    - This plugin does not currently support any additional options.
 
     This plugin exposes the following metric groups:
     - `:phoenix_live_view_event_metrics`
