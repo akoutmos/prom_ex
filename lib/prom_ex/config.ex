@@ -29,9 +29,9 @@ defmodule PromEx.Config do
   config :web_app, WebApp.PromEx,
     grafana: [
       host: "http://localhost:3000",
-      auth_username: "<YOUR_AUTH_USERNAME>",
-      auth_password: "<YOUR_AUTH_PASSWORD>"
-      auth_token: "<YOUR_AUTH_TOKEN_HERE>",
+      username: "<YOUR_USERNAME>",  # Or authenticate via Basic Auth
+      password: "<YOUR_PASSWORD>"
+      auth_token: "<YOUR_AUTH_TOKEN_HERE>", # Or authenticate via API Token
       upload_dashboards_on_start: true # This is an optional setting and will default to `true`
     ]
     ```
@@ -86,10 +86,10 @@ defmodule PromEx.Config do
       Grafana this valueshould be in the format `protocol://host:port` like `http://localhost:3000`
       for example.
 
-    * `:auth_username` - The auth username that was created in Grafana so that PromEx can upload dashboards
+    * `:username` - The username that was created in Grafana so that PromEx can upload dashboards
       via the API.
 
-    * `:auth_password` - The auth password that was created in Grafana so that PromEx can upload dashboards
+    * `:password` - The password that was created in Grafana so that PromEx can upload dashboards
       via the API.
 
     * `:auth_token` - The auth token that was created in Grafana so that PromEx can upload dashboards
@@ -200,8 +200,8 @@ defmodule PromEx.Config do
   defp generate_grafana_config(grafana_opts) do
     %{
       host: grafana_opts |> get_grafana_config(:host) |> normalize_host(),
-      auth_username: Keyword.get(grafana_opts, :auth_username),
-      auth_password: Keyword.get(grafana_opts, :auth_password),
+      username: Keyword.get(grafana_opts, :username),
+      password: Keyword.get(grafana_opts, :password),
       auth_token: Keyword.get(grafana_opts, :auth_token),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
       folder_name: Keyword.get(grafana_opts, :folder_name, :default),

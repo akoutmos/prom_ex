@@ -16,7 +16,7 @@ defmodule PromEx.GrafanaClient.Connection do
   Build a connection struct for connecting to Grafana.
   """
   @spec build(finch_process :: module(), grafana_config :: map()) :: __MODULE__.t()
-  def build(finch_process, %{host: host, auth_username: username, auth_password: password}) do
+  def build(finch_process, %{host: host, username: username, password: password, auth_token: nil}) do
     %__MODULE__{
       finch_process: finch_process,
       base_url: normalize_host(host),
