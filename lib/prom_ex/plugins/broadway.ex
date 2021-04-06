@@ -46,6 +46,9 @@ if Code.ensure_loaded?(Broadway) do
     @message_exception_event [:broadway, :processor, :message, :exception]
     @batch_stop_event [:broadway, :consumer, :stop]
 
+    @init_topology_processors_proxy_event [:prom_ex, :broadway, :proxy, :processor, :init]
+    @init_topology_batchers_proxy_event [:prom_ex, :broadway, :proxy, :batcher, :init]
+
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
@@ -59,6 +62,36 @@ if Code.ensure_loaded?(Broadway) do
       ]
     end
 
+    """
+    [
+      hibernate_after: 15000,
+      context: :context_not_set,
+      resubscribe_interval: 100,
+      max_seconds: 5,
+      max_restarts: 3,
+      shutdown: 30000,
+      name: WebApp.TempProcessor,
+      producer: [
+        hibernate_after: 15000,
+        concurrency: 1,
+        module: {WebApp.CityProducer, []},
+        transformer: {WebApp.TempProcessor, :transform, []},
+        rate_limiting: [allowed_messages: 60, interval: 30000]
+      ],
+      processors: [
+        default: [hibernate_after: 15000, max_demand: 10, concurrency: 5]
+      ],
+      batchers: [
+        batch_temp: [
+          hibernate_after: 15000,
+          concurrency: 2,
+          batch_size: 15,
+          batch_timeout: 15000
+        ]
+      ]
+    ]
+    """
+
     defp topology_init_events(metric_prefix) do
       Event.build(
         :broadway_init_event_metrics,
@@ -69,31 +102,61 @@ if Code.ensure_loaded?(Broadway) do
             measurement: fn _measurements -> 1 end,
             description: "The topology configuration data that was provided to Broadway.",
             tags: [:name],
-            tag_values: fn %{config: config_opts} ->
-              full_configuration = NimbleOptions.validate!(config_opts, Broadway.Options.definition()) |> IO.inspect()
-
-              %{}
-            end
+            tag_values: &extract_init_tag_values/1
+          ),
+          last_value(
+            metric_prefix ++ [:init, :hibernate_after, :default, :milliseconds],
+            event_name: @init_topology_event,
+            description: "The Broadway supervisor's hibernate after default value.",
+            measurement: extract_default_config_measurement(:hibernate_after),
+            tags: [:name],
+            tag_values: &extract_init_tag_values/1
+          ),
+          last_value(
+            metric_prefix ++ [:init, :resubscribe_interval, :default, :milliseconds],
+            event_name: @init_topology_event,
+            description: "The Broadway supervisor's resubscribe interval default value.",
+            measurement: extract_default_config_measurement(:resubscribe_interval),
+            tags: [:name],
+            tag_values: &extract_init_tag_values/1
+          ),
+          last_value(
+            metric_prefix ++ [:init, :max, :duration, :default, :milliseconds],
+            event_name: @init_topology_event,
+            description: "The Broadway supervisor's max seconds default value (in milliseconds).",
+            measurement: extract_default_config_measurement(:max_seconds),
+            tags: [:name],
+            tag_values: &extract_init_tag_values/1,
+            unit: {:second, :millisecond}
+          ),
+          last_value(
+            metric_prefix ++ [:init, :max_restarts, :default, :value],
+            event_name: @init_topology_event,
+            description: "The Broadway supervisor's max restarts default value.",
+            measurement: extract_default_config_measurement(:max_restarts),
+            tags: [:name],
+            tag_values: &extract_init_tag_values/1
+          ),
+          last_value(
+            metric_prefix ++ [:init, :shutdown, :default, :milliseconds],
+            event_name: @init_topology_event,
+            description: "The Broadway supervisor's shutdown default value.",
+            measurement: extract_default_config_measurement(:shutdown),
+            tags: [:name],
+            tag_values: &extract_init_tag_values/1
           )
         ]
       )
     end
 
-    """
-    %{
-      message: %Broadway.Message{
-        acknowledger: {WebApp.TempProcessor, :ack_id, :ack_data},
-        batch_key: :default,
-        batch_mode: :bulk,
-        batcher: :default,
-        data: :ok,
-        metadata: %{},
-        status: :ok
-      },
-      name: WebApp.TempProcessor.Broadway.Processor_default_4,
-      processor_key: :default
-    }
-    """
+    defp extract_default_config_measurement(field) do
+      fn _measurements, %{config: config} ->
+        config
+        |> NimbleOptions.validate!(Broadway.Options.definition())
+        |> Map.new()
+        |> Map.get(field)
+      end
+    end
 
     defp handle_message_events(metric_prefix) do
       Event.build(
@@ -136,7 +199,6 @@ if Code.ensure_loaded?(Broadway) do
       Event.build(
         :broadway_batch_event_metrics,
         [
-          # TODO: Add batch sizes for failed and success
           distribution(
             metric_prefix ++ [:process, :batch, :duration, :milliseconds],
             event_name: @batch_stop_event,
@@ -192,6 +254,17 @@ if Code.ensure_loaded?(Broadway) do
           )
         ]
       )
+    end
+
+    defp extract_init_tag_values(metadata) do
+      full_configuration =
+        metadata.config
+        |> NimbleOptions.validate!(Broadway.Options.definition())
+        |> Map.new()
+
+      %{
+        name: normalize_module_name(full_configuration.name)
+      }
     end
 
     defp extract_exception_tag_values(%{
