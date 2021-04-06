@@ -39,7 +39,7 @@ if Code.ensure_loaded?(Broadway) do
 
     require Logger
 
-    alias Broadway.{BatchInfo, Message}
+    alias Broadway.{BatchInfo, Message, Options}
 
     @init_topology_event [:broadway, :topology, :init]
     @message_stop_event [:broadway, :processor, :message, :stop]
@@ -54,6 +54,13 @@ if Code.ensure_loaded?(Broadway) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = PromEx.metric_prefix(otp_app, :broadway)
 
+      # Telemetry metrics will emit warnings if multiple handlers with the same names are defined.
+      # As a result, this plugin supports gathering metrics on multiple processors and batches, but needs
+      # to proxy them as not to create multiple definitions of the same metrics. The final data point will
+      # have a label for the module associated with the event though so you'll be able to separate one
+      # measurement from another.
+      set_up_telemetry_proxies(@init_topology_event, otp_app)
+
       # Event metrics definitions
       [
         topology_init_events(metric_prefix),
@@ -61,36 +68,6 @@ if Code.ensure_loaded?(Broadway) do
         handle_batch_events(metric_prefix)
       ]
     end
-
-    """
-    [
-      hibernate_after: 15000,
-      context: :context_not_set,
-      resubscribe_interval: 100,
-      max_seconds: 5,
-      max_restarts: 3,
-      shutdown: 30000,
-      name: WebApp.TempProcessor,
-      producer: [
-        hibernate_after: 15000,
-        concurrency: 1,
-        module: {WebApp.CityProducer, []},
-        transformer: {WebApp.TempProcessor, :transform, []},
-        rate_limiting: [allowed_messages: 60, interval: 30000]
-      ],
-      processors: [
-        default: [hibernate_after: 15000, max_demand: 10, concurrency: 5]
-      ],
-      batchers: [
-        batch_temp: [
-          hibernate_after: 15000,
-          concurrency: 2,
-          batch_size: 15,
-          batch_timeout: 15000
-        ]
-      ]
-    ]
-    """
 
     defp topology_init_events(metric_prefix) do
       Event.build(
@@ -144,15 +121,97 @@ if Code.ensure_loaded?(Broadway) do
             measurement: extract_default_config_measurement(:shutdown),
             tags: [:name],
             tag_values: &extract_init_tag_values/1
+          ),
+          last_value(
+            metric_prefix ++ [:init, :processor, :hibernate_after, :milliseconds],
+            event_name: @init_topology_processors_proxy_event,
+            description: "The Broadway processors hibernate after value.",
+            measurement: fn _measurements, %{hibernate_after: hibernate_after} -> hibernate_after end,
+            tags: [:name]
+          ),
+          last_value(
+            metric_prefix ++ [:init, :processor, :max_demand, :value],
+            event_name: @init_topology_processors_proxy_event,
+            description: "The Broadway processors max demand value.",
+            measurement: fn _measurements, %{max_demand: max_demand} -> max_demand end,
+            tags: [:name]
+          ),
+          last_value(
+            metric_prefix ++ [:init, :processor, :concurrency, :value],
+            event_name: @init_topology_processors_proxy_event,
+            description: "The Broadway processors concurrency value.",
+            measurement: fn _measurements, %{concurrency: concurrency} -> concurrency end,
+            tags: [:name]
+          ),
+          last_value(
+            metric_prefix ++ [:init, :batcher, :hibernate_after, :milliseconds],
+            event_name: @init_topology_batchers_proxy_event,
+            description: "The Broadway batchers hibernate after value.",
+            measurement: fn _measurements, %{hibernate_after: hibernate_after} -> hibernate_after end,
+            tags: [:name]
+          ),
+          last_value(
+            metric_prefix ++ [:init, :batcher, :concurrency, :value],
+            event_name: @init_topology_batchers_proxy_event,
+            description: "The Broadway batchers concurrency value.",
+            measurement: fn _measurements, %{concurrency: concurrency} -> concurrency end,
+            tags: [:name]
+          ),
+          last_value(
+            metric_prefix ++ [:init, :batcher, :batch_size, :value],
+            event_name: @init_topology_batchers_proxy_event,
+            description: "The Broadway batchers batch size value.",
+            measurement: fn _measurements, %{batch_size: batch_size} -> batch_size end,
+            tags: [:name]
+          ),
+          last_value(
+            metric_prefix ++ [:init, :batcher, :batch_timeout, :milliseconds],
+            event_name: @init_topology_batchers_proxy_event,
+            description: "The Broadway batchers timeout value.",
+            measurement: fn _measurements, %{batch_timeout: batch_timeout} -> batch_timeout end,
+            tags: [:name]
           )
         ]
+      )
+    end
+
+    defp set_up_telemetry_proxies(init_topology_event, otp_app) do
+      :telemetry.attach(
+        [:prom_ex, :broadway, :proxy, otp_app],
+        init_topology_event,
+        fn _event_name, _measurements, %{config: config}, _config ->
+          # Extract all of the processors and proxy for each processor
+          config
+          |> Keyword.get(:processors, [])
+          |> Enum.each(fn {processor, processor_options} ->
+            metadata =
+              processor_options
+              |> Map.new()
+              |> Map.put(:name, processor)
+
+            :telemetry.execute(@init_topology_processors_proxy_event, %{}, metadata)
+          end)
+
+          # Extract all of the batchers and proxy for each batcher
+          config
+          |> Keyword.get(:batchers, [])
+          |> Enum.each(fn {batcher, batcher_options} ->
+            metadata =
+              batcher_options
+              |> Map.new()
+              |> Map.put(:name, batcher)
+
+            :telemetry.execute(@init_topology_batchers_proxy_event, %{}, metadata)
+          end)
+        end,
+        %{}
       )
     end
 
     defp extract_default_config_measurement(field) do
       fn _measurements, %{config: config} ->
         config
-        |> NimbleOptions.validate!(Broadway.Options.definition())
+        |> NimbleOptions.validate!(Options.definition())
         |> Map.new()
         |> Map.get(field)
       end
@@ -208,12 +267,7 @@ if Code.ensure_loaded?(Broadway) do
               buckets: exponential!(1, 2, 12)
             ],
             tags: [:batch_key, :batcher],
-            tag_values: fn metadata ->
-              %{
-                batch_key: metadata.batch_info.batch_key,
-                batcher: metadata.batch_info.batcher
-              }
-            end,
+            tag_values: &extract_batcher_tag_values/1,
             unit: {:native, :millisecond}
           ),
           distribution(
@@ -227,12 +281,7 @@ if Code.ensure_loaded?(Broadway) do
               buckets: [1, 3, 5, 10, 20, 50, 100]
             ],
             tags: [:batch_key, :batcher],
-            tag_values: fn metadata ->
-              %{
-                batch_key: metadata.batch_info.batch_key,
-                batcher: metadata.batch_info.batcher
-              }
-            end
+            tag_values: &extract_batcher_tag_values/1
           ),
           distribution(
             metric_prefix ++ [:process, :batch, :success, :size],
@@ -245,15 +294,17 @@ if Code.ensure_loaded?(Broadway) do
               buckets: [1, 3, 5, 10, 20, 50, 100]
             ],
             tags: [:batch_key, :batcher],
-            tag_values: fn metadata ->
-              %{
-                batch_key: metadata.batch_info.batch_key,
-                batcher: metadata.batch_info.batcher
-              }
-            end
+            tag_values: &extract_batcher_tag_values/1
           )
         ]
       )
+    end
+
+    defp extract_batcher_tag_values(%{batch_info: batch_info = %BatchInfo{}}) do
+      %{
+        batch_key: batch_info.batch_key,
+        batcher: batch_info.batcher
+      }
     end
 
     defp extract_init_tag_values(metadata) do
