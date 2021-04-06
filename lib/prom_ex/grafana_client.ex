@@ -21,7 +21,7 @@ defmodule PromEx.GrafanaClient do
   @spec upload_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t(), opts :: keyword()) ::
           handler_respose()
   def upload_dashboard(%Connection{} = grafana_conn, dashboard_contents, opts \\ []) do
-    headers = grafana_headers(:post, grafana_conn.auth_token)
+    headers = grafana_headers(:post, grafana_conn.authorization)
     payload = generate_payload(dashboard_contents, Keyword.merge(opts, overwrite: true))
 
     :post
@@ -36,7 +36,7 @@ defmodule PromEx.GrafanaClient do
   """
   @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) :: handler_respose()
   def get_dashboard(%Connection{} = grafana_conn, dashboard_contents) do
-    headers = grafana_headers(:get, grafana_conn.auth_token)
+    headers = grafana_headers(:get, grafana_conn.authorization)
 
     dashboard_uid =
       dashboard_contents
@@ -55,7 +55,7 @@ defmodule PromEx.GrafanaClient do
   @spec create_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), title :: String.t()) ::
           handler_respose()
   def create_folder(%Connection{} = grafana_conn, folder_uid, title) do
-    headers = grafana_headers(:post, grafana_conn.auth_token)
+    headers = grafana_headers(:post, grafana_conn.authorization)
 
     payload =
       Jason.encode!(%{
@@ -75,7 +75,7 @@ defmodule PromEx.GrafanaClient do
   @spec update_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), new_title :: String.t()) ::
           handler_respose()
   def update_folder(%Connection{} = grafana_conn, folder_uid, new_title) do
-    headers = grafana_headers(:put, grafana_conn.auth_token)
+    headers = grafana_headers(:put, grafana_conn.authorization)
 
     payload =
       Jason.encode!(%{
@@ -94,7 +94,7 @@ defmodule PromEx.GrafanaClient do
   """
   @spec get_folder(grafana_conn :: Connection.t(), folder_uid :: String.t()) :: handler_respose()
   def get_folder(%Connection{} = grafana_conn, folder_id) do
-    headers = grafana_headers(:get, grafana_conn.auth_token)
+    headers = grafana_headers(:get, grafana_conn.authorization)
 
     :get
     |> Finch.build("#{grafana_conn.base_url}/api/folders/#{folder_id}", headers)
@@ -108,7 +108,7 @@ defmodule PromEx.GrafanaClient do
   @spec create_annotation(grafana_conn :: Connection.t(), tags :: [String.t()], message :: String.t()) ::
           handler_respose()
   def create_annotation(%Connection{} = grafana_conn, tags, message) do
-    headers = grafana_headers(:post, grafana_conn.auth_token)
+    headers = grafana_headers(:post, grafana_conn.authorization)
 
     payload =
       Jason.encode!(%{
@@ -144,16 +144,16 @@ defmodule PromEx.GrafanaClient do
     end
   end
 
-  defp grafana_headers(:get, bearer_token) do
+  defp grafana_headers(:get, authorization) do
     [
-      {"authorization", bearer_token},
+      {"authorization", authorization},
       {"accept", "application/json"}
     ]
   end
 
-  defp grafana_headers(action, bearer_token) when action in [:post, :put] do
+  defp grafana_headers(action, authorization) when action in [:post, :put] do
     [
-      {"authorization", bearer_token},
+      {"authorization", authorization},
       {"content-type", "application/json"},
       {"accept", "application/json"}
     ]

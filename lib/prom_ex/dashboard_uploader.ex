@@ -44,21 +44,15 @@ defmodule PromEx.DashboardUploader do
       default_dashboard_opts: default_dashboard_opts
     } = state
 
-    %PromEx.Config{
-      grafana_config: %{
-        host: grafana_host,
-        auth_token: grafana_auth_token,
-        folder_name: folder_name
-      }
-    } = prom_ex_module.init_opts()
+    %PromEx.Config{grafana_config: grafana_config} = prom_ex_module.init_opts()
 
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
     Finch.start_link(name: finch_name)
-    grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
+    grafana_conn = Connection.build(finch_name, grafana_config)
 
     upload_opts =
-      case folder_name do
+      case grafana_config.folder_name do
         :default ->
           []
 
