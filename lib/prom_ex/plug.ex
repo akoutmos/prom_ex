@@ -66,6 +66,8 @@ defmodule PromEx.Plug do
         |> halt()
 
       metrics ->
+        PromEx.ETSCronFlusher.defer_ets_flush(prom_ex_module.__ets_cron_flusher_name__())
+
         conn
         |> put_resp_content_type("text/plain")
         |> send_resp(200, metrics)
