@@ -187,6 +187,7 @@ defmodule PromEx do
         # Start the relevant child processes depending on configuration
         children =
           []
+          |> PromEx.ets_cron_flusher_child_spec()
           |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
           |> PromEx.manual_metrics_child_spec(manual_metrics, manual_metrics_start_delay, unquote(manual_metrics_name))
           |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
