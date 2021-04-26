@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added ETSCronFlusher GenServer to supervision tree to flush distribution metrics from ETS
+  to address ETS memory leak when metrics are not scraped at a regular interval.
+
 ## [1.0.1] - 2021-03-14
 
 ### Changed
