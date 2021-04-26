@@ -31,7 +31,6 @@ defmodule PromEx.ETSCronFlusher do
   scraped so that ETS is not leaking memeory.
   """
   def defer_ets_flush(instance) do
-    IO.inspect("DEFERRED")
     GenServer.cast(instance, :defer_ets_flush)
   end
 
@@ -48,8 +47,7 @@ defmodule PromEx.ETSCronFlusher do
 
   @impl true
   def handle_info(:flush_ets, state) do
-    IO.inspect("METRICS_FLUSH")
-    state.prom_ex_module.get_metrics()
+    PromEx.get_metrics(state.prom_ex_module)
 
     timer_ref = schedule_flush()
     {:noreply, %{state | timer_ref: timer_ref}}
@@ -57,7 +55,6 @@ defmodule PromEx.ETSCronFlusher do
 
   @impl true
   def handle_cast(:defer_ets_flush, state) do
-    IO.inspect("DEFERE_ETS_FLUSH")
     # Cancel the existing timer
     Process.cancel_timer(state.timer_ref)
 
@@ -65,7 +62,7 @@ defmodule PromEx.ETSCronFlusher do
     {:noreply, %{state | timer_ref: timer_ref}}
   end
 
-  defp schedule_flush() do
+  defp schedule_flush do
     Process.send_after(self(), :flush_ets, 7_500)
   end
 end
