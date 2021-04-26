@@ -36,6 +36,12 @@ defmodule PromEx.ETSCronFlusherTest do
       new_timer_ref = get_timer_ref()
       assert original_timer_ref != new_timer_ref
       assert is_reference(new_timer_ref)
+
+      PromEx.ETSCronFlusher.defer_ets_flush(DefaultPromExSetUp.__ets_cron_flusher_name__())
+      Process.sleep(500)
+      defer_new_timer_ref = get_timer_ref()
+      assert new_timer_ref != defer_new_timer_ref
+      assert is_reference(defer_new_timer_ref)
     end
   end
 
