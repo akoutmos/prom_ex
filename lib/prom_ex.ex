@@ -144,6 +144,7 @@ defmodule PromEx do
       end
 
     # Generate process names under calling module namespace
+    ets_cron_flusher_name = Module.concat([calling_module, ETSCronFlusher])
     manual_metrics_name = Module.concat([calling_module, ManualMetricsManager])
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
@@ -187,6 +188,7 @@ defmodule PromEx do
         # Start the relevant child processes depending on configuration
         children =
           []
+          |> PromEx.ets_cron_flusher_child_spec(__MODULE__, unquote(ets_cron_flusher_name))
           |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
           |> PromEx.manual_metrics_child_spec(manual_metrics, manual_metrics_start_delay, unquote(manual_metrics_name))
           |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
@@ -301,6 +303,9 @@ defmodule PromEx do
       @doc false
       def __lifecycle_annotator_name__, do: unquote(lifecycle_annotator_name)
 
+      @doc false
+      def __ets_cron_flusher_name__, do: unquote(ets_cron_flusher_name)
+
       defoverridable PromEx
     end
   end
@@ -344,6 +349,13 @@ defmodule PromEx do
       Core,
       name: process_name, metrics: metrics, require_seconds: false, consistent_units: true, start_async: false
     }
+
+    [spec | acc]
+  end
+
+  @doc false
+  def ets_cron_flusher_child_spec(acc, prom_ex_module, process_name) do
+    spec = {PromEx.ETSCronFlusher, name: process_name, prom_ex_module: prom_ex_module}
 
     [spec | acc]
   end
