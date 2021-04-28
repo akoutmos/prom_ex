@@ -2,7 +2,7 @@
 defmodule PromEx.Debug do
   @moduledoc """
   This is a convenience module used for debugging and introspecting
-  telemetry events. Primarily used to ease for development or
+  telemetry events. Primarily used to ease the development of
   PromEx itself.
   """
 

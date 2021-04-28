@@ -12,14 +12,14 @@ defmodule PromEx.GrafanaClient do
 
   alias PromEx.GrafanaClient.Connection
 
-  @typep handler_respose ::
+  @typep handler_response ::
            {:ok, result :: map()} | {:error, reason :: atom()} | {:error, reason :: Mint.TransportError.t()}
 
   @doc """
   Used to create a new dashboard or update an existing dashboard.
   """
   @spec upload_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t(), opts :: keyword()) ::
-          handler_respose()
+          handler_response()
   def upload_dashboard(%Connection{} = grafana_conn, dashboard_contents, opts \\ []) do
     headers = grafana_headers(:post, grafana_conn.authorization)
     payload = generate_payload(dashboard_contents, Keyword.merge(opts, overwrite: true))
@@ -34,7 +34,7 @@ defmodule PromEx.GrafanaClient do
   Used to get the dashboard definition currently in Grafana for the provided dashboard file.
   If the ID does not exist in Grafana an error tuple will be returned.
   """
-  @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) :: handler_respose()
+  @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) :: handler_response()
   def get_dashboard(%Connection{} = grafana_conn, dashboard_contents) do
     headers = grafana_headers(:get, grafana_conn.authorization)
 
@@ -53,7 +53,7 @@ defmodule PromEx.GrafanaClient do
   Used to create a new folder in Grafana
   """
   @spec create_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), title :: String.t()) ::
-          handler_respose()
+          handler_response()
   def create_folder(%Connection{} = grafana_conn, folder_uid, title) do
     headers = grafana_headers(:post, grafana_conn.authorization)
 
@@ -73,7 +73,7 @@ defmodule PromEx.GrafanaClient do
   Update an existing folder in Grafana
   """
   @spec update_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), new_title :: String.t()) ::
-          handler_respose()
+          handler_response()
   def update_folder(%Connection{} = grafana_conn, folder_uid, new_title) do
     headers = grafana_headers(:put, grafana_conn.authorization)
 
@@ -92,7 +92,7 @@ defmodule PromEx.GrafanaClient do
   @doc """
   Used to fetch the details regarding a particular folder on Grafana
   """
-  @spec get_folder(grafana_conn :: Connection.t(), folder_uid :: String.t()) :: handler_respose()
+  @spec get_folder(grafana_conn :: Connection.t(), folder_uid :: String.t()) :: handler_response()
   def get_folder(%Connection{} = grafana_conn, folder_id) do
     headers = grafana_headers(:get, grafana_conn.authorization)
 
@@ -106,7 +106,7 @@ defmodule PromEx.GrafanaClient do
   Used to create annotations on dashboard panels
   """
   @spec create_annotation(grafana_conn :: Connection.t(), tags :: [String.t()], message :: String.t()) ::
-          handler_respose()
+          handler_response()
   def create_annotation(%Connection{} = grafana_conn, tags, message) do
     headers = grafana_headers(:post, grafana_conn.authorization)
 

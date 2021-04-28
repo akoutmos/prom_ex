@@ -202,7 +202,7 @@ PromEx provides the following utilities to you in order to achieve your observab
 <img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx Dashboards">
 
 Each PromEx plugin comes with a custom tailored Grafana Dashboard. [Click here](https://hexdocs.pm/prom_ex/all.html)
-to check out sample screenshots of each Plugin specific Grafana Dashbaord.
+to check out sample screenshots of each Plugin specific Grafana Dashboard.
 
 ## Security Concerns
 

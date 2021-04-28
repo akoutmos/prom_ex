@@ -21,7 +21,7 @@ defmodule PromEx.Config do
 
   In this configuration, the Grafana dashboards are not uploaded on application start, and a standalone HTTP metrics server is not
   started. In addition, the `PromEx.ManualMetricsManager` is started without any time delay, and all metrics groups from all the plugins
-  are regestered and set up.
+  are registered and set up.
 
   If you would like to set up PromEx to communicate with Grafana, your config would look something like:
 
@@ -77,13 +77,13 @@ defmodule PromEx.Config do
     tracking. For example, if your application does not leverage Phoenix channels at all but
     you still would like to use the `PromEx.Plugins.Phoenix` plugin, you can pass
     `[:phoenix_channel_event_metrics]` as the value to `:drop_metrics_groups` and that set of
-    metrics will not be caputred. Default value: `[]`
+    metrics will not be captured. Default value: `[]`
 
   * `:grafana` - This key contains the configuration information for connecting to Grafana. Its
     configuration options are:
 
     * `:host` - The host address of your Grafana instance. In order for PromEx to communicate with
-      Grafana this valueshould be in the format `protocol://host:port` like `http://localhost:3000`
+      Grafana this value should be in the format `protocol://host:port` like `http://localhost:3000`
       for example.
 
     * `:username` - The username that was created in Grafana so that PromEx can upload dashboards
@@ -101,7 +101,7 @@ defmodule PromEx.Config do
 
     * `:folder_name` - The name of the folder that PromEx will put all of the project dashboards in.
       PromEx will automatically generate a unique ID for the folder based on the project's otp_app
-      value so that it can access the correct folder in Grafana. This also makes sure that differnt
+      value so that it can access the correct folder in Grafana. This also makes sure that different
       Elixir projects running in the same cluster and publishing dashboards to Grafana do not collide
       with one another. If no name is provided, then the dashboards will all be uploaded to the default
       Grafana folder.

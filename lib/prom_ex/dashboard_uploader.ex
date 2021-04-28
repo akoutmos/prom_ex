@@ -5,7 +5,7 @@ defmodule PromEx.DashboardUploader do
   the dashboards have been successfully uploaded. It requires the name of the
   PromEx module as an option so that it can look into the application
   config for the appropriate Grafana settings. For example, if the name of the
-  PromEx module is `WebApp.PromEx`, then your config chould provide the following
+  PromEx module is `WebApp.PromEx`, then your config should provide the following
   settings:
 
   ```elixir
