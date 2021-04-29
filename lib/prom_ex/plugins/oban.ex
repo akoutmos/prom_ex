@@ -6,11 +6,11 @@ if Code.ensure_loaded?(Oban) do
 
     This plugin supports the following options:
     - `oban_supervisors`: This is an OPTIONAL option and it allows you to specify what Oban instances should have their events
-      tracked. By default the only Oban instance will have its events tracked is the defualt `Oban` instance. As a result, by
+      tracked. By default the only Oban instance that will have its events tracked is the default `Oban` instance. As a result, by
       default this option has a value of `[Oban]`. If you would like to track other named Oban instances, or perhaps your default
       and only Oban instance has a different name, you can pass in your own list of Oban instances (e.g. `[Oban, Oban.PrivateJobs]`).
 
-    - `poll_rate`: This is option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
+    - `poll_rate`: This option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
     This plugin exposes the following metric groups:
     - `:oban_init_event_metrics`
