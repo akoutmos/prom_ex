@@ -93,7 +93,10 @@ if Code.ensure_loaded?(Phoenix) do
               buckets: exponential!(1, 4, 12)
             ],
             measurement: fn _measurements, metadata ->
-              :erlang.iolist_size(metadata.conn.resp_body)
+              case metadata.conn.resp_body do
+                nil -> 0
+                _ -> :erlang.iolist_size(metadata.conn.resp_body)
+              end
             end,
             tag_values: get_conn_tags(phoenix_router),
             tags: http_metrics_tags,
