@@ -49,7 +49,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 1.0.1"}
+    {:prom_ex, "~> 1.1.0"}
   ]
 end
 ```
