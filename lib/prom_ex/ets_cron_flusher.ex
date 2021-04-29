@@ -28,7 +28,7 @@ defmodule PromEx.ETSCronFlusher do
   new. The reason for this being that if metrics scrapes occur regularly,
   there is no need to flush via the cron job. Cron ETS flushes should
   only occur if the metrics endpoint for whatever reason fails to be
-  scraped so that ETS is not leaking memeory.
+  scraped so that ETS is not leaking memory.
   """
   def defer_ets_flush(instance) do
     GenServer.cast(instance, :defer_ets_flush)

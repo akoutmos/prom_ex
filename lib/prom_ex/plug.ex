@@ -2,7 +2,7 @@ defmodule PromEx.Plug do
   @moduledoc """
   Use this plug in your Endpoint file to expose your metrics. The following options are supported by this plug:
 
-  * `:prom_ex_module` - The PromEx module whose metrics will be plublished through this particular plug
+  * `:prom_ex_module` - The PromEx module whose metrics will be published through this particular plug
   * `:path` - The path through which your metrics can be accessed (default is "/metrics")
 
   If you need to have some sort of access control around your metrics endpoint, I would suggest looking at another

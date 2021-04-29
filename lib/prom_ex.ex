@@ -49,7 +49,7 @@ defmodule PromEx do
   ## Options
 
   * `:otp_app` - This is a REQUIRED field and is used by PromEx to fetch the application
-    configuration values for the various PromEx caputure modules. Make sure that this value
+    configuration values for the various PromEx capture modules. Make sure that this value
     matches the `:app` value in `project/0` from your `mix.exs` file. If you use the PromEx
     `mix prom_ex.create` mix task this will be done automatically for you.
 
@@ -511,14 +511,14 @@ defmodule PromEx do
       # metrics pollers don't have name collisions. While String.to_atom/1
       # is being used here, it is assumed that this is trusted input and not
       # infinitely bounded.
-      uniqe_poll_value =
+      unique_poll_value =
         poll_rate
         |> Integer.to_string()
         |> String.to_atom()
 
       {
         :telemetry_poller,
-        name: Module.concat([prom_ex_module, Poller, uniqe_poll_value]), measurements: measurements, period: poll_rate
+        name: Module.concat([prom_ex_module, Poller, unique_poll_value]), measurements: measurements, period: poll_rate
       }
     end)
   end

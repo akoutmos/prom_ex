@@ -116,11 +116,11 @@ if Code.ensure_loaded?(Phoenix) do
       Event.build(
         :phoenix_channel_event_metrics,
         [
-          # Capture the number of channel joins that have occured
+          # Capture the number of channel joins that have occurred
           counter(
             metric_prefix ++ [:channel, :joined, :total],
             event_name: [:phoenix, :channel_joined],
-            description: "The number of channel joins that have occured.",
+            description: "The number of channel joins that have occurred.",
             tag_values: fn %{result: result, socket: %Socket{transport: transport}} ->
               %{
                 transport: transport,
