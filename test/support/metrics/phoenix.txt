@@ -1,7 +1,7 @@
 # HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
 # TYPE web_app_prom_ex_prom_ex_status_info gauge
 web_app_prom_ex_prom_ex_status_info 1
-# HELP web_app_prom_ex_phoenix_channel_joined_total The number of channel joins that have occured.
+# HELP web_app_prom_ex_phoenix_channel_joined_total The number of channel joins that have occurred.
 # TYPE web_app_prom_ex_phoenix_channel_joined_total counter
 web_app_prom_ex_phoenix_channel_joined_total{result="ok",transport="websocket"} 1
 # HELP web_app_prom_ex_phoenix_http_requests_total The number of requests have been serviced.
