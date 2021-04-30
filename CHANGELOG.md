@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Phoenix plugin encountered an error when the response body was empty.
+
+### Changed
+
+- Switch back to a released version of `telemetry_metrics_prometheus_core` now that a new
+  release have been cut to include necessary functionality for PromEx.
+
 ## [1.1.0] - 2021-04-28
 
 ### Added
