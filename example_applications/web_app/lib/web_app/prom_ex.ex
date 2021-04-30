@@ -59,6 +59,7 @@ defmodule WebApp.PromEx do
       {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
       {PromEx.Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
       PromEx.Plugins.PhoenixLiveView
+      # PromEx.Plugins.Broadway
 
       # Add your own PromEx metrics plugins
       # WebApp.Users.PromEx

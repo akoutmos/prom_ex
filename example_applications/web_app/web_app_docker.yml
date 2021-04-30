@@ -24,7 +24,7 @@ services:
       POSTGRES_HOST: 'postgres'
       GIT_SHA: '0fa5476'
       GIT_AUTHOR: 'Alex Koutmos'
-      GRAFANA_TOKEN: ''
+      GRAFANA_TOKEN: 'eyJrIjoiZktmWTdDSkpjMTJWbmkwTG1qTDAxZHdUQzNKZXB1ZDAiLCJuIjoiUHJvbUV4IiwiaWQiOjF9'
       GRAFANA_DATASOURCE: 'prometheus'
     volumes:
       - ./config:/app/config:ro
@@ -59,7 +59,7 @@ services:
       POSTGRES_HOST: 'postgres'
       GIT_SHA: '0fa5476'
       GIT_AUTHOR: 'Alex Koutmos'
-      GRAFANA_TOKEN: ''
+      GRAFANA_TOKEN: 'eyJrIjoiZktmWTdDSkpjMTJWbmkwTG1qTDAxZHdUQzNKZXB1ZDAiLCJuIjoiUHJvbUV4IiwiaWQiOjF9'
       GRAFANA_DATASOURCE: 'prometheus'
     volumes:
       - ./config:/app/config:ro

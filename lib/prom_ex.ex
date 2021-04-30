@@ -102,7 +102,7 @@ defmodule PromEx do
 
   alias Telemetry.Metrics.{Counter, Distribution, LastValue, Sum, Summary}
 
-  alias PromEx.TelemetryMetricsPrometheus.Core
+  alias TelemetryMetricsPrometheus.Core
 
   @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
   @type measurements_mfa() :: {module(), atom(), list()}
