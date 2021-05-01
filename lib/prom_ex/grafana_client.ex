@@ -70,18 +70,37 @@ defmodule PromEx.GrafanaClient do
   end
 
   @doc """
+  Get all of the folder that exist in Grafana
+  """
+  @spec get_all_folders(grafana_conn :: Connection.t()) :: handler_response()
+  def get_all_folders(%Connection{} = grafana_conn) do
+    headers = grafana_headers(:get, grafana_conn.authorization)
+
+    :get
+    |> Finch.build("#{grafana_conn.base_url}/api/folders", headers)
+    |> Finch.request(grafana_conn.finch_process)
+    |> handle_grafana_response()
+  end
+
+  @doc """
   Update an existing folder in Grafana
   """
-  @spec update_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), new_title :: String.t()) ::
-          handler_response()
-  def update_folder(%Connection{} = grafana_conn, folder_uid, new_title) do
+  @spec update_folder(
+          grafana_conn :: Connection.t(),
+          folder_uid :: String.t(),
+          new_title :: String.t(),
+          attrs :: map()
+        ) :: handler_response()
+  def update_folder(%Connection{} = grafana_conn, folder_uid, new_title, attrs \\ %{}) do
     headers = grafana_headers(:put, grafana_conn.authorization)
 
     payload =
-      Jason.encode!(%{
+      %{
         title: new_title,
         overwrite: true
-      })
+      }
+      |> Map.merge(attrs)
+      |> Jason.encode!()
 
     :put
     |> Finch.build("#{grafana_conn.base_url}/api/folders/#{folder_uid}", headers, payload)
@@ -126,6 +145,9 @@ defmodule PromEx.GrafanaClient do
     case finch_response do
       {:ok, %Finch.Response{status: 200, body: body}} ->
         {:ok, Jason.decode!(body)}
+
+      {:ok, %Finch.Response{status: 400}} ->
+        {:error, :bad_request}
 
       {:ok, %Finch.Response{status: 401}} ->
         {:error, :unauthorized}

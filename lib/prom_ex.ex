@@ -254,18 +254,11 @@ defmodule PromEx do
           :default ->
             :default
 
-          _folder_name ->
-            otp_app_name =
-              unquote(otp_app)
-              |> Atom.to_string()
-
-            module_name = Atom.to_string(__MODULE__)
-            string_uid = "#{otp_app_name}:#{module_name}:prom_ex_dashboards"
-
+          folder_name ->
             # Grafana limits us to 40 character UIDs...so taking the MD5 of
             # a complete unique identifier to use as the UID
             :md5
-            |> :crypto.hash(string_uid)
+            |> :crypto.hash(folder_name)
             |> Base.encode16()
         end
       end
