@@ -150,8 +150,7 @@ defmodule PromEx.DashboardUploader do
           folder_details
 
         {:error, :not_found} ->
-          {:ok, folder_details} = GrafanaClient.create_folder(grafana_conn, folder_uid, folder_name)
-          folder_details
+          create_folder(grafana_conn, folder_uid, folder_name)
 
         error ->
           Logger.error(
@@ -169,5 +168,42 @@ defmodule PromEx.DashboardUploader do
     end
 
     id
+  end
+
+  defp create_folder(grafana_conn, folder_uid, folder_name) do
+    case GrafanaClient.create_folder(grafana_conn, folder_uid, folder_name) do
+      {:ok, folder_details} ->
+        folder_details
+
+      {:error, :bad_request} ->
+        {:ok, all_folders} = GrafanaClient.get_all_folders(grafana_conn)
+
+        all_folders
+        |> Enum.find(fn %{"title" => find_folder_name} ->
+          find_folder_name == folder_name
+        end)
+        |> Map.get("uid")
+        |> update_existing_folder_uid(grafana_conn, folder_uid, folder_name)
+    end
+  end
+
+  defp update_existing_folder_uid(uid_of_mismatch, grafana_conn, folder_uid, folder_name) do
+    case GrafanaClient.update_folder(grafana_conn, uid_of_mismatch, folder_name, %{uid: folder_uid}) do
+      {:ok, folder_details} ->
+        Logger.info(
+          "There was a folder UID mismatch for the folder titled \"#{folder_name}\". PromEx has updated the folder configuration in Grafana and resolved the issue."
+        )
+
+        folder_details
+
+      error ->
+        Logger.error(
+          "PromEx.DashboardUploader (#{inspect(self())}) failed to update the folder UID from Grafana (#{
+            grafana_conn.base_url
+          }) because: #{inspect(error)}"
+        )
+
+        Process.exit(self(), :normal)
+    end
   end
 end
