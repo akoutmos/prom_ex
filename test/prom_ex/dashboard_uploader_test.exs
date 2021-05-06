@@ -173,9 +173,6 @@ defmodule PromEx.DashboardUploaderTest do
            end) =~ "PromEx.DashboardUploader successfully uploaded"
   end
 
-  # ------------------------------------------------------------
-  # --------------------------------------------------------------
-
   test "should reconcile a diverged UID value for existing folders", %{bypass: bypass} do
     Application.put_env(:prom_ex, DefaultPromExSetUp,
       grafana: [
