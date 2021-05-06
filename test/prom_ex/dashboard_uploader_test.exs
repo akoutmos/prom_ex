@@ -99,6 +99,80 @@ defmodule PromEx.DashboardUploaderTest do
            end) =~ "PromEx.DashboardUploader successfully uploaded"
   end
 
+  test "should check for new folders", %{bypass: bypass} do
+    Application.put_env(:prom_ex, DefaultPromExSetUp,
+      grafana: [
+        host: endpoint_url(bypass.port),
+        auth_token: "random_token",
+        folder_name: "Web App Dashboards",
+        annotate_app_lifecycle: false
+      ]
+    )
+
+    folder_uid = DefaultPromExSetUp.__grafana_folder_uid__()
+
+    Bypass.expect_once(bypass, "GET", "/api/folders/#{folder_uid}", fn conn ->
+      response_payload = """
+      {
+        "message": "Dashboard not found"
+      }
+      """
+
+      Plug.Conn.resp(conn, 404, response_payload)
+    end)
+
+    Bypass.expect_once(bypass, "POST", "/api/folders", fn conn ->
+      response_payload = """
+      {
+        "id":1,
+        "uid": "nErXDvCkzz",
+        "title": "Web App Dashboards"
+      }
+      """
+
+      Plug.Conn.resp(conn, 200, response_payload)
+    end)
+
+    Bypass.expect_once(bypass, "POST", "/api/dashboards/db", fn conn ->
+      response_payload = """
+      {
+        "id":1,
+        "uid": "nErXDvCkzz",
+        "title": "Department ABC",
+        "url": "/dashboards/f/nErXDvCkzz/department-abc",
+        "hasAcl": false,
+        "canSave": true,
+        "canEdit": true,
+        "canAdmin": true,
+        "createdBy": "admin",
+        "created": "2018-01-31T17:43:12+01:00",
+        "updatedBy": "admin",
+        "updated": "2018-01-31T17:43:12+01:00",
+        "version": 1
+      }
+      """
+
+      Plug.Conn.resp(conn, 200, response_payload)
+    end)
+
+    assert capture_log(fn ->
+             {:ok, pid} =
+               start_supervised(
+                 {
+                   DashboardUploader,
+                   [
+                     name: DefaultPromExSetUp.__dashboard_uploader_name__(),
+                     prom_ex_module: DefaultPromExSetUp,
+                     default_dashboard_opts: []
+                   ]
+                 },
+                 restart: :temporary
+               )
+
+             wait_for_process(pid, 1_000)
+           end) =~ "PromEx.DashboardUploader successfully uploaded"
+  end
+
   defp endpoint_url(port), do: "http://localhost:#{port}/"
 
   defp wait_for_process(_pid, timeout) when timeout < 0 do
