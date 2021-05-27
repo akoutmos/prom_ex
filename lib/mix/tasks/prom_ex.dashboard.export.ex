@@ -13,7 +13,7 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
                    This is needed to fetch any relevant assigns from the
                    `c:PromEx.dashboard_assigns/0` callback
 
-  -s, --std_out    A boolean flag denoting that the rendered dashboard should be output
+  -s, --stdout    A boolean flag denoting that the rendered dashboard should be output
                    to STDOUT.
 
   -f, --file_path  If you would like the write the generated JSON dashboard definition

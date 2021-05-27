@@ -104,6 +104,19 @@ defmodule Mix.Tasks.PromEx.Dashboard.ExportTest do
     assert output =~ ~s("datasource": "an_id")
   end
 
+  test "outputs to STDOUT if the --stdout flag is present", ctx do
+    output =
+      capture_io(fn ->
+        File.cd!(ctx.tmp_dir, fn ->
+          Config.run(~w(-d an_id -o sample))
+          Code.compile_file("lib/sample/prom_ex.ex")
+          Export.run(~w(-m Sample.PromEx -d phoenix.json --stdout))
+        end)
+      end)
+
+    assert output =~ ~s("datasource": "an_id")
+  end
+
   test "outputs to STDOUT if the -s flag is present and there is an assign override", ctx do
     output =
       capture_io(fn ->
