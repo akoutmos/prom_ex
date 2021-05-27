@@ -1131,7 +1131,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of garbage collection events that are occuring and the number of bytes reclaimed",
+      "description": "The number of garbage collection events that are occurring and the number of bytes reclaimed",
       "fieldConfig": {
         "defaults": {
           "custom": {},
