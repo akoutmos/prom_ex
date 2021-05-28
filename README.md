@@ -49,7 +49,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 1.1.0"}
+    {:prom_ex, "~> 1.1.1"}
   ]
 end
 ```
@@ -218,7 +218,7 @@ There are a couple of solutions to this problem:
 
 2. If your application is public facing, you can leverage the [Unplug](https://hex.pm/packages/unplug) library that I
    maintain in order to only execute the `PromEx.Plug` plug when the incoming request fulfills your configured
-   requirements (see the [PromEx.Plug HexDocs](https://hexdocs.pm/prom_ex/1.0.0/PromEx.Plug.html) for an example).
+   requirements (see the [PromEx.Plug HexDocs](https://hexdocs.pm/prom_ex/1.1.1/PromEx.Plug.html) for an example).
 
 ## Performance Concerns
 
