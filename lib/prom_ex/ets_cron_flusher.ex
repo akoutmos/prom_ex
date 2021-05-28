@@ -30,6 +30,7 @@ defmodule PromEx.ETSCronFlusher do
   only occur if the metrics endpoint for whatever reason fails to be
   scraped so that ETS is not leaking memory.
   """
+  @spec defer_ets_flush(instance :: module()) :: :ok
   def defer_ets_flush(instance) do
     GenServer.cast(instance, :defer_ets_flush)
   end

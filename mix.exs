@@ -46,7 +46,7 @@ defmodule PromEx.MixProject do
     [
       # Required dependencies
       {:jason, "~> 1.2"},
-      {:finch, "~> 0.5.2"},
+      {:finch, "~> 0.7.0"},
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
@@ -62,12 +62,12 @@ defmodule PromEx.MixProject do
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.22", only: :dev},
-      {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
-      {:doctor, "~> 0.15.0", only: :dev},
-      {:credo, "~> 1.5.1", only: :dev},
-      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
-      {:git_hooks, "~> 0.5.0", only: [:test, :dev], runtime: false}
+      {:ex_doc, "~> 0.24.2", only: :dev},
+      {:excoveralls, "~> 0.14.1", only: :test, runtime: false},
+      {:doctor, "~> 0.18.0", only: :dev},
+      {:credo, "~> 1.5.5", only: :dev},
+      {:dialyxir, "~> 1.1.0", only: :dev, runtime: false},
+      {:git_hooks, "~> 0.6.2", only: [:test, :dev], runtime: false}
     ]
   end
 
