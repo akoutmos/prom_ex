@@ -11,6 +11,13 @@ if Code.ensure_loaded?(Phoenix) do
       value should align with what you pass to `Plug.Telemetry` in your `endpoint.ex` file (see the plug docs
       for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
 
+    - `additional_routes`: This option is OPTIONAL and allows you to specify route path labels for applications routes
+      not defined in your Router module. For example, if you want to track telemetry events for a plug in your
+      `endpoint.ex` file, you can provide a keyword list with the structure `[some-route: ~r(\/some-path)]` and any
+      time that the route is called and the plug handles the call, the path label for this particular Prometheus metric
+      will be set to `some-route`. You can pass in either a regular expression or a string to match the incoming
+      request.
+
     This plugin exposes the following metric groups:
     - `:phoenix_http_event_metrics`
     - `:phoenix_channel_event_metrics`
@@ -62,6 +69,7 @@ if Code.ensure_loaded?(Phoenix) do
       # Fetch user options
       phoenix_router = Keyword.fetch!(opts, :router)
       event_prefix = Keyword.get(opts, :event_prefix, [:phoenix, :endpoint])
+      additional_routes = Keyword.get(opts, :additional_routes, [])
 
       # Shared configuration
       phoenix_stop_event = event_prefix ++ [:stop]
@@ -79,7 +87,7 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
-            tag_values: get_conn_tags(phoenix_router),
+            tag_values: get_conn_tags(phoenix_router, additional_routes),
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
           ),
@@ -98,7 +106,7 @@ if Code.ensure_loaded?(Phoenix) do
                 _ -> :erlang.iolist_size(metadata.conn.resp_body)
               end
             end,
-            tag_values: get_conn_tags(phoenix_router),
+            tag_values: get_conn_tags(phoenix_router, additional_routes),
             tags: http_metrics_tags,
             unit: :byte
           ),
@@ -108,7 +116,7 @@ if Code.ensure_loaded?(Phoenix) do
             metric_prefix ++ [:http, :requests, :total],
             event_name: phoenix_stop_event,
             description: "The number of requests have been serviced.",
-            tag_values: get_conn_tags(phoenix_router),
+            tag_values: get_conn_tags(phoenix_router, additional_routes),
             tags: http_metrics_tags
           )
         ]
@@ -148,7 +156,7 @@ if Code.ensure_loaded?(Phoenix) do
       )
     end
 
-    defp get_conn_tags(router) do
+    defp get_conn_tags(router, []) do
       fn
         %{conn: %Conn{} = conn} ->
           router
@@ -177,6 +185,63 @@ if Code.ensure_loaded?(Phoenix) do
           # TODO: Change this to warning as warn is deprecated as of Elixir 1.11
           Logger.warn("Could not resolve path for request")
       end
+    end
+
+    defp get_conn_tags(router, additional_routes) do
+      fn
+        %{conn: %Conn{} = conn} ->
+          router
+          |> Phoenix.Router.route_info(conn.method, conn.request_path, "")
+          |> case do
+            %{route: path, plug: controller, plug_opts: action} ->
+              %{
+                path: path,
+                controller: normalize_module_name(controller),
+                action: action
+              }
+
+            _ ->
+              handle_additional_routes_check(conn, additional_routes)
+          end
+          |> Map.merge(%{
+            status: conn.status,
+            method: conn.method
+          })
+
+        _ ->
+          # TODO: Change this to warning as warn is deprecated as of Elixir 1.11
+          Logger.warn("Could not resolve path for request")
+      end
+    end
+
+    defp handle_additional_routes_check(%Conn{request_path: request_path}, additional_routes) do
+      default_tags = %{
+        path: "Unknown",
+        controller: "Unknown",
+        action: "Unknown"
+      }
+
+      additional_routes
+      |> Enum.find_value(default_tags, fn {path_label, route_check} ->
+        cond do
+          is_binary(route_check) and route_check == request_path ->
+            %{
+              path: path_label,
+              controller: "NA",
+              action: "NA"
+            }
+
+          match?(%Regex{}, route_check) and Regex.match?(route_check, request_path) ->
+            %{
+              path: path_label,
+              controller: "NA",
+              action: "NA"
+            }
+
+          true ->
+            false
+        end
+      end)
     end
 
     defp normalize_module_name(name) when is_atom(name) do

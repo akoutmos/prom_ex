@@ -7,9 +7,14 @@ defmodule PromEx.Plugins.PhoenixTest do
   defmodule WebApp.PromEx do
     use PromEx, otp_app: :web_app
 
+    @additional_routes [
+      special_label: "/really-cool-route",
+      another_label: ~r(\/another-cool-route)
+    ]
+
     @impl true
     def plugins do
-      [{Phoenix, router: TestApp.Router}]
+      [{Phoenix, router: TestApp.Router, additional_routes: @additional_routes}]
     end
   end
 
