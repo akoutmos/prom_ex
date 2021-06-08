@@ -21,12 +21,12 @@ defmodule PromEx.ETSCronFlusherTest do
       Events.execute_all(:phoenix)
 
       assert length(get_metrics_table()) == 5
-      assert length(get_dist_table()) == 6
+      assert length(get_dist_table()) == 40
 
       Events.execute_all(:phoenix)
 
       assert length(get_metrics_table()) == 5
-      assert length(get_dist_table()) == 12
+      assert length(get_dist_table()) == 80
 
       Process.sleep(8_000)
 

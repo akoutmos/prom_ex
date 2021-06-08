@@ -49,13 +49,18 @@ defmodule WebApp.PromEx do
 
   use PromEx, otp_app: :web_app
 
+  @additional_routes [
+    special_label: "/really-cool-route",
+    another_label: ~r(\/another-cool-route)
+  ]
+
   @impl true
   def plugins do
     [
       # PromEx built in plugins
       PromEx.Plugins.Application,
       PromEx.Plugins.Beam,
-      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router},
+      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router, additional_routes: @additional_routes},
       {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
       {PromEx.Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
       PromEx.Plugins.PhoenixLiveView

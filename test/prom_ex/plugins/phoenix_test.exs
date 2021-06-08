@@ -4,19 +4,13 @@ defmodule PromEx.Plugins.PhoenixTest do
   alias PromEx.Plugins.Phoenix
   alias PromEx.Test.Support.{Events, Metrics}
 
-  defmodule WebApp.PromExNoAdditionalRoutes do
+  defmodule WebApp.PromEx do
     use PromEx, otp_app: :web_app
 
-    @impl true
-    def plugins do
-      [{Phoenix, router: TestApp.Router}]
-    end
-  end
-
-  defmodule WebApp.PromExAdditionalRoutes do
-    use PromEx, otp_app: :web_app
-
-    @additional_routes [special_label: "/really-cool-route", another_label: ~r(\/another-cool-route)]
+    @additional_routes [
+      special_label: "/really-cool-route",
+      another_label: ~r(\/another-cool-route)
+    ]
 
     @impl true
     def plugins do
@@ -24,24 +18,12 @@ defmodule PromEx.Plugins.PhoenixTest do
     end
   end
 
-  test "telemetry events are accumulated when not using additional routes" do
-    start_supervised!(WebApp.PromExNoAdditionalRoutes)
+  test "telemetry events are accumulated" do
+    start_supervised!(WebApp.PromEx)
     Events.execute_all(:phoenix)
 
     metrics =
-      WebApp.PromExNoAdditionalRoutes
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:phoenix)
-  end
-
-  test "telemetry events are accumulated when using additional routes" do
-    start_supervised!(WebApp.PromExAdditionalRoutes)
-    Events.execute_all(:phoenix)
-
-    metrics =
-      WebApp.PromExAdditionalRoutes
+      WebApp.PromEx
       |> PromEx.get_metrics()
       |> Metrics.sort()
 
