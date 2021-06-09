@@ -179,7 +179,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           # PromEx built in plugins
           Plugins.Application,
           Plugins.Beam
-          # {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
+          # {Plugins.Phoenix, router: <%= @module_name %>Web.Router, endpoint: <%= @module_name %>Web.Endpoint},
           # Plugins.Ecto,
           # Plugins.Oban,
           # Plugins.PhoenixLiveView

@@ -14,7 +14,7 @@ defmodule PromEx.Plugins.PhoenixTest do
 
     @impl true
     def plugins do
-      [{Phoenix, router: TestApp.Router, additional_routes: @additional_routes}]
+      [{Phoenix, router: TestApp.Router, additional_routes: @additional_routes, endpoint: TestApp.Endpoint}]
     end
   end
 
@@ -32,7 +32,7 @@ defmodule PromEx.Plugins.PhoenixTest do
 
   describe "event_metrics/1" do
     test "should return the correct number of metrics" do
-      assert length(Phoenix.event_metrics(otp_app: :prom_ex, router: Some.Module)) == 2
+      assert length(Phoenix.event_metrics(otp_app: :prom_ex, router: Some.Module)) == 3
     end
   end
 
@@ -44,7 +44,7 @@ defmodule PromEx.Plugins.PhoenixTest do
 
   describe "manual_metrics/1" do
     test "should return the correct number of metrics" do
-      assert Phoenix.manual_metrics([]) == []
+      assert length(Phoenix.manual_metrics(otp_app: :prom_ex, router: Some.Module, endpoint: Some.Endpoint)) == 1
     end
   end
 end
