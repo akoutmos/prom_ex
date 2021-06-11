@@ -257,7 +257,7 @@ if Code.ensure_loaded?(Phoenix) do
               %{
                 path: path,
                 controller: normalize_module_name(controller),
-                action: action
+                action: normalize_action(action)
               }
 
             _ ->
@@ -288,7 +288,7 @@ if Code.ensure_loaded?(Phoenix) do
               %{
                 path: path,
                 controller: normalize_module_name(controller),
-                action: action
+                action: normalize_action(action)
               }
 
             _ ->
@@ -304,6 +304,9 @@ if Code.ensure_loaded?(Phoenix) do
           Logger.warn("Could not resolve path for request")
       end
     end
+
+    defp normalize_action(action) when is_atom(action), do: action
+    defp normalize_action(_action), do: "Unknown"
 
     defp handle_additional_routes_check(%Conn{request_path: request_path}, additional_routes) do
       default_tags = %{
