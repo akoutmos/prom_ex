@@ -39,6 +39,46 @@ defmodule PromEx.DashboardUploaderTest do
     {:ok, bypass: bypass}
   end
 
+  test "should handle HTTP errors", %{bypass: bypass} do
+    response_payload = """
+    {
+      "message": "Unauthorized request"
+    }
+    """
+
+    Application.put_env(:prom_ex, DefaultPromExSetUp,
+      grafana: [
+        host: endpoint_url(bypass.port),
+        auth_token: "random_token",
+        folder_name: "Web App Dashboards",
+        annotate_app_lifecycle: false
+      ]
+    )
+
+    folder_uid = DefaultPromExSetUp.__grafana_folder_uid__()
+
+    Bypass.expect_once(bypass, "GET", "/api/folders/#{folder_uid}", fn conn ->
+      Plug.Conn.resp(conn, 401, response_payload)
+    end)
+
+    assert capture_log(fn ->
+             {:ok, pid} =
+               start_supervised(
+                 {
+                   DashboardUploader,
+                   [
+                     name: DefaultPromExSetUp.__dashboard_uploader_name__(),
+                     prom_ex_module: DefaultPromExSetUp,
+                     default_dashboard_opts: []
+                   ]
+                 },
+                 restart: :temporary
+               )
+
+             wait_for_process(pid, 1_000)
+           end) =~ "Recieved a 401 from Grafana because"
+  end
+
   test "should check for existing folders", %{bypass: bypass} do
     response_payload = """
     {
