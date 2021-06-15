@@ -12,6 +12,15 @@ defmodule PromEx.GrafanaClient do
 
   alias PromEx.GrafanaClient.Connection
 
+  @status_codes %{
+    200 => :ok,
+    400 => :bad_request,
+    401 => :unauthorized,
+    403 => :forbidden,
+    404 => :not_found,
+    412 => :already_exists
+  }
+
   @typep handler_response ::
            {:ok, result :: map()} | {:error, reason :: atom()} | {:error, reason :: Mint.TransportError.t()}
 
@@ -143,26 +152,19 @@ defmodule PromEx.GrafanaClient do
 
   defp handle_grafana_response(finch_response) do
     case finch_response do
-      {:ok, %Finch.Response{status: 200, body: body}} ->
+      {:ok, %Finch.Response{status: status_code, body: body}} when status_code in [200, 201] ->
         {:ok, Jason.decode!(body)}
 
-      {:ok, %Finch.Response{status: 400}} ->
-        {:error, :bad_request}
-
-      {:ok, %Finch.Response{status: 401}} ->
-        {:error, :unauthorized}
-
-      {:ok, %Finch.Response{status: 404}} ->
-        {:error, :not_found}
-
-      {:ok, %Finch.Response{status: 412}} ->
-        {:error, :already_exists}
+      {:ok, %Finch.Response{status: status_code} = response} ->
+        Logger.warn("Recieved a #{status_code} from Grafana because: #{inspect(response)}")
+        {:error, lookup_status_code(status_code)}
 
       {:error, %Mint.TransportError{} = mint_error_reason} ->
         {:error, Exception.message(mint_error_reason)}
 
-      {:error, _unknown_reason} = error ->
-        error
+      unknown_response ->
+        Logger.warn("Recieved an unhandled response from Grafana because: #{inspect(unknown_response)}")
+        {:error, :unkown}
     end
   end
 
@@ -188,5 +190,9 @@ defmodule PromEx.GrafanaClient do
     |> Map.new()
     |> Map.put(:dashboard, dashboard)
     |> Jason.encode!()
+  end
+
+  defp lookup_status_code(status_code) do
+    Map.get(@status_codes, status_code, :unknown)
   end
 end
