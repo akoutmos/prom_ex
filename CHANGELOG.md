@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2021-06-15
+
+### Fixed
+
+- GrafanaClient module error case statement. Relaxed the pattern matching so that unaccounted
+  for responses from Grafana don't crash the GenServer.
+
+### Added
+
+- Added the `additional_routes` option to the Phoenix plugin so that routes not defined in
+  the router module can still be labeled correctly.
+
 ## [1.1.1] - 2021-05-27
 
 ### Fixed
