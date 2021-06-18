@@ -63,11 +63,9 @@ Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/pr
 
 ## Supporting PromEx
 
-PromEx has an ambition goal: To provide Prometheus metrics and Grafana dashboards for as many of the Telemetry compliant
-libraries in the Elixir ecosystem as possible as well as a framework so that you can manage the lifecycle of your own
-metrics and dashboards.
+PromEx has an ambition goal: To provide Prometheus metrics and Grafana dashboards for as many of the libraries in the Elixir ecosystem as possible as well as a framework so that you can manage the lifecycle of your own metrics and dashboards.
 
-If you rely on PromEx to monitor your production applicationid, it would much appreciated if you can give back to the
+If you rely on PromEx to monitor your production applications, it would much appreciated if you can give back to the
 project in order to help ensure its continued development.
 
 ### Gold Sponsors
