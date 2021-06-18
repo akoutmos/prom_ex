@@ -73,7 +73,7 @@ project in order to help ensure its continued development.
 ### Gold Sponsors
 
 <a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=58083">
-  <img align="center" height="200" src="guides/images/your_logo_here.png" alt="Support the project">
+  <img align="center" height="175" src="guides/images/your_logo_here.png" alt="Support the project">
 </a>
 
 ### Silver Sponsors
