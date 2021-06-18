@@ -24,6 +24,10 @@
   <a href="https://elixir-lang.slack.com/archives/C01NZ0FBFSR">
     <img alt="Elixir Slack Channel" src="https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack">
   </a>
+
+  <a href="https://github.com/sponsors/akoutmos">
+    <img alt="Support PromEx" src="https://img.shields.io/badge/Support%20PromEx-%E2%9D%A4-lightblue?style=for-the-badge">
+  </a>
 </p>
 
 <br>
@@ -32,6 +36,7 @@
 # Contents
 
 - [Installation](#installation)
+- [Supporting PromEx](#supporting-promex)
 - [Setting Up PromEx](#setting-up-promex)
 - [Adding Your Metrics](#adding-your-metrics)
 - [Design Philosophy](#design-philosophy)
@@ -55,6 +60,33 @@ end
 ```
 
 Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/prom_ex).
+
+## Supporting PromEx
+
+PromEx has an ambition goal: To provide Prometheus metrics and Grafana dashboards for as many of the Telemetry compliant
+libraries in the Elixir ecosystem as possible as well as a framework so that you can manage the lifecycle of your own
+metrics and dashboards.
+
+If you rely on PromEx to monitor your production applicationid, it would much appreciated if you can give back to the
+project in order to help ensure its continued development.
+
+### Gold Sponsors
+
+<a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=58083">
+  <img align="center" height="200" src="guides/images/your_logo_here.png" alt="Support the project">
+</a>
+
+### Silver Sponsors
+
+<a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=58082">
+  <img align="center" height="150" src="guides/images/your_logo_here.png" alt="Support the project">
+</a>
+
+### Bronze Sponsors
+
+<a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=17615">
+  <img align="center" height="125" src="guides/images/your_logo_here.png" alt="Support the project">
+</a>
 
 ## Setting Up PromEx
 
