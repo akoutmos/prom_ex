@@ -166,7 +166,7 @@ if Code.ensure_loaded?(Phoenix) do
               %{
                 path: path,
                 controller: normalize_module_name(controller),
-                action: action
+                action: normalize_action(action)
               }
 
             _ ->
@@ -197,7 +197,7 @@ if Code.ensure_loaded?(Phoenix) do
               %{
                 path: path,
                 controller: normalize_module_name(controller),
-                action: action
+                action: normalize_action(action)
               }
 
             _ ->
@@ -251,6 +251,9 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     defp normalize_module_name(name), do: name
+
+    defp normalize_action(action) when is_atom(action), do: action
+    defp normalize_action(_plug_opts), do: "NA"
   end
 else
   defmodule PromEx.Plugins.Phoenix do
