@@ -169,11 +169,11 @@ tools that PromEx uses for its plugins are what you should use to create your ow
 
 To write your own PromEx plugin, create a module that implements the `PromEx.Plugin` behaviour and collect the
 relevant event/polling/manual metrics. Be sure to check out the 1st party PromEx plugins as a reference for how
-plugins are written and how to collect the different types of datapoints (also checkout the [Writing PromEx Plugins
+plugins are written and how to collect the different types of data points (also checkout the [Writing PromEx Plugins
 ](https://hexdocs.pm/prom_ex/writing-promex-plugins.html) guide).
 
-As a side note, PromEx will attach its own Telemetry handlers to events inorder to capture Prometheus compatible
-metrics and so any datapoints that are added to your `telemetry.ex` file (if you are using LiveDashboard) will
+As a side note, PromEx will attach its own Telemetry handlers to events in order to capture Prometheus compatible
+metrics and so any data points that are added to your `telemetry.ex` file (if you are using LiveDashboard) will
 not show up in PromEx. One of the benefits of the Telemetry library is that you can have an arbitrary number of
 event handlers attached to Telemetry events and so LiveDashboard and PromEx can operate in the same application
 without any issues.
@@ -241,7 +241,7 @@ to check out sample screenshots of each Plugin specific Grafana Dashboard.
 By default, you can set up a Prometheus scrape target without providing any security authorization configuration. As a
 result, PromEx does not enforce any security precautions by default, and it is up to you to secure your `/metrics`
 endpoint to ensure that people are not seeing sensitive information (sort of like Phoenix LiveDashboard where you need
-to set up your own basic auth plug to guard access).
+to set up your own basic authentication plug to guard access).
 
 There are a couple of solutions to this problem:
 
