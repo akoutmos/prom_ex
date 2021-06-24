@@ -172,50 +172,55 @@ defmodule PromEx do
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
 
-        # Default plugin and dashboard opts
-        default_plugin_opts = [otp_app: unquote(otp_app)]
-        default_dashboard_opts = [otp_app: unquote(otp_app)]
-
-        # Configure each of the desired plugins
-        plugins =
-          __MODULE__.plugins()
-          |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
-
-        # Extract the various metrics types from all of the plugins
-        telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
-        poll_metrics = Map.get(plugins, :poll_metrics, [])
-        manual_metrics = Map.get(plugins, :manual_metrics, [])
-
-        # Start the relevant child processes depending on configuration
-        children =
-          []
-          |> PromEx.ets_cron_flusher_child_spec(__MODULE__, unquote(ets_cron_flusher_name))
-          |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
-          |> PromEx.manual_metrics_child_spec(manual_metrics, manual_metrics_start_delay, unquote(manual_metrics_name))
-          |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
-          |> PromEx.dashboard_uploader_child_spec(
-            grafana_config,
-            __MODULE__,
-            default_dashboard_opts,
-            unquote(dashboard_uploader_name)
-          )
-          |> PromEx.metrics_server_child_spec(
-            metrics_server_config,
-            __MODULE__,
-            unquote(metrics_server_name)
-          )
-          |> PromEx.lifecycle_annotator_child_spec(
-            grafana_config,
-            __MODULE__,
-            unquote(otp_app),
-            unquote(lifecycle_annotator_name)
-          )
-          |> Enum.reverse()
-
         # If the PromEx supervision tree is disabled, then skip it
         if disabled do
           :ignore
         else
+          # Default plugin and dashboard opts
+          default_plugin_opts = [otp_app: unquote(otp_app)]
+          default_dashboard_opts = [otp_app: unquote(otp_app)]
+
+          # Configure each of the desired plugins
+          plugins =
+            __MODULE__.plugins()
+            |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
+
+          # Extract the various metrics types from all of the plugins
+          telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
+          poll_metrics = Map.get(plugins, :poll_metrics, [])
+          manual_metrics = Map.get(plugins, :manual_metrics, [])
+
+          # Start the relevant child processes depending on configuration
+          children =
+            []
+            |> PromEx.ets_cron_flusher_child_spec(__MODULE__, unquote(ets_cron_flusher_name))
+            |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
+            |> PromEx.manual_metrics_child_spec(
+              manual_metrics,
+              manual_metrics_start_delay,
+              unquote(manual_metrics_name)
+            )
+            |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
+            |> PromEx.dashboard_uploader_child_spec(
+              grafana_config,
+              __MODULE__,
+              default_dashboard_opts,
+              unquote(dashboard_uploader_name)
+            )
+            |> PromEx.metrics_server_child_spec(
+              metrics_server_config,
+              __MODULE__,
+              unquote(metrics_server_name)
+            )
+            |> PromEx.lifecycle_annotator_child_spec(
+              grafana_config,
+              __MODULE__,
+              unquote(otp_app),
+              unquote(lifecycle_annotator_name)
+            )
+            |> Enum.reverse()
+
+          # Start the PromEx supervision tree
           Supervisor.init(children, strategy: :one_for_one)
         end
       end
