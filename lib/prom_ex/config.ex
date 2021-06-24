@@ -13,6 +13,7 @@ defmodule PromEx.Config do
 
   ```elixir
   config :web_app, WebApp.PromEx,
+    disabled: false,
     manual_metrics_start_delay: :no_delay,
     drop_metrics_groups: [],
     grafana: :disabled,
