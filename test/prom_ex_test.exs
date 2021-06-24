@@ -62,6 +62,15 @@ defmodule PromExTest do
       assert Map.get(config, :metrics_server_config) == :disabled
     end
 
+    test "should not start the supervision tree if the disabled flag is true" do
+      Application.put_env(:prom_ex, DefaultPromExSetUp, disabled: true)
+
+      assert DefaultPromExSetUp.start_link([]) == :ignore
+      assert Process.whereis(DefaultPromExSetUp) == nil
+    after
+      Application.put_env(:prom_ex, DefaultPromExSetUp, disabled: false)
+    end
+
     test "should start the correct processes under the supervision tree" do
       # Start the supervision tree for dummy PromEx Module
       DefaultPromExSetUp.start_link([])

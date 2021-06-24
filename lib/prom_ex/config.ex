@@ -65,6 +65,10 @@ defmodule PromEx.Config do
 
   ## Option Details
 
+  * `:disabled` - This option will diable the PromEx supervision tree entirely and will not
+    start any metris collectors. This is primarily used for disabling PromEx during testing. Default
+    value: false
+
   * `:manual_metrics_start_delay` - Manual metrics are gathered once on start up and then only when
     you call `PromEx.ManualMetricsManager.refresh_metrics/1`. Sometimes, you may have metrics
     that require your entire supervision tree to be started in order to fetch accurate data.
@@ -158,6 +162,7 @@ defmodule PromEx.Config do
   """
 
   @type t :: %__MODULE__{
+          disabled: boolean(),
           manual_metrics_start_delay: :no_delay | pos_integer(),
           drop_metrics_groups: MapSet.t(),
           grafana_config: map(),
@@ -165,6 +170,7 @@ defmodule PromEx.Config do
         }
 
   defstruct [
+    :disabled,
     :manual_metrics_start_delay,
     :drop_metrics_groups,
     :grafana_config,
@@ -188,6 +194,7 @@ defmodule PromEx.Config do
       |> generate_metrics_server_config()
 
     %__MODULE__{
+      disabled: Keyword.get(opts, :disabled, false),
       manual_metrics_start_delay: Keyword.get(opts, :manual_metrics_start_delay, :no_delay),
       drop_metrics_groups: opts |> Keyword.get(:drop_metrics_groups, []) |> MapSet.new(),
       grafana_config: grafana_config,
