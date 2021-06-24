@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2021-06-24
+
+### Added
+
+- Added the ability to disable the entire PromEx supervision tree. Useful for when you
+  are running tests and you don't want telemetry events attached or polling events
+  running.
+
 ## [1.2.1] - 2021-06-18
 
 ### Fixed
