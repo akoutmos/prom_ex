@@ -18,6 +18,28 @@ defmodule PromExTest do
     end
   end
 
+  defmodule DisabledPromExSetUp do
+    use PromEx, otp_app: :prom_ex
+
+    alias PromEx.Plugins.{Application, Beam, Ecto, Oban, Phoenix}
+
+    @impl true
+    def plugins do
+      [
+        {Application, otp_app: :prom_ex},
+        {Phoenix, router: TestApp.Router},
+        {Beam, poll_rate: 500},
+        {Ecto, otp_app: :prom_ex, repos: [Test.Repo]},
+        {Oban, poll_rate: 10_000, oban_supervisors: []}
+      ]
+    end
+
+    @impl true
+    def dashboards do
+      [{:prom_ex, "application.json"}]
+    end
+  end
+
   defmodule DefaultPromExSetUp do
     use PromEx, otp_app: :prom_ex
 
@@ -48,6 +70,17 @@ defmodule PromExTest do
     []
   end
 
+  describe "DisabledPromExSetUp" do
+    test "should not start the supervision tree if the disabled flag is true" do
+      Application.put_env(:prom_ex, DisabledPromExSetUp, disabled: true)
+
+      assert DisabledPromExSetUp.start_link([]) == :ignore
+      assert Process.whereis(DisabledPromExSetUp) == nil
+    after
+      Application.put_env(:prom_ex, DisabledPromExSetUp, disabled: false)
+    end
+  end
+
   describe "DefaultPromExSetUp" do
     test "should have the correct default configs" do
       module_dashboards = DefaultPromExSetUp.dashboards()
@@ -60,15 +93,6 @@ defmodule PromExTest do
       assert Map.get(config, :drop_metrics_groups) == MapSet.new([])
       assert Map.get(config, :grafana_config) == :disabled
       assert Map.get(config, :metrics_server_config) == :disabled
-    end
-
-    test "should not start the supervision tree if the disabled flag is true" do
-      Application.put_env(:prom_ex, DefaultPromExSetUp, disabled: true)
-
-      assert DefaultPromExSetUp.start_link([]) == :ignore
-      assert Process.whereis(DefaultPromExSetUp) == nil
-    after
-      Application.put_env(:prom_ex, DefaultPromExSetUp, disabled: false)
     end
 
     test "should start the correct processes under the supervision tree" do
