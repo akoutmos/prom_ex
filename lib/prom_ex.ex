@@ -165,6 +165,7 @@ defmodule PromEx do
       def init(_) do
         # Get module init options from module callback
         %PromEx.Config{
+          disabled: disabled,
           manual_metrics_start_delay: manual_metrics_start_delay,
           drop_metrics_groups: drop_metrics_groups,
           grafana_config: grafana_config,
@@ -211,7 +212,12 @@ defmodule PromEx do
           )
           |> Enum.reverse()
 
-        Supervisor.init(children, strategy: :one_for_one)
+        # If the PromEx supervision tree is disabled, then skip it
+        if disabled do
+          :ignore
+        else
+          Supervisor.init(children, strategy: :one_for_one)
+        end
       end
 
       @doc false
