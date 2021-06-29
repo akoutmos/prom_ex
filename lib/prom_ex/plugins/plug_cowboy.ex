@@ -44,7 +44,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       ]
     end
 
-    defp http_events(metrics_prefix, opts) do
+    defp http_events(metric_prefix, _opts) do
       # Shared configuration
       cowboy_stop_event = [:cowboy, :request, :stop]
       http_metrics_tags = [:status, :method, :path, :controller, :action]
@@ -65,7 +65,6 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
           ),
-
           distribution(
             metric_prefix ++ [:http, :response, :duration, :milliseconds],
             event_name: cowboy_stop_event,
@@ -78,7 +77,6 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
           ),
-
           distribution(
             metric_prefix ++ [:http, :request_body, :duration, :milliseconds],
             event_name: cowboy_stop_event,
@@ -143,15 +141,15 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     defp get_http_status(resp_status) when is_integer(resp_status) do
       to_string(resp_status)
     end
-  else
-    defmodule PromEx.Plugins.PlugCowboy do
-      @moduledoc false
-      use PromEx.Plugin
+  end
+else
+  defmodule PromEx.Plugins.PlugCowboy do
+    @moduledoc false
+    use PromEx.Plugin
 
-      @impl true
-      def event_metrics(_opts) do
-        PromEx.Plugin.no_dep_raise(__MODULE__, "Plug.Cowboy")
-      end
+    @impl true
+    def event_metrics(_opts) do
+      PromEx.Plugin.no_dep_raise(__MODULE__, "Plug.Cowboy")
     end
   end
 end
