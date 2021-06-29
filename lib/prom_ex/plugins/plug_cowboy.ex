@@ -1,7 +1,36 @@
 if Code.ensure_loaded?(Plug.Cowboy) do
   defmodule PromEx.Plugins.PlugCowboy do
     @moduledoc """
+    This plugin captures HTTP request metrics emitted by Plug.Cowboy.
+
+    This plugin exposes the following metric group:
+    - `:plug_cowboy_http_event_metrics`
+
+
+    To use plugin in your application, add the following to your PromEx module:
+    ```
+    defmodule WebApp.PromEx do
+      use PromEx, otp_app: :web_app
+
+      @impl true
+      def plugins do
+        [
+          ...
+          PromEx.Plugins.PlugCowboy
+        ]
+      end
+
+      @impl true
+      def dashboards do
+        [
+          ...
+          {:prom_ex, "plug_cowboy.json"}
+        ]
+      end
+    end
+    ```
     """
+
     use PromEx.Plugin
     require Logger
 
