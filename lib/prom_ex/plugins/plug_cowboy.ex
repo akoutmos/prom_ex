@@ -57,7 +57,33 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             metric_prefix ++ [:http, :request, :duration, :milliseconds],
             event_name: cowboy_stop_event,
             measurement: :duration,
-            description: "The time it takes for the application to respond to HTTP requests.",
+            description: "The time it takes for the application to process HTTP requests.",
+            reporter_options: [
+              buckets: exponential!(1, 2, 12)
+            ],
+            tag_values: &get_tags/1,
+            tags: http_metrics_tags,
+            unit: {:native, :millisecond}
+          ),
+
+          distribution(
+            metric_prefix ++ [:http, :response, :duration, :milliseconds],
+            event_name: cowboy_stop_event,
+            measurement: :resp_duration,
+            description: "The time it takes for the application to send the HTTP response.",
+            reporter_options: [
+              buckets: exponential!(1, 2, 12)
+            ],
+            tag_values: &get_tags/1,
+            tags: http_metrics_tags,
+            unit: {:native, :millisecond}
+          ),
+
+          distribution(
+            metric_prefix ++ [:http, :request_body, :duration, :milliseconds],
+            event_name: cowboy_stop_event,
+            measurement: :req_body_duration,
+            description: "The time it takes for the application to receive the HTTP request body.",
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
