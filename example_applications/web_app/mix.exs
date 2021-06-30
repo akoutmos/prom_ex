@@ -51,8 +51,8 @@ defmodule WebApp.MixProject do
       {:oban, "~> 2.4.2"},
       {:broadway, github: "dashbitco/broadway", branch: :master},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
-      # {:prom_ex, "~> 1.0.1"}
-      {:prom_ex, github: "akoutmos/prom_ex", branch: "master"}
+      {:prom_ex, "~> 1.2.1"}
+      # {:prom_ex, github: "akoutmos/prom_ex", branch: "master"}
       # {:prom_ex, path: "../../"}
     ]
   end
