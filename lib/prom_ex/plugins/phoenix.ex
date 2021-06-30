@@ -6,23 +6,13 @@ if Code.ensure_loaded?(Phoenix) do
 
     ## Plugin options
 
-    ### REQUIRED
-
-    One of the following:
-
-    - `router`: This is the full module name of your Phoenix Router (e.g MyAppWeb.Router).
-    - `routers`: This accepts a list of Phoenix Router module names (e.g [MyAppWeb.Public.Router, MyAppWeb.Admin.Router])
-
-      Aditionally, instead of just the Router module name, one can pass `{module_name, event_prefix: [:some, :prefix]}` tuples. This allows you to set the event prefix for the Telemetry events. This
-      value should align with what you pass to `Plug.Telemetry` in the `endpoint.ex` file **for each router** (see the plug docs
-      for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
-
-    ### OPTIONAL
-
-    - `event_prefix`: **When defining only one router**, allows you to set the event prefix for the Telemetry events.
+    ### Single Endpoint/Router
+    - `endpoint`: **Required** This is the full module name of your Phoenix Endpoint (e.g MyAppWeb.Endpoint).
+    - `router`: **Required** This is the full module name of your Phoenix Router (e.g MyAppWeb.Router).
+    - `event_prefix`: **Optional**, allows you to set the event prefix for the Telemetry events.
 
       This value should align with what you pass to `Plug.Telemetry` in your `endpoint.ex` file (see the plug docs for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
-    - `additional_routes`: This option allows you to specify route path labels for applications routes
+    - `additional_routes`: **Optional** This option allows you to specify route path labels for applications routes
       not defined in your Router module.
 
       For example, if you want to track telemetry events for a plug in your
@@ -30,6 +20,41 @@ if Code.ensure_loaded?(Phoenix) do
       time that the route is called and the plug handles the call, the path label for this particular Prometheus metric
       will be set to `some-route`. You can pass in either a regular expression or a string to match the incoming
       request.
+
+    e.g
+
+    ```elixir
+    {
+      PromEx.Plugins.Phoenix,
+      endpoint: MyApp.Endpoint,
+      router: MyAppWeb.Public.Router,
+      event_prefix: [:admin, :endpoint]
+    }
+    ```
+
+    ### Multiple Endpoints/Router
+
+    - `endpoints`: This accepts a list of per Phoenix Endpoint options `{endpoint_name, endpoint_opts}`
+      - `endpoint_name`: **Required** This is the full module name of your Phoenix Endpoint (e.g MyAppWeb.Endpoint).
+      - `endpoint_opts`: Per endpoint plugin options:
+        - `:routers`: **Required** List of routers modules for the endpoint, the HTTP metrics will be augmented with controller/action/path information from the routers.
+        - `:event_prefix`: **Optional** Allows you to set the event prefix for the Telemetry events. This
+        value should align with what you pass to `Plug.Telemetry` in the  corresponding endpoint module (see the plug docs
+        for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
+        - `:additional_routes`: This option allows you to specify route path labels for applications routes
+        not defined in your Router modules for the corresponding endpoint.
+
+      e.g
+
+      ```elixir
+      {
+        PromEx.Plugins.Phoenix,
+        endpoints: [
+          {MyApp.Endpoint, routers: [MyAppWeb.Public.Router]},
+          {MyApp.Endpoint2, routers: [MyAppWeb.Admin.Router], event_prefix: [:admin, :endpoint]}
+        ]
+      }
+      ```
 
     ## Metric Groups
 
@@ -49,7 +74,11 @@ if Code.ensure_loaded?(Phoenix) do
       def plugins do
         [
           ...
-          {PromEx.Plugins.Phoenix, router: WebAppWeb.Router}
+          {
+            PromEx.Plugins.Phoenix,
+            endpoint: MyApp.Endpoint,
+            router: MyAppWeb.Public.Router
+          }
         ]
       end
 
@@ -63,7 +92,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
     ```
 
-    When working with multiple Phoenix routers use the `routers` option instead:
+    When working with multiple Phoenix routers use the `endpoints` option instead:
 
     ```elixir
     defmodule WebApp.PromEx do
@@ -75,7 +104,10 @@ if Code.ensure_loaded?(Phoenix) do
           ...
           {
             PromEx.Plugins.Phoenix,
-            routers: [WebAppWeb.Public.Router, WebAppWeb.Admin.Router]
+            endpoints: [
+              {MyApp.Endpoint, routers: [MyAppWeb.Public.Router]},
+              {MyApp.Endpoint2, routers: [MyAppWeb.Admin.Router], event_prefix: [:admin, :endpoint]}
+            ]
           }
         ]
       end
@@ -117,7 +149,7 @@ if Code.ensure_loaded?(Phoenix) do
 
     defp http_events(metric_prefix, opts) do
       routers = fetch_routers!(opts)
-      additional_routes = Keyword.get(opts, :additional_routes, [])
+      additional_routes = fetch_additional_routes!(opts)
       http_metrics_tags = [:status, :method, :path, :controller, :action]
 
       Event.build(
@@ -318,36 +350,55 @@ if Code.ensure_loaded?(Phoenix) do
     defp normalize_action(action) when is_atom(action), do: action
     defp normalize_action(_plug_opts), do: "NA"
 
+    defp fetch_additional_routes!(opts) do
+      opts
+      |> fetch_either!(:router, :endpoints)
+      |> case do
+        endpoints when is_list(endpoints) ->
+          endpoints
+          |> Enum.flat_map(fn
+            {_endpoint, endpoint_opts} ->
+              Keyword.get(endpoint_opts, :additional_routes, [])
+          end)
+          |> MapSet.new()
+          |> MapSet.to_list()
+
+        _router ->
+          Keyword.get(opts, :additional_routes, [])
+      end
+    end
+
     defp fetch_event_prefixes!(opts) do
       opts
-      |> fetch_either!(:router, :routers)
+      |> fetch_either!(:router, :endpoints)
       |> case do
-        routers when is_list(routers) ->
-          routers
+        endpoints when is_list(endpoints) ->
+          endpoints
           |> Enum.map(fn
-            {_router, router_opts} ->
-              Keyword.get(router_opts, :event_prefix, [:phoenix, :endpoint])
-
-            _router ->
-              [:phoenix, :endpoint]
+            {_endpoint, endpoint_opts} ->
+              Keyword.get(endpoint_opts, :event_prefix, [:phoenix, :endpoint])
           end)
 
         _router ->
           [Keyword.get(opts, :event_prefix, [:phoenix, :endpoint])]
       end
       |> MapSet.new()
+      |> MapSet.to_list()
     end
 
     defp fetch_routers!(opts) do
       opts
-      |> fetch_either!(:router, :routers)
+      |> fetch_either!(:router, :endpoints)
       |> case do
-        routers when is_list(routers) ->
-          routers
-          |> Enum.map(fn
-            {router, _opts} -> router
-            router -> router
+        endpoints when is_list(endpoints) ->
+          endpoints
+          |> Enum.flat_map(fn
+            {_endpoint, endpoint_opts} ->
+              endpoint_opts
+              |> Keyword.fetch!(:routers)
           end)
+          |> MapSet.new()
+          |> MapSet.to_list()
 
         router ->
           [router]
