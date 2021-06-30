@@ -413,7 +413,7 @@ defmodule PromEx.Plugins.Beam do
     memory_measurements =
       :erlang.memory()
       |> Map.new()
-      |> Map.put(:persistent_term_memory, persistent_term_memory)
+      |> Map.put(:persistent_term, persistent_term_memory)
 
     :telemetry.execute(@memory_event, memory_measurements, %{})
   end
