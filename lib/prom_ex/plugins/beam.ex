@@ -392,6 +392,15 @@ defmodule PromEx.Plugins.Beam do
           description: "The total amount of memory currently allocated to Erlang processes.",
           measurement: :processes,
           unit: :byte
+        ),
+
+        # Capture the total memory allocated to :persistent_term
+        last_value(
+          metric_prefix ++ [:memory, :persistent_term, :total, :bytes],
+          event_name: @memory_event,
+          description: "The total amount of memory currently allocated to Erlang :persistent_term.",
+          measurement: :persistent_term,
+          unit: :byte
         )
       ]
     )
@@ -399,9 +408,12 @@ defmodule PromEx.Plugins.Beam do
 
   @doc false
   def execute_memory_metrics do
+    %{memory: persistent_term_memory} = :persistent_term.info()
+
     memory_measurements =
       :erlang.memory()
       |> Map.new()
+      |> Map.put(:persistent_term_memory, persistent_term_memory)
 
     :telemetry.execute(@memory_event, memory_measurements, %{})
   end
