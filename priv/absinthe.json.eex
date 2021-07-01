@@ -127,6 +127,7 @@
       "fieldConfig": {
         "defaults": {
           "mappings": [],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -303,6 +304,7 @@
       "fieldConfig": {
         "defaults": {
           "mappings": [],
+          "noValue": "0",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1159,7 +1161,7 @@
   "refresh": "5s",
   "schemaVersion": 30,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Absinthe", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {
