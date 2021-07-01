@@ -67,10 +67,11 @@ defmodule PromEx do
     - [X] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
     - [X] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
+    - [X] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
 
   Backlog Elixir library metrics:
+    - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
-    - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
@@ -78,7 +79,6 @@ defmodule PromEx do
     - [ ] Redix (https://hexdocs.pm/redix/Redix.Telemetry.html)
     - [ ] Tesla (https://hexdocs.pm/tesla/Tesla.Middleware.Telemetry.html)
     - [ ] Memcachex (https://hexdocs.pm/memcachex/0.5.0/Memcache.html#module-telemetry)
-    - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
     - [ ] Nebulex (https://hexdocs.pm/nebulex/2.0.0-rc.0/telemetry.html)
     - [ ] Horde (https://github.com/derekkraan/horde/blob/master/lib/horde/supervisor_telemetry_poller.ex)
     - [ ] Cachex (Need to open up PR)
