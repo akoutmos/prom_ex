@@ -2,7 +2,12 @@ if Code.ensure_loaded?(Absinthe) do
   defmodule PromEx.Plugins.Absinthe do
     @moduledoc """
     This plugin captures metrics emitted by Absinthe. Specifically, it captures timings and metrics
-    around execution times, query complexity, and subscription timings.
+    around execution times, query complexity, and subscription timings. In order to get complexity
+    metrics you'll need to make sure that you have `:analyze_complexity` enabled in
+    [Absinthe.Plug](https://hexdocs.pm/absinthe_plug/Absinthe.Plug.html#t:opts/0). This plugin can
+    generate a large amount of Prometheus series, so it is suggested that you use the
+    `ignored_entrypoints` and `only_entrypoints` (TODO: coming soon) options to prune down the
+    resulting metrics if needed.
 
     This plugin supports the following options:
     - `ignored_entrypoints`: This option is OPTIONAL and is used to filter out Absinthe GraphQL
@@ -58,8 +63,6 @@ if Code.ensure_loaded?(Absinthe) do
       [
         operation_execute_events(metric_prefix, opts),
         subscription_publish_events(metric_prefix, opts)
-        # resolve_field_events(metric_prefix),
-        # middleware_batch_events(metric_prefix)
       ]
     end
 
