@@ -32,8 +32,6 @@ if Code.ensure_loaded?(Ecto) do
 
     use PromEx.Plugin
 
-    require Logger
-
     @init_event [:ecto, :repo, :init]
     @query_event [:prom_ex, :plugin, :ecto, :query]
 
