@@ -45,8 +45,6 @@ defmodule PromEx.Plugins.Beam do
 
   use PromEx.Plugin
 
-  require Logger
-
   @memory_event [:prom_ex, :plugin, :beam, :memory]
 
   @impl true

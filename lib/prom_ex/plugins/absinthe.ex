@@ -8,10 +8,11 @@ if Code.ensure_loaded?(Absinthe) do
     - `ignored_entrypoints`: This option is OPTIONAL and is used to filter out Absinthe GraphQL
       schema entrypoints that you do not want to track metrics for. For example, if you don't want
       metrics on the `:__schema` entrypoint (used for GraphQL schema introspection), you would set
-      a value of `[:__schema]`.
+      a value of `[:__schema]`. This is applicable to queries, mutations, and subscriptions.
 
     This plugin exposes the following metric groups:
-    - `:absinthe_operation_execute_metrics`
+    - `:absinthe_execute_event_metrics`
+    - `:absinthe_subscription_event_metrics`
 
     To use plugin in your application, add the following to your PromEx module:
     ```
@@ -39,12 +40,10 @@ if Code.ensure_loaded?(Absinthe) do
 
     use PromEx.Plugin
 
-    require Logger
-
     # @operation_execute_start_event [:absinthe, :execute, :operation, :start]
     @operation_execute_stop_event [:absinthe, :execute, :operation, :stop]
     # @subscription_publish_start_event [:absinthe, :subscription, :publish, :start]
-    # @subscription_publish_stop_event [:absinthe, :subscription, :publish, :stop]
+    @subscription_publish_stop_event [:absinthe, :subscription, :publish, :stop]
     # @resolve_field_start_event [:absinthe, :resolve, :field, :start]
     # @resolve_field_stop_event [:absinthe, :resolve, :field, :stop]
     # @middleware_batch_start_event [:absinthe, :middleware, :batch, :start]
@@ -57,11 +56,41 @@ if Code.ensure_loaded?(Absinthe) do
 
       # Event metrics definitions
       [
-        operation_execute_events(metric_prefix, opts)
-        # subscription_publish_events(metric_prefix),
+        operation_execute_events(metric_prefix, opts),
+        subscription_publish_events(metric_prefix, opts)
         # resolve_field_events(metric_prefix),
         # middleware_batch_events(metric_prefix)
       ]
+    end
+
+    defp subscription_publish_events(metric_prefix, opts) do
+      # Fetch user options
+      ignored_entrypoints =
+        opts
+        |> Keyword.get(:ignored_entrypoints, [])
+        |> MapSet.new()
+
+      event_tags = [:schema, :operation_type, :entrypoint]
+
+      Event.build(
+        :absinthe_subscription_event_metrics,
+        [
+          # Capture GraphQL request duration information
+          distribution(
+            metric_prefix ++ [:subscription, :duration, :milliseconds],
+            event_name: @subscription_publish_stop_event,
+            measurement: :duration,
+            description: "The time it takes for the Absinthe to publish subscription data.",
+            reporter_options: [
+              buckets: [50, 100, 250, 500, 1_000, 2_500, 5_000, 10_000, 20_000]
+            ],
+            tag_values: &subscription_stop_tag_values/1,
+            tags: event_tags,
+            unit: {:native, :millisecond},
+            drop: entrypoint_in_ignore_set?(ignored_entrypoints)
+          )
+        ]
+      )
     end
 
     defp operation_execute_events(metric_prefix, opts) do
@@ -74,7 +103,7 @@ if Code.ensure_loaded?(Absinthe) do
       event_tags = [:schema, :operation_type, :entrypoint]
 
       Event.build(
-        :absinthe_operation_execute_metrics,
+        :absinthe_execute_event_metrics,
         [
           # Capture GraphQL request duration information
           distribution(
@@ -88,14 +117,7 @@ if Code.ensure_loaded?(Absinthe) do
             tag_values: &operation_execute_stop_tag_values/1,
             tags: event_tags,
             unit: {:native, :millisecond},
-            drop: fn metadata ->
-              entrypoint =
-                metadata.blueprint
-                |> Absinthe.Blueprint.current_operation()
-                |> entrypoint_from_current_operation()
-
-              MapSet.member?(ignored_entrypoints, entrypoint)
-            end
+            drop: entrypoint_in_ignore_set?(ignored_entrypoints)
           ),
 
           # Capture GraphQL request complexity
@@ -113,24 +135,91 @@ if Code.ensure_loaded?(Absinthe) do
             tag_values: &operation_execute_stop_tag_values/1,
             tags: event_tags,
             drop: fn metadata ->
-              current_operation = Absinthe.Blueprint.current_operation(metadata.blueprint)
-              entrypoint = entrypoint_from_current_operation(current_operation)
+              metadata.blueprint
+              |> Absinthe.Blueprint.current_operation()
+              |> case do
+                nil ->
+                  true
 
-              MapSet.member?(ignored_entrypoints, entrypoint) or is_nil(current_operation.complexity)
+                current_operation ->
+                  entrypoint = entrypoint_from_current_operation(current_operation)
+                  MapSet.member?(ignored_entrypoints, entrypoint) or is_nil(current_operation.complexity)
+              end
+            end
+          ),
+
+          # Count Absinthe executions that resulted in errors
+          counter(
+            metric_prefix ++ [:execute, :invalid, :request, :count],
+            event_name: @operation_execute_stop_event,
+            tag_values: &operation_execute_stop_tag_values/1,
+            tags: [:schema],
+            keep: fn metadata ->
+              metadata.blueprint.execution.validation_errors != []
             end
           )
         ]
       )
     end
 
-    defp operation_execute_stop_tag_values(metadata) do
-      current_operation = Absinthe.Blueprint.current_operation(metadata.blueprint)
+    defp entrypoint_in_ignore_set?(ignored_entrypoints) do
+      fn metadata ->
+        metadata.blueprint
+        |> Absinthe.Blueprint.current_operation()
+        |> case do
+          nil ->
+            true
 
-      %{
-        schema: Keyword.get(metadata.options, :schema, :unknown) |> normalize_module_name(),
-        operation_type: current_operation.type || :unknown,
-        entrypoint: entrypoint_from_current_operation(current_operation)
-      }
+          current_operation ->
+            entrypoint = entrypoint_from_current_operation(current_operation)
+            MapSet.member?(ignored_entrypoints, entrypoint)
+        end
+      end
+    end
+
+    defp subscription_stop_tag_values(metadata) do
+      metadata.blueprint
+      |> Absinthe.Blueprint.current_operation()
+      |> case do
+        nil ->
+          %{
+            schema: :unknown,
+            operation_type: :unknown,
+            entrypoint: :unknown
+          }
+
+        current_operation ->
+          %{
+            schema: normalize_module_name(current_operation.schema_node.definition),
+            operation_type: Map.get(current_operation, :type, :unknown),
+            entrypoint: entrypoint_from_current_operation(current_operation)
+          }
+      end
+    end
+
+    defp operation_execute_stop_tag_values(metadata) do
+      metadata.blueprint
+      |> Absinthe.Blueprint.current_operation()
+      |> case do
+        nil ->
+          schema =
+            metadata.options
+            |> Keyword.get(:schema, :unknown)
+            |> normalize_module_name()
+
+          %{
+            schema: schema,
+            operation_type: :unknown,
+            entrypoint: :unknown
+          }
+
+        current_operation ->
+          %{
+            schema: normalize_module_name(current_operation.schema_node.definition),
+            operation_type: Map.get(current_operation, :type, :unknown),
+            entrypoint: entrypoint_from_current_operation(current_operation)
+          }
+      end
     end
 
     defp entrypoint_from_current_operation(current_operation) do
