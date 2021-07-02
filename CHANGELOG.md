@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2021-07-02
+
+### Added
+
+- Absinthe plugin and dashboard.
+- Erlang persistent_term metrics to BEAM dashboard.
+
+## [1.2.1] - 2021-06-18
+
+### Fixed
+
+- Addressed bug in later version of LiveView when extracting the LiveView module from a Telemetry event.
+
 ## [1.2.2] - 2021-06-24
 
 ### Added

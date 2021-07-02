@@ -1590,7 +1590,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_subscription_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint)",
+          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_subscription_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_subscription_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint)",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
