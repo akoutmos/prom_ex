@@ -47,7 +47,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     defp http_events(metric_prefix, _opts) do
       # Shared configuration
       cowboy_stop_event = [:cowboy, :request, :stop]
-      http_metrics_tags = [:status, :method, :path, :controller, :action]
+      http_metrics_tags = [:status, :method, :path]
 
       Event.build(
         :plug_cowboy_http_event_metrics,
@@ -140,6 +140,11 @@ if Code.ensure_loaded?(Plug.Cowboy) do
 
     defp get_http_status(resp_status) when is_integer(resp_status) do
       to_string(resp_status)
+    end
+
+    defp get_http_status(resp_status) when is_bitstring(resp_status) do
+      [code | _rest] = String.split(resp_status)
+      code
     end
   end
 else
