@@ -60,7 +60,11 @@ defmodule WebApp.PromEx do
       # PromEx built in plugins
       PromEx.Plugins.Application,
       PromEx.Plugins.Beam,
-      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router, additional_routes: @additional_routes},
+      {
+        PromEx.Plugins.Phoenix,
+        routers: [WebAppWeb.Router, {WebAppWeb.InternalRouter, event_prefix: [:internal, :endpoint]}],
+        additional_routes: @additional_routes
+      },
       {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
       {PromEx.Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
       PromEx.Plugins.PhoenixLiveView

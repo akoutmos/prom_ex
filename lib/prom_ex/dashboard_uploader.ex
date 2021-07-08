@@ -154,9 +154,7 @@ defmodule PromEx.DashboardUploader do
 
         error ->
           Logger.error(
-            "PromEx.DashboardUploader (#{inspect(self())}) failed to retrieve the dashboard folderId from Grafana (#{
-              grafana_conn.base_url
-            }) because: #{inspect(error)}"
+            "PromEx.DashboardUploader (#{inspect(self())}) failed to retrieve the dashboard folderId from Grafana (#{grafana_conn.base_url}) because: #{inspect(error)}"
           )
 
           Process.exit(self(), :normal)
@@ -198,9 +196,7 @@ defmodule PromEx.DashboardUploader do
 
       error ->
         Logger.error(
-          "PromEx.DashboardUploader (#{inspect(self())}) failed to update the folder UID from Grafana (#{
-            grafana_conn.base_url
-          }) because: #{inspect(error)}"
+          "PromEx.DashboardUploader (#{inspect(self())}) failed to update the folder UID from Grafana (#{grafana_conn.base_url}) because: #{inspect(error)}"
         )
 
         Process.exit(self(), :normal)
