@@ -182,7 +182,7 @@ if Code.ensure_loaded?(Ecto) do
             measurement: fn _measurement, %{result: result} ->
               normalize_results_returned(result)
             end,
-            description: "The time spent executing the query.",
+            description: "The number of result rows returned from a query.",
             tags: [:repo, :source, :command],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
