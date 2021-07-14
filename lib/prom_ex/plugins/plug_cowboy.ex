@@ -152,6 +152,10 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       code
     end
 
+    defp get_http_status(_resp_status) do
+      :undefined
+    end
+
     defp drop_ignored(ignored_routes) do
       fn %{req: %{path: path}} ->
         ignored_routes
