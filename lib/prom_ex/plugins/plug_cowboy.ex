@@ -44,10 +44,11 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       ]
     end
 
-    defp http_events(metric_prefix, _opts) do
+    defp http_events(metric_prefix, opts) do
       # Shared configuration
       cowboy_stop_event = [:cowboy, :request, :stop]
       http_metrics_tags = [:status, :method, :path]
+      ignore_routes = Keyword.get(opts, :ignore_routes, [])
 
       Event.build(
         :plug_cowboy_http_event_metrics,
@@ -61,6 +62,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
+            drop: drop_ignored(ignore_routes),
             tag_values: &get_tags/1,
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
@@ -73,6 +75,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
+            drop: drop_ignored(ignore_routes),
             tag_values: &get_tags/1,
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
@@ -99,6 +102,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             reporter_options: [
               buckets: exponential!(1, 4, 12)
             ],
+            drop: drop_ignored(ignore_routes),
             tag_values: &get_tags/1,
             tags: http_metrics_tags,
             unit: :byte
@@ -109,6 +113,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             metric_prefix ++ [:http, :requests, :total],
             event_name: cowboy_stop_event,
             description: "The number of requests have been serviced.",
+            drop: drop_ignored(ignore_routes),
             tag_values: &get_tags/1,
             tags: http_metrics_tags
           )
@@ -145,6 +150,14 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     defp get_http_status(resp_status) when is_bitstring(resp_status) do
       [code | _rest] = String.split(resp_status)
       code
+    end
+
+    defp drop_ignored(ignored_routes) do
+      fn %{req: %{path: path}} ->
+        ignored_routes
+        |> MapSet.new(fn {_k, route} -> route end)
+        |> MapSet.member?(path)
+      end
     end
   end
 else
