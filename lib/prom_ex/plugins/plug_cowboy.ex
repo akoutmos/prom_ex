@@ -157,10 +157,13 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     end
 
     defp drop_ignored(ignored_routes) do
-      fn %{req: %{path: path}} ->
+      fn
+        %{req: %{path: path}} ->
         ignored_routes
         |> MapSet.new(fn {_k, route} -> route end)
         |> MapSet.member?(path)
+        _meta ->
+          false
       end
     end
   end
