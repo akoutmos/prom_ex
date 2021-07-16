@@ -19,7 +19,10 @@ defmodule PromEx.Plugins.PhoenixMultiRouterTest do
           Phoenix,
           endpoints: [
             {TestApp.Endpoint, routers: [TestApp.ExternalRouter], event_prefix: [:external, :endpoint]},
-            {TestApp.Endpoint2, routers: [TestApp.InternalRouter], event_prefix: [:internal, :endpoint], additional_routes: @additional_routes}
+            {TestApp.Endpoint2,
+             routers: [TestApp.InternalRouter],
+             event_prefix: [:internal, :endpoint],
+             additional_routes: @additional_routes}
           ]
         }
       ]

@@ -2,7 +2,7 @@
   %{
     event: [:cowboy, :request, :stop],
     measurements: %{
-      duration: 53504000,
+      duration: 53_504_000,
       req_body_duration: 0,
       req_body_length: 0,
       resp_body_length: 0,
@@ -26,7 +26,8 @@
           "sec-websocket-key" => "RiBYBD0m+Q2Jg7mpcCR72g==",
           "sec-websocket-version" => "13",
           "upgrade" => "websocket",
-          "user-agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Insomnia/2021.4.1 Chrome/83.0.4103.122 Electron/9.3.5 Safari/537.36"
+          "user-agent" =>
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Insomnia/2021.4.1 Chrome/83.0.4103.122 Electron/9.3.5 Safari/537.36"
         },
         host: "localhost",
         method: "GET",
@@ -49,10 +50,10 @@
   %{
     event: [:cowboy, :request, :stop],
     measurements: %{
-      duration: 117251000,
+      duration: 117_251_000,
       req_body_duration: 0,
       req_body_length: 0,
-      resp_body_length: 359413,
+      resp_body_length: 359_413,
       resp_duration: 0
     },
     metadata: %{
@@ -64,7 +65,8 @@
         has_body: false,
         headers: %{
           "accept" => "*/*",
-          "cookie" => "_web_app_key=SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYUU1ZRWVGaE9SMnpXSG1tczlfVDRCRm95.nXW-mcHRFi2qAJ7XlcyA-uf6IKyNi7ZmNQSSetrFQjM",
+          "cookie" =>
+            "_web_app_key=SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYUU1ZRWVGaE9SMnpXSG1tczlfVDRCRm95.nXW-mcHRFi2qAJ7XlcyA-uf6IKyNi7ZmNQSSetrFQjM",
           "host" => "localhost:4000",
           "user-agent" => "insomnia/2021.4.1"
         },
@@ -96,7 +98,7 @@
   %{
     event: [:cowboy, :request, :stop],
     measurements: %{
-      duration: 711000,
+      duration: 711_000,
       req_body_duration: 0,
       req_body_length: 0,
       resp_body_length: 13900,
@@ -118,7 +120,8 @@
           "sec-fetch-dest" => "image",
           "sec-fetch-mode" => "no-cors",
           "sec-fetch-site" => "cross-site",
-          "user-agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Insomnia/2021.4.1 Chrome/83.0.4103.122 Electron/9.3.5 Safari/537.36"
+          "user-agent" =>
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 (KHTML, like Gecko) Insomnia/2021.4.1 Chrome/83.0.4103.122 Electron/9.3.5 Safari/537.36"
         },
         host: "localhost",
         method: "GET",
@@ -149,10 +152,10 @@
   %{
     event: [:cowboy, :request, :stop],
     measurements: %{
-      duration: 19834000,
+      duration: 19_834_000,
       req_body_duration: 0,
       req_body_length: 0,
-      resp_body_length: 189726,
+      resp_body_length: 189_726,
       resp_duration: 0
     },
     metadata: %{
@@ -164,7 +167,8 @@
         has_body: false,
         headers: %{
           "accept" => "*/*",
-          "cookie" => "_web_app_key=SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYUU1ZRWVGaE9SMnpXSG1tczlfVDRCRm95.nXW-mcHRFi2qAJ7XlcyA-uf6IKyNi7ZmNQSSetrFQjM",
+          "cookie" =>
+            "_web_app_key=SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYUU1ZRWVGaE9SMnpXSG1tczlfVDRCRm95.nXW-mcHRFi2qAJ7XlcyA-uf6IKyNi7ZmNQSSetrFQjM",
           "host" => "localhost:4000",
           "user-agent" => "insomnia/2021.4.1"
         },
