@@ -152,6 +152,10 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       code
     end
 
+    defp get_http_status(nil) do
+      nil
+    end
+
     defp get_http_status(_resp_status) do
       :undefined
     end

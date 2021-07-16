@@ -100,7 +100,9 @@ defmodule Mix.Tasks.PromEx.Dashboard.Publish do
 
       {:EXIT, ^pid, error_reason} ->
         IO.error(
-          "PromEx was unable to upload your dashboards to Grafana because:\n#{Code.format_string!(inspect(error_reason))}"
+          "PromEx was unable to upload your dashboards to Grafana because:\n#{
+            Code.format_string!(inspect(error_reason))
+          }"
         )
     after
       timeout ->
