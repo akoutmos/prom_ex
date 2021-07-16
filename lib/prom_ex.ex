@@ -67,6 +67,7 @@ defmodule PromEx do
     - [X] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
     - [X] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
+    - [X] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
 
   Backlog Elixir library metrics:
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
@@ -74,7 +75,6 @@ defmodule PromEx do
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
-    - [ ] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
     - [ ] Redix (https://hexdocs.pm/redix/Redix.Telemetry.html)
     - [ ] Tesla (https://hexdocs.pm/tesla/Tesla.Middleware.Telemetry.html)
     - [ ] Memcachex (https://hexdocs.pm/memcachex/0.5.0/Memcache.html#module-telemetry)
