@@ -2723,7 +2723,7 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Oban", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {

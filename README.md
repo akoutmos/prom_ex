@@ -54,7 +54,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 1.2.1"}
+    {:prom_ex, "~> 1.3.0"}
   ]
 end
 ```
@@ -221,8 +221,8 @@ PromEx provides the following utilities to you in order to achieve your observab
 | `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                  |
 | `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban       |
 | `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView            |
+| `PromEx.Plugins.Absinthe`        | Beta        | Collect GraphQL metrics emitted by Absinthe            |
 | `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
-| `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
 | `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
 | `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix         |
 | More to come...                  |             |                                                        |

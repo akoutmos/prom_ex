@@ -540,7 +540,7 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Application", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {

@@ -66,6 +66,12 @@ config :web_app, WebAppWeb.Endpoint,
     ]
   ]
 
+  config :web_app, WebAppWeb.InternalEndpoint,
+  http: [port: 4001],
+  debug_errors: true,
+  code_reloader: true,
+  check_origin: false
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

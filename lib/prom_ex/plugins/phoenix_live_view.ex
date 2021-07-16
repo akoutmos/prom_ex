@@ -167,8 +167,8 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     end
 
     defp get_live_view_module(%Socket{} = socket) do
-      socket.assigns
-      |> Map.get(:live_module, :unknown)
+      socket
+      |> Map.get(:view, :unknown)
       |> normalize_module_name()
     end
 

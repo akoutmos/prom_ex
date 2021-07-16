@@ -954,7 +954,7 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Ecto", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {

@@ -1082,6 +1082,12 @@
           "interval": "",
           "legendFormat": "Processes",
           "refId": "F"
+        },
+        {
+          "expr": "<%= @otp_app %>_prom_ex_beam_memory_persistent_term_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "interval": "",
+          "legendFormat": "Persistent Term",
+          "refId": "G"
         }
       ],
       "thresholds": [],
@@ -2191,7 +2197,7 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "BEAM", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {

@@ -100,7 +100,8 @@
       processes: 7_247_824,
       processes_used: 7_243_984,
       system: 33_252_448,
-      total: 40_500_272
+      total: 40_500_272,
+      persistent_term: 1376
     },
     metadata: %{}
   },
@@ -190,7 +191,8 @@
       processes: 10_212_216,
       processes_used: 10_199_384,
       system: 40_808_736,
-      total: 51_020_952
+      total: 51_020_952,
+      persistent_term: 1376
     },
     metadata: %{}
   },
@@ -280,7 +282,8 @@
       processes: 10_939_632,
       processes_used: 10_913_480,
       system: 42_585_600,
-      total: 53_525_232
+      total: 53_525_232,
+      persistent_term: 1376
     },
     metadata: %{}
   },
@@ -370,7 +373,8 @@
       processes: 10_761_720,
       processes_used: 10_731_040,
       system: 42_451_104,
-      total: 53_212_824
+      total: 53_212_824,
+      persistent_term: 1376
     },
     metadata: %{}
   },
@@ -460,7 +464,8 @@
       processes: 11_356_552,
       processes_used: 11_340_824,
       system: 42_736_368,
-      total: 54_092_920
+      total: 54_092_920,
+      persistent_term: 1376
     },
     metadata: %{}
   },
@@ -550,7 +555,8 @@
       processes: 11_342_296,
       processes_used: 11_304_856,
       system: 43_673_840,
-      total: 55_016_136
+      total: 55_016_136,
+      persistent_term: 1376
     },
     metadata: %{}
   },
