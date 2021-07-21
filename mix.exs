@@ -46,7 +46,7 @@ defmodule PromEx.MixProject do
     [
       # Required dependencies
       {:jason, "~> 1.2"},
-      {:finch, "~> 0.7.0"},
+      {:finch, "~> 0.8.0"},
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
