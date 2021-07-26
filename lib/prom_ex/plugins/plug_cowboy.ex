@@ -88,6 +88,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
+            drop: drop_ignored(ignore_routes),
             tag_values: &get_tags/1,
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
