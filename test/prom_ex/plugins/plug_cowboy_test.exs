@@ -7,9 +7,7 @@ defmodule PromEx.Plugins.PlugCowboyTest do
   defmodule WebApp.PromEx do
     use PromEx, otp_app: :web_app
 
-    @ignore_routes [
-      metrics: "/metrics"
-    ]
+    @ignore_routes ["/metrics"]
 
     @impl true
     def plugins do

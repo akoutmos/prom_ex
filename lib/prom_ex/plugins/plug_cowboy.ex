@@ -8,6 +8,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
 
 
     To use plugin in your application, add the following to your PromEx module:
+
     ```
     defmodule WebApp.PromEx do
       use PromEx, otp_app: :web_app
@@ -29,6 +30,32 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       end
     end
     ```
+
+    To ignore certain paths, pass a list of routes using the `:ignore_routes` option
+
+    ```
+    defmodule WebApp.PromEx do
+      use PromEx, otp_app: :web_app
+
+      @impl true
+      def plugins do
+        [
+          ...
+          {PromEx.Plugins.PlugCowboy, ignore_routes: ["/metrics"]}
+        ]
+      end
+
+      @impl true
+      def dashboards do
+        [
+          ...
+          {:prom_ex, "plug_cowboy.json"}
+        ]
+      end
+    end
+    ```
+
+
     """
 
     use PromEx.Plugin
@@ -48,7 +75,11 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       # Shared configuration
       cowboy_stop_event = [:cowboy, :request, :stop]
       http_metrics_tags = [:status, :method, :path]
-      ignore_routes = Keyword.get(opts, :ignore_routes, [])
+
+      ignore_routes =
+        opts
+        |> Keyword.get(:ignore_routes, [])
+        |> MapSet.new()
 
       Event.build(
         :plug_cowboy_http_event_metrics,
@@ -165,7 +196,6 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       fn
         %{req: %{path: path}} ->
           ignored_routes
-          |> MapSet.new(fn {_k, route} -> route end)
           |> MapSet.member?(path)
 
         _meta ->
