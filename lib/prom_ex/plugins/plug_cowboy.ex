@@ -67,6 +67,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
 
     use PromEx.Plugin
     require Logger
+    alias Plug.Cowboy.Conn
 
     @default_route ""
 
@@ -216,7 +217,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     end
 
     defp find_plug_route(routers, req) do
-      conn = Plug.Cowboy.Conn.conn(req)
+      conn = Conn.conn(req)
 
       routers
       |> Enum.find_value(@default_route, fn router ->

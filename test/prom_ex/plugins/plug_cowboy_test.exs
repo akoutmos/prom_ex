@@ -11,7 +11,7 @@ defmodule PromEx.Plugins.PlugCowboyTest do
 
     @impl true
     def plugins do
-      [{PlugCowboy, ignore_routes: @ignore_routes}]
+      [{PlugCowboy, routers: [TestApp.Router], ignore_routes: @ignore_routes}]
     end
   end
 
@@ -32,6 +32,7 @@ defmodule PromEx.Plugins.PlugCowboyTest do
       assert length(
                PlugCowboy.event_metrics(
                  otp_app: :prom_ex,
+                 routers: [TestApp.Router],
                  ignore_routes: [
                    metrics: "/metrics"
                  ]
