@@ -68,6 +68,8 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     use PromEx.Plugin
     require Logger
 
+    @default_route ""
+
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
@@ -187,34 +189,42 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       end
     end
 
-    defp maybe_get_parametrized_path(%{method: method, path: path} = req, routers) do
+    defp maybe_get_parametrized_path(req, routers) do
       cond do
         Code.ensure_loaded?(Phoenix) ->
-          routers
-          |> Enum.find_value("", fn router ->
-            case Phoenix.Router.route_info(router, method, path, "") do
-              :error ->
-                false
-
-              %{route: route} ->
-                route
-            end
-          end)
+          find_phoenix_route(routers, req)
 
         Code.ensure_loaded?(Plug.Router) ->
-          conn = Plug.Cowboy.Conn.conn(req)
-
-          routers
-          |> Enum.find_value("", fn router ->
-            case router.call(conn, []) do
-              %{private: %{plug_route: {route, _fn}}} -> route
-              _ -> false
-            end
-          end)
+          find_plug_route(routers, req)
 
         true ->
-          ""
+          @default_route
       end
+    end
+
+    defp find_phoenix_route(routers, %{method: method, path: path}) do
+      routers
+      |> Enum.find_value(@default_route, fn router ->
+        case Phoenix.Router.route_info(router, method, path, "") do
+          :error ->
+            false
+
+          %{route: route} ->
+            route
+        end
+      end)
+    end
+
+    defp find_plug_route(routers, req) do
+      conn = Plug.Cowboy.Conn.conn(req)
+
+      routers
+      |> Enum.find_value(@default_route, fn router ->
+        case router.call(conn, []) do
+          %{private: %{plug_route: {route, _fn}}} -> route
+          _ -> false
+        end
+      end)
     end
 
     defp get_http_status(resp_status) when is_integer(resp_status) do
