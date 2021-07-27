@@ -62,13 +62,18 @@ defmodule WebApp.PromEx do
       PromEx.Plugins.Beam,
       {
         PromEx.Plugins.Phoenix,
-        routers: [WebAppWeb.Router, {WebAppWeb.InternalRouter, event_prefix: [:internal, :endpoint]}],
-        additional_routes: @additional_routes
+        endpoints: [
+          {WebAppWeb.Endpoint,
+           routers: [WebAppWeb.Router], additional_routes: @additional_routes},
+          {WebAppWeb.InternalEndpoint,
+           routers: [WebAppWeb.InternalRouter], event_prefix: [:internal, :endpoint]}
+        ]
       },
       {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
       {PromEx.Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
       PromEx.Plugins.PhoenixLiveView,
-      {PromEx.Plugins.PlugCowboy, ignore_routes: ["/metrics"]}
+      {PromEx.Plugins.PlugCowboy,
+       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
       # PromEx.Plugins.Broadway
 
       # Add your own PromEx metrics plugins

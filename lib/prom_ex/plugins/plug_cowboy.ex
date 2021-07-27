@@ -6,6 +6,13 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     This plugin exposes the following metric group:
     - `:plug_cowboy_http_event_metrics`
 
+    ## Plugin options
+
+    - `routers`: **Required** This is a list with the full module names of your Routers (e.g MyAppWeb.Router).
+      Phoenix and Plug routers are supported. When the Phoenix dependency is present in your project, a list of Phoenix Routers is expected. Otherwise a list of Plug.Router modules must be provided
+    - `event_prefix`: **Optional**, allows you to set the event prefix for the Telemetry events.
+
+
 
     To use plugin in your application, add the following to your PromEx module:
 
@@ -17,7 +24,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       def plugins do
         [
           ...
-          PromEx.Plugins.PlugCowboy
+          {PromEx.Plugins.PlugCowboy, routers: [MyApp.Router]}
         ]
       end
 
@@ -41,7 +48,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       def plugins do
         [
           ...
-          {PromEx.Plugins.PlugCowboy, ignore_routes: ["/metrics"]}
+          {PromEx.Plugins.PlugCowboy, routers: [MyApp.Router], ignore_routes: ["/metrics"]}
         ]
       end
 
@@ -81,6 +88,11 @@ if Code.ensure_loaded?(Plug.Cowboy) do
         |> Keyword.get(:ignore_routes, [])
         |> MapSet.new()
 
+      routers =
+        opts
+        |> Keyword.fetch!(:routers)
+        |> MapSet.new()
+
       Event.build(
         :plug_cowboy_http_event_metrics,
         [
@@ -94,7 +106,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
               buckets: exponential!(1, 2, 12)
             ],
             drop: drop_ignored(ignore_routes),
-            tag_values: &get_tags/1,
+            tag_values: &get_tags(&1, routers),
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
           ),
@@ -107,7 +119,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
               buckets: exponential!(1, 2, 12)
             ],
             drop: drop_ignored(ignore_routes),
-            tag_values: &get_tags/1,
+            tag_values: &get_tags(&1, routers),
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
           ),
@@ -120,7 +132,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
               buckets: exponential!(1, 2, 12)
             ],
             drop: drop_ignored(ignore_routes),
-            tag_values: &get_tags/1,
+            tag_values: &get_tags(&1, routers),
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
           ),
@@ -135,7 +147,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
               buckets: exponential!(1, 4, 12)
             ],
             drop: drop_ignored(ignore_routes),
-            tag_values: &get_tags/1,
+            tag_values: &get_tags(&1, routers),
             tags: http_metrics_tags,
             unit: :byte
           ),
@@ -146,32 +158,62 @@ if Code.ensure_loaded?(Plug.Cowboy) do
             event_name: cowboy_stop_event,
             description: "The number of requests have been serviced.",
             drop: drop_ignored(ignore_routes),
-            tag_values: &get_tags/1,
+            tag_values: &get_tags(&1, routers),
             tags: http_metrics_tags
           )
         ]
       )
     end
 
-    defp get_tags(%{resp_status: resp_status, req: %{method: method, path: path}}) do
+    defp get_tags(%{resp_status: resp_status, req: %{method: method} = req}, routers) do
       case get_http_status(resp_status) do
         status when is_binary(status) ->
           %{
             status: status,
             method: method,
-            path: path
+            path: maybe_get_parametrized_path(req, routers)
           }
 
         :undefined ->
           %{
             status: :undefined,
             method: method,
-            path: path
+            path: maybe_get_parametrized_path(req, routers)
           }
 
         nil ->
           Logger.warn("Cowboy failed to provide valid response status #{inspect(resp_status)}")
           %{}
+      end
+    end
+
+    defp maybe_get_parametrized_path(%{method: method, path: path} = req, routers) do
+      cond do
+        Code.ensure_loaded?(Phoenix) ->
+          routers
+          |> Enum.find_value("", fn router ->
+            case Phoenix.Router.route_info(router, method, path, "") do
+              :error ->
+                false
+
+              %{route: route} ->
+                route
+            end
+          end)
+
+        Code.ensure_loaded?(Plug.Router) ->
+          conn = Plug.Cowboy.Conn.conn(req)
+
+          routers
+          |> Enum.find_value("", fn router ->
+            case router.call(conn, []) do
+              %{private: %{plug_route: {route, _fn}}} -> route
+              _ -> false
+            end
+          end)
+
+        true ->
+          ""
       end
     end
 
