@@ -10,6 +10,9 @@ if Code.ensure_loaded?(Oban) do
       default this option has a value of `[Oban]`. If you would like to track other named Oban instances, or perhaps your default
       and only Oban instance has a different name, you can pass in your own list of Oban instances (e.g. `[Oban, Oban.PrivateJobs]`).
 
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+      `[otp_app, :prom_ex, :oban]`.
+
     - `poll_rate`: This option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
     This plugin exposes the following metric groups:
@@ -62,7 +65,7 @@ if Code.ensure_loaded?(Oban) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :oban)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :oban))
 
       oban_supervisors = get_oban_supervisors(opts)
       keep_function_filter = keep_oban_instance_metrics(oban_supervisors)
@@ -81,7 +84,7 @@ if Code.ensure_loaded?(Oban) do
     @impl true
     def polling_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :oban)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :oban))
       poll_rate = Keyword.get(opts, :poll_rate, 5_000)
 
       oban_supervisors = get_oban_supervisors(opts)

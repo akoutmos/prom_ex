@@ -6,7 +6,7 @@ defmodule PromEx.Plugins.PromEx do
   @impl true
   def manual_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
-    metric_prefix = PromEx.metric_prefix(otp_app, :prom_ex)
+    metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :prom_ex))
 
     Manual.build(
       :prom_ex_manual_metrics,

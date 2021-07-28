@@ -9,6 +9,9 @@ defmodule PromEx.Plugins.Beam do
   This plugin supports the following options:
   - `poll_rate`: This is option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
+  - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+    `[otp_app, :prom_ex, :beam]`.
+
   This plugin exposes the following metric groups:
   - `:beam_memory_polling_metrics`
   - `:beam_internal_polling_metrics`
@@ -51,7 +54,7 @@ defmodule PromEx.Plugins.Beam do
   def polling_metrics(opts) do
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
     otp_app = Keyword.fetch!(opts, :otp_app)
-    metric_prefix = PromEx.metric_prefix(otp_app, :beam)
+    metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :beam))
 
     # TODO: Investigate Microstate accounting metrics
     # http://erlang.org/doc/man/erlang.html#statistics_microstate_accounting
@@ -71,7 +74,7 @@ defmodule PromEx.Plugins.Beam do
   @impl true
   def manual_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
-    metric_prefix = PromEx.metric_prefix(otp_app, :beam)
+    metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :beam))
 
     [
       beam_cpu_topology_info(metric_prefix),

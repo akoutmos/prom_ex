@@ -5,7 +5,8 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     mount, handle_event, and handle_params callbacks for live views and live components.
 
     This plugin supports the following options:
-    - This plugin does not currently support any additional options.
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+      `[otp_app, :prom_ex, :phoenix_live_view]`.
 
     This plugin exposes the following metric groups:
     - `:phoenix_live_view_event_metrics`
@@ -56,7 +57,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :phoenix_live_view)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix_live_view))
 
       # Event metrics definitions
       [
