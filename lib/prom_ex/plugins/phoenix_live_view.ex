@@ -6,7 +6,9 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
 
     This plugin supports the following options:
     - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
-      `[otp_app, :prom_ex, :phoenix_live_view]`.
+      `[otp_app, :prom_ex, :phoenix_live_view]`. If this changes you will also want to set
+      `phoenix_live_view_metric_prefix` in your `dashboard_assigns` to the snakecase version of your
+      prefix, the default `phoenix_live_view_metric_prefix` is `{otp_app}_prom_ex_phoenix_live_view`.
 
     This plugin exposes the following metric groups:
     - `:phoenix_live_view_event_metrics`

@@ -20,7 +20,9 @@ defmodule PromEx.Plugins.Application do
     will be called and will attempt to read the GIT_AUTHOR environment variable to populate the value.
 
   - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
-    `[otp_app, :prom_ex, :application]`.
+    `[otp_app, :prom_ex, :application]`. If this changes you will also want to set `application_metric_prefix`
+    in your `dashboard_assigns` to the snakecase version of your prefix, the default
+    `application_metric_prefix` is `{otp_app}_prom_ex_application`.
 
   This plugin exposes the following metric groups:
   - `:application_versions_manual_metrics`

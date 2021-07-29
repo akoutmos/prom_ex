@@ -10,7 +10,9 @@ defmodule PromEx.Plugins.Beam do
   - `poll_rate`: This is option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
   - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
-    `[otp_app, :prom_ex, :beam]`.
+    `[otp_app, :prom_ex, :beam]`. If this changes you will also want to set `beam_metric_prefix`
+    in your `dashboard_assigns` to the snakecase version of your prefix, the default
+    `beam_metric_prefix` is `{otp_app}_prom_ex_beam`.
 
   This plugin exposes the following metric groups:
   - `:beam_memory_polling_metrics`

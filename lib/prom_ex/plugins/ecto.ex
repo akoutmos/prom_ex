@@ -10,7 +10,9 @@ if Code.ensure_loaded?(Ecto) do
       default the otp_app set for the prom_ex module that this plugin is defined in is used.
 
     - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
-      `[otp_app, :prom_ex, :ecto]`.
+      `[otp_app, :prom_ex, :ecto]`. If this changes you will also want to set `ecto_metric_prefix`
+      in your `dashboard_assigns` to the snakecase version of your prefix, the default
+      `ecto_metric_prefix` is `{otp_app}_prom_ex_ecto`.
 
     - `repos`: This is an OPTIONAL option and is a list with the full module name of your Ecto Repos (e.g [MyApp.Repo]).
        If you do not provide this value, PromEx will attempt to resolve your Repo modules via the
