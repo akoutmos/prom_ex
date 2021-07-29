@@ -109,7 +109,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(increase(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[24h])))",
+          "expr": "round(sum(increase(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -167,7 +167,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(increase(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[24h])))",
+          "expr": "round(sum(increase(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -228,7 +228,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[24h])) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[24h])))",
+          "expr": "round(sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[24h])) / sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -289,7 +289,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(increase(<%= @otp_app %>_prom_ex_absinthe_execute_invalid_request_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[24h])))",
+          "expr": "round(sum(increase(<%= @absinthe_metric_prefix %>_execute_invalid_request_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -347,7 +347,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(increase(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[1h])))",
+          "expr": "round(sum(increase(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -405,7 +405,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(increase(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[1h])))",
+          "expr": "round(sum(increase(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -466,7 +466,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[1h])) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[1h])))",
+          "expr": "round(sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[1h])) / sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -527,7 +527,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "round(sum(increase(<%= @otp_app %>_prom_ex_absinthe_execute_invalid_request_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[1h])))",
+          "expr": "round(sum(increase(<%= @absinthe_metric_prefix %>_execute_invalid_request_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -586,7 +586,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -668,7 +668,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])) by(entrypoint)",
+          "expr": "sum(rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])) by(entrypoint) / sum(rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])) by(entrypoint)",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -763,7 +763,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])",
+          "expr": "rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"query\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -858,7 +858,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint)",
+          "expr": "sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint) / sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", operation_type=\"query\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint)",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -952,7 +952,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1034,7 +1034,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])) by(entrypoint)",
+          "expr": "sum(rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])) by(entrypoint) / sum(rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])) by(entrypoint)",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -1129,7 +1129,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])",
+          "expr": "rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"mutation\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -1224,7 +1224,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint)",
+          "expr": "sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_sum{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint) / sum(rate(<%= @absinthe_metric_prefix %>_execute_complexity_size_count{job=\"$job\", instance=\"$instance\", operation_type=\"mutation\", schema=\"$absinthe_schema\"}[$interval])) by(entrypoint)",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -1318,7 +1318,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1400,7 +1400,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint)",
+          "expr": "sum(rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint) / sum(rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint)",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -1495,7 +1495,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])",
+          "expr": "rate(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -1590,7 +1590,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(<%= @otp_app %>_prom_ex_absinthe_subscription_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint) / sum(rate(<%= @otp_app %>_prom_ex_absinthe_subscription_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint)",
+          "expr": "sum(rate(<%= @absinthe_metric_prefix %>_subscription_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint) / sum(rate(<%= @absinthe_metric_prefix %>_subscription_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", schema=\"$absinthe_schema\", operation_type=\"subscription\"}[$interval])) by(entrypoint)",
           "interval": "",
           "legendFormat": "{{ entrypoint }}",
           "refId": "A"
@@ -1647,7 +1647,7 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -1657,7 +1657,7 @@
         "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+          "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -1672,7 +1672,7 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -1682,7 +1682,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+          "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,
@@ -1697,7 +1697,7 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count, schema)",
+        "definition": "label_values(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count, schema)",
         "description": "The Absinthe schema that handled the request",
         "error": null,
         "hide": 0,
@@ -1707,7 +1707,7 @@
         "name": "absinthe_schema",
         "options": [],
         "query": {
-          "query": "label_values(<%= @otp_app %>_prom_ex_absinthe_execute_duration_milliseconds_count, schema)",
+          "query": "label_values(<%= @absinthe_metric_prefix %>_execute_duration_milliseconds_count, schema)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,

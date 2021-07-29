@@ -44,7 +44,7 @@ defmodule PromEx.DashboardRenderer do
     base_def = %__MODULE__{
       otp_app: otp_app,
       relative_path: dashboard_relative_path,
-      assigns: []
+      assigns: default_plugin_assigns(otp_app)
     }
 
     dashboard_full_path =
@@ -150,5 +150,18 @@ defmodule PromEx.DashboardRenderer do
       {:error, reason} ->
         %{dashboard_render | valid_file?: false, full_path: path, error: {:file_read_error, reason}}
     end
+  end
+
+  defp default_plugin_assigns(otp_app) do
+    [
+      absinthe_metric_prefix: "#{otp_app}_prom_ex_absinthe",
+      application_metric_prefix: "#{otp_app}_prom_ex_application",
+      beam_metric_prefix: "#{otp_app}_prom_ex_beam",
+      ecto_metric_prefix: "#{otp_app}_prom_ex_ecto",
+      oban_metric_prefix: "#{otp_app}_prom_ex_oban",
+      phoenix_metric_prefix: "#{otp_app}_prom_ex_phoenix",
+      phoenix_live_view_metric_prefix: "#{otp_app}_prom_ex_phoenix_live_view",
+      prom_ex_metric_prefix: "#{otp_app}_prom_ex_prom_ex"
+    ]
   end
 end
