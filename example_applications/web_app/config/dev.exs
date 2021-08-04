@@ -66,7 +66,7 @@ config :web_app, WebAppWeb.Endpoint,
     ]
   ]
 
-  config :web_app, WebAppWeb.InternalEndpoint,
+config :web_app, WebAppWeb.InternalEndpoint,
   http: [port: 4001],
   debug_errors: true,
   code_reloader: true,
