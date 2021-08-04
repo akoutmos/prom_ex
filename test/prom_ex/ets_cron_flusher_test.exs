@@ -9,7 +9,7 @@ defmodule PromEx.ETSCronFlusherTest do
 
     @impl true
     def plugins do
-      [{Phoenix, router: TestApp.Router}]
+      [{Phoenix, router: TestApp.Router, endpoint: TestApp.Endpoint}]
     end
   end
 
