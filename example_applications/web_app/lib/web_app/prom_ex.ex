@@ -60,10 +60,20 @@ defmodule WebApp.PromEx do
       # PromEx built in plugins
       PromEx.Plugins.Application,
       PromEx.Plugins.Beam,
-      {PromEx.Plugins.Phoenix, router: WebAppWeb.Router, additional_routes: @additional_routes},
+      {
+        PromEx.Plugins.Phoenix,
+        endpoints: [
+          {WebAppWeb.Endpoint,
+           routers: [WebAppWeb.Router], additional_routes: @additional_routes},
+          {WebAppWeb.InternalEndpoint,
+           routers: [WebAppWeb.InternalRouter], event_prefix: [:internal, :endpoint]}
+        ]
+      },
       {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
       {PromEx.Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
-      PromEx.Plugins.PhoenixLiveView
+      PromEx.Plugins.PhoenixLiveView,
+      {PromEx.Plugins.PlugCowboy,
+       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
       # PromEx.Plugins.Broadway
 
       # Add your own PromEx metrics plugins
@@ -87,7 +97,8 @@ defmodule WebApp.PromEx do
       {:prom_ex, "phoenix.json"},
       {:prom_ex, "ecto.json"},
       {:prom_ex, "oban.json"},
-      {:prom_ex, "phoenix_live_view.json"}
+      {:prom_ex, "phoenix_live_view.json"},
+      {:prom_ex, "plug_cowboy.json"}
 
       # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
       # {:web_app, "/grafana_dashboards/user_metrics.json"}

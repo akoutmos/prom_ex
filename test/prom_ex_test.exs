@@ -18,6 +18,28 @@ defmodule PromExTest do
     end
   end
 
+  defmodule DisabledPromExSetUp do
+    use PromEx, otp_app: :prom_ex
+
+    alias PromEx.Plugins.{Application, Beam, Ecto, Oban, Phoenix}
+
+    @impl true
+    def plugins do
+      [
+        {Application, otp_app: :prom_ex},
+        {Phoenix, router: TestApp.Router},
+        {Beam, poll_rate: 500},
+        {Ecto, otp_app: :prom_ex, repos: [Test.Repo]},
+        {Oban, poll_rate: 10_000, oban_supervisors: []}
+      ]
+    end
+
+    @impl true
+    def dashboards do
+      [{:prom_ex, "application.json"}]
+    end
+  end
+
   defmodule DefaultPromExSetUp do
     use PromEx, otp_app: :prom_ex
 
@@ -46,6 +68,17 @@ defmodule PromExTest do
     Application.put_env(:prom_ex, Test.Repo, telemetry_prefix: [:test, :repo])
 
     []
+  end
+
+  describe "DisabledPromExSetUp" do
+    test "should not start the supervision tree if the disabled flag is true" do
+      Application.put_env(:prom_ex, DisabledPromExSetUp, disabled: true)
+
+      assert DisabledPromExSetUp.start_link([]) == :ignore
+      assert Process.whereis(DisabledPromExSetUp) == nil
+    after
+      Application.put_env(:prom_ex, DisabledPromExSetUp, disabled: false)
+    end
   end
 
   describe "DefaultPromExSetUp" do

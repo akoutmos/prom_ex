@@ -94,7 +94,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_application_uptime_milliseconds_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @application_metric_prefix %>_uptime_milliseconds_count{job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -214,7 +214,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_application_dependency_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @application_metric_prefix %>_dependency_info{job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -299,7 +299,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_application_primary_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @application_metric_prefix %>_primary_info{job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -355,7 +355,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_application_git_sha_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @application_metric_prefix %>_git_sha_info{job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -411,7 +411,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_application_git_author_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @application_metric_prefix %>_git_author_info{job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -467,7 +467,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_application_primary_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @application_metric_prefix %>_primary_info{job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -523,7 +523,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_application_primary_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @application_metric_prefix %>_primary_info{job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -540,20 +540,20 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Application", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -567,14 +567,14 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,

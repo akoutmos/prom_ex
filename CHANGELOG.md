@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2021-07-02
+
+### Added
+
+- Absinthe plugin and dashboard.
+- Erlang persistent_term metrics to BEAM dashboard.
+
+## [1.2.1] - 2021-06-18
+
+### Fixed
+
+- Addressed bug in later version of LiveView when extracting the LiveView module from a Telemetry event.
+
+## [1.2.2] - 2021-06-24
+
+### Added
+
+- Added the ability to disable the entire PromEx supervision tree. Useful for when you
+  are running tests and you don't want telemetry events attached or polling events
+  running.
+
+## [1.2.1] - 2021-06-18
+
+### Fixed
+
+- Addressed bug when Phoenix metric labels fails to serialize due to `forward` macro
+  plug options list.
+
+## [1.2.0] - 2021-06-15
+
+### Fixed
+
+- GrafanaClient module error case statement. Relaxed the pattern matching so that unaccounted
+  for responses from Grafana don't crash the GenServer.
+
+### Added
+
+- Added the `additional_routes` option to the Phoenix plugin so that routes not defined in
+  the router module can still be labeled correctly.
+
 ## [1.1.1] - 2021-05-27
 
 ### Fixed

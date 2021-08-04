@@ -67,18 +67,18 @@ defmodule PromEx do
     - [X] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
     - [X] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
-
+    - [X] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
+    - [X] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
+    
   Backlog Elixir library metrics:
+    - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
-    - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
-    - [ ] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
     - [ ] Redix (https://hexdocs.pm/redix/Redix.Telemetry.html)
     - [ ] Tesla (https://hexdocs.pm/tesla/Tesla.Middleware.Telemetry.html)
     - [ ] Memcachex (https://hexdocs.pm/memcachex/0.5.0/Memcache.html#module-telemetry)
-    - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
     - [ ] Nebulex (https://hexdocs.pm/nebulex/2.0.0-rc.0/telemetry.html)
     - [ ] Horde (https://github.com/derekkraan/horde/blob/master/lib/horde/supervisor_telemetry_poller.ex)
     - [ ] Cachex (Need to open up PR)
@@ -165,53 +165,64 @@ defmodule PromEx do
       def init(_) do
         # Get module init options from module callback
         %PromEx.Config{
+          disabled: disabled,
           manual_metrics_start_delay: manual_metrics_start_delay,
           drop_metrics_groups: drop_metrics_groups,
           grafana_config: grafana_config,
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
 
-        # Default plugin and dashboard opts
-        default_plugin_opts = [otp_app: unquote(otp_app)]
-        default_dashboard_opts = [otp_app: unquote(otp_app)]
+        # If the PromEx supervision tree is disabled, then skip it
+        if disabled do
+          :ignore
+        else
+          # Default plugin and dashboard opts
+          default_plugin_opts = [otp_app: unquote(otp_app)]
+          default_dashboard_opts = [otp_app: unquote(otp_app)]
 
-        # Configure each of the desired plugins
-        plugins =
-          __MODULE__.plugins()
-          |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
+          # Configure each of the desired plugins
+          plugins =
+            __MODULE__.plugins()
+            |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
 
-        # Extract the various metrics types from all of the plugins
-        telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
-        poll_metrics = Map.get(plugins, :poll_metrics, [])
-        manual_metrics = Map.get(plugins, :manual_metrics, [])
+          # Extract the various metrics types from all of the plugins
+          telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
+          poll_metrics = Map.get(plugins, :poll_metrics, [])
+          manual_metrics = Map.get(plugins, :manual_metrics, [])
 
-        # Start the relevant child processes depending on configuration
-        children =
-          []
-          |> PromEx.ets_cron_flusher_child_spec(__MODULE__, unquote(ets_cron_flusher_name))
-          |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
-          |> PromEx.manual_metrics_child_spec(manual_metrics, manual_metrics_start_delay, unquote(manual_metrics_name))
-          |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
-          |> PromEx.dashboard_uploader_child_spec(
-            grafana_config,
-            __MODULE__,
-            default_dashboard_opts,
-            unquote(dashboard_uploader_name)
-          )
-          |> PromEx.metrics_server_child_spec(
-            metrics_server_config,
-            __MODULE__,
-            unquote(metrics_server_name)
-          )
-          |> PromEx.lifecycle_annotator_child_spec(
-            grafana_config,
-            __MODULE__,
-            unquote(otp_app),
-            unquote(lifecycle_annotator_name)
-          )
-          |> Enum.reverse()
+          # Start the relevant child processes depending on configuration
+          children =
+            []
+            |> PromEx.ets_cron_flusher_child_spec(__MODULE__, unquote(ets_cron_flusher_name))
+            |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
+            |> PromEx.manual_metrics_child_spec(
+              manual_metrics,
+              manual_metrics_start_delay,
+              unquote(manual_metrics_name)
+            )
+            |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
+            |> PromEx.dashboard_uploader_child_spec(
+              grafana_config,
+              __MODULE__,
+              default_dashboard_opts,
+              unquote(dashboard_uploader_name)
+            )
+            |> PromEx.metrics_server_child_spec(
+              metrics_server_config,
+              __MODULE__,
+              unquote(metrics_server_name)
+            )
+            |> PromEx.lifecycle_annotator_child_spec(
+              grafana_config,
+              __MODULE__,
+              unquote(otp_app),
+              unquote(lifecycle_annotator_name)
+            )
+            |> Enum.reverse()
 
-        Supervisor.init(children, strategy: :one_for_one)
+          # Start the PromEx supervision tree
+          Supervisor.init(children, strategy: :one_for_one)
+        end
       end
 
       @doc false

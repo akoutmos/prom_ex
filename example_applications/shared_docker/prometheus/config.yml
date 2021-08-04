@@ -15,5 +15,4 @@ scrape_configs:
   - job_name: 'elixir_app'
     static_configs:
       - targets:
-        - 'elixir_app_one:4000'
-        - 'elixir_app_two:4000'
+        - 'host.docker.internal:4000'

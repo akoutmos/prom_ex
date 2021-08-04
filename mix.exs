@@ -4,7 +4,7 @@ defmodule PromEx.MixProject do
   def project do
     [
       app: :prom_ex,
-      version: "1.1.1",
+      version: "1.3.0",
       elixir: "~> 1.10",
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",
@@ -21,7 +21,7 @@ defmodule PromEx.MixProject do
         "coveralls.github": :test
       ],
       dialyzer: [
-        plt_add_apps: [:ecto, :mix, :oban, :phoenix, :plug, :telemetry_metrics],
+        plt_add_apps: [:absinthe, :ecto, :mix, :oban, :phoenix, :plug, :telemetry_metrics],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
       package: package(),
@@ -46,7 +46,7 @@ defmodule PromEx.MixProject do
     [
       # Required dependencies
       {:jason, "~> 1.2"},
-      {:finch, "~> 0.7.0"},
+      {:finch, "~> 0.8.0"},
       {:telemetry, "~> 0.4.2"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
@@ -59,6 +59,7 @@ defmodule PromEx.MixProject do
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
+      {:absinthe, ">= 1.6.0", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
@@ -137,6 +138,7 @@ defmodule PromEx.MixProject do
     [![Build Status](https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge)](https://github.com/akoutmos/prom_ex/actions)
     [![Coverage Status](https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
     [![Elixir Slack Channel](https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack)](https://elixir-lang.slack.com/archives/C01NZ0FBFSR)
+    [![Support PromEx](https://img.shields.io/badge/Support%20PromEx-%E2%9D%A4-lightblue?style=for-the-badge)](https://github.com/sponsors/akoutmos)
     """
 
     File.cp!("./README.md", "./README.md.orig")

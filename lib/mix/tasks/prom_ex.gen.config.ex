@@ -125,6 +125,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
          more details regarding configuring PromEx:
          ```
          config :<%= @otp_app %>, <%= @module_name %>.PromEx,
+           disabled: false,
            manual_metrics_start_delay: :no_delay,
            drop_metrics_groups: [],
            grafana: :disabled,

@@ -11,9 +11,10 @@ services:
       mix deps.get &&
       mix ecto.setup &&
       mix prom_ex.dashboard.publish &&
-      exec mix phx.server'
+      exec elixir --sname elixir_app_one --cookie super_secret -S mix phx.server'
     ports:
       - '4000:4000'
+      - '4001:4001'
       - '4021:4021'
       - '4022:4022'
     depends_on:
@@ -46,9 +47,10 @@ services:
       mix deps.get &&
       mix ecto.setup &&
       mix prom_ex.dashboard.publish &&
-      exec mix phx.server'
+      exec elixir --sname elixir_app_two --cookie super_secret -S mix phx.server'
     ports:
       - '4100:4000'
+      - '4101:4001'
       - '4121:4021'
       - '4122:4022'
     depends_on:

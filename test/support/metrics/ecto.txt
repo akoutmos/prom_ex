@@ -1,7 +1,7 @@
 # HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
 # TYPE web_app_prom_ex_prom_ex_status_info gauge
 web_app_prom_ex_prom_ex_status_info 1
-# HELP web_app_prom_ex_ecto_repo_query_results_returned The time spent executing the query.
+# HELP web_app_prom_ex_ecto_repo_query_results_returned The number of result rows returned from a query.
 # TYPE web_app_prom_ex_ecto_repo_query_results_returned histogram
 web_app_prom_ex_ecto_repo_query_results_returned_bucket{command="select",repo="WebApp.Repo",source="source_unavailable",le="1"} 4
 web_app_prom_ex_ecto_repo_query_results_returned_bucket{command="select",repo="WebApp.Repo",source="source_unavailable",le="10"} 4

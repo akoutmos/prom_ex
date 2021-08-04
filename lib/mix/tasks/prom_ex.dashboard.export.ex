@@ -69,12 +69,12 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
         |> Enum.reduce(%{}, fn
           {:assign, assign_value}, acc when is_map_key(acc, :assigns) ->
             [key, value] = String.split(assign_value, "=", parts: 2)
-            new_assign = {String.to_existing_atom(key), value}
+            new_assign = {String.to_atom(key), value}
             Map.put(acc, :assigns, [new_assign | acc.assigns])
 
           {:assign, assign_value}, acc ->
             [key, value] = String.split(assign_value, "=", parts: 2)
-            Map.put(acc, :assigns, [{String.to_existing_atom(key), value}])
+            Map.put(acc, :assigns, [{String.to_atom(key), value}])
 
           {opt, value}, acc ->
             Map.put(acc, opt, value)
