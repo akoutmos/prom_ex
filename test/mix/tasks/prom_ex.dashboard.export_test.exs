@@ -148,7 +148,10 @@ defmodule Mix.Tasks.PromEx.Dashboard.ExportTest do
         File.cd!(ctx.tmp_dir, fn ->
           Config.run(~w(-d an_id -o sample))
           Code.compile_file("lib/sample/prom_ex.ex")
-          Export.run(~w(-m Sample.PromEx -d phoenix.json -s -a datasource_id=another_id -a prom_ex_metric_prefix=another_app_prom_ex_prom_ex))
+
+          Export.run(
+            ~w(-m Sample.PromEx -d phoenix.json -s -a datasource_id=another_id -a prom_ex_metric_prefix=another_app_prom_ex_prom_ex)
+          )
         end)
       end)
 
