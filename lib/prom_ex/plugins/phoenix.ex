@@ -6,6 +6,12 @@ if Code.ensure_loaded?(Phoenix) do
 
     ## Plugin options
 
+    This plugin supports the following options:
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+      `[otp_app, :prom_ex, :phoenix]`. If this changes you will also want to set `phoenix_metric_prefix`
+      in your `dashboard_assigns` to the snakecase version of your prefix, the default
+      `phoenix_metric_prefix` is `{otp_app}_prom_ex_phoenix`.
+
     ### Single Endpoint/Router
     - `endpoint`: **Required** This is the full module name of your Phoenix Endpoint (e.g MyAppWeb.Endpoint).
     - `router`: **Required** This is the full module name of your Phoenix Router (e.g MyAppWeb.Router).
@@ -135,7 +141,7 @@ if Code.ensure_loaded?(Phoenix) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :phoenix)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix))
       phoenix_event_prefixes = fetch_event_prefixes!(opts)
 
       set_up_telemetry_proxy(phoenix_event_prefixes)

@@ -15,6 +15,11 @@ if Code.ensure_loaded?(Absinthe) do
       metrics on the `:__schema` entrypoint (used for GraphQL schema introspection), you would set
       a value of `[:__schema]`. This is applicable to queries, mutations, and subscriptions.
 
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+      `[otp_app, :prom_ex, :absinthe]`. If this changes you will also want to set `absinthe_metric_prefix`
+      in your `dashboard_assigns` to the snakecase version of your prefix, the default
+      `absinthe_metric_prefix` is `{otp_app}_prom_ex_absinthe`.
+
     This plugin exposes the following metric groups:
     - `:absinthe_execute_event_metrics`
     - `:absinthe_subscription_event_metrics`
@@ -57,7 +62,7 @@ if Code.ensure_loaded?(Absinthe) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :absinthe)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :absinthe))
 
       # Event metrics definitions
       [

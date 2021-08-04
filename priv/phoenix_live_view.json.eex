@@ -116,7 +116,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) / \n(\n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + \n  (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))\n)",
+          "expr": "sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) / \n(\n  sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + \n  (sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))\n)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -173,7 +173,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0)) + (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))",
+          "expr": "(sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0)) + (sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -238,7 +238,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) / \n(\n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + \n  (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))\n)",
+          "expr": "sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) / \n(\n  sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) + \n  (sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))\n)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -295,7 +295,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0)) + (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))",
+          "expr": "(sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0)) + (sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[24h])) or vector(0))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -360,7 +360,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) / \n(\n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + \n  (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))\n)",
+          "expr": "sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) / \n(\n  sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + \n  (sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))\n)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -417,7 +417,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0)) + (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))",
+          "expr": "(sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0)) + (sum(increase(<%= @phoenix_live_view_metric_prefix %>_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -482,7 +482,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) / \n(\n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + \n  (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))\n)",
+          "expr": "sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) / \n(\n  sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) + \n  (sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))\n)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -539,7 +539,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0)) + (sum(increase(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))",
+          "expr": "(sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0)) + (sum(increase(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[1h])) or vector(0))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -615,7 +615,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module) / sum(irate(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module)",
           "instant": false,
           "interval": "",
           "legendFormat": "({{ action }}) {{ module }}",
@@ -713,7 +713,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, kind, reason) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, kind, reason)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_mount_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, kind, reason) / sum(irate(<%= @phoenix_live_view_metric_prefix %>_mount_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, kind, reason)",
           "instant": false,
           "interval": "",
           "legendFormat": "({{ action }}) {{ module }} :: ({{kind}} -> {{reason}})",
@@ -799,7 +799,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_mount_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -871,7 +871,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_mount_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -969,7 +969,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, event) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, event)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, event) / sum(irate(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(action, module, event)",
           "instant": false,
           "interval": "",
           "legendFormat": "({{ action }}) {{ module }} :: {{ event }}",
@@ -1067,7 +1067,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_handle_event_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason) / sum(irate(<%= @phoenix_live_view_metric_prefix %>_handle_event_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(event, action, module, kind, reason)",
           "instant": false,
           "interval": "",
           "legendFormat": "({{ action }}) {{ module }} :: {{event}} ({{kind}} -> {{reason}})",
@@ -1153,7 +1153,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_handle_event_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1225,7 +1225,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_live_view_metric_prefix %>_handle_event_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1269,14 +1269,14 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1290,14 +1290,14 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
