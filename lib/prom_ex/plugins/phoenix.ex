@@ -217,7 +217,7 @@ if Code.ensure_loaded?(Phoenix) do
 
             _ ->
               Process.sleep(1_000)
-              endpoint_init_checker_function.(count + 1, endpoint_init_checker_function)
+              endpoint_init_checker_function.(count + 1, endpoint_module, endpoint_init_checker_function)
           end
 
         _, _, _ ->
