@@ -1,6 +1,6 @@
 # HELP web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds The time it takes for the application to receive the HTTP request body.
 # HELP web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds The time it takes for the application to process HTTP requests.
-# HELP web_app_prom_ex_plug_cowboy_http_requests_total The number of requests have been serviced.
+# HELP web_app_prom_ex_plug_cowboy_http_requests_total The number of requests that have been serviced.
 # HELP web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds The time it takes for the application to send the HTTP response.
 # HELP web_app_prom_ex_plug_cowboy_http_response_size_bytes The size of the HTTP response payload.
 # HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.

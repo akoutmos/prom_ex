@@ -222,6 +222,7 @@ PromEx provides the following utilities to you in order to achieve your observab
 | `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban       |
 | `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView            |
 | `PromEx.Plugins.Absinthe`        | Beta        | Collect GraphQL metrics emitted by Absinthe            |
+| `PromEx.Plugins.PlugCowboy`      | Beta        | Collect HTTP request metrics emitted by Plug.Cowboy    |
 | `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
 | `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
 | `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix         |

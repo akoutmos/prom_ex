@@ -116,7 +116,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -180,7 +180,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -236,7 +236,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -292,7 +292,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -357,7 +357,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -422,7 +422,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -478,7 +478,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -534,7 +534,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -598,7 +598,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -670,7 +670,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @plug_cowboy_metric_prefix %>_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -754,7 +754,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @plug_cowboy_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -851,7 +851,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @plug_cowboy_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @plug_cowboy_metric_prefix %>_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -948,7 +948,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -1043,19 +1043,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @plug_cowboy_metric_prefix %>_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "2xx",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @plug_cowboy_metric_prefix %>_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "4xx",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_plug_cowboy_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @plug_cowboy_metric_prefix %>_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "5xx",
           "refId": "C"
@@ -1117,14 +1117,14 @@
           "value": "elixir_app"
         },
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1143,14 +1143,14 @@
           "value": "host.docker.internal:4001"
         },
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
