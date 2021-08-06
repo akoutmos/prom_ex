@@ -11,6 +11,10 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     - `routers`: **Required** This is a list with the full module names of your Routers (e.g MyAppWeb.Router).
       Phoenix and Plug routers are supported. When the Phoenix dependency is present in your project, a list of Phoenix Routers is expected. Otherwise a list of Plug.Router modules must be provided
     - `event_prefix`: **Optional**, allows you to set the event prefix for the Telemetry events.
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+    `[otp_app, :prom_ex, :plug_cowboy]`. If this changes you will also want to set `plug_cowboy_metric_prefix`
+    in your `dashboard_assigns` to the snakecase version of your prefix, the default
+    `plug_cowboy_metric_prefix` is `{otp_app}_prom_ex_plug_cowboy`.
 
 
 
@@ -74,7 +78,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :plug_cowboy)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :plug_cowboy))
 
       [
         http_events(metric_prefix, opts)
@@ -159,7 +163,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
           counter(
             metric_prefix ++ [:http, :requests, :total],
             event_name: cowboy_stop_event,
-            description: "The number of requests have been serviced.",
+            description: "The number of requests that have been serviced.",
             drop: drop_ignored(ignore_routes),
             tag_values: &get_tags(&1, routers),
             tags: http_metrics_tags
