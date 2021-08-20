@@ -180,6 +180,20 @@ if Code.ensure_loaded?(Ecto) do
             unit: {:native, :millisecond}
           ),
 
+          # Capture the total time (the sum of all other measurements)
+          distribution(
+            metric_prefix ++ [:repo, :query, :total, :time, :milliseconds],
+            event_name: @query_event,
+            measurement: :total_time,
+            description: "The sum of the other time measurements.",
+            tags: [:repo, :source, :command],
+            tag_values: &ecto_query_tag_values/1,
+            reporter_options: [
+              buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+            ],
+            unit: {:native, :millisecond}
+          ),
+
           # Capture the number of results returned
           distribution(
             metric_prefix ++ [:repo, :query, :results, :returned],
