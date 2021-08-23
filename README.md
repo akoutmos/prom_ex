@@ -1,37 +1,16 @@
-<!--START-->
-<p align="center">
-  <img align="center" width="40%" src="guides/images/logo.svg" alt="PromEx Logo">
-  <img align="center" width="40%" src="guides/images/logo_text.png" alt="PromEx Logo">
-</p>
-
-<p align="center">
-  Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries
-</p>
-
-<p align="center">
-  <a href="https://hex.pm/packages/prom_ex">
-    <img alt="Hex.pm" src="https://img.shields.io/hexpm/v/prom_ex?style=for-the-badge">
-  </a>
-
-  <a href="https://github.com/akoutmos/prom_ex/actions">
-    <img alt="GitHub Workflow Status (master)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
-  </a>
-
-  <a href="https://coveralls.io/github/akoutmos/prom_ex?branch=master">
-    <img alt="Coveralls master branch" src="https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge">
-  </a>
-
-  <a href="https://elixir-lang.slack.com/archives/C01NZ0FBFSR">
-    <img alt="Elixir Slack Channel" src="https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack">
-  </a>
-
-  <a href="https://github.com/sponsors/akoutmos">
-    <img alt="Support PromEx" src="https://img.shields.io/badge/Support%20PromEx-%E2%9D%A4-lightblue?style=for-the-badge">
-  </a>
-</p>
-
 <br>
-<!--END-->
+<img align="center" width="33%" src="guides/images/logo.svg" alt="PromEx Logo" style="margin-left:33%">
+<img align="center" width="70%" src="guides/images/logo_text.png" alt="PromEx Logo" style="margin-left:15%">
+<br>
+<div align="center">Prometheus metrics and Grafana dashboards for all of your favorite Elixir libraries</div>
+<br>
+--------------------
+
+[![Hex.pm](https://img.shields.io/hexpm/v/prom_ex?style=for-the-badge)](http://hex.pm/packages/prom_ex)
+[![Build Status](https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge)](https://github.com/akoutmos/prom_ex/actions)
+[![Coverage Status](https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
+[![Elixir Slack Channel](https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack)](https://elixir-lang.slack.com/archives/C01NZ0FBFSR)
+[![Support PromEx](https://img.shields.io/badge/Support%20PromEx-%E2%9D%A4-lightblue?style=for-the-badge)](https://github.com/sponsors/akoutmos)
 
 # Contents
 
@@ -81,6 +60,10 @@ project in order to help ensure its continued development.
 </a>
 
 ### Bronze Sponsors
+
+<a href="https://smartlogic.io/" style="margin-right: 10px;" target="_blank">
+  <img align="center" height="50" src="guides/images/smartlogic-logo-teal-400.png" alt="SmartLogic Consultancy">
+</a>
 
 <a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=17615">
   <img align="center" height="125" src="guides/images/your_logo_here.png" alt="Support the project">
