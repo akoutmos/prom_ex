@@ -208,7 +208,7 @@ if Code.ensure_loaded?(Phoenix) do
           case Process.whereis(endpoint_module) do
             pid when is_pid(pid) ->
               measurements = %{status: 1}
-              url_metadata = %{url: endpoint_module.url(), endpoint: endpoint_module}
+              url_metadata = %{url: endpoint_module.url(), endpoint: normalize_module_name(endpoint_module)}
               :telemetry.execute([:prom_ex, :plugin, :phoenix, :endpoint_url], measurements, url_metadata)
 
               %URI{port: port} = endpoint_module.struct_url()
