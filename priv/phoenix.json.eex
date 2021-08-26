@@ -256,8 +256,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "green",
                 "value": null
+              },
+              {
+                "value": 0,
+                "color": "red"
               },
               {
                 "color": "yellow",
@@ -269,6 +273,7 @@
               }
             ]
           },
+          "noValue": "No data",
           "unit": "percent"
         },
         "overrides": []
