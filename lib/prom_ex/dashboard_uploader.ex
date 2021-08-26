@@ -112,7 +112,7 @@ defmodule PromEx.DashboardUploader do
     ]
 
     dashboard_otp_app
-    |> DashboardRenderer.build(dashboard_relative_path)
+    |> DashboardRenderer.build(dashboard_relative_path, prom_ex_module.__otp_app__())
     |> DashboardRenderer.merge_assigns(default_assigns)
     |> DashboardRenderer.merge_assigns(user_provided_assigns)
     |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
