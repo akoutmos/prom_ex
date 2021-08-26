@@ -43,11 +43,10 @@
     ]
   },
   "description": "All the data that is presented here is captured by the PromEx Plug Cowboy plugin (https://github.com/akoutmos/prom_ex/blob/master/lib/prom_ex/plugins/plug_cowboy.ex)",
-  "editable": true,
+  "editable": false,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 5,
-  "iteration": 1625581159566,
+  "id": null,
   "links": [],
   "panels": [
     {
@@ -1106,25 +1105,20 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Plug Cowboy", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "elixir_app",
-          "value": "elixir_app"
-        },
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1137,20 +1131,15 @@
       },
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "host.docker.internal:4001",
-          "value": "host.docker.internal:4001"
-        },
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @plug_cowboy_metric_prefix %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1234,5 +1223,5 @@
   "timezone": "",
   "title": "<%= @title %>",
   "uid": "<%= @uid %>",
-  "version": 15
+  "version": 1
 }
