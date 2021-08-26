@@ -291,7 +291,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "round(sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -533,7 +533,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "round(sum(increase(<%= @plug_cowboy_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
