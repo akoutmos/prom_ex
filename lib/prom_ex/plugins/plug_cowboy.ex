@@ -73,7 +73,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     require Logger
     alias Plug.Cowboy.Conn
 
-    @default_route ""
+    @default_route "Unknown"
 
     @impl true
     def event_metrics(opts) do
