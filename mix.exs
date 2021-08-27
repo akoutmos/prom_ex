@@ -51,7 +51,7 @@ defmodule PromEx.MixProject do
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
       {:telemetry_metrics_prometheus_core, "~> 1.0.1"},
-      {:plug_cowboy, "~> 2.1"},
+      {:plug_cowboy, ">= 2.4.0"},
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.5.0", optional: true},
