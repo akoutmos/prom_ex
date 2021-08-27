@@ -71,19 +71,42 @@ if Code.ensure_loaded?(Plug.Router) do
     require Logger
     alias Plug.Conn
 
+    @stop_event [:prom_ex, :router, :stop]
+
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :plug_router))
+      set_up_telemetry_proxy()
 
       [
         http_events(metric_prefix, opts)
       ]
     end
 
+    defp set_up_telemetry_proxy do
+      :ok =
+        :telemetry.attach(
+          {__MODULE__, :stop},
+          [:plug, :router_dispatch, :stop],
+          &__MODULE__.handle_proxy_router_event/4,
+          %{}
+        )
+
+      :ok =
+        :telemetry.attach(
+          {__MODULE__, :exception},
+          [:plug, :router_dispatch, :exception],
+          &__MODULE__.handle_proxy_router_event/4,
+          %{}
+        )
+    end
+
+    def handle_proxy_router_event(_, measurements, meta, _) do
+      :telemetry.execute(@stop_event, measurements, meta)
+    end
+
     defp http_events(metric_prefix, opts) do
-      # Shared configuration
-      router_stop_event = [:plug, :router_dispatch, :stop]
       http_metrics_tags = [:status, :method, :path]
 
       routers =
@@ -102,7 +125,7 @@ if Code.ensure_loaded?(Plug.Router) do
           # Capture request duration information
           distribution(
             metric_prefix ++ [:http, :request, :duration, :milliseconds],
-            event_name: router_stop_event,
+            event_name: @stop_event,
             measurement: :duration,
             description: "The time it takes for the application to process HTTP requests.",
             reporter_options: [
@@ -115,7 +138,7 @@ if Code.ensure_loaded?(Plug.Router) do
           ),
           counter(
             metric_prefix ++ [:http, :requests, :total],
-            event_name: router_stop_event,
+            event_name: @stop_event,
             description: "The number of requests that have been serviced.",
             drop: drop_ignored(ignore_routes, routers),
             tag_values: &get_tags(&1),
@@ -130,10 +153,10 @@ if Code.ensure_loaded?(Plug.Router) do
       path
     end
 
-    defp get_tags(%{conn: conn = %Conn{status: status, method: method}}) do
+    defp get_tags(%{conn: conn = %Conn{}}) do
       %{
-        status: status,
-        method: method,
+        status: conn.status || 500,
+        method: conn.method,
         path: path(conn)
       }
     end
