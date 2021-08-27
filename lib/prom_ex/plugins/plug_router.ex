@@ -85,21 +85,19 @@ if Code.ensure_loaded?(Plug.Router) do
     end
 
     defp set_up_telemetry_proxy do
-      :ok =
-        :telemetry.attach(
-          {__MODULE__, :stop},
-          [:plug, :router_dispatch, :stop],
-          &__MODULE__.handle_proxy_router_event/4,
-          %{}
-        )
+      :telemetry.attach(
+        {__MODULE__, :stop},
+        [:plug, :router_dispatch, :stop],
+        &__MODULE__.handle_proxy_router_event/4,
+        %{}
+      )
 
-      :ok =
-        :telemetry.attach(
-          {__MODULE__, :exception},
-          [:plug, :router_dispatch, :exception],
-          &__MODULE__.handle_proxy_router_event/4,
-          %{}
-        )
+      :telemetry.attach(
+        {__MODULE__, :exception},
+        [:plug, :router_dispatch, :exception],
+        &__MODULE__.handle_proxy_router_event/4,
+        %{}
+      )
     end
 
     def handle_proxy_router_event(_, measurements, meta, _) do

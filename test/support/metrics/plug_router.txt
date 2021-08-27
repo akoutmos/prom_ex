@@ -1,0 +1,39 @@
+# HELP web_app_prom_ex_plug_router_http_request_duration_milliseconds The time it takes for the application to process HTTP requests.
+# HELP web_app_prom_ex_plug_router_http_requests_total The number of requests that have been serviced.
+# HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
+# TYPE web_app_prom_ex_plug_router_http_request_duration_milliseconds histogram
+# TYPE web_app_prom_ex_plug_router_http_requests_total counter
+# TYPE web_app_prom_ex_prom_ex_status_info gauge
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="+Inf"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="1"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="1024"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="128"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="16"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="2"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="2048"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="256"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="32"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="4"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="512"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="64"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="200",le="8"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="+Inf"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="1"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="1024"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="128"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="16"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="2"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="2048"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="256"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="32"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="4"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="512"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="64"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_bucket{method="GET",path="/users",status="500",le="8"} 0
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_count{method="GET",path="/users",status="200"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_count{method="GET",path="/users",status="500"} 1
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_sum{method="GET",path="/users",status="200"} 53.504
+web_app_prom_ex_plug_router_http_request_duration_milliseconds_sum{method="GET",path="/users",status="500"} 10.0
+web_app_prom_ex_plug_router_http_requests_total{method="GET",path="/users",status="200"} 1
+web_app_prom_ex_plug_router_http_requests_total{method="GET",path="/users",status="500"} 1
+web_app_prom_ex_prom_ex_status_info 1
