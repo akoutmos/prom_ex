@@ -41,11 +41,13 @@ if Code.ensure_loaded?(Plug.Router) do
     defmodule WebApp.PromEx do
       use PromEx, otp_app: :web_app
 
+      alias PromEx.Plugins
+
       @impl true
       def plugins do
         [
           ...
-          {PromEx.Plugins.PlugRouter,
+          {Plugins.PlugRouter,
             event_prefix: [:webapp, :router], metric_prefix: [:prom_ex, :router], routers: [WebApp.Router]},
           {Plugins.PromEx, metric_prefix: [:prom_ex, :prom_ex]}
         ]
