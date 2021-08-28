@@ -10,8 +10,7 @@ if Code.ensure_loaded?(Plug.Router) do
 
     - `routers`: **Required** This is a list with the full module names of your Routers (e.g MyAppWeb.Router).
      Metrics produced by routers not in this list will be discarded.
-    - `event_prefix`: **Required**, allows you to set the event prefix for the Telemetry events.
-    Don't forget to include a matching `Plug.Telemetry` in our plug. Eg:
+    - `event_prefix`: **Required**, allows you to set the event prefix defined in your `Plug.Telemetry` configuration:
 
     ```
     defmodule WebApp.Router do
@@ -24,10 +23,18 @@ if Code.ensure_loaded?(Plug.Router) do
     ```
 
     With the above configuration, this plugin will subscribe to `[:webapp, :router, :stop]` telemetry events
-    produced by `Plug.Telemetry`.
+    produced by `Plug.Telemetry`. These events will be fired **before** the response is actually sent, therefore this
+    plugin will be able to export response body size metrics, since the `Plug.Conn` struct in the metadata of the
+    telemetry measurement still contains the response body.
 
-    Additionally, this plugin will also subscribe to `[:plug, :router_dispatch, :exception]` telemetry events fired by
-    `Plug.Router` in order to track requests that fail to complete successfully.
+    However, `Plug.Telemetry` does not use `:telemetry.span/3`, which means the `:stop` event might not always be fired
+    (eg. if the process handling the request crashes). For this reason, this PromEx plugin also subscribes to
+    `[:plug, :router_dispatch, :exception]` telemetry events fired by `Plug.Router`, which are fired within a
+    `:telemetry.span/3` call.
+
+    Unfortunately, we cannot safely rely on `[:plug, :router_dispatch, :stop]` events produced by `Plug.Router` since
+    these are fired **after** the response is sent (as opposed to `Plug.Telemetry` `:stop` events). As a consequence,
+    the response body is no longer available in the `Plug.Conn` struct attached to the telemetry measurement metadata.
 
     - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
      `[otp_app, :prom_ex, :plug_router]`. If this changes you will also want to set `plug_router_metric_prefix`
