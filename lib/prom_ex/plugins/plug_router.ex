@@ -1,20 +1,27 @@
 if Code.ensure_loaded?(Plug.Router) do
   defmodule PromEx.Plugins.PlugRouter do
     @moduledoc """
-    This plugin captures HTTP request metrics emitted by Plug.Cowboy.
+    This plugin captures HTTP request metrics emitted by Plug.Router.
+
+    Note: this plugin is heavily inspired on plugin `Plug.Cowboy` however at the moment this plugin does not
+    expose response body size related metrics, since the `[:plug, :router_dispatch, :stop]` telemetry
+    event measurements from `Plug.Router` does not offer an obvious way to obtain this information.
+
+    As as consequence, for the moment, Grafana panels around response sizes from this plugin dashboard
+    won't contain any data.
 
     This plugin exposes the following metric group:
-    - `:plug_router_http_event_metrics`
+     - `:plug_router_http_event_metrics`
 
     ## Plugin options
 
     - `routers`: **Required** This is a list with the full module names of your Routers (e.g MyAppWeb.Router).
-    Metrics produced by routers not in this list will be discarded.
+     Metrics produced by routers not in this list will be discarded.
     - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
-    `[otp_app, :prom_ex, :plug_router]`. If this changes you will also want to set `plug_router_metric_prefix`
-    in your `dashboard_assigns` to the snakecase version of your prefix, the default
-    `plug_router_metric_prefix` is `{otp_app}_prom_ex_plug_router`.
-
+     `[otp_app, :prom_ex, :plug_router]`. If this changes you will also want to set `plug_router_metric_prefix`
+     in your `dashboard_assigns` to the snakecase version of your prefix, the default
+     `plug_router_metric_prefix` is `{otp_app}_prom_ex_plug_router`.
+    - `ignore_routes`: This option is OPTIONAL and is used to ignore certain paths.
 
     To use plugin in your application, add the following to your PromEx module:
 
@@ -26,7 +33,17 @@ if Code.ensure_loaded?(Plug.Router) do
       def plugins do
         [
           ...
-          {PromEx.Plugins.PlugRouter, routers: [MyApp.Router]}
+          {PromEx.Plugins.PlugRouter, metric_prefix: [:prom_ex, :router], routers: [MyApp.Router]},
+          {Plugins.PromEx, metric_prefix: [:prom_ex, :prom_ex]}
+        ]
+      end
+
+      @impl true
+      def dashboard_assigns do
+        [
+          datasource_id: "...",
+          plug_router_metric_prefix: "prom_ex_router",
+          prom_ex_metric_prefix: "prom_ex_prom_ex"
         ]
       end
 
@@ -50,7 +67,8 @@ if Code.ensure_loaded?(Plug.Router) do
       def plugins do
         [
           ...
-          {PromEx.Plugins.PlugRouter, routers: [MyApp.Router], ignore_routes: ["/metrics"]}
+          {PromEx.Plugins.PlugRouter,
+            metric_prefix: [:prom_ex, :router], routers: [MyApp.Router], ignore_routes: ["/metrics"]}
         ]
       end
 
@@ -63,8 +81,6 @@ if Code.ensure_loaded?(Plug.Router) do
       end
     end
     ```
-
-
     """
 
     use PromEx.Plugin
