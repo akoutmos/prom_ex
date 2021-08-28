@@ -1,6 +1,6 @@
 [
   %{
-    event: [:plug, :router_dispatch, :stop],
+    event: [:testapp, :plug, :router, :stop],
     measurements: %{
       duration: 53_504_000
     },
@@ -8,16 +8,16 @@
       conn: %Plug.Conn{
         method: "GET",
         private: %{
-          plug_route: {"/users", fn _ -> :ok end}
+          plug_route: {"/users/:id", fn _ -> :ok end}
         },
         status: 200
       },
-      route: "/users",
-      router: TestApp.Router
+      route: "/users/1",
+      router: TestApp.PlugRouter
     }
   },
   %{
-    event: [:plug, :router_dispatch, :stop],
+    event: [:testapp, :plug, :router, :stop],
     measurements: %{
       duration: 5_000_000
     },
@@ -30,11 +30,11 @@
         status: 200
       },
       route: "/metrics",
-      router: TestApp.Router
+      router: TestApp.PlugRouter
     }
   },
   %{
-    event: [:plug, :router_dispatch, :stop],
+    event: [:testapp, :plug, :router, :stop],
     measurements: %{
       duration: 53_504_000
     },
@@ -42,11 +42,11 @@
       conn: %Plug.Conn{
         method: "GET",
         private: %{
-          plug_route: {"/users", fn _ -> :ok end}
+          plug_route: {"/users/:id", fn _ -> :ok end}
         },
         status: 200
       },
-      route: "/users",
+      route: "/users/1",
       router: TestApp.OtherRouter
     }
   },
@@ -56,15 +56,18 @@
       duration: 10_000_000
     },
     metadata: %{
+      kind: :exit,
+      reason: nil,
+      stacktrace: [],
       conn: %Plug.Conn{
         method: "GET",
         private: %{
-          plug_route: {"/users", fn _ -> :ok end}
+          plug_route: {"/users/:id", fn _ -> :ok end}
         },
         status: nil
       },
-      route: "/users",
-      router: TestApp.Router
+      route: "/users/1",
+      router: TestApp.PlugRouter
     }
   }
 ]

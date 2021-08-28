@@ -4,23 +4,29 @@ defmodule PromEx.Plugins.PlugRouterTest do
   alias PromEx.Plugins.PlugRouter
   alias PromEx.Test.Support.{Events, Metrics}
 
-  defmodule WebApp.PromEx do
-    use PromEx, otp_app: :web_app
+  defmodule TestApp.PromEx do
+    use PromEx, otp_app: :test_app
 
-    @ignore_routes ["/metrics"]
+    alias Elixir.TestApp
 
     @impl true
     def plugins do
-      [{PlugRouter, routers: [TestApp.Router], ignore_routes: @ignore_routes}]
+      [
+        {PlugRouter,
+         event_prefix: [:testapp, :plug, :router],
+         metric_prefix: [:testapp, :plug, :router],
+         routers: [TestApp.PlugRouter],
+         ignore_routes: ["/metrics"]}
+      ]
     end
   end
 
   test "telemetry events are accumulated" do
-    start_supervised!(WebApp.PromEx)
+    start_supervised!(TestApp.PromEx)
     Events.execute_all(:plug_router)
 
     metrics =
-      WebApp.PromEx
+      TestApp.PromEx
       |> PromEx.get_metrics()
       |> Metrics.sort()
 
@@ -32,7 +38,9 @@ defmodule PromEx.Plugins.PlugRouterTest do
       assert length(
                PlugRouter.event_metrics(
                  otp_app: :prom_ex,
-                 routers: [TestApp.Router],
+                 event_prefix: [:testapp, :plug, :router],
+                 metric_prefix: [:testapp, :plug, :router],
+                 routers: [TestApp.PlugRouter],
                  ignore_routes: [
                    metrics: "/metrics"
                  ]

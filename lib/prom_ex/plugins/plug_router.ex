@@ -1,22 +1,34 @@
 if Code.ensure_loaded?(Plug.Router) do
   defmodule PromEx.Plugins.PlugRouter do
     @moduledoc """
-    This plugin captures HTTP request metrics emitted by Plug.Router.
+    This plugin captures HTTP request metrics emitted by `Plug.Router` and `Plug.Telemetry`.
 
-    Note: this plugin is heavily inspired on plugin `Plug.Cowboy` however at the moment this plugin does not
-    expose response body size related metrics, since the `[:plug, :router_dispatch, :stop]` telemetry
-    event measurements from `Plug.Router` does not offer an obvious way to obtain this information.
-
-    As as consequence, for the moment, Grafana panels around response sizes from this plugin dashboard
-    won't contain any data.
-
-    This plugin exposes the following metric group:
+    This plugin is heavily inspired on plugin `Plug.Cowboy`, and exposes the following metric group:
      - `:plug_router_http_event_metrics`
 
     ## Plugin options
 
     - `routers`: **Required** This is a list with the full module names of your Routers (e.g MyAppWeb.Router).
      Metrics produced by routers not in this list will be discarded.
+    - `event_prefix`: **Required**, allows you to set the event prefix for the Telemetry events.
+    Don't forget to include a matching `Plug.Telemetry` in our plug. Eg:
+
+    ```
+    defmodule WebApp.Router do
+      use Plug.Router
+
+      plug PromEx.Plug, prom_ex_module: WebApp.PromEx, path: "/metrics"
+      plug Plug.Telemetry, event_prefix: [:webapp, :router]
+      ...
+    end
+    ```
+
+    With the above configuration, this plugin will subscribe to `[:webapp, :router, :stop]` telemetry events
+    produced by `Plug.Telemetry`.
+
+    Additionally, this plugin will also subscribe to `[:plug, :router_dispatch, :exception]` telemetry events fired by
+    `Plug.Router` in order to track requests that fail to complete successfully.
+
     - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
      `[otp_app, :prom_ex, :plug_router]`. If this changes you will also want to set `plug_router_metric_prefix`
      in your `dashboard_assigns` to the snakecase version of your prefix, the default
@@ -33,7 +45,8 @@ if Code.ensure_loaded?(Plug.Router) do
       def plugins do
         [
           ...
-          {PromEx.Plugins.PlugRouter, metric_prefix: [:prom_ex, :router], routers: [MyApp.Router]},
+          {PromEx.Plugins.PlugRouter,
+            event_prefix: [:webapp, :router], metric_prefix: [:prom_ex, :router], routers: [WebApp.Router]},
           {Plugins.PromEx, metric_prefix: [:prom_ex, :prom_ex]}
         ]
       end
@@ -68,7 +81,8 @@ if Code.ensure_loaded?(Plug.Router) do
         [
           ...
           {PromEx.Plugins.PlugRouter,
-            metric_prefix: [:prom_ex, :router], routers: [MyApp.Router], ignore_routes: ["/metrics"]}
+            event_prefix: [:webapp, :router], metric_prefix: [:prom_ex, :router], routers: [WebApp.Router],
+            ignore_routes: ["/metrics"]}
         ]
       end
 
@@ -88,29 +102,31 @@ if Code.ensure_loaded?(Plug.Router) do
     alias Plug.Conn
 
     @stop_event [:prom_ex, :router, :stop]
+    @default_event_prefix [:plug, :router_dispatch]
 
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :plug_router))
-      set_up_telemetry_proxy()
+      event_prefix = Keyword.fetch!(opts, :event_prefix)
+      set_up_telemetry_proxy(event_prefix)
 
       [
         http_events(metric_prefix, opts)
       ]
     end
 
-    defp set_up_telemetry_proxy do
+    defp set_up_telemetry_proxy(event_prefix) do
       :telemetry.attach(
         {__MODULE__, :stop},
-        [:plug, :router_dispatch, :stop],
+        event_prefix ++ [:stop],
         &__MODULE__.handle_proxy_router_event/4,
         %{}
       )
 
       :telemetry.attach(
         {__MODULE__, :exception},
-        [:plug, :router_dispatch, :exception],
+        @default_event_prefix ++ [:exception],
         &__MODULE__.handle_proxy_router_event/4,
         %{}
       )
@@ -150,6 +166,19 @@ if Code.ensure_loaded?(Plug.Router) do
             tags: http_metrics_tags,
             unit: {:native, :millisecond}
           ),
+          distribution(
+            metric_prefix ++ [:http, :response, :size, :bytes],
+            event_name: @stop_event,
+            description: "The size of the HTTP response payload.",
+            reporter_options: [
+              buckets: exponential!(1, 4, 12)
+            ],
+            measurement: &resp_body_size/2,
+            drop: drop_ignored(ignore_routes, routers),
+            tag_values: &get_tags(&1),
+            tags: http_metrics_tags,
+            unit: :byte
+          ),
           counter(
             metric_prefix ++ [:http, :requests, :total],
             event_name: @stop_event,
@@ -160,6 +189,13 @@ if Code.ensure_loaded?(Plug.Router) do
           )
         ]
       )
+    end
+
+    defp resp_body_size(_, metadata) do
+      case metadata.conn.resp_body do
+        nil -> 0
+        _ -> :erlang.iolist_size(metadata.conn.resp_body)
+      end
     end
 
     defp path(conn) do
@@ -180,7 +216,10 @@ if Code.ensure_loaded?(Plug.Router) do
         %{conn: conn = %Conn{}, router: router} ->
           path = path(conn)
 
-          !Enum.member?(routers, router) || MapSet.member?(ignored_routes, path)
+          disallowed_router? = !Enum.member?(routers, router)
+          ignored_route? = MapSet.member?(ignored_routes, path)
+
+          disallowed_router? || ignored_route?
 
         _meta ->
           false
