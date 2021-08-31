@@ -217,20 +217,21 @@ PromEx provides the following utilities to you in order to achieve your observab
 
 ## Available Plugins
 
-| Plugin                           | Status      | Description                                            |
-| -------------------------------- | ----------- | ------------------------------------------------------ |
-| `PromEx.Plugins.Application`     | Stable      | Collect metrics on your application dependencies       |
-| `PromEx.Plugins.Beam`            | Stable      | Collect metrics regarding the BEAM virtual machine     |
-| `PromEx.Plugins.Phoenix`         | Stable      | Collect request metrics emitted by Phoenix             |
-| `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                  |
-| `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban       |
-| `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView            |
-| `PromEx.Plugins.Absinthe`        | Beta        | Collect GraphQL metrics emitted by Absinthe            |
-| `PromEx.Plugins.PlugCowboy`      | Beta        | Collect HTTP request metrics emitted by Plug.Cowboy    |
-| `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
-| `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
-| `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix         |
-| More to come...                  |             |                                                        |
+| Plugin                           | Status      | Description                                                            |
+| -------------------------------- | ----------- | ---------------------------------------------------------------------- |
+| `PromEx.Plugins.Application`     | Stable      | Collect metrics on your application dependencies                       |
+| `PromEx.Plugins.Beam`            | Stable      | Collect metrics regarding the BEAM virtual machine                     |
+| `PromEx.Plugins.Phoenix`         | Stable      | Collect request metrics emitted by Phoenix                             |
+| `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                                  |
+| `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban                       |
+| `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView                            |
+| `PromEx.Plugins.Absinthe`        | Beta        | Collect GraphQL metrics emitted by Absinthe                            |
+| `PromEx.Plugins.PlugCowboy`      | Beta        | Collect HTTP request metrics emitted by Plug.Cowboy                    |
+| `PromEx.Plugins.PlugRouter`      | Beta        | Collect HTTP request metrics emitted by Plug.Router and Plug.Telemetry |
+| `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway                 |
+| `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch                          |
+| `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix                         |
+| More to come...                  |             |                                                                        |
 
 ## Grafana Dashboards
 
