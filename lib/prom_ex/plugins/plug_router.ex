@@ -116,7 +116,9 @@ if Code.ensure_loaded?(Plug.Router) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
+
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :plug_router))
+
       event_prefix = Keyword.fetch!(opts, :event_prefix)
       set_up_telemetry_proxy(event_prefix)
 
@@ -141,6 +143,7 @@ if Code.ensure_loaded?(Plug.Router) do
       )
     end
 
+    @doc false
     def handle_proxy_router_event(_, measurements, meta, _) do
       :telemetry.execute(@stop_event, measurements, meta)
     end
