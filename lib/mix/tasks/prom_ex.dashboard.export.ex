@@ -124,7 +124,7 @@ defmodule Mix.Tasks.PromEx.Dashboard.Export do
 
     dashboard_render =
       :prom_ex
-      |> DashboardRenderer.build(cli_args.dashboard)
+      |> DashboardRenderer.build(cli_args.dashboard, prom_ex_module.__otp_app__())
       |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
       |> DashboardRenderer.merge_assigns(user_provided_assigns)
       |> DashboardRenderer.merge_assigns(cli_args.assigns)

@@ -65,6 +65,188 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
+      "description": "The Phoenix Endpoint module currently active for config metrics.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "/^endpoint$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "<%= @phoenix_metric_prefix %>_endpoint_port_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Server Endpoint",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The port that the server is listening on.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "/^port$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "<%= @phoenix_metric_prefix %>_endpoint_port_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Server Port",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The URL that the server is configured to be accessed from.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^url$/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "<%= @phoenix_metric_prefix %>_endpoint_url_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
+          "format": "table",
+          "interval": "",
+          "legendFormat": "",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "title": "Server URL",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
       "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
       "fieldConfig": {
         "defaults": {
@@ -74,8 +256,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "green",
                 "value": null
+              },
+              {
+                "value": 0,
+                "color": "red"
               },
               {
                 "color": "yellow",
@@ -87,6 +273,7 @@
               }
             ]
           },
+          "noValue": "No data",
           "unit": "percent"
         },
         "overrides": []
@@ -95,7 +282,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 1
+        "y": 5
       },
       "id": 21,
       "options": {
@@ -159,7 +346,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 1
+        "y": 5
       },
       "id": 22,
       "options": {
@@ -215,7 +402,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 1
+        "y": 5
       },
       "id": 24,
       "options": {
@@ -271,7 +458,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 1
+        "y": 5
       },
       "id": 23,
       "options": {
@@ -291,7 +478,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -336,7 +523,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 7
+        "y": 11
       },
       "id": 25,
       "options": {
@@ -401,7 +588,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 7
+        "y": 11
       },
       "id": 26,
       "options": {
@@ -457,7 +644,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 7
+        "y": 11
       },
       "id": 27,
       "options": {
@@ -513,7 +700,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 7
+        "y": 11
       },
       "id": 28,
       "options": {
@@ -533,7 +720,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -552,7 +739,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 17
       },
       "id": 2,
       "panels": [],
@@ -584,7 +771,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 18
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -656,7 +843,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 18
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -722,7 +909,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 27
+        "y": 31
       },
       "hiddenSeries": false,
       "id": 11,
@@ -819,7 +1006,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 27
+        "y": 31
       },
       "hiddenSeries": false,
       "id": 13,
@@ -916,7 +1103,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 44
       },
       "hiddenSeries": false,
       "id": 8,
@@ -1013,7 +1200,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 44
       },
       "hiddenSeries": false,
       "id": 10,
@@ -1108,7 +1295,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 53
+        "y": 57
       },
       "id": 4,
       "panels": [],
@@ -1134,7 +1321,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 54
+        "y": 58
       },
       "hiddenSeries": false,
       "id": 15,
@@ -1235,7 +1422,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 54
+        "y": 58
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -1301,7 +1488,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 67
+        "y": 71
       },
       "hiddenSeries": false,
       "id": 17,
@@ -1418,6 +1605,26 @@
         "name": "instance",
         "options": [],
         "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "datasource": "<%= @datasource_id %>",
+        "definition": "label_values(<%= @phoenix_metric_prefix %>_endpoint_port_info, endpoint)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Phoenix Endpoint",
+        "multi": false,
+        "name": "endpoint",
+        "options": [],
+        "query": "label_values(<%= @phoenix_metric_prefix %>_endpoint_port_info, endpoint)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,

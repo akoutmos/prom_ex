@@ -39,16 +39,17 @@ defmodule PromEx.DashboardRenderer do
   This is more so for convenience so that you don't need to write out `.eex` everywhere
   given that all PromEx 1st party dashboards are EEx templates.
   """
-  @spec build(otp_app :: atom(), dashboard_relative_path :: String.t()) :: __MODULE__.t()
-  def build(otp_app, dashboard_relative_path) do
+  @spec build(dashboard_otp_app :: atom(), dashboard_relative_path :: String.t(), metrics_otp_app :: atom()) ::
+          __MODULE__.t()
+  def build(dashboard_otp_app, dashboard_relative_path, metrics_otp_app) do
     base_def = %__MODULE__{
-      otp_app: otp_app,
+      otp_app: dashboard_otp_app,
       relative_path: dashboard_relative_path,
-      assigns: default_plugin_assigns(otp_app)
+      assigns: default_plugin_assigns(metrics_otp_app)
     }
 
     dashboard_full_path =
-      otp_app
+      dashboard_otp_app
       |> :code.priv_dir()
       |> :erlang.list_to_binary()
       |> Path.join(dashboard_relative_path)
@@ -157,6 +158,7 @@ defmodule PromEx.DashboardRenderer do
       absinthe_metric_prefix: "#{otp_app}_prom_ex_absinthe",
       application_metric_prefix: "#{otp_app}_prom_ex_application",
       beam_metric_prefix: "#{otp_app}_prom_ex_beam",
+      plug_cowboy_metric_prefix: "#{otp_app}_prom_ex_plug_cowboy",
       ecto_metric_prefix: "#{otp_app}_prom_ex_ecto",
       oban_metric_prefix: "#{otp_app}_prom_ex_oban",
       phoenix_metric_prefix: "#{otp_app}_prom_ex_phoenix",
