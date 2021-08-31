@@ -47,7 +47,7 @@ defmodule PromEx.MixProject do
       # Required dependencies
       {:jason, "~> 1.2"},
       {:finch, "~> 0.8.0"},
-      {:telemetry, "~> 0.4.2"},
+      {:telemetry, "~> 1.0", override: true},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
       {:telemetry_metrics_prometheus_core, "~> 1.0.1"},
@@ -56,7 +56,7 @@ defmodule PromEx.MixProject do
       # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.5.0", optional: true},
       {:phoenix_live_view, ">= 0.14.0", optional: true},
-      {:plug, ">= 1.10.0", optional: true},
+      {:plug, ">= 1.12.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
       {:absinthe, ">= 1.6.0", optional: true},
