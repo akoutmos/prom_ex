@@ -49,6 +49,8 @@ defmodule WebApp.PromEx do
 
   use PromEx, otp_app: :web_app
 
+  alias PromEx.Plugins
+
   @additional_routes [
     special_label: "/really-cool-route",
     another_label: ~r(\/another-cool-route)
@@ -58,22 +60,29 @@ defmodule WebApp.PromEx do
   def plugins do
     [
       # PromEx built in plugins
-      PromEx.Plugins.Application,
-      PromEx.Plugins.Beam,
-      {
-        PromEx.Plugins.Phoenix,
-        endpoints: [
-          {WebAppWeb.Endpoint,
-           routers: [WebAppWeb.Router], additional_routes: @additional_routes},
-          {WebAppWeb.InternalEndpoint,
-           routers: [WebAppWeb.InternalRouter], event_prefix: [:internal, :endpoint]}
-        ]
-      },
-      {PromEx.Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
-      {PromEx.Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
-      PromEx.Plugins.PhoenixLiveView,
-      {PromEx.Plugins.PlugCowboy,
-       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
+      Plugins.Application,
+      Plugins.Beam,
+      {Plugins.Phoenix, endpoint: WebAppWeb.Endpoint, router: WebAppWeb.Router},
+      # OR
+      #      {
+      #        Plugins.Phoenix,
+      #        endpoints: [
+      #          {WebAppWeb.Endpoint,
+      #           routers: [WebAppWeb.Router], additional_routes: @additional_routes},
+      #          {WebAppWeb.InternalEndpoint,
+      #           routers: [WebAppWeb.InternalRouter], event_prefix: [:internal, :endpoint]}
+      #        ]
+      #      },
+      {Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
+      {Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
+      Plugins.PhoenixLiveView,
+      {Plugins.PlugCowboy,
+       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]},
+      {Plugins.PlugRouter,
+       event_prefix: [:web_app, :router],
+       metric_prefix: [:phoenix, :endpoint],
+       routers: [WebAppWeb.Router]}
+
       # PromEx.Plugins.Broadway
 
       # Add your own PromEx metrics plugins
@@ -98,7 +107,8 @@ defmodule WebApp.PromEx do
       {:prom_ex, "ecto.json"},
       {:prom_ex, "oban.json"},
       {:prom_ex, "phoenix_live_view.json"},
-      {:prom_ex, "plug_cowboy.json"}
+      {:prom_ex, "plug_cowboy.json"},
+      {:prom_ex, "plug_router.json"}
 
       # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
       # {:web_app, "/grafana_dashboards/user_metrics.json"}

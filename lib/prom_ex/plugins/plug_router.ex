@@ -55,8 +55,7 @@ if Code.ensure_loaded?(Plug.Router) do
         [
           ...
           {Plugins.PlugRouter,
-            event_prefix: [:webapp, :router], metric_prefix: [:prom_ex, :router], routers: [WebApp.Router]},
-          {Plugins.PromEx, metric_prefix: [:prom_ex, :prom_ex]}
+            event_prefix: [:webapp, :router], metric_prefix: [:prom_ex, :router], routers: [WebApp.Router]}
         ]
       end
 
@@ -64,8 +63,7 @@ if Code.ensure_loaded?(Plug.Router) do
       def dashboard_assigns do
         [
           datasource_id: "...",
-          plug_router_metric_prefix: "prom_ex_router",
-          prom_ex_metric_prefix: "prom_ex_prom_ex"
+          plug_router_metric_prefix: "prom_ex_router"
         ]
       end
 

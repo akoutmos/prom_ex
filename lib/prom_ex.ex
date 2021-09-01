@@ -69,10 +69,13 @@ defmodule PromEx do
     - [X] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
     - [X] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
     - [X] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
-    
+    - [X] PlugRouter (https://hexdocs.pm/plug/1.12.1/Plug.Router.html#module-telemetry)
+
   Backlog Elixir library metrics:
     - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
     - [ ] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
+    - [ ] Swoosh (https://hexdocs.pm/swoosh/1.5.0/Swoosh.html#module-telemetry)
+    - [ ] ChromicPDF (https://hexdocs.pm/chromic_pdf/ChromicPDF.html#module-telemetry-support)
     - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
