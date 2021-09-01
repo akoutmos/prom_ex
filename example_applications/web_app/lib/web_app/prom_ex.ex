@@ -77,11 +77,7 @@ defmodule WebApp.PromEx do
       {Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
       Plugins.PhoenixLiveView,
       {Plugins.PlugCowboy,
-       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]},
-      {Plugins.PlugRouter,
-       event_prefix: [:web_app, :router],
-       metric_prefix: [:phoenix, :endpoint],
-       routers: [WebAppWeb.Router]}
+       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
 
       # PromEx.Plugins.Broadway
 

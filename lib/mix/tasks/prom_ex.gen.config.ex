@@ -183,7 +183,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           # {Plugins.Phoenix, router: <%= @module_name %>Web.Router, endpoint: <%= @module_name %>Web.Endpoint},
           # Plugins.Ecto,
           # Plugins.Oban,
-          # Plugins.PhoenixLiveView
+          # Plugins.PhoenixLiveView,
+          # Plugins.Absinthe
 
           # Add your own PromEx metrics plugins
           # <%= @module_name %>.Users.PromExPlugin
@@ -207,6 +208,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           # {:prom_ex, "ecto.json"},
           # {:prom_ex, "oban.json"},
           # {:prom_ex, "phoenix_live_view.json"}
+          # {:prom_ex, "absinthe.json"}
 
           # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
           # {:<%= @otp_app %>, "/grafana_dashboards/user_metrics.json"}
