@@ -310,7 +310,7 @@
         "defaults": {
           "custom": {},
           "mappings": [],
-          "noValue": "No data available",
+          "noValue": "No data",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -375,7 +375,7 @@
         "defaults": {
           "custom": {},
           "mappings": [],
-          "noValue": "No data available",
+          "noValue": "No data",
           "thresholds": {
             "mode": "percentage",
             "steps": [
