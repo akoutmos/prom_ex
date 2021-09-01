@@ -159,6 +159,7 @@ defmodule PromEx.DashboardRenderer do
       application_metric_prefix: "#{otp_app}_prom_ex_application",
       beam_metric_prefix: "#{otp_app}_prom_ex_beam",
       plug_cowboy_metric_prefix: "#{otp_app}_prom_ex_plug_cowboy",
+      plug_router_metric_prefix: "#{otp_app}_prom_ex_plug_router",
       ecto_metric_prefix: "#{otp_app}_prom_ex_ecto",
       oban_metric_prefix: "#{otp_app}_prom_ex_oban",
       phoenix_metric_prefix: "#{otp_app}_prom_ex_phoenix",

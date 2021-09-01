@@ -42,6 +42,7 @@ defmodule WebApp.MixProject do
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.2.9"},
+      {:telemetry, "~> 1.0.0", override: true},
       {:telemetry_metrics, "~> 0.6.0", override: true},
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
