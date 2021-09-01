@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Plug.Router plugin and dashboard
+## [1.4.0] - 2021-09-01
+
+### Changed
+
+- The Phoenix plugin now requires an `:endpoint` configuration option to be passed to it containing the module
+  for which metrics will be captured.
+
+### Added
+
+- Plug.Router plugin and dashboard.
+- PlugCowboy plugin and dashboard.
+- Phoenix plugin now supports multiple routers and multiple endpoints.
+- Phoenix plugin and dashboards now contains endpoint configuration data.
+- Phoenix plugin now captures socket metrics (dashboard not yet updated though).
+- Ecto plugin captures total_time metrics (dashboard not yet updated though).
+- Add an optional configuration to dashboard renderer and each plugin so that the `metrics_prefix` can be altered.
+
+### Fixed
+
+- Oban dashboard overview stat panels.
 
 ## [1.3.0] - 2021-07-02
 
