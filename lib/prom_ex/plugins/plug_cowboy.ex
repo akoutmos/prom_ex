@@ -70,8 +70,10 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     """
 
     use PromEx.Plugin
+
     require Logger
-    alias Plug.Cowboy.Conn
+
+    # alias Plug.Cowboy.Conn
 
     @default_route "Unknown"
 
@@ -195,12 +197,14 @@ if Code.ensure_loaded?(Plug.Cowboy) do
     end
 
     defp maybe_get_parametrized_path(req, routers) do
+      # credo:disable-for-next-line
       cond do
         Code.ensure_loaded?(Phoenix) ->
           find_phoenix_route(routers, req)
 
-        Code.ensure_loaded?(Plug.Router) ->
-          find_plug_route(routers, req)
+        # TODO: This needs to be further investigated to see how the normalized route can be extracted
+        # Code.ensure_loaded?(Plug.Router) ->
+        #  find_plug_route(routers, req)
 
         true ->
           @default_route
@@ -220,17 +224,17 @@ if Code.ensure_loaded?(Plug.Cowboy) do
       end)
     end
 
-    defp find_plug_route(routers, req) do
-      conn = Conn.conn(req)
-
-      routers
-      |> Enum.find_value(@default_route, fn router ->
-        case router.call(conn, []) do
-          %{private: %{plug_route: {route, _fn}}} -> route
-          _ -> false
-        end
-      end)
-    end
+    # defp find_plug_route(routers, req) do
+    #   conn = Conn.conn(req)
+    #
+    #   routers
+    #   |> Enum.find_value(@default_route, fn router ->
+    #     case router.call(conn, []) do
+    #       %{private: %{plug_route: {route, _fn}}} -> route
+    #       _ -> false
+    #     end
+    #   end)
+    # end
 
     defp get_http_status(resp_status) when is_integer(resp_status) do
       to_string(resp_status)
