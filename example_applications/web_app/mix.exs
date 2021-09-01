@@ -49,7 +49,7 @@ defmodule WebApp.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:faker, "~> 0.16"},
       {:oban, "~> 2.4.2"},
-      {:broadway, github: "dashbitco/broadway", branch: :master},
+      {:broadway, "~> 1.0.0"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       # {:prom_ex, "~> 1.2.1"}
       {:prom_ex, github: "akoutmos/prom_ex", branch: "master"}
