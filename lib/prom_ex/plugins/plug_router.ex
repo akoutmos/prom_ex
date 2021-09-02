@@ -217,9 +217,10 @@ if Code.ensure_loaded?(Plug.Router) do
     end
 
     defp route_or_path(conn) do
-      with {route, _} <- Map.get(conn.private, :plug_route) do
-        route
-      else
+      case Map.get(conn.private, :plug_route) do
+        {route, _} ->
+          route
+
         nil ->
           conn.request_path
       end
