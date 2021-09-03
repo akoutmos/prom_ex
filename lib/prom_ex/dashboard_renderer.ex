@@ -155,6 +155,10 @@ defmodule PromEx.DashboardRenderer do
 
   defp default_plugin_assigns(otp_app) do
     [
+      # View defaults
+      default_selected_interval: "30s",
+
+      # Metrics prefix defaults
       absinthe_metric_prefix: "#{otp_app}_prom_ex_absinthe",
       application_metric_prefix: "#{otp_app}_prom_ex_application",
       beam_metric_prefix: "#{otp_app}_prom_ex_beam",
