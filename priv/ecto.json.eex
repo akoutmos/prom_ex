@@ -1034,37 +1034,37 @@
         "name": "interval",
         "options": [
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15s" %>,
             "text": "15s",
             "value": "15s"
           },
           {
-            "selected": true,
+            "selected": <%= @default_selected_interval == "30s" %>,
             "text": "30s",
             "value": "30s"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1m" %>,
             "text": "1m",
             "value": "1m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "5m" %>,
             "text": "5m",
             "value": "5m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15m" %>,
             "text": "15m",
             "value": "15m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "30m" %>,
             "text": "30m",
             "value": "30m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1h" %>,
             "text": "1h",
             "value": "1h"
           }

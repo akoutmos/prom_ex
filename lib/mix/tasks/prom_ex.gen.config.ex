@@ -194,7 +194,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
       @impl true
       def dashboard_assigns do
         [
-          datasource_id: "<%= @datasource_id %>"
+          datasource_id: "<%= @datasource_id %>",
+          default_selected_interval: "30s"
         ]
       end
 
