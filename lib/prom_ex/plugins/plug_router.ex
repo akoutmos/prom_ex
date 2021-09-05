@@ -208,28 +208,46 @@ if Code.ensure_loaded?(Plug.Router) do
       end
     end
 
-    defp path(conn) do
-      {path, _} = conn.private.plug_route
-      path
+    defp route(%Plug.Conn{private: %{plug_route: {route, _}}}) do
+      route
+    end
+
+    defp route(_conn) do
+      "Unknown"
+    end
+
+    defp route_or_path(conn) do
+      case Map.get(conn.private, :plug_route) do
+        {route, _} ->
+          route
+
+        nil ->
+          conn.request_path
+      end
     end
 
     defp get_tags(%{conn: conn = %Conn{}}) do
       %{
         status: conn.status || 500,
         method: conn.method,
-        path: path(conn)
+        path: route(conn)
       }
     end
 
     defp drop_ignored(ignored_routes, routers) do
       fn
         %{conn: conn = %Conn{}, router: router} ->
-          path = path(conn)
+          value = route_or_path(conn)
 
           disallowed_router? = !Enum.member?(routers, router)
-          ignored_route? = MapSet.member?(ignored_routes, path)
-
+          ignored_route? = MapSet.member?(ignored_routes, value)
           disallowed_router? || ignored_route?
+
+        %{conn: conn = %Conn{}} ->
+          value = route_or_path(conn)
+
+          ignored_route? = MapSet.member?(ignored_routes, value)
+          ignored_route?
 
         _meta ->
           false
