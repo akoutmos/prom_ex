@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2021-09-06
+
+### Added
+
+- Added a configuration to the dashboard assigns so that the default time interval can be specified
+  by the user as opposed to being hard coded to 30s.
+
+### Fixed
+
+- Fixed Plug.Router plugin to handle requests without conn.private.plug_route info
+
 ## [1.4.0] - 2021-09-01
 
 ### Changed
