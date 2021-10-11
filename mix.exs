@@ -48,7 +48,7 @@ defmodule PromEx.MixProject do
       {:jason, "~> 1.2"},
       {:finch, "~> 0.8.0"},
       {:telemetry, ">= 0.4.0"},
-      {:telemetry_poller, "~> 0.5.1"},
+      {:telemetry_poller, "~> 1.0.0"},
       {:telemetry_metrics, "~> 0.6.0"},
       {:telemetry_metrics_prometheus_core, "~> 1.0.1"},
       {:plug_cowboy, ">= 2.4.0"},
