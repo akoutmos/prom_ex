@@ -162,13 +162,13 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
       }
     end
 
-    defp get_mount_socket_exception_tags(%{socket: socket = %Socket{}, kind: kind, reason: reason}) do
+    defp get_mount_socket_exception_tags(%{socket: socket = %Socket{}} = metadata) do
       %reason{} = Exception.normalize(metadata.kind, metadata.reason, metadata.stacktrace)
 
       %{
         action: get_live_view_action(socket),
         module: get_live_view_module(socket),
-        kind: kind,
+        kind: metadata.kind,
         reason: normalize_module_name(reason)
       }
     end
