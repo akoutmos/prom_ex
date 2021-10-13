@@ -31,10 +31,10 @@ defmodule WebApp.Application do
 
       # Start the Endpoint (http/https)
       WebAppWeb.Endpoint,
-      WebAppWeb.InternalEndpoint
+      WebAppWeb.InternalEndpoint,
 
       # Work generator for Oban
-      # WebApp.RandomWorkGenerator
+      WebApp.RandomWorkGenerator
 
       # Work generator for Broadway
       # WebApp.TempTracker,
