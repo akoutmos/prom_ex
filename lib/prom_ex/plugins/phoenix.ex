@@ -346,7 +346,7 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
-            tag_values: fn %{result: result, socket: %Socket{transport: transport, endpoint: endpoint}} ->
+            tag_values: fn %{result: result, endpoint: endpoint} ->
               %{
                 transport: transport,
                 result: result,
