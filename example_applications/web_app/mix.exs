@@ -33,27 +33,26 @@ defmodule WebApp.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.5.4"},
-      {:phoenix_ecto, "~> 4.1"},
-      {:ecto_sql, "~> 3.4"},
+      {:phoenix, "~> 1.6.0"},
+      {:phoenix_ecto, "~> 4.4.0"},
+      {:ecto_sql, "~> 3.7.0"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_live_view, "~> 0.14.3"},
+      {:phoenix_live_view, "~> 0.16.0"},
       {:floki, ">= 0.0.0", only: :test},
-      {:phoenix_html, "~> 2.11"},
+      {:phoenix_html, "~> 3.0.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.2.9"},
+      {:phoenix_live_dashboard, "~> 0.5.0"},
       {:telemetry_metrics, "~> 0.6.0", override: true},
-      {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:faker, "~> 0.16"},
-      {:oban, "~> 2.4.2"},
+      {:oban, "~> 2.9.0"},
       {:broadway, "~> 1.0.0"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       # {:prom_ex, "~> 1.2.1"}
-      {:prom_ex, github: "akoutmos/prom_ex", branch: "documentation_cleanup"}
-      # {:prom_ex, path: "../../"}
+      # {:prom_ex, github: "akoutmos/prom_ex", branch: "documentation_cleanup"}
+      {:prom_ex, path: "../../"}
     ]
   end
 

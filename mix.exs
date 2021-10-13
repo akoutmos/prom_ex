@@ -47,11 +47,11 @@ defmodule PromEx.MixProject do
       # Required dependencies
       {:jason, "~> 1.2"},
       {:finch, "~> 0.8.0"},
-      {:telemetry, ">= 0.4.0"},
-      {:telemetry_poller, "~> 0.5.1"},
-      {:telemetry_metrics, "~> 0.6.0"},
-      {:telemetry_metrics_prometheus_core, "~> 1.0.1"},
-      {:plug_cowboy, ">= 2.4.0"},
+      {:telemetry, "~> 1.0.0"},
+      {:telemetry_poller, "~> 1.0.0"},
+      {:telemetry_metrics, "~> 0.6.1"},
+      {:telemetry_metrics_prometheus_core, "~> 1.0.2"},
+      {:plug_cowboy, "~> 2.5.1"},
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.5.0", optional: true},
@@ -63,7 +63,7 @@ defmodule PromEx.MixProject do
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.24.2", only: :dev},
+      {:ex_doc, "~> 0.25.3", only: :dev},
       {:excoveralls, "~> 0.14.1", only: :test, runtime: false},
       {:doctor, "~> 0.18.0", only: :dev},
       {:credo, "~> 1.5.5", only: :dev},

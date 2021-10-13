@@ -460,10 +460,6 @@ if Code.ensure_loaded?(Oban) do
         %{conf: %{name: name}} ->
           MapSet.member?(oban_supervisors, name)
 
-        %{config: %{name: name}} ->
-          # TODO: This match should be deprecated eventually
-          MapSet.member?(oban_supervisors, name)
-
         %{name: name} ->
           MapSet.member?(oban_supervisors, name)
 
