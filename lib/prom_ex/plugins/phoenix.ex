@@ -306,7 +306,7 @@ if Code.ensure_loaded?(Phoenix) do
               %{
                 transport: transport,
                 result: result,
-                endpoint: endpoint
+                endpoint: normalize_module_name(endpoint)
               }
             end,
             tags: [:result, :transport, :endpoint]
@@ -321,6 +321,12 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
+            tag_values: fn %{socket: %Socket{transport: transport, endpoint: endpoint}} ->
+              %{
+                endpoint: normalize_module_name(endpoint)
+              }
+            end,
+            tags: [:endpoint],
             unit: {:native, :millisecond}
           )
         ]
@@ -340,6 +346,13 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
+            tag_values: fn %{result: result, socket: %Socket{transport: transport, endpoint: endpoint}} ->
+              %{
+                transport: transport,
+                result: result,
+                endpoint: normalize_module_name(endpoint)
+              }
+            end,
             tags: [:result, :transport, :endpoint],
             unit: {:native, :millisecond}
           )

@@ -1375,7 +1375,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_joined_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_joined_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
@@ -1460,7 +1460,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1544,7 +1544,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
@@ -1653,7 +1653,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
@@ -1733,7 +1733,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1817,7 +1817,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
