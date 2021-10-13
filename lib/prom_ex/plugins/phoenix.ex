@@ -302,13 +302,14 @@ if Code.ensure_loaded?(Phoenix) do
             metric_prefix ++ [:channel, :joined, :total],
             event_name: [:phoenix, :channel_joined],
             description: "The number of channel joins that have occurred.",
-            tag_values: fn %{result: result, socket: %Socket{transport: transport}} ->
+            tag_values: fn %{result: result, socket: %Socket{transport: transport, endpoint: endpoint}} ->
               %{
                 transport: transport,
-                result: result
+                result: result,
+                endpoint: endpoint
               }
             end,
-            tags: [:result, :transport]
+            tags: [:result, :transport, :endpoint]
           ),
 
           # Capture channel handle_in duration
@@ -339,7 +340,7 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
-            tags: [:result, :transport],
+            tags: [:result, :transport, :endpoint],
             unit: {:native, :millisecond}
           )
         ]
