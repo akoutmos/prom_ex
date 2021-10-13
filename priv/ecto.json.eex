@@ -642,13 +642,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average request time per path per status code per HTTP method.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "The average total time to execute and decode a database query.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -656,6 +650,169 @@
         "w": 12,
         "x": 0,
         "y": 14
+      },
+      "hiddenSeries": false,
+      "id": 32,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @ecto_metric_prefix %>_repo_query_total_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", repo=\"$repo\"}[$interval])) by(command) / sum(irate(<%= @ecto_metric_prefix %>_repo_query_total_time_milliseconds_count{job=\"$job\", instance=\"$instance\", repo=\"$repo\"}[$interval])) by(command)",
+          "interval": "",
+          "legendFormat": "{{ command }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Total Execution Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": "Response Time",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "<%= @datasource_id %>",
+      "description": "A heatmap showing the total time spread across all Repo query executions (regardless of query type).",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 6,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "expr": "sum(irate(<%= @ecto_metric_prefix %>_repo_query_execution_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", repo=\"$repo\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total Execution Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "<%= @datasource_id %>",
+      "description": "The average query execution time per Ecto command.",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 27
       },
       "hiddenSeries": false,
       "id": 11,
@@ -758,12 +915,12 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 27
       },
       "heatmap": {},
       "hideZeroBuckets": true,
       "highlightCards": true,
-      "id": 6,
+      "id": 33,
       "legend": {
         "show": true
       },
@@ -811,7 +968,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average response size per path per status code per HTTP method.",
+      "description": "The number of operations taking place on each data source.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -824,7 +981,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 27
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 13,
@@ -928,7 +1085,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 27
+        "y": 40
       },
       "heatmap": {},
       "hideZeroBuckets": true,

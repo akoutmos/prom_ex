@@ -13,19 +13,17 @@ if Code.ensure_loaded?(Phoenix) do
       `phoenix_metric_prefix` is `{otp_app}_prom_ex_phoenix`.
 
     ### Single Endpoint/Router
-    - `endpoint`: **Required** This is the full module name of your Phoenix Endpoint (e.g MyAppWeb.Endpoint).
-    - `router`: **Required** This is the full module name of your Phoenix Router (e.g MyAppWeb.Router).
-    - `event_prefix`: **Optional**, allows you to set the event prefix for the Telemetry events.
-
+    - `router`: This option is REQUIRED and is the full module name of your Phoenix Router (e.g MyAppWeb.Router).
 
     - `endpoint`: This is a REQUIRED option and is the full module name of your Phoenix Endpoint (e.g MyAppWeb.Endpoint).
 
     - `event_prefix`: This option is OPTIONAL and allows you to set the event prefix for the Telemetry events. This
       value should align with what you pass to `Plug.Telemetry` in your `endpoint.ex` file (see the plug docs
-      for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
+      for more information https://hexdocs.pm/plug/Plug.Telemetry.html) This value should align with what you pass
+      to `Plug.Telemetry` in your `endpoint.ex` file (see the plug docs for more
+      information https://hexdocs.pm/plug/Plug.Telemetry.html)
 
-      This value should align with what you pass to `Plug.Telemetry` in your `endpoint.ex` file (see the plug docs for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
-    - `additional_routes`: **Optional** This option allows you to specify route path labels for applications routes
+    - `additional_routes`: This option is OPTIONAL and allows you to specify route path labels for applications routes
       not defined in your Router module.
 
       For example, if you want to track telemetry events for a plug in your
@@ -34,7 +32,7 @@ if Code.ensure_loaded?(Phoenix) do
       will be set to `some-route`. You can pass in either a regular expression or a string to match the incoming
       request.
 
-    e.g
+    #### Example plugin configuration
 
     ```elixir
     {
@@ -48,26 +46,30 @@ if Code.ensure_loaded?(Phoenix) do
     ### Multiple Endpoints/Router
 
     - `endpoints`: This accepts a list of per Phoenix Endpoint options `{endpoint_name, endpoint_opts}`
-      - `endpoint_name`: **Required** This is the full module name of your Phoenix Endpoint (e.g MyAppWeb.Endpoint).
+      - `endpoint_name`: This option is REQUIRED and is the full module name of your Phoenix Endpoint (e.g MyAppWeb.Endpoint).
+
       - `endpoint_opts`: Per endpoint plugin options:
-        - `:routers`: **Required** List of routers modules for the endpoint, the HTTP metrics will be augmented with controller/action/path information from the routers.
-        - `:event_prefix`: **Optional** Allows you to set the event prefix for the Telemetry events. This
+        - `:routers`: This option is REQUIRED and lists all of routers modules for the endpoint, the HTTP metrics will
+          be augmented with controller/action/path information from the routers.
+
+        - `:event_prefix`: This option is OPTIONAL and allows you to set the event prefix for the Telemetry events. This
         value should align with what you pass to `Plug.Telemetry` in the  corresponding endpoint module (see the plug docs
         for more information https://hexdocs.pm/plug/Plug.Telemetry.html)
-        - `:additional_routes`: This option allows you to specify route path labels for applications routes
+
+        - `:additional_routes`: This option is OPTIONAL and allows you to specify route path labels for applications routes
         not defined in your Router modules for the corresponding endpoint.
 
-      e.g
+    #### Example plugin configuration
 
-      ```elixir
-      {
-        PromEx.Plugins.Phoenix,
-        endpoints: [
-          {MyApp.Endpoint, routers: [MyAppWeb.Public.Router]},
-          {MyApp.Endpoint2, routers: [MyAppWeb.Admin.Router], event_prefix: [:admin, :endpoint]}
-        ]
-      }
-      ```
+    ```elixir
+    {
+      PromEx.Plugins.Phoenix,
+      endpoints: [
+        {MyApp.Endpoint, routers: [MyAppWeb.Public.Router]},
+        {MyApp.Endpoint2, routers: [MyAppWeb.Admin.Router], event_prefix: [:admin, :endpoint]}
+      ]
+    }
+    ```
 
     ## Metric Groups
 
@@ -300,13 +302,14 @@ if Code.ensure_loaded?(Phoenix) do
             metric_prefix ++ [:channel, :joined, :total],
             event_name: [:phoenix, :channel_joined],
             description: "The number of channel joins that have occurred.",
-            tag_values: fn %{result: result, socket: %Socket{transport: transport}} ->
+            tag_values: fn %{result: result, socket: %Socket{transport: transport, endpoint: endpoint}} ->
               %{
                 transport: transport,
-                result: result
+                result: result,
+                endpoint: normalize_module_name(endpoint)
               }
             end,
-            tags: [:result, :transport]
+            tags: [:result, :transport, :endpoint]
           ),
 
           # Capture channel handle_in duration
@@ -318,6 +321,12 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
+            tag_values: fn %{socket: %Socket{endpoint: endpoint}} ->
+              %{
+                endpoint: normalize_module_name(endpoint)
+              }
+            end,
+            tags: [:endpoint],
             unit: {:native, :millisecond}
           )
         ]
@@ -337,7 +346,14 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: exponential!(1, 2, 12)
             ],
-            tags: [:result, :transport],
+            tag_values: fn %{result: result, endpoint: endpoint, transport: transport} ->
+              %{
+                transport: transport,
+                result: result,
+                endpoint: normalize_module_name(endpoint)
+              }
+            end,
+            tags: [:result, :transport, :endpoint],
             unit: {:native, :millisecond}
           )
         ]

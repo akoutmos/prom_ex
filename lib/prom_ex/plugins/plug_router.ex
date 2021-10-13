@@ -10,6 +10,7 @@ if Code.ensure_loaded?(Plug.Router) do
 
     - `routers`: **Required** This is a list with the full module names of your Routers (e.g MyAppWeb.Router).
      Metrics produced by routers not in this list will be discarded.
+
     - `event_prefix`: **Required**, allows you to set the event prefix defined in your `Plug.Telemetry` configuration:
 
     ```
