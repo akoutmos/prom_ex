@@ -76,6 +76,7 @@ defmodule WebApp.PromEx do
       {Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
       {Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
       Plugins.PhoenixLiveView,
+      {Plugins.PlugRouter, routers: [WebAppWeb.Router], event_prefix: [:phoenix, :endpoint]},
       {Plugins.PlugCowboy,
        ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
 
