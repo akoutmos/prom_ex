@@ -50,8 +50,8 @@ defmodule WebApp.MixProject do
       {:oban, "~> 2.9.0"},
       {:broadway, "~> 1.0.0"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
-      # {:prom_ex, "~> 1.2.1"}
-      {:prom_ex, github: "akoutmos/prom_ex", branch: "documentation_cleanup"}
+      {:prom_ex, "~> 1.5.0"}
+      # {:prom_ex, github: "akoutmos/prom_ex", branch: "master"}
       # {:prom_ex, path: "../../"}
     ]
   end
