@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2021-11-04
+
+### Added
+
+- Links to HexDocs from Grafana dashboards
+- Links to GitHub sponsorship from Grafana dashboards
+- Endpoint label to channel metrics
+- Ecto Grafana dashboard panels for total time metrics
+- Phoenix Grafana dashboard panels for socket connections
+
+### Fixed
+
+- PhoenixLiveView plugin error label is now normalized
+- Documentation for Phoenix plugin was cleaned up
+
 ## [1.4.1] - 2021-09-06
 
 ### Added

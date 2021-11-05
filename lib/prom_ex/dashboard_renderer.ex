@@ -102,17 +102,8 @@ defmodule PromEx.DashboardRenderer do
     %__MODULE__{file_type: :eex, assigns: assigns, file_contents: contents} =
       merge_assigns(dashboard_render, non_configurable_assigns)
 
-    case EEx.eval_string(contents, assigns: assigns) do
-      nil ->
-        %{
-          dashboard_render
-          | valid_file?: false,
-            error: {:invalid_eex_template, "Failed to render EEx dashboard template due to missing assigns."}
-        }
-
-      rendered_file ->
-        %{dashboard_render | rendered_file: rendered_file}
-    end
+    rendered_file = EEx.eval_string(contents, assigns: assigns)
+    %{dashboard_render | rendered_file: rendered_file}
   end
 
   @doc """
