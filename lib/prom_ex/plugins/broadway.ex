@@ -40,11 +40,15 @@ if Code.ensure_loaded?(Broadway) do
     require Logger
 
     alias Broadway.{BatchInfo, Message, Options}
+    alias PromEx.Utils
+
+    @millisecond_duration_buckets [10, 50, 100, 500, 1_000, 10_000, 30_000, 60_000]
+    @message_batch_size_buckets [1, 5, 10, 20, 50, 100, 500]
 
     @init_topology_event [:broadway, :topology, :init]
     @message_stop_event [:broadway, :processor, :message, :stop]
     @message_exception_event [:broadway, :processor, :message, :exception]
-    @batch_stop_event [:broadway, :consumer, :stop]
+    @batch_stop_event [:broadway, :batch_processor, :stop]
 
     @init_topology_processors_proxy_event [:prom_ex, :broadway, :proxy, :processor, :init]
     @init_topology_batchers_proxy_event [:prom_ex, :broadway, :proxy, :batcher, :init]
@@ -227,13 +231,13 @@ if Code.ensure_loaded?(Broadway) do
             measurement: :duration,
             description: "The time it takes Broadway to process a message.",
             reporter_options: [
-              buckets: exponential!(1, 2, 12)
+              buckets: @millisecond_duration_buckets
             ],
             tags: [:processor_key, :acknowledger],
             tag_values: fn %{processor_key: processor_key, message: %Message{acknowledger: {acknowledger, _, _}}} ->
               %{
                 processor_key: processor_key,
-                acknowledger: normalize_module_name(acknowledger)
+                acknowledger: Utils.normalize_module_name(acknowledger)
               }
             end,
             unit: {:native, :millisecond}
@@ -244,7 +248,7 @@ if Code.ensure_loaded?(Broadway) do
             measurement: :duration,
             description: "The time it takes Broadway to process a message that results in an error.",
             reporter_options: [
-              buckets: exponential!(1, 2, 12)
+              buckets: @millisecond_duration_buckets
             ],
             tags: [:processor_key, :acknowledger, :kind, :reason],
             tag_values: &extract_exception_tag_values/1,
@@ -264,7 +268,7 @@ if Code.ensure_loaded?(Broadway) do
             measurement: :duration,
             description: "The time it takes Broadway to process a batch of messages.",
             reporter_options: [
-              buckets: exponential!(1, 2, 12)
+              buckets: @millisecond_duration_buckets
             ],
             tags: [:batch_key, :batcher],
             tag_values: &extract_batcher_tag_values/1,
@@ -278,7 +282,7 @@ if Code.ensure_loaded?(Broadway) do
             end,
             description: "How many of the messages in the batch failed to process.",
             reporter_options: [
-              buckets: [1, 3, 5, 10, 20, 50, 100]
+              buckets: @message_batch_size_buckets
             ],
             tags: [:batch_key, :batcher],
             tag_values: &extract_batcher_tag_values/1
@@ -291,7 +295,7 @@ if Code.ensure_loaded?(Broadway) do
             end,
             description: "How many of the messages in the batch were successfully processed.",
             reporter_options: [
-              buckets: [1, 3, 5, 10, 20, 50, 100]
+              buckets: @message_batch_size_buckets
             ],
             tags: [:batch_key, :batcher],
             tag_values: &extract_batcher_tag_values/1
@@ -314,7 +318,7 @@ if Code.ensure_loaded?(Broadway) do
         |> Map.new()
 
       %{
-        name: normalize_module_name(full_configuration.name)
+        name: Utils.normalize_module_name(full_configuration.name)
       }
     end
 
@@ -322,33 +326,18 @@ if Code.ensure_loaded?(Broadway) do
            processor_key: processor_key,
            kind: kind,
            reason: reason,
+           stacktrace: stacktrace,
            message: %Message{acknowledger: {acknowledger, _, _}}
          }) do
+      reason = Utils.normalize_exception(kind, reason, stacktrace)
+
       %{
         processor_key: processor_key,
         kind: kind,
-        reason: normalize_exception_reason(reason),
-        acknowledger: normalize_module_name(acknowledger)
+        reason: reason,
+        acknowledger: Utils.normalize_module_name(acknowledger)
       }
     end
-
-    defp normalize_exception_reason(reason) when is_struct(reason) do
-      normalize_exception_reason(reason.__struct__)
-    end
-
-    defp normalize_exception_reason(reason) when is_atom(reason) do
-      reason
-      |> Atom.to_string()
-      |> String.trim_leading("Elixir.")
-    end
-
-    defp normalize_module_name(name) when is_atom(name) do
-      name
-      |> Atom.to_string()
-      |> String.trim_leading("Elixir.")
-    end
-
-    defp normalize_module_name(name), do: name
   end
 else
   defmodule PromEx.Plugins.Broadway do

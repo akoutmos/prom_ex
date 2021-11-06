@@ -47,7 +47,7 @@ defmodule PromEx.MixProject do
       # Required dependencies
       {:jason, "~> 1.2"},
       {:finch, "~> 0.5.2"},
-      {:telemetry, "~> 0.4.2"},
+      {:telemetry, ">= 0.4.3"},
       {:telemetry_poller, "~> 0.5.1"},
       {:telemetry_metrics, "~> 0.6.0"},
       {:plug_cowboy, "~> 2.1"},
@@ -58,7 +58,7 @@ defmodule PromEx.MixProject do
       {:plug, ">= 1.10.0", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
-      {:broadway, github: "dashbitco/broadway", branch: :master, optional: true},
+      {:broadway, ">= 1.0.0", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
