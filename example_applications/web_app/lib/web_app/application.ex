@@ -34,12 +34,12 @@ defmodule WebApp.Application do
       WebAppWeb.InternalEndpoint,
 
       # Work generator for Oban
-      WebApp.RandomWorkGenerator
+      WebApp.RandomWorkGenerator,
 
       # Work generator for Broadway
-      # WebApp.TempTracker,
-      # WebApp.CityProducer,
-      # WebApp.TempProcessor
+      WebApp.TempTracker,
+      WebApp.CityProducer,
+      WebApp.TempProcessor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
