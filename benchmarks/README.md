@@ -15,7 +15,7 @@ There are three helper script included:
 
 * _ab_graph.sh_: Run an apache bench test and create plot result graphs using gnuplot.
 * _ab_graph_merge.sh_: Merge various ab_graph.sh results graphs into a single one.
-* _ab_graph_scale.sh_: Helper script for ab-graph that can run multple configurable _ab_graph.sh_ runs in one go
+* _ab_graph_scale.sh_: Helper script for ab-graph that can run multiple configurable _ab_graph.sh_ runs in one go
 
 
 ### ab_graph.sh

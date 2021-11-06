@@ -47,7 +47,32 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "bolt",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Sponsor PromEx",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://github.com/sponsors/akoutmos"
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "BEAM Plugin Docs",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://hexdocs.pm/prom_ex/PromEx.Plugins.Beam.html"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -108,7 +133,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_uptime_milliseconds_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_uptime_milliseconds_count{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -188,7 +213,7 @@
                     "text": "SMP Support",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_smp_support_info"
+                    "value": "<%= @beam_metric_prefix %>_system_smp_support_info"
                   },
                   {
                     "from": "",
@@ -196,7 +221,7 @@
                     "text": "Thread Support",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_thread_support_info"
+                    "value": "<%= @beam_metric_prefix %>_system_thread_support_info"
                   },
                   {
                     "from": "",
@@ -204,7 +229,7 @@
                     "text": "Time Correction Support",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_time_correction_support_info"
+                    "value": "<%= @beam_metric_prefix %>_system_time_correction_support_info"
                   }
                 ]
               },
@@ -231,7 +256,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_beam_system_thread_support_info|<%= @otp_app %>_prom_ex_beam_system_smp_support_info|<%= @otp_app %>_prom_ex_beam_system_time_correction_support_info\", job=\"$job\", instance=\"$instance\"}",
+          "expr": "{__name__=~\"<%= @beam_metric_prefix %>_system_thread_support_info|<%= @beam_metric_prefix %>_system_smp_support_info|<%= @beam_metric_prefix %>_system_time_correction_support_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -310,7 +335,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_system_version_info{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_system_version_info{job=\"$job\", instance=\"$instance\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -374,7 +399,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_process_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -450,7 +475,7 @@
                     "text": "Dirty CPU Schedulers",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_dirty_cpu_schedulers_info"
+                    "value": "<%= @beam_metric_prefix %>_system_dirty_cpu_schedulers_info"
                   },
                   {
                     "from": "",
@@ -458,7 +483,7 @@
                     "text": "Dirty CPU Schedulers Online",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_dirty_cpu_schedulers_online_info"
+                    "value": "<%= @beam_metric_prefix %>_system_dirty_cpu_schedulers_online_info"
                   },
                   {
                     "from": "",
@@ -466,7 +491,7 @@
                     "text": "Dirty IO Schedulers",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_dirty_io_schedulers_info"
+                    "value": "<%= @beam_metric_prefix %>_system_dirty_io_schedulers_info"
                   },
                   {
                     "from": "",
@@ -474,7 +499,7 @@
                     "text": "System Schedulers",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_schedulers_info"
+                    "value": "<%= @beam_metric_prefix %>_system_schedulers_info"
                   },
                   {
                     "from": "",
@@ -482,7 +507,7 @@
                     "text": "System Schedulers Online",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_schedulers_online_info"
+                    "value": "<%= @beam_metric_prefix %>_system_schedulers_online_info"
                   },
                   {
                     "from": "",
@@ -490,7 +515,7 @@
                     "text": "Word Size in Bytes",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_word_size_bytes_info"
+                    "value": "<%= @beam_metric_prefix %>_system_word_size_bytes_info"
                   },
                   {
                     "from": "",
@@ -498,7 +523,7 @@
                     "text": "Logical Processors",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_logical_processors_info"
+                    "value": "<%= @beam_metric_prefix %>_system_logical_processors_info"
                   },
                   {
                     "from": "",
@@ -506,7 +531,7 @@
                     "text": "Logical Processors Available",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_logical_processors_available_info"
+                    "value": "<%= @beam_metric_prefix %>_system_logical_processors_available_info"
                   },
                   {
                     "from": "",
@@ -514,7 +539,7 @@
                     "text": "Logical Processors Online",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_logical_processors_online_info"
+                    "value": "<%= @beam_metric_prefix %>_system_logical_processors_online_info"
                   }
                 ]
               }
@@ -536,7 +561,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_beam_system_dirty_cpu_schedulers_info|<%= @otp_app %>_prom_ex_beam_system_dirty_cpu_schedulers_online_info|<%= @otp_app %>_prom_ex_beam_system_dirty_io_schedulers_info|<%= @otp_app %>_prom_ex_beam_system_schedulers_info|<%= @otp_app %>_prom_ex_beam_system_schedulers_online_info|<%= @otp_app %>_prom_ex_beam_system_word_size_bytes_info|<%= @otp_app %>_prom_ex_beam_system_logical_processors_info|<%= @otp_app %>_prom_ex_beam_system_logical_processors_available_info|<%= @otp_app %>_prom_ex_beam_system_logical_processors_online_info\", job=\"$job\", instance=\"$instance\"}",
+          "expr": "{__name__=~\"<%= @beam_metric_prefix %>_system_dirty_cpu_schedulers_info|<%= @beam_metric_prefix %>_system_dirty_cpu_schedulers_online_info|<%= @beam_metric_prefix %>_system_dirty_io_schedulers_info|<%= @beam_metric_prefix %>_system_schedulers_info|<%= @beam_metric_prefix %>_system_schedulers_online_info|<%= @beam_metric_prefix %>_system_word_size_bytes_info|<%= @beam_metric_prefix %>_system_logical_processors_info|<%= @beam_metric_prefix %>_system_logical_processors_available_info|<%= @beam_metric_prefix %>_system_logical_processors_online_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -624,7 +649,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_port_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -688,7 +713,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -751,7 +776,7 @@
                     "text": "Atom Limit",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_atom_limit_info"
+                    "value": "<%= @beam_metric_prefix %>_system_atom_limit_info"
                   },
                   {
                     "from": "",
@@ -759,7 +784,7 @@
                     "text": "ETS Table Limit",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_ets_limit_info"
+                    "value": "<%= @beam_metric_prefix %>_system_ets_limit_info"
                   },
                   {
                     "from": "",
@@ -767,7 +792,7 @@
                     "text": "Port Limit",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_port_limit_info"
+                    "value": "<%= @beam_metric_prefix %>_system_port_limit_info"
                   },
                   {
                     "from": "",
@@ -775,7 +800,7 @@
                     "text": "Process Limit",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_beam_system_process_limit_info"
+                    "value": "<%= @beam_metric_prefix %>_system_process_limit_info"
                   },
                   {
                     "from": "",
@@ -805,7 +830,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_beam_system_ets_limit_info|<%= @otp_app %>_prom_ex_beam_system_port_limit_info|<%= @otp_app %>_prom_ex_beam_system_process_limit_info|<%= @otp_app %>_prom_ex_beam_system_atom_limit_info\", job=\"$job\", instance=\"$instance\"}",
+          "expr": "{__name__=~\"<%= @beam_metric_prefix %>_system_ets_limit_info|<%= @beam_metric_prefix %>_system_port_limit_info|<%= @beam_metric_prefix %>_system_process_limit_info|<%= @beam_metric_prefix %>_system_atom_limit_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -893,7 +918,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -957,7 +982,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -1048,40 +1073,46 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_memory_allocated_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Total Usage",
           "refId": "A"
         },
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_memory_atom_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_memory_atom_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Atoms",
           "refId": "B"
         },
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_memory_binary_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_memory_binary_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Binaries",
           "refId": "C"
         },
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_memory_code_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_memory_code_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Code",
           "refId": "D"
         },
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_memory_ets_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_memory_ets_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "ETS",
           "refId": "E"
         },
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_memory_processes_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_memory_processes_total_bytes{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Processes",
           "refId": "F"
+        },
+        {
+          "expr": "<%= @beam_metric_prefix %>_memory_persistent_term_total_bytes{job=\"$job\", instance=\"$instance\"}",
+          "interval": "",
+          "legendFormat": "Persistent Term",
+          "refId": "G"
         }
       ],
       "thresholds": [],
@@ -1131,7 +1162,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of garbage collection events that are occuring and the number of bytes reclaimed",
+      "description": "The number of garbage collection events that are occurring and the number of bytes reclaimed",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -1200,13 +1231,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_gc_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @beam_metric_prefix %>_stats_gc_count{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "Garbage Collections",
           "refId": "A"
         },
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_gc_reclaimed_bytes{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @beam_metric_prefix %>_stats_gc_reclaimed_bytes{job=\"$job\", instance=\"$instance\"}[$interval])",
           "instant": false,
           "interval": "",
           "legendFormat": "Bytes Reclaimed",
@@ -1320,13 +1351,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}",
           "interval": "",
           "legendFormat": "Normal Tasks",
           "refId": "A"
         },
         {
-          "expr": "0 - <%= @otp_app %>_prom_ex_beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}",
+          "expr": "0 - <%= @beam_metric_prefix %>_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"normal\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "Normal Run Queue",
@@ -1440,13 +1471,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_active_task_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}",
           "interval": "",
           "legendFormat": "Dirty Tasks",
           "refId": "C"
         },
         {
-          "expr": "0 - <%= @otp_app %>_prom_ex_beam_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}",
+          "expr": "0 - <%= @beam_metric_prefix %>_stats_run_queue_count{job=\"$job\", instance=\"$instance\", type=\"dirty\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "Dirty Run Queue",
@@ -1569,13 +1600,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_reduction_count{job=\"$job\", instance=\"$instance\"}[$interval]) / 1000000",
+          "expr": "irate(<%= @beam_metric_prefix %>_stats_reduction_count{job=\"$job\", instance=\"$instance\"}[$interval]) / 1000000",
           "interval": "",
           "legendFormat": "Reductions",
           "refId": "A"
         },
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_context_switch_count{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @beam_metric_prefix %>_stats_context_switch_count{job=\"$job\", instance=\"$instance\"}[$interval])",
           "instant": false,
           "interval": "",
           "legendFormat": "Context Switches",
@@ -1687,7 +1718,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_process_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_process_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active Processes",
           "refId": "A"
@@ -1799,7 +1830,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active ports",
           "refId": "A"
@@ -1912,13 +1943,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "0 - irate(<%= @otp_app %>_prom_ex_beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"input\"}[$interval])",
+          "expr": "0 - irate(<%= @beam_metric_prefix %>_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"input\"}[$interval])",
           "interval": "",
           "legendFormat": "Data Received",
           "refId": "A"
         },
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_beam_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"output\"}[$interval])",
+          "expr": "irate(<%= @beam_metric_prefix %>_stats_port_io_byte_count{job=\"$job\", instance=\"$instance\", type=\"output\"}[$interval])",
           "interval": "",
           "legendFormat": "Data Sent",
           "refId": "B"
@@ -2029,7 +2060,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_ets_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active ETS Tables",
           "refId": "A"
@@ -2140,7 +2171,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_beam_stats_port_count{job=\"$job\", instance=\"$instance\"}",
+          "expr": "<%= @beam_metric_prefix %>_stats_port_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
           "legendFormat": "Active Ports",
           "refId": "A"
@@ -2191,20 +2222,20 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "BEAM", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -2218,14 +2249,14 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -2250,37 +2281,37 @@
         "name": "interval",
         "options": [
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15s" %>,
             "text": "15s",
             "value": "15s"
           },
           {
-            "selected": true,
+            "selected": <%= @default_selected_interval == "30s" %>,
             "text": "30s",
             "value": "30s"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1m" %>,
             "text": "1m",
             "value": "1m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "5m" %>,
             "text": "5m",
             "value": "5m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15m" %>,
             "text": "15m",
             "value": "15m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "30m" %>,
             "text": "30m",
             "value": "30m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1h" %>,
             "text": "1h",
             "value": "1h"
           }

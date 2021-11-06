@@ -19,6 +19,11 @@ defmodule PromEx.Plugins.Application do
     application's last Git commit author at the time of deployment. By default, an Application Plugin function
     will be called and will attempt to read the GIT_AUTHOR environment variable to populate the value.
 
+  - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+    `[otp_app, :prom_ex, :application]`. If this changes you will also want to set `application_metric_prefix`
+    in your `dashboard_assigns` to the snakecase version of your prefix, the default
+    `application_metric_prefix` is `{otp_app}_prom_ex_application`.
+
   This plugin exposes the following metric groups:
   - `:application_versions_manual_metrics`
 
@@ -55,7 +60,7 @@ defmodule PromEx.Plugins.Application do
     apps = Keyword.get(opts, :deps, :all)
     git_sha_mfa = Keyword.get(opts, :git_sha_mfa, {__MODULE__, :git_sha, []})
     git_author_mfa = Keyword.get(opts, :git_author_mfa, {__MODULE__, :git_author, []})
-    metric_prefix = PromEx.metric_prefix(otp_app, :application)
+    metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :application))
 
     [
       Manual.build(
@@ -106,7 +111,7 @@ defmodule PromEx.Plugins.Application do
   def polling_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
-    metric_prefix = PromEx.metric_prefix(otp_app, :application)
+    metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :application))
 
     Polling.build(
       :application_time_polling_metrics,

@@ -78,17 +78,12 @@ defmodule PromEx.LifecycleAnnotator do
       |> Map.put(:git_author, git_author)
 
     # Get the Grafana config
-    %PromEx.Config{
-      grafana_config: %{
-        host: grafana_host,
-        auth_token: grafana_auth_token
-      }
-    } = prom_ex_module.init_opts()
+    %PromEx.Config{grafana_config: grafana_config} = prom_ex_module.init_opts()
 
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
     Finch.start_link(name: finch_name)
-    grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
+    grafana_conn = Connection.build(finch_name, grafana_config)
 
     annotation_details = generate_annotation_details(state)
     annotation_text = ["#{to_string(otp_app)} is starting up\n" | annotation_details] |> Enum.join("\n")
@@ -108,17 +103,12 @@ defmodule PromEx.LifecycleAnnotator do
 
   @impl true
   def terminate(_reason, %{prom_ex_module: prom_ex_module, otp_app: otp_app} = state) do
-    %PromEx.Config{
-      grafana_config: %{
-        host: grafana_host,
-        auth_token: grafana_auth_token
-      }
-    } = prom_ex_module.init_opts()
+    %PromEx.Config{grafana_config: grafana_config} = prom_ex_module.init_opts()
 
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
     Finch.start_link(name: finch_name)
-    grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
+    grafana_conn = Connection.build(finch_name, grafana_config)
 
     annotation_details = generate_annotation_details(state)
     annotation_text = ["#{to_string(otp_app)} is shutting down\n" | annotation_details] |> Enum.join("\n")

@@ -12,7 +12,7 @@ defmodule PromEx.LifecycleAnnotatorTest do
     def plugins do
       [
         {Application, otp_app: :prom_ex},
-        {Phoenix, router: TestApp.Router},
+        {Phoenix, router: TestApp.Router, endpoint: TestApp.Endpoint},
         {Beam, poll_rate: 500},
         {Ecto, otp_app: :prom_ex, repos: [Test.Repo]}
       ]

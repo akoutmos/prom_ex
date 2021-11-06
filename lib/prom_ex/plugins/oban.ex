@@ -6,11 +6,16 @@ if Code.ensure_loaded?(Oban) do
 
     This plugin supports the following options:
     - `oban_supervisors`: This is an OPTIONAL option and it allows you to specify what Oban instances should have their events
-      tracked. By default the only Oban instance will have its events tracked is the defualt `Oban` instance. As a result, by
+      tracked. By default the only Oban instance that will have its events tracked is the default `Oban` instance. As a result, by
       default this option has a value of `[Oban]`. If you would like to track other named Oban instances, or perhaps your default
       and only Oban instance has a different name, you can pass in your own list of Oban instances (e.g. `[Oban, Oban.PrivateJobs]`).
 
-    - `poll_rate`: This is option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+      `[otp_app, :prom_ex, :oban]`. If this changes you will also want to set `oban_metric_prefix`
+      in your `dashboard_assigns` to the snakecase version of your prefix, the default
+      `oban_metric_prefix` is `{otp_app}_prom_ex_oban`.
+
+    - `poll_rate`: This option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
     This plugin exposes the following metric groups:
     - `:oban_init_event_metrics`
@@ -62,7 +67,7 @@ if Code.ensure_loaded?(Oban) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :oban)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :oban))
 
       oban_supervisors = get_oban_supervisors(opts)
       keep_function_filter = keep_oban_instance_metrics(oban_supervisors)
@@ -81,7 +86,7 @@ if Code.ensure_loaded?(Oban) do
     @impl true
     def polling_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :oban)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :oban))
       poll_rate = Keyword.get(opts, :poll_rate, 5_000)
 
       oban_supervisors = get_oban_supervisors(opts)
@@ -453,10 +458,6 @@ if Code.ensure_loaded?(Oban) do
     defp keep_oban_instance_metrics(oban_supervisors) do
       fn
         %{conf: %{name: name}} ->
-          MapSet.member?(oban_supervisors, name)
-
-        %{config: %{name: name}} ->
-          # TODO: This match should be deprecated eventually
           MapSet.member?(oban_supervisors, name)
 
         %{name: name} ->

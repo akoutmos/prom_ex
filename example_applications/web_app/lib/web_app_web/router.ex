@@ -18,6 +18,7 @@ defmodule WebAppWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
+    live "/error", ErrorLive, :index
   end
 
   scope "/", WebAppWeb do

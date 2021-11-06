@@ -37,13 +37,11 @@ defmodule WebApp.Recorder do
     {:noreply, state}
   end
 
-  @impl GenServer
   def handle_cast({:track, _}, %{count: @max_count} = state) do
     :telemetry.detach(state.handler_id)
     {:noreply, %{state | handler_id: nil}}
   end
 
-  @impl GenServer
   def handle_cast({:track, metric}, state) do
     {:noreply, %{state | count: state.count + 1, events: [metric | state.events]}}
   end

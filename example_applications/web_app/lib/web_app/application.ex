@@ -31,9 +31,15 @@ defmodule WebApp.Application do
 
       # Start the Endpoint (http/https)
       WebAppWeb.Endpoint,
+      WebAppWeb.InternalEndpoint,
 
-      # Work generator
+      # Work generator for Oban
       WebApp.RandomWorkGenerator
+
+      # Work generator for Broadway
+      # WebApp.TempTracker,
+      # WebApp.CityProducer,
+      # WebApp.TempProcessor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

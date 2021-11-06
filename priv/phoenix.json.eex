@@ -47,7 +47,32 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "bolt",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Sponsor PromEx",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://github.com/sponsors/akoutmos"
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Phoenix Plugin Docs",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://hexdocs.pm/prom_ex/PromEx.Plugins.Phoenix.html"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -65,7 +90,7 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
+      "description": "The Phoenix Endpoint module currently active for config metrics.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -74,8 +99,195 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "green",
                 "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "/^endpoint$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "<%= @phoenix_metric_prefix %>_endpoint_port_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Server Endpoint",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The port that the server is listening on.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "/^port$/",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "expr": "<%= @phoenix_metric_prefix %>_endpoint_port_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Server Port",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The URL that the server is configured to be accessed from.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 31,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^url$/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.1.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "<%= @phoenix_metric_prefix %>_endpoint_url_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
+          "format": "table",
+          "interval": "",
+          "legendFormat": "",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "title": "Server URL",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "noValue": "No data",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0
               },
               {
                 "color": "yellow",
@@ -95,7 +307,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 1
+        "y": 5
       },
       "id": 21,
       "options": {
@@ -115,7 +327,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -159,7 +371,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 1
+        "y": 5
       },
       "id": 22,
       "options": {
@@ -179,7 +391,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -215,7 +427,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 1
+        "y": 5
       },
       "id": 24,
       "options": {
@@ -235,7 +447,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -271,7 +483,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 1
+        "y": 5
       },
       "id": 23,
       "options": {
@@ -291,7 +503,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -336,7 +548,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 7
+        "y": 11
       },
       "id": 25,
       "options": {
@@ -356,7 +568,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -401,7 +613,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 7
+        "y": 11
       },
       "id": 26,
       "options": {
@@ -421,7 +633,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -457,7 +669,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 7
+        "y": 11
       },
       "id": 27,
       "options": {
@@ -477,7 +689,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -513,7 +725,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 7
+        "y": 11
       },
       "id": 28,
       "options": {
@@ -533,7 +745,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -552,7 +764,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 17
       },
       "id": 2,
       "panels": [],
@@ -584,7 +796,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 18
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -597,7 +809,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -656,7 +868,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 18
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -669,7 +881,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -722,7 +934,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 27
+        "y": 31
       },
       "hiddenSeries": false,
       "id": 11,
@@ -753,7 +965,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -819,7 +1031,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 27
+        "y": 31
       },
       "hiddenSeries": false,
       "id": 13,
@@ -850,7 +1062,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -916,7 +1128,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 44
       },
       "hiddenSeries": false,
       "id": 8,
@@ -947,7 +1159,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -1013,7 +1225,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 40
+        "y": 44
       },
       "hiddenSeries": false,
       "id": 10,
@@ -1042,19 +1254,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "2xx",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "4xx",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
           "interval": "",
           "legendFormat": "5xx",
           "refId": "C"
@@ -1108,7 +1320,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 53
+        "y": 57
       },
       "id": 4,
       "panels": [],
@@ -1134,7 +1346,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 54
+        "y": 58
       },
       "hiddenSeries": false,
       "id": 15,
@@ -1163,7 +1375,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_phoenix_channel_joined_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_joined_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
@@ -1235,7 +1447,7 @@
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 54
+        "y": 58
       },
       "heatmap": {},
       "hideZeroBuckets": true,
@@ -1248,7 +1460,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1301,7 +1513,7 @@
         "h": 13,
         "w": 12,
         "x": 0,
-        "y": 67
+        "y": 71
       },
       "hiddenSeries": false,
       "id": 17,
@@ -1332,9 +1544,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path) / sum(irate(<%= @otp_app %>_prom_ex_phoenix_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path)",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{ transport }} :: {{ result }}",
           "refId": "A"
         }
       ],
@@ -1378,25 +1590,298 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 84
+      },
+      "id": 34,
+      "panels": [],
+      "title": "Socket Details",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "<%= @datasource_id %>",
+      "description": "How many socket connections have occurred over time.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 85
+      },
+      "hiddenSeries": false,
+      "id": 35,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
+          "interval": "",
+          "legendFormat": "{{ transport }} :: {{ result }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Socket Connection Events",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "Channel joins",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "<%= @datasource_id %>",
+      "description": "A heatmap showing the request time spread across all socket connections.",
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 85
+      },
+      "heatmap": {},
+      "hideZeroBuckets": true,
+      "highlightCards": true,
+      "id": 36,
+      "legend": {
+        "show": true
+      },
+      "pluginVersion": "7.1.3",
+      "reverseYBuckets": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ le }}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Socket Connection Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "ms",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "<%= @datasource_id %>",
+      "description": "The average time it connects to establish a socket connection.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 98
+      },
+      "hiddenSeries": false,
+      "id": 37,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pluginVersion": "7.1.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
+          "interval": "",
+          "legendFormat": "{{ transport }} :: {{ result }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Socket Connection Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": "Response Time",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Phoenix", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1410,14 +1895,34 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "datasource": "<%= @datasource_id %>",
+        "definition": "label_values(<%= @phoenix_metric_prefix %>_endpoint_port_info, endpoint)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Phoenix Endpoint",
+        "multi": false,
+        "name": "endpoint",
+        "options": [],
+        "query": "label_values(<%= @phoenix_metric_prefix %>_endpoint_port_info, endpoint)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1442,37 +1947,37 @@
         "name": "interval",
         "options": [
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15s" %>,
             "text": "15s",
             "value": "15s"
           },
           {
-            "selected": true,
+            "selected": <%= @default_selected_interval == "30s" %>,
             "text": "30s",
             "value": "30s"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1m" %>,
             "text": "1m",
             "value": "1m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "5m" %>,
             "text": "5m",
             "value": "5m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15m" %>,
             "text": "15m",
             "value": "15m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "30m" %>,
             "text": "30m",
             "value": "30m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1h" %>,
             "text": "1h",
             "value": "1h"
           }

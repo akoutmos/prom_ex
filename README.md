@@ -24,6 +24,10 @@
   <a href="https://elixir-lang.slack.com/archives/C01NZ0FBFSR">
     <img alt="Elixir Slack Channel" src="https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack">
   </a>
+
+  <a href="https://github.com/sponsors/akoutmos">
+    <img alt="Support PromEx" src="https://img.shields.io/badge/Support%20PromEx-%E2%9D%A4-lightblue?style=for-the-badge">
+  </a>
 </p>
 
 <br>
@@ -32,11 +36,13 @@
 # Contents
 
 - [Installation](#installation)
+- [Supporting PromEx](#supporting-promex)
 - [Setting Up PromEx](#setting-up-promex)
 - [Adding Your Metrics](#adding-your-metrics)
 - [Design Philosophy](#design-philosophy)
 - [Available Plugins](#available-plugins)
 - [Grafana Dashboards](#grafana-dashboards)
+- [Security Concerns](#security-concerns)
 - [Performance Concerns](#performance-concerns)
 - [Attribution](#attribution)
 
@@ -48,12 +54,41 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:prom_ex, "~> 1.0.1"}
+    {:prom_ex, "~> 1.5.0"}
   ]
 end
 ```
 
 Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/prom_ex).
+
+## Supporting PromEx
+
+PromEx has an ambition goal: To provide Prometheus metrics and Grafana dashboards for as many of the libraries in the Elixir ecosystem as possible as well as a framework so that you can manage the lifecycle of your own metrics and dashboards.
+
+If you rely on PromEx to monitor your production applications, it would much appreciated if you can give back to the
+project in order to help ensure its continued development.
+
+### Gold Sponsors
+
+<a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=58083">
+  <img align="center" height="175" src="guides/images/your_logo_here.png" alt="Support the project">
+</a>
+
+### Silver Sponsors
+
+<a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=58082">
+  <img align="center" height="150" src="guides/images/your_logo_here.png" alt="Support the project">
+</a>
+
+### Bronze Sponsors
+
+<a href="https://smartlogic.io/" style="margin-right: 10px;" target="_blank">
+  <img align="center" height="50" src="guides/images/smartlogic-logo-teal-400.png" alt="SmartLogic Consultancy">
+</a>
+
+<a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=17615">
+  <img align="center" height="125" src="guides/images/your_logo_here.png" alt="Support the project">
+</a>
 
 ## Setting Up PromEx
 
@@ -136,11 +171,11 @@ tools that PromEx uses for its plugins are what you should use to create your ow
 
 To write your own PromEx plugin, create a module that implements the `PromEx.Plugin` behaviour and collect the
 relevant event/polling/manual metrics. Be sure to check out the 1st party PromEx plugins as a reference for how
-plugins are written and how to collect the different types of datapoints (also checkout the [Writing PromEx Plugins
+plugins are written and how to collect the different types of data points (also checkout the [Writing PromEx Plugins
 ](https://hexdocs.pm/prom_ex/writing-promex-plugins.html) guide).
 
-As a side note, PromEx will attach its own Telemetry handlers to events inorder to capture Prometheus compatible
-metrics and so any datapoints that are added to your `telemetry.ex` file (if you are using LiveDashboard) will
+As a side note, PromEx will attach its own Telemetry handlers to events in order to capture Prometheus compatible
+metrics and so any data points that are added to your `telemetry.ex` file (if you are using LiveDashboard) will
 not show up in PromEx. One of the benefits of the Telemetry library is that you can have an arbitrary number of
 event handlers attached to Telemetry events and so LiveDashboard and PromEx can operate in the same application
 without any issues.
@@ -182,33 +217,35 @@ PromEx provides the following utilities to you in order to achieve your observab
 
 ## Available Plugins
 
-| Plugin                           | Status      | Description                                            |
-| -------------------------------- | ----------- | ------------------------------------------------------ |
-| `PromEx.Plugins.Application`     | Stable      | Collect metrics on your application dependencies       |
-| `PromEx.Plugins.Beam`            | Stable      | Collect metrics regarding the BEAM virtual machine     |
-| `PromEx.Plugins.Phoenix`         | Stable      | Collect request metrics emitted by Phoenix             |
-| `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                  |
-| `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban       |
-| `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView            |
-| `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway |
-| `PromEx.Plugins.Absinthe`        | Coming soon | Collect GraphQL metrics emitted by Absinthe            |
-| `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch          |
-| `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix         |
-| More to come...                  |             |                                                        |
+| Plugin                           | Status      | Description                                                            |
+| -------------------------------- | ----------- | ---------------------------------------------------------------------- |
+| `PromEx.Plugins.Application`     | Stable      | Collect metrics on your application dependencies                       |
+| `PromEx.Plugins.Beam`            | Stable      | Collect metrics regarding the BEAM virtual machine                     |
+| `PromEx.Plugins.Phoenix`         | Stable      | Collect request metrics emitted by Phoenix                             |
+| `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                                  |
+| `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban                       |
+| `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView                            |
+| `PromEx.Plugins.Absinthe`        | Beta        | Collect GraphQL metrics emitted by Absinthe                            |
+| `PromEx.Plugins.PlugCowboy`      | Beta        | Collect HTTP request metrics emitted by Plug.Cowboy                    |
+| `PromEx.Plugins.PlugRouter`      | Beta        | Collect HTTP request metrics emitted by Plug.Router and Plug.Telemetry |
+| `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway                 |
+| `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch                          |
+| `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix                         |
+| More to come...                  |             |                                                                        |
 
 ## Grafana Dashboards
 
 <img align="center" width="100%" src="guides/images/dashboards_preview.png" alt="PromEx Dashboards">
 
 Each PromEx plugin comes with a custom tailored Grafana Dashboard. [Click here](https://hexdocs.pm/prom_ex/all.html)
-to check out sample screenshots of each Plugin specific Grafana Dashbaord.
+to check out sample screenshots of each Plugin specific Grafana Dashboard.
 
 ## Security Concerns
 
 By default, you can set up a Prometheus scrape target without providing any security authorization configuration. As a
 result, PromEx does not enforce any security precautions by default, and it is up to you to secure your `/metrics`
 endpoint to ensure that people are not seeing sensitive information (sort of like Phoenix LiveDashboard where you need
-to set up your own basic auth plug to guard access).
+to set up your own basic authentication plug to guard access).
 
 There are a couple of solutions to this problem:
 
@@ -217,7 +254,7 @@ There are a couple of solutions to this problem:
 
 2. If your application is public facing, you can leverage the [Unplug](https://hex.pm/packages/unplug) library that I
    maintain in order to only execute the `PromEx.Plug` plug when the incoming request fulfills your configured
-   requirements (see the [PromEx.Plug HexDocs](https://hexdocs.pm/prom_ex/1.0.0/PromEx.Plug.html) for an example).
+   requirements (see the [PromEx.Plug HexDocs](https://hexdocs.pm/prom_ex/1.1.1/PromEx.Plug.html) for an example).
 
 ## Performance Concerns
 
