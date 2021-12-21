@@ -63,12 +63,12 @@ defmodule PromEx.MixProject do
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.25.3", only: :dev},
-      {:excoveralls, "~> 0.14.1", only: :test, runtime: false},
+      {:ex_doc, "~> 0.26.0", only: :dev},
+      {:excoveralls, "~> 0.14.4", only: :test, runtime: false},
       {:doctor, "~> 0.18.0", only: :dev},
-      {:credo, "~> 1.5.5", only: :dev},
+      {:credo, "~> 1.6.1", only: :dev},
       {:dialyxir, "~> 1.1.0", only: :dev, runtime: false},
-      {:git_hooks, "~> 0.6.2", only: [:test, :dev], runtime: false}
+      {:git_hooks, "~> 0.6.4", only: [:test, :dev], runtime: false}
     ]
   end
 
