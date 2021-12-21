@@ -22,7 +22,27 @@ defmodule PromEx.Plugins.BeamTest do
       |> PromEx.get_metrics()
       |> Metrics.sort()
 
-    assert metrics == Metrics.read_expected(:beam)
+    # Alter the JIT entry to ensure that it passes in all OTP versions in CI
+    expected_metrics =
+      :beam
+      |> Metrics.read_expected()
+      |> Enum.map(fn
+        "web_app_prom_ex_beam_system_jit_support_info" <> _ ->
+          jit_enabled =
+            try do
+              if :erlang.system_info(:emu_flavor) == :jit, do: 1, else: 0
+            rescue
+              _error ->
+                0
+            end
+
+          "web_app_prom_ex_beam_system_jit_support_info #{jit_enabled}"
+
+        entry ->
+          entry
+      end)
+
+    assert metrics == expected_metrics
   end
 
   describe "event_metrics/1" do
