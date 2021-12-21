@@ -22,6 +22,9 @@ web_app_prom_ex_beam_system_time_correction_support_info 1
 # HELP web_app_prom_ex_beam_system_thread_support_info Whether the BEAM instance has been compiled with threading support.
 # TYPE web_app_prom_ex_beam_system_thread_support_info gauge
 web_app_prom_ex_beam_system_thread_support_info 1
+# HELP web_app_prom_ex_beam_system_jit_support_info Whether the BEAM instance is running with the JIT compiler.
+# TYPE web_app_prom_ex_beam_system_jit_support_info gauge
+web_app_prom_ex_beam_system_jit_support_info 1
 # HELP web_app_prom_ex_beam_system_smp_support_info Whether the BEAM instance has been compiled with SMP support.
 # TYPE web_app_prom_ex_beam_system_smp_support_info gauge
 web_app_prom_ex_beam_system_smp_support_info 1

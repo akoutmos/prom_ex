@@ -210,6 +210,12 @@ defmodule PromEx.Plugins.Beam do
           measurement: :enabled
         ),
         last_value(
+          metric_prefix ++ [:system, :jit_support, :info],
+          event_name: [:prom_ex, :plugin, :beam, :jit_support],
+          description: "Whether the BEAM instance is running with the JIT compiler.",
+          measurement: :enabled
+        ),
+        last_value(
           metric_prefix ++ [:system, :thread_support, :info],
           event_name: [:prom_ex, :plugin, :beam, :thread_support],
           description: "Whether the BEAM instance has been compiled with threading support.",
@@ -495,7 +501,16 @@ defmodule PromEx.Plugins.Beam do
     word_size = :erlang.system_info(:wordsize)
     version = :otp_release |> :erlang.system_info() |> :erlang.list_to_binary() |> String.to_integer()
 
+    jit_enabled =
+      try do
+        if :erlang.system_info(:emu_flavor) == :jit, do: 1, else: 0
+      rescue
+        _error ->
+          0
+      end
+
     :telemetry.execute([:prom_ex, :plugin, :beam, :smp_support], %{enabled: smp_enabled}, %{})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :jit_support], %{enabled: jit_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :thread_support], %{enabled: thread_support_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :time_correction_support], %{enabled: time_correction_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :word_size_bytes], %{size: word_size}, %{})

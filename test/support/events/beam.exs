@@ -45,6 +45,11 @@
     metadata: %{}
   },
   %{
+    event: [:prom_ex, :plugin, :beam, :jit_support],
+    measurements: %{enabled: 1},
+    metadata: %{}
+  },
+  %{
     event: [:prom_ex, :plugin, :beam, :thread_support],
     measurements: %{enabled: 1},
     metadata: %{}

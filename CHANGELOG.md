@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Updated BEAM plugin to surface JIT support
+
+### Fixed
+
+- LiveView plugin would detach exception handles when certain errors were encountered
+
 ## [1.5.0] - 2021-11-04
 
 ### Added

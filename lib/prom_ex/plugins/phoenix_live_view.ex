@@ -136,7 +136,22 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     end
 
     defp get_handle_event_exception_socket_tags(%{socket: socket = %Socket{}} = metadata) do
-      %reason{} = Exception.normalize(metadata.kind, metadata.reason, metadata.stacktrace)
+      reason =
+        metadata.kind
+        |> Exception.normalize(metadata.reason, metadata.stacktrace)
+        |> case do
+          reason when is_struct(reason) ->
+            reason.__struct__
+
+          {reason, _} when is_atom(reason) ->
+            reason
+
+          reason when is_atom(reason) ->
+            reason
+
+          _ ->
+            :unknown
+        end
 
       %{
         event: metadata.event,
@@ -163,7 +178,22 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     end
 
     defp get_mount_socket_exception_tags(%{socket: socket = %Socket{}} = metadata) do
-      %reason{} = Exception.normalize(metadata.kind, metadata.reason, metadata.stacktrace)
+      reason =
+        metadata.kind
+        |> Exception.normalize(metadata.reason, metadata.stacktrace)
+        |> case do
+          reason when is_struct(reason) ->
+            reason.__struct__
+
+          {reason, _} when is_atom(reason) ->
+            reason
+
+          reason when is_atom(reason) ->
+            reason
+
+          _ ->
+            :unknown
+        end
 
       %{
         action: get_live_view_action(socket),

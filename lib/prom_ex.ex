@@ -551,12 +551,14 @@ defmodule PromEx do
   defp init_plugin({module, opts}, default_plugin_opts, function) when is_atom(module) do
     opts = Keyword.merge(default_plugin_opts, opts)
 
+    # credo:disable-for-lines:3 Credo.Check.Refactor.Apply
     module
     |> apply(function, [opts])
     |> normalize_plugin()
   end
 
   defp init_plugin(module, default_plugin_opts, function) when is_atom(module) do
+    # credo:disable-for-lines:3 Credo.Check.Refactor.Apply
     module
     |> apply(function, [default_plugin_opts])
     |> normalize_plugin()

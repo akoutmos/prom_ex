@@ -175,8 +175,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-red",
                 "value": null
+              },
+              {
+                "color": "dark-green",
+                "value": 1
               }
             ]
           }
@@ -230,6 +234,14 @@
                     "to": "",
                     "type": 1,
                     "value": "<%= @beam_metric_prefix %>_system_time_correction_support_info"
+                  },
+                  {
+                    "from": "",
+                    "id": 3,
+                    "text": "JIT Support",
+                    "to": "",
+                    "type": 1,
+                    "value": "<%= @beam_metric_prefix %>_system_jit_support_info"
                   }
                 ]
               },
@@ -256,7 +268,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"<%= @beam_metric_prefix %>_system_thread_support_info|<%= @beam_metric_prefix %>_system_smp_support_info|<%= @beam_metric_prefix %>_system_time_correction_support_info\", job=\"$job\", instance=\"$instance\"}",
+          "expr": "{__name__=~\"<%= @beam_metric_prefix %>_system_thread_support_info|<%= @beam_metric_prefix %>_system_jit_support_info|<%= @beam_metric_prefix %>_system_smp_support_info|<%= @beam_metric_prefix %>_system_time_correction_support_info\", job=\"$job\", instance=\"$instance\"}",
           "format": "table",
           "instant": true,
           "interval": "",
