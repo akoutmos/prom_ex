@@ -471,17 +471,15 @@ if Code.ensure_loaded?(Oban) do
     defp oban_init_tag_values(%{conf: config}) do
       plugins_string_list =
         config.plugins
-        |> Enum.map(fn plugin ->
+        |> Enum.map_join(", ", fn plugin ->
           normalize_module_name(plugin)
         end)
-        |> Enum.join(", ")
 
       queues_string_list =
         config.queues
-        |> Enum.map(fn {queue, _queue_opts} ->
+        |> Enum.map_join(", ", fn {queue, _queue_opts} ->
           Atom.to_string(queue)
         end)
-        |> Enum.join(", ")
 
       %{
         name: normalize_module_name(config.name),
