@@ -41,6 +41,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     use PromEx.Plugin
 
     alias Phoenix.LiveView.Socket
+    alias PromEx.Utils
 
     @live_view_mount_stop [:phoenix, :live_view, :mount, :stop]
     @live_view_mount_exception [:phoenix, :live_view, :mount, :exception]
@@ -95,7 +96,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
             reporter_options: [
               buckets: bucket_intervals
             ],
-            tag_values: &get_mount_socket_exception_tags/1,
+            tag_values: &get_mount_exception_tags/1,
             tags: [:action, :module, :kind, :reason],
             unit: {:native, :millisecond}
           ),
@@ -136,29 +137,12 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     end
 
     defp get_handle_event_exception_socket_tags(%{socket: socket = %Socket{}} = metadata) do
-      reason =
-        metadata.kind
-        |> Exception.normalize(metadata.reason, metadata.stacktrace)
-        |> case do
-          reason when is_struct(reason) ->
-            reason.__struct__
-
-          {reason, _} when is_atom(reason) ->
-            reason
-
-          reason when is_atom(reason) ->
-            reason
-
-          _ ->
-            :unknown
-        end
-
       %{
         event: metadata.event,
         action: get_live_view_action(socket),
         module: get_live_view_module(socket),
         kind: metadata.kind,
-        reason: normalize_module_name(reason)
+        reason: Utils.normalize_exception(metadata.kind, metadata.reason, metadata.stacktrace)
       }
     end
 
@@ -177,29 +161,12 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
       }
     end
 
-    defp get_mount_socket_exception_tags(%{socket: socket = %Socket{}} = metadata) do
-      reason =
-        metadata.kind
-        |> Exception.normalize(metadata.reason, metadata.stacktrace)
-        |> case do
-          reason when is_struct(reason) ->
-            reason.__struct__
-
-          {reason, _} when is_atom(reason) ->
-            reason
-
-          reason when is_atom(reason) ->
-            reason
-
-          _ ->
-            :unknown
-        end
-
+    defp get_mount_exception_tags(%{socket: socket = %Socket{}} = metadata) do
       %{
         action: get_live_view_action(socket),
         module: get_live_view_module(socket),
         kind: metadata.kind,
-        reason: normalize_module_name(reason)
+        reason: Utils.normalize_exception(metadata.kind, metadata.reason, metadata.stacktrace)
       }
     end
 

@@ -1,0 +1,105 @@
+# HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
+# TYPE web_app_prom_ex_prom_ex_status_info gauge
+web_app_prom_ex_prom_ex_status_info 1
+# HELP web_app_prom_ex_broadway_process_batch_success_size How many of the messages in the batch were successfully processed.
+# TYPE web_app_prom_ex_broadway_process_batch_success_size histogram
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="1"} 0
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="5"} 0
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="10"} 0
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="20"} 5
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="50"} 5
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="100"} 5
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="500"} 5
+web_app_prom_ex_broadway_process_batch_success_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="+Inf"} 5
+web_app_prom_ex_broadway_process_batch_success_size_sum{batcher="batch_temp",name="WebApp.TempProcessor"} 71
+web_app_prom_ex_broadway_process_batch_success_size_count{batcher="batch_temp",name="WebApp.TempProcessor"} 5
+# HELP web_app_prom_ex_broadway_process_batch_failure_size How many of the messages in the batch failed to process.
+# TYPE web_app_prom_ex_broadway_process_batch_failure_size histogram
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="1"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="5"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="10"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="20"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="50"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="100"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="500"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="+Inf"} 5
+web_app_prom_ex_broadway_process_batch_failure_size_sum{batcher="batch_temp",name="WebApp.TempProcessor"} 0
+web_app_prom_ex_broadway_process_batch_failure_size_count{batcher="batch_temp",name="WebApp.TempProcessor"} 5
+# HELP web_app_prom_ex_broadway_process_batch_duration_milliseconds The time it takes Broadway to process a batch of messages.
+# TYPE web_app_prom_ex_broadway_process_batch_duration_milliseconds histogram
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="10"} 0
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="50"} 0
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="100"} 0
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="500"} 1
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="1000"} 3
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="10000"} 5
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="30000"} 5
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="60000"} 5
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_bucket{batcher="batch_temp",name="WebApp.TempProcessor",le="+Inf"} 5
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_sum{batcher="batch_temp",name="WebApp.TempProcessor"} 4852.312468
+web_app_prom_ex_broadway_process_batch_duration_milliseconds_count{batcher="batch_temp",name="WebApp.TempProcessor"} 5
+# HELP web_app_prom_ex_broadway_process_message_exception_duration_milliseconds The time it takes Broadway to process a message that results in an error.
+# TYPE web_app_prom_ex_broadway_process_message_exception_duration_milliseconds histogram
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="10"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="50"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="100"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="500"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="1000"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="10000"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="30000"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="60000"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError",le="+Inf"} 4
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_sum{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError"} 0.027600999999999997
+web_app_prom_ex_broadway_process_message_exception_duration_milliseconds_count{kind="error",name="WebApp.TempProcessor",processor_key="default",reason="ArithmeticError"} 4
+# HELP web_app_prom_ex_broadway_process_message_duration_milliseconds The time it takes Broadway to process a message.
+# TYPE web_app_prom_ex_broadway_process_message_duration_milliseconds histogram
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="10"} 0
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="50"} 0
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="100"} 0
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="500"} 21
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="1000"} 48
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="10000"} 88
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="30000"} 88
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="60000"} 88
+web_app_prom_ex_broadway_process_message_duration_milliseconds_bucket{name="WebApp.TempProcessor",processor_key="default",le="+Inf"} 88
+web_app_prom_ex_broadway_process_message_duration_milliseconds_sum{name="WebApp.TempProcessor",processor_key="default"} 86292.99267500002
+web_app_prom_ex_broadway_process_message_duration_milliseconds_count{name="WebApp.TempProcessor",processor_key="default"} 88
+# HELP web_app_prom_ex_broadway_init_batcher_batch_timeout_milliseconds The Broadway batchers timeout value.
+# TYPE web_app_prom_ex_broadway_init_batcher_batch_timeout_milliseconds gauge
+web_app_prom_ex_broadway_init_batcher_batch_timeout_milliseconds{batcher="batch_temp",name="WebApp.TempProcessor"} 15000
+# HELP web_app_prom_ex_broadway_init_batcher_batch_size_value The Broadway batchers batch size value.
+# TYPE web_app_prom_ex_broadway_init_batcher_batch_size_value gauge
+web_app_prom_ex_broadway_init_batcher_batch_size_value{batcher="batch_temp",name="WebApp.TempProcessor"} 15
+# HELP web_app_prom_ex_broadway_init_batcher_concurrency_value The Broadway batchers concurrency value.
+# TYPE web_app_prom_ex_broadway_init_batcher_concurrency_value gauge
+web_app_prom_ex_broadway_init_batcher_concurrency_value{batcher="batch_temp",name="WebApp.TempProcessor"} 2
+# HELP web_app_prom_ex_broadway_init_batcher_hibernate_after_milliseconds The Broadway batchers hibernate after value.
+# TYPE web_app_prom_ex_broadway_init_batcher_hibernate_after_milliseconds gauge
+web_app_prom_ex_broadway_init_batcher_hibernate_after_milliseconds{batcher="batch_temp",name="WebApp.TempProcessor"} 50000
+# HELP web_app_prom_ex_broadway_init_processor_concurrency_value The Broadway processors concurrency value.
+# TYPE web_app_prom_ex_broadway_init_processor_concurrency_value gauge
+web_app_prom_ex_broadway_init_processor_concurrency_value{name="WebApp.TempProcessor",processor="default"} 5
+# HELP web_app_prom_ex_broadway_init_processor_max_demand_value The Broadway processors max demand value.
+# TYPE web_app_prom_ex_broadway_init_processor_max_demand_value gauge
+web_app_prom_ex_broadway_init_processor_max_demand_value{name="WebApp.TempProcessor",processor="default"} 10
+# HELP web_app_prom_ex_broadway_init_processor_hibernate_after_milliseconds The Broadway processors hibernate after value.
+# TYPE web_app_prom_ex_broadway_init_processor_hibernate_after_milliseconds gauge
+web_app_prom_ex_broadway_init_processor_hibernate_after_milliseconds{name="WebApp.TempProcessor",processor="default"} 50000
+# HELP web_app_prom_ex_broadway_init_shutdown_default_milliseconds The Broadway supervisor's shutdown default value.
+# TYPE web_app_prom_ex_broadway_init_shutdown_default_milliseconds gauge
+web_app_prom_ex_broadway_init_shutdown_default_milliseconds{name="WebApp.TempProcessor"} 30000
+# HELP web_app_prom_ex_broadway_init_max_restarts_default_value The Broadway supervisor's max restarts default value.
+# TYPE web_app_prom_ex_broadway_init_max_restarts_default_value gauge
+web_app_prom_ex_broadway_init_max_restarts_default_value{name="WebApp.TempProcessor"} 3
+# HELP web_app_prom_ex_broadway_init_max_duration_default_milliseconds The Broadway supervisor's max seconds default value (in milliseconds).
+# TYPE web_app_prom_ex_broadway_init_max_duration_default_milliseconds gauge
+web_app_prom_ex_broadway_init_max_duration_default_milliseconds{name="WebApp.TempProcessor"} 5000
+# HELP web_app_prom_ex_broadway_init_resubscribe_interval_default_milliseconds The Broadway supervisor's resubscribe interval default value.
+# TYPE web_app_prom_ex_broadway_init_resubscribe_interval_default_milliseconds gauge
+web_app_prom_ex_broadway_init_resubscribe_interval_default_milliseconds{name="WebApp.TempProcessor"} 100
+# HELP web_app_prom_ex_broadway_init_hibernate_after_default_milliseconds The Broadway supervisor's hibernate after default value.
+# TYPE web_app_prom_ex_broadway_init_hibernate_after_default_milliseconds gauge
+web_app_prom_ex_broadway_init_hibernate_after_default_milliseconds{name="WebApp.TempProcessor"} 50000
+# HELP web_app_prom_ex_broadway_init_status_info The topology configuration data that was provided to Broadway.
+# TYPE web_app_prom_ex_broadway_init_status_info gauge
+web_app_prom_ex_broadway_init_status_info{name="WebApp.TempProcessor"} 1
