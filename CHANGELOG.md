@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Updated BEAM plugin to surface JIT support
+- Broadway metrics plugin
+- Broadway Grafana dashboard
 
 ### Fixed
 

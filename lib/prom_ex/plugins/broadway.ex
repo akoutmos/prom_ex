@@ -40,7 +40,7 @@ if Code.ensure_loaded?(Broadway) do
     require Logger
 
     alias Broadway.{BatchInfo, Message, Options}
-    alias PromEx.{Debug, Utils}
+    alias PromEx.Utils
 
     @millisecond_duration_buckets [10, 50, 100, 500, 1_000, 10_000, 30_000, 60_000]
     @message_batch_size_buckets [1, 5, 10, 20, 50, 100, 500]
