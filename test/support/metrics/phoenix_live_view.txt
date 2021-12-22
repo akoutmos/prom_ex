@@ -51,17 +51,17 @@ web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_sum{action="index"
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{action="index",module="WebAppWeb.PageLive"} 1
 # HELP web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds The time it takes for the live view to complete the mount callback that resulted in an exception
 # TYPE web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds histogram
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="+Inf"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="10"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="100"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="1000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="10000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="2000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="250"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="500"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc",le="5000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{action="index",kind="exit",module="WebAppWeb.PageLive",reason="noproc"} 0.008195
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="+Inf"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="10"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="100"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="1000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="10000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="2000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="250"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="500"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="5000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc"} 0.008195
 web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="+Inf"} 1
 web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10"} 1
 web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="100"} 1

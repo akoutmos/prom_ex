@@ -40,7 +40,7 @@ if Code.ensure_loaded?(Broadway) do
     require Logger
 
     alias Broadway.{BatchInfo, Message, Options}
-    alias PromEx.Utils
+    alias PromEx.{Debug, Utils}
 
     @millisecond_duration_buckets [10, 50, 100, 500, 1_000, 10_000, 30_000, 60_000]
     @message_batch_size_buckets [1, 5, 10, 20, 50, 100, 500]
@@ -131,21 +131,21 @@ if Code.ensure_loaded?(Broadway) do
             event_name: @init_topology_processors_proxy_event,
             description: "The Broadway processors hibernate after value.",
             measurement: fn _measurements, %{hibernate_after: hibernate_after} -> hibernate_after end,
-            tags: [:name]
+            tags: [:name, :processor]
           ),
           last_value(
             metric_prefix ++ [:init, :processor, :max_demand, :value],
             event_name: @init_topology_processors_proxy_event,
             description: "The Broadway processors max demand value.",
             measurement: fn _measurements, %{max_demand: max_demand} -> max_demand end,
-            tags: [:name]
+            tags: [:name, :processor]
           ),
           last_value(
             metric_prefix ++ [:init, :processor, :concurrency, :value],
             event_name: @init_topology_processors_proxy_event,
             description: "The Broadway processors concurrency value.",
             measurement: fn _measurements, %{concurrency: concurrency} -> concurrency end,
-            tags: [:name]
+            tags: [:name, :processor]
           ),
           last_value(
             metric_prefix ++ [:init, :batcher, :hibernate_after, :milliseconds],
@@ -184,6 +184,12 @@ if Code.ensure_loaded?(Broadway) do
         [:prom_ex, :broadway, :proxy, otp_app],
         init_topology_event,
         fn _event_name, _measurements, %{config: config}, _config ->
+          # Invoking Broadway module
+          broadway_module =
+            config
+            |> Keyword.fetch!(:name)
+            |> Utils.normalize_module_name()
+
           # Extract all of the processors and proxy for each processor
           config
           |> Keyword.get(:processors, [])
@@ -191,7 +197,8 @@ if Code.ensure_loaded?(Broadway) do
             metadata =
               processor_options
               |> Map.new()
-              |> Map.put(:name, processor)
+              |> Map.put(:processor, processor)
+              |> Map.put(:name, broadway_module)
 
             :telemetry.execute(@init_topology_processors_proxy_event, %{}, metadata)
           end)
@@ -203,7 +210,8 @@ if Code.ensure_loaded?(Broadway) do
             metadata =
               batcher_options
               |> Map.new()
-              |> Map.put(:name, batcher)
+              |> Map.put(:batcher, batcher)
+              |> Map.put(:name, broadway_module)
 
             :telemetry.execute(@init_topology_batchers_proxy_event, %{}, metadata)
           end)
@@ -233,11 +241,11 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @millisecond_duration_buckets
             ],
-            tags: [:processor_key, :acknowledger],
+            tags: [:processor_key, :name],
             tag_values: fn %{processor_key: processor_key, message: %Message{acknowledger: {acknowledger, _, _}}} ->
               %{
                 processor_key: processor_key,
-                acknowledger: Utils.normalize_module_name(acknowledger)
+                name: Utils.normalize_module_name(acknowledger)
               }
             end,
             unit: {:native, :millisecond}
@@ -250,7 +258,7 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @millisecond_duration_buckets
             ],
-            tags: [:processor_key, :acknowledger, :kind, :reason],
+            tags: [:processor_key, :name, :kind, :reason],
             tag_values: &extract_exception_tag_values/1,
             unit: {:native, :millisecond}
           )
@@ -270,7 +278,7 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @millisecond_duration_buckets
             ],
-            tags: [:batch_key, :batcher],
+            tags: [:batch_key, :batcher, :name],
             tag_values: &extract_batcher_tag_values/1,
             unit: {:native, :millisecond}
           ),
@@ -284,7 +292,7 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @message_batch_size_buckets
             ],
-            tags: [:batch_key, :batcher],
+            tags: [:batch_key, :batcher, :name],
             tag_values: &extract_batcher_tag_values/1
           ),
           distribution(
@@ -297,15 +305,16 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @message_batch_size_buckets
             ],
-            tags: [:batch_key, :batcher],
+            tags: [:batch_key, :batcher, :name],
             tag_values: &extract_batcher_tag_values/1
           )
         ]
       )
     end
 
-    defp extract_batcher_tag_values(%{batch_info: batch_info = %BatchInfo{}}) do
+    defp extract_batcher_tag_values(%{batch_info: batch_info = %BatchInfo{}, topology_name: name}) do
       %{
+        name: Utils.normalize_module_name(name),
         batch_key: batch_info.batch_key,
         batcher: batch_info.batcher
       }
@@ -335,7 +344,7 @@ if Code.ensure_loaded?(Broadway) do
         processor_key: processor_key,
         kind: kind,
         reason: reason,
-        acknowledger: Utils.normalize_module_name(acknowledger)
+        name: Utils.normalize_module_name(acknowledger)
       }
     end
   end

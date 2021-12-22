@@ -31,7 +31,7 @@ defmodule WebApp.Application do
 
       # Start the Endpoint (http/https)
       WebAppWeb.Endpoint,
-      WebAppWeb.InternalEndpoint
+      WebAppWeb.InternalEndpoint,
 
       # Work generator for Oban
       # WebApp.RandomWorkGenerator

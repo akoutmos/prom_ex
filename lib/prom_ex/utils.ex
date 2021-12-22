@@ -27,8 +27,18 @@ defmodule PromEx.Utils do
   """
   @spec normalize_exception(exception_kind(), term(), term()) :: String.t()
   def normalize_exception(:error, reason, stacktrace) do
-    %reason{} = Exception.normalize(:error, reason, stacktrace)
-    normalize_module_name(reason)
+    normalized_reason =
+      :error
+      |> Exception.normalize(reason, stacktrace)
+      |> case do
+        %exception{__exception__: true} ->
+          exception
+
+        _ ->
+          "UnknownError"
+      end
+
+    normalize_module_name(normalized_reason)
   end
 
   def normalize_exception(:exit, {reason, _details}, _stacktrace) do
@@ -42,7 +52,15 @@ defmodule PromEx.Utils do
     "UnknownExit"
   end
 
+  def normalize_exception({:EXIT, _pid}, _reason, _stacktrace) do
+    "UnknownExit"
+  end
+
   def normalize_exception(:throw, _reason, _stacktrace) do
     "UnknownThrow"
+  end
+
+  def normalize_exception(_kind, _reason, _stacktrace) do
+    "UnknownException"
   end
 end
