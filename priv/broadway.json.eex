@@ -108,7 +108,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 6,
         "w": 6,
         "x": 0,
         "y": 1
@@ -170,10 +170,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -206,41 +202,17 @@
                 "value": [
                   {
                     "options": {
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value": {
-                        "index": 1,
-                        "text": "Batcher batch size"
-                      },
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds": {
+                      "<%= @otp_app %>_prom_ex_broadway_init_processor_concurrency_value": {
                         "index": 0,
-                        "text": "Batch timeout (milliseconds)"
+                        "text": "Processor Concurrency"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value": {
+                      "<%= @otp_app %>_prom_ex_broadway_init_processor_hibernate_after_milliseconds": {
                         "index": 2,
-                        "text": "Batcher concurrency"
+                        "text": "Hibernate After (in milliseconds)"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds": {
-                        "index": 3,
-                        "text": "Batcher hibernate after (milliseconds)"
-                      },
-                      "<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds": {
-                        "index": 4,
-                        "text": "Default hibernate after (milliseconds)"
-                      },
-                      "<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds": {
-                        "index": 5,
-                        "text": "Max duration (milliseconds)"
-                      },
-                      "<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value": {
-                        "index": 6,
-                        "text": "Default max restarts"
-                      },
-                      "<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds": {
-                        "index": 7,
-                        "text": "Default resubscribe interval (milliseconds)"
-                      },
-                      "<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds": {
-                        "index": 8,
-                        "text": "Default shutdown interval (milliseconds)"
+                      "<%= @otp_app %>_prom_ex_broadway_init_processor_max_demand_value": {
+                        "index": 1,
+                        "text": "Max Demand"
                       }
                     },
                     "type": "value"
@@ -248,14 +220,293 @@
                 ]
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Processor"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 275
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 16,
-        "w": 6,
+        "h": 6,
+        "w": 9,
         "x": 6,
         "y": 1
+      },
+      "id": 56,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_processor_concurrency_value|<%= @otp_app %>_prom_ex_broadway_init_processor_max_demand_value|<%= @otp_app %>_prom_ex_broadway_init_processor_hibernate_after_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "title": "Message Processors",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "instance": true,
+              "job": true,
+              "name": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "",
+              "__name__": "Config",
+              "processor": "Processor"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The settings that were set for the selected Broadway module.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "unit",
+                "value": "locale"
+              },
+              {
+                "id": "custom.width",
+                "value": 218
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Config"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value": {
+                        "index": 1,
+                        "text": "Batch Size"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds": {
+                        "index": 0,
+                        "text": "Batch Timeout (in milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value": {
+                        "index": 2,
+                        "text": "Batcher Concurrency "
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds": {
+                        "index": 3,
+                        "text": "Hibernate After (in milliseconds)"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Batcher"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 275
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 9,
+        "x": 15,
+        "y": 1
+      },
+      "id": 57,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "title": "Batch Processors",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "instance": true,
+              "job": true,
+              "name": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "__name__": "Config",
+              "batcher": "Batcher"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The settings that were set for the selected Broadway module.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "center"
+              },
+              {
+                "id": "unit",
+                "value": "locale"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Config"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds": {
+                        "index": 4,
+                        "text": "Default Hibernate After (in milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds": {
+                        "index": 2,
+                        "text": "Default Max Duration (in milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value": {
+                        "index": 1,
+                        "text": "Default Max Restarts"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds": {
+                        "index": 3,
+                        "text": "Default Resubscribe Interval (in milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds": {
+                        "index": 0,
+                        "text": "Default Shutdown (in milliseconds)"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 385
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 0,
+        "y": 7
       },
       "id": 44,
       "options": {
@@ -266,7 +517,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value|<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value|<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -275,7 +526,7 @@
           "refId": "A"
         }
       ],
-      "title": "Broadway Module Settings",
+      "title": "Default Module Settings",
       "transformations": [
         {
           "id": "organize",
@@ -298,6 +549,77 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
+      "description": "A percentage of Broadway message that resulted in an error over the past 24 hours.",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 99
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 7
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) OR on() vector(0)",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Message Error Percentage (Last 24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
       "description": "The number of messages processed in the last 24 hours.",
       "fieldConfig": {
         "defaults": {
@@ -317,10 +639,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
         "x": 12,
-        "y": 1
+        "y": 7
       },
       "id": 24,
       "options": {
@@ -375,10 +697,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
         "x": 18,
-        "y": 1
+        "y": 7
       },
       "id": 46,
       "options": {
@@ -414,7 +736,7 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of Broadway message that resulted in an error over the past 24 hours.",
+      "description": "A percentage of Broadway message that resulted in an error over the past hour.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
@@ -446,12 +768,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 6,
-        "x": 0,
-        "y": 5
+        "x": 6,
+        "y": 12
       },
-      "id": 22,
+      "id": 38,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -471,7 +793,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -480,7 +802,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Message Error Percentage (Last 24h)",
+      "title": "Message Error Percentage (Last 1h)",
       "type": "stat"
     },
     {
@@ -504,10 +826,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
         "x": 12,
-        "y": 9
+        "y": 12
       },
       "id": 45,
       "options": {
@@ -562,10 +884,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 6,
         "x": 18,
-        "y": 9
+        "y": 12
       },
       "id": 47,
       "options": {
@@ -597,77 +919,6 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Batches processed (Last 1h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of Broadway message that resulted in an error over the past hour.",
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 70
-              },
-              {
-                "color": "yellow",
-                "value": 80
-              },
-              {
-                "color": "green",
-                "value": 99
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 11
-      },
-      "id": 38,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.0.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) OR on() vector(0)",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Message Error Percentage (Last 1h)",
       "type": "stat"
     },
     {
@@ -1678,10 +1929,7 @@
         "multi": false,
         "name": "job",
         "options": [],
-        "query": {
-          "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
-          "refId": "prometheus-job-Variable-Query"
-        },
+        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1703,10 +1951,7 @@
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": {
-          "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
-          "refId": "prometheus-instance-Variable-Query"
-        },
+        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1728,10 +1973,7 @@
         "multi": false,
         "name": "broadway_module",
         "options": [],
-        "query": {
-          "query": "label_values(<%= @otp_app %>_prom_ex_broadway_init_status_info, name)",
-          "refId": "StandardVariableQuery"
-        },
+        "query": "label_values(<%= @otp_app %>_prom_ex_broadway_init_status_info, name)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
