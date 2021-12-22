@@ -22,6 +22,9 @@ web_app_prom_ex_beam_system_time_correction_support_info 1
 # HELP web_app_prom_ex_beam_system_thread_support_info Whether the BEAM instance has been compiled with threading support.
 # TYPE web_app_prom_ex_beam_system_thread_support_info gauge
 web_app_prom_ex_beam_system_thread_support_info 1
+# HELP web_app_prom_ex_beam_system_jit_support_info Whether the BEAM instance is running with the JIT compiler.
+# TYPE web_app_prom_ex_beam_system_jit_support_info gauge
+web_app_prom_ex_beam_system_jit_support_info 1
 # HELP web_app_prom_ex_beam_system_smp_support_info Whether the BEAM instance has been compiled with SMP support.
 # TYPE web_app_prom_ex_beam_system_smp_support_info gauge
 web_app_prom_ex_beam_system_smp_support_info 1
@@ -112,3 +115,6 @@ web_app_prom_ex_beam_memory_atom_total_bytes 752561
 # HELP web_app_prom_ex_beam_memory_allocated_bytes The total amount of memory currently allocated.
 # TYPE web_app_prom_ex_beam_memory_allocated_bytes gauge
 web_app_prom_ex_beam_memory_allocated_bytes 55016136
+# HELP web_app_prom_ex_beam_memory_persistent_term_total_bytes The total amount of memory currently allocated to Erlang :persistent_term.
+# TYPE web_app_prom_ex_beam_memory_persistent_term_total_bytes gauge
+web_app_prom_ex_beam_memory_persistent_term_total_bytes 1376

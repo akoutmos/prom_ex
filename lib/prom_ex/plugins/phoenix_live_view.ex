@@ -5,7 +5,10 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     mount, handle_event, and handle_params callbacks for live views and live components.
 
     This plugin supports the following options:
-
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+      `[otp_app, :prom_ex, :phoenix_live_view]`. If this changes you will also want to set
+      `phoenix_live_view_metric_prefix` in your `dashboard_assigns` to the snakecase version of your
+      prefix, the default `phoenix_live_view_metric_prefix` is `{otp_app}_prom_ex_phoenix_live_view`.
 
     This plugin exposes the following metric groups:
     - `:phoenix_live_view_event_metrics`
@@ -56,7 +59,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :phoenix_live_view)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix_live_view))
 
       # Event metrics definitions
       [
@@ -133,12 +136,29 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     end
 
     defp get_handle_event_exception_socket_tags(%{socket: socket = %Socket{}} = metadata) do
+      reason =
+        metadata.kind
+        |> Exception.normalize(metadata.reason, metadata.stacktrace)
+        |> case do
+          reason when is_struct(reason) ->
+            reason.__struct__
+
+          {reason, _} when is_atom(reason) ->
+            reason
+
+          reason when is_atom(reason) ->
+            reason
+
+          _ ->
+            :unknown
+        end
+
       %{
         event: metadata.event,
         action: get_live_view_action(socket),
         module: get_live_view_module(socket),
         kind: metadata.kind,
-        reason: metadata.reason
+        reason: normalize_module_name(reason)
       }
     end
 
@@ -157,18 +177,35 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
       }
     end
 
-    defp get_mount_socket_exception_tags(%{socket: socket = %Socket{}, kind: kind, reason: reason}) do
+    defp get_mount_socket_exception_tags(%{socket: socket = %Socket{}} = metadata) do
+      reason =
+        metadata.kind
+        |> Exception.normalize(metadata.reason, metadata.stacktrace)
+        |> case do
+          reason when is_struct(reason) ->
+            reason.__struct__
+
+          {reason, _} when is_atom(reason) ->
+            reason
+
+          reason when is_atom(reason) ->
+            reason
+
+          _ ->
+            :unknown
+        end
+
       %{
         action: get_live_view_action(socket),
         module: get_live_view_module(socket),
-        kind: kind,
-        reason: reason
+        kind: metadata.kind,
+        reason: normalize_module_name(reason)
       }
     end
 
     defp get_live_view_module(%Socket{} = socket) do
-      socket.assigns
-      |> Map.get(:live_module, :unknown)
+      socket
+      |> Map.get(:view, :unknown)
       |> normalize_module_name()
     end
 

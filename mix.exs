@@ -4,7 +4,7 @@ defmodule PromEx.MixProject do
   def project do
     [
       app: :prom_ex,
-      version: "1.0.1",
+      version: "1.5.0",
       elixir: "~> 1.10",
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",
@@ -18,10 +18,10 @@ defmodule PromEx.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test,
-        "coveralls.travis": :test
+        "coveralls.github": :test
       ],
       dialyzer: [
-        plt_add_apps: [:broadway, :ecto, :mix, :oban, :phoenix, :plug, :telemetry_metrics],
+        plt_add_apps: [:absinthe, :broadway, :ecto, :mix, :oban, :phoenix, :plug, :telemetry_metrics],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
       package: package(),
@@ -46,28 +46,30 @@ defmodule PromEx.MixProject do
     [
       # Required dependencies
       {:jason, "~> 1.2"},
-      {:finch, "~> 0.5.2"},
-      {:telemetry, "~> 0.4.2"},
-      {:telemetry_poller, "~> 0.5.1"},
-      {:telemetry_metrics, "~> 0.6.0"},
-      {:plug_cowboy, "~> 2.1"},
+      {:finch, "~> 0.9.0"},
+      {:telemetry, "~> 1.0.0"},
+      {:telemetry_poller, "~> 1.0.0"},
+      {:telemetry_metrics, "~> 0.6.1"},
+      {:telemetry_metrics_prometheus_core, "~> 1.0.2"},
+      {:plug_cowboy, "~> 2.5.1"},
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.5.0", optional: true},
       {:phoenix_live_view, ">= 0.14.0", optional: true},
-      {:plug, ">= 1.10.0", optional: true},
+      {:plug, ">= 1.12.1", optional: true},
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
-      {:broadway, github: "dashbitco/broadway", branch: :master, optional: true},
+      {:absinthe, ">= 1.6.0", optional: true},
+      {:broadway, ">= 1.0.0", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.22", only: :dev},
-      {:excoveralls, "~> 0.13.3", only: :test, runtime: false},
-      {:doctor, "~> 0.15.0", only: :dev},
-      {:credo, "~> 1.5.1", only: :dev},
-      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
-      {:git_hooks, "~> 0.5.0", only: [:test, :dev], runtime: false}
+      {:ex_doc, "~> 0.26.0", only: :dev},
+      {:excoveralls, "~> 0.14.4", only: :test, runtime: false},
+      {:doctor, "~> 0.18.0", only: :dev},
+      {:credo, "~> 1.6.1", only: :dev},
+      {:dialyxir, "~> 1.1.0", only: :dev, runtime: false},
+      {:git_hooks, "~> 0.6.4", only: [:test, :dev], runtime: false}
     ]
   end
 
@@ -137,6 +139,7 @@ defmodule PromEx.MixProject do
     [![Build Status](https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge)](https://github.com/akoutmos/prom_ex/actions)
     [![Coverage Status](https://img.shields.io/coveralls/github/akoutmos/prom_ex/master?style=for-the-badge)](https://coveralls.io/github/akoutmos/prom_ex?branch=master)
     [![Elixir Slack Channel](https://img.shields.io/badge/slack-%23prom__ex-orange.svg?style=for-the-badge&logo=slack)](https://elixir-lang.slack.com/archives/C01NZ0FBFSR)
+    [![Support PromEx](https://img.shields.io/badge/Support%20PromEx-%E2%9D%A4-lightblue?style=for-the-badge)](https://github.com/sponsors/akoutmos)
     """
 
     File.cp!("./README.md", "./README.md.orig")

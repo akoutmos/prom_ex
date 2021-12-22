@@ -5,7 +5,7 @@ defmodule PromEx.DashboardUploader do
   the dashboards have been successfully uploaded. It requires the name of the
   PromEx module as an option so that it can look into the application
   config for the appropriate Grafana settings. For example, if the name of the
-  PromEx module is `WebApp.PromEx`, then your config chould provide the following
+  PromEx module is `WebApp.PromEx`, then your config should provide the following
   settings:
 
   ```elixir
@@ -44,21 +44,15 @@ defmodule PromEx.DashboardUploader do
       default_dashboard_opts: default_dashboard_opts
     } = state
 
-    %PromEx.Config{
-      grafana_config: %{
-        host: grafana_host,
-        auth_token: grafana_auth_token,
-        folder_name: folder_name
-      }
-    } = prom_ex_module.init_opts()
+    %PromEx.Config{grafana_config: grafana_config} = prom_ex_module.init_opts()
 
     # Start Finch process and build Grafana connection
     finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
     Finch.start_link(name: finch_name)
-    grafana_conn = Connection.build(finch_name, grafana_host, grafana_auth_token)
+    grafana_conn = Connection.build(finch_name, grafana_config)
 
     upload_opts =
-      case folder_name do
+      case grafana_config.folder_name do
         :default ->
           []
 
@@ -95,7 +89,11 @@ defmodule PromEx.DashboardUploader do
     handle_dashboard_render({otp_app, dashboard_relative_path, []}, default_assigns, prom_ex_module)
   end
 
-  defp handle_dashboard_render({otp_app, dashboard_relative_path, dashboard_opts}, default_assigns, prom_ex_module) do
+  defp handle_dashboard_render(
+         {dashboard_otp_app, dashboard_relative_path, dashboard_opts},
+         default_assigns,
+         prom_ex_module
+       ) do
     user_provided_assigns = prom_ex_module.dashboard_assigns()
 
     default_title =
@@ -110,17 +108,16 @@ defmodule PromEx.DashboardUploader do
       |> Macro.camelize()
 
     default_dashboard_assigns = [
-      uid: prom_ex_module.__grafana_dashboard_uid__(otp_app, dashboard_relative_path),
       title: "#{default_title} - PromEx #{default_dashboard_name} Dashboard"
     ]
 
-    otp_app
-    |> DashboardRenderer.build(dashboard_relative_path)
+    dashboard_otp_app
+    |> DashboardRenderer.build(dashboard_relative_path, prom_ex_module.__otp_app__())
     |> DashboardRenderer.merge_assigns(default_assigns)
     |> DashboardRenderer.merge_assigns(user_provided_assigns)
     |> DashboardRenderer.merge_assigns(default_dashboard_assigns)
     |> DashboardRenderer.merge_assigns(dashboard_opts)
-    |> DashboardRenderer.render_dashboard()
+    |> DashboardRenderer.render_dashboard(prom_ex_module)
     |> DashboardRenderer.decode_dashboard()
   end
 
@@ -153,14 +150,11 @@ defmodule PromEx.DashboardUploader do
           folder_details
 
         {:error, :not_found} ->
-          {:ok, folder_details} = GrafanaClient.create_folder(grafana_conn, folder_uid, folder_name)
-          folder_details
+          create_folder(grafana_conn, folder_uid, folder_name)
 
         error ->
           Logger.error(
-            "PromEx.DashboardUploader (#{inspect(self())}) failed to retrieve the dashboard folderId from Grafana (#{
-              grafana_conn.base_url
-            }) because: #{inspect(error)}"
+            "PromEx.DashboardUploader (#{inspect(self())}) failed to retrieve the dashboard folderId from Grafana (#{grafana_conn.base_url}) because: #{inspect(error)}"
           )
 
           Process.exit(self(), :normal)
@@ -172,5 +166,40 @@ defmodule PromEx.DashboardUploader do
     end
 
     id
+  end
+
+  defp create_folder(grafana_conn, folder_uid, folder_name) do
+    case GrafanaClient.create_folder(grafana_conn, folder_uid, folder_name) do
+      {:ok, folder_details} ->
+        folder_details
+
+      {:error, :bad_request} ->
+        {:ok, all_folders} = GrafanaClient.get_all_folders(grafana_conn)
+
+        all_folders
+        |> Enum.find(fn %{"title" => find_folder_name} ->
+          find_folder_name == folder_name
+        end)
+        |> Map.get("uid")
+        |> update_existing_folder_uid(grafana_conn, folder_uid, folder_name)
+    end
+  end
+
+  defp update_existing_folder_uid(uid_of_mismatch, grafana_conn, folder_uid, folder_name) do
+    case GrafanaClient.update_folder(grafana_conn, uid_of_mismatch, folder_name, %{uid: folder_uid}) do
+      {:ok, folder_details} ->
+        Logger.info(
+          "There was a folder UID mismatch for the folder titled \"#{folder_name}\". PromEx has updated the folder configuration in Grafana and resolved the issue."
+        )
+
+        folder_details
+
+      error ->
+        Logger.error(
+          "PromEx.DashboardUploader (#{inspect(self())}) failed to update the folder UID from Grafana (#{grafana_conn.base_url}) because: #{inspect(error)}"
+        )
+
+        Process.exit(self(), :normal)
+    end
   end
 end

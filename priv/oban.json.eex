@@ -47,7 +47,32 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "bolt",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Sponsor PromEx",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://github.com/sponsors/akoutmos"
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Oban Plugin Docs",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://hexdocs.pm/prom_ex/PromEx.Plugins.Oban.html"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -101,7 +126,7 @@
                     "text": "Circuit Backoff",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_oban_init_circuit_backoff_milliseconds"
+                    "value": "<%= @oban_metric_prefix %>_init_circuit_backoff_milliseconds"
                   },
                   {
                     "from": "",
@@ -109,7 +134,7 @@
                     "text": "Cooldown",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_oban_init_dispatch_cooldown_milliseconds"
+                    "value": "<%= @oban_metric_prefix %>_init_dispatch_cooldown_milliseconds"
                   },
                   {
                     "from": "",
@@ -117,7 +142,7 @@
                     "text": "Global Poll Interval",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_oban_init_poll_interval_milliseconds"
+                    "value": "<%= @oban_metric_prefix %>_init_poll_interval_milliseconds"
                   },
                   {
                     "from": "",
@@ -125,7 +150,7 @@
                     "text": "Shutdown Grace Period",
                     "to": "",
                     "type": 1,
-                    "value": "<%= @otp_app %>_prom_ex_oban_init_shutdown_grace_period_milliseconds"
+                    "value": "<%= @oban_metric_prefix %>_init_shutdown_grace_period_milliseconds"
                   }
                 ]
               }
@@ -146,7 +171,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_oban_init_circuit_backoff_milliseconds|<%= @otp_app %>_prom_ex_oban_init_shutdown_grace_period_milliseconds|<%= @otp_app %>_prom_ex_oban_init_poll_interval_milliseconds|<%= @otp_app %>_prom_ex_oban_init_dispatch_cooldown_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "expr": "{__name__=~\"<%= @oban_metric_prefix %>_init_circuit_backoff_milliseconds|<%= @oban_metric_prefix %>_init_shutdown_grace_period_milliseconds|<%= @oban_metric_prefix %>_init_poll_interval_milliseconds|<%= @oban_metric_prefix %>_init_dispatch_cooldown_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -230,7 +255,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
+          "expr": "<%= @oban_metric_prefix %>_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "{{ queue }}",
@@ -278,7 +303,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "{__name__=\"<%= @otp_app %>_prom_ex_oban_init_status_info\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "expr": "{__name__=\"<%= @oban_metric_prefix %>_init_status_info\", job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -350,7 +375,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_init_queue_concurrency_limit{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
+          "expr": "<%= @oban_metric_prefix %>_init_queue_concurrency_limit{instance=\"$instance\", job=\"$job\", name=\"$oban\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -419,7 +444,7 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^Value$/",
+          "fields": "",
           "values": false
         },
         "textMode": "auto"
@@ -427,10 +452,11 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "expr": "round(sum(increase(<%= @oban_metric_prefix %>_job_processing_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval])))",
           "interval": "",
           "legendFormat": "",
-          "refId": "A"
+          "refId": "A",
+          "format": "table"
         }
       ],
       "timeFrom": null,
@@ -475,7 +501,7 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^Value$/",
+          "fields": "",
           "values": false
         },
         "textMode": "auto"
@@ -483,10 +509,11 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "expr": "round(sum(increase(<%= @oban_metric_prefix %>_job_exception_duration_milliseconds_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval])))",
           "interval": "",
           "legendFormat": "",
-          "refId": "A"
+          "refId": "A",
+          "format": "table"
         }
       ],
       "timeFrom": null,
@@ -531,7 +558,7 @@
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^Value$/",
+          "fields": "",
           "values": false
         },
         "textMode": "auto"
@@ -539,10 +566,11 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval]))",
+          "expr": "round(sum(increase(<%= @oban_metric_prefix %>_producer_dispatched_count_count{instance=\"$instance\", job=\"$job\", name=\"$oban\"}[$interval])))",
           "interval": "",
           "legendFormat": "",
-          "refId": "A"
+          "refId": "A",
+          "format": "table"
         }
       ],
       "timeFrom": null,
@@ -602,7 +630,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @oban_metric_prefix %>_job_processing_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -674,7 +702,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @oban_metric_prefix %>_job_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -758,7 +786,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_processing_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_job_processing_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_job_processing_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -855,7 +883,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_job_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_job_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -952,7 +980,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_complete_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_complete_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_job_complete_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_job_complete_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1051,7 +1079,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @oban_metric_prefix %>_job_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1123,7 +1151,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @oban_metric_prefix %>_job_exception_queue_time_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1207,7 +1235,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_job_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_job_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ error }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1304,7 +1332,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_exception_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_exception_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_job_exception_queue_time_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_job_exception_queue_time_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ error }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1401,7 +1429,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_job_exception_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_job_exception_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_job_exception_attempts_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_job_exception_attempts_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "({{ state }}) {{ name }} :: {{ worker }}",
           "refId": "A"
@@ -1510,7 +1538,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
+          "expr": "<%= @oban_metric_prefix %>_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"available\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1605,7 +1633,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"completed\"}",
+          "expr": "<%= @oban_metric_prefix %>_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"completed\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1700,7 +1728,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"executing\"}",
+          "expr": "<%= @oban_metric_prefix %>_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"executing\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1795,7 +1823,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"retryable\"}",
+          "expr": "<%= @oban_metric_prefix %>_queue_length_count{job=\"$job\", instance=\"$instance\", name=\"$oban\", state=\"retryable\"}",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -1894,7 +1922,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_producer_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @oban_metric_prefix %>_producer_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1966,7 +1994,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @oban_metric_prefix %>_producer_dispatched_count_bucket{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -2046,7 +2074,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_producer_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_producer_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_producer_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2139,7 +2167,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_producer_dispatched_count_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_producer_dispatched_count_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_producer_dispatched_count_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2232,7 +2260,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @otp_app %>_prom_ex_oban_producer_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @otp_app %>_prom_ex_oban_producer_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "irate(<%= @oban_metric_prefix %>_producer_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval]) / irate(<%= @oban_metric_prefix %>_producer_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ queue }}",
           "refId": "A"
@@ -2342,7 +2370,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "increase(<%= @otp_app %>_prom_ex_oban_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[1h])",
+          "expr": "increase(<%= @oban_metric_prefix %>_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[1h])",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2402,7 +2430,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "expr": "<%= @oban_metric_prefix %>_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2462,7 +2490,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "increase(<%= @otp_app %>_prom_ex_oban_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[1h])",
+          "expr": "increase(<%= @oban_metric_prefix %>_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[1h])",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2522,7 +2550,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "<%= @otp_app %>_prom_ex_oban_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
+          "expr": "<%= @oban_metric_prefix %>_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2579,7 +2607,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(<%= @otp_app %>_prom_ex_oban_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "increase(<%= @oban_metric_prefix %>_circuit_trip_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ circuit_breaker }}",
           "refId": "A"
@@ -2672,7 +2700,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(<%= @otp_app %>_prom_ex_oban_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
+          "expr": "increase(<%= @oban_metric_prefix %>_circuit_open_total{job=\"$job\", instance=\"$instance\", name=\"$oban\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ circuit_breaker }}",
           "refId": "A"
@@ -2723,7 +2751,7 @@
   "refresh": "5s",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [],
+  "tags": ["PromEx", "Oban", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {
@@ -2734,14 +2762,14 @@
           "value": "elixir_app"
         },
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -2760,14 +2788,14 @@
           "value": "elixir_app_one:4000"
         },
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -2781,14 +2809,14 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_oban_init_status_info, name)",
+        "definition": "label_values(<%= @oban_metric_prefix %>_init_status_info, name)",
         "hide": 0,
         "includeAll": false,
         "label": "Oban Instance",
         "multi": false,
         "name": "oban",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_oban_init_status_info, name)",
+        "query": "label_values(<%= @oban_metric_prefix %>_init_status_info, name)",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -2813,37 +2841,37 @@
         "name": "interval",
         "options": [
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15s" %>,
             "text": "15s",
             "value": "15s"
           },
           {
-            "selected": true,
+            "selected": <%= @default_selected_interval == "30s" %>,
             "text": "30s",
             "value": "30s"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1m" %>,
             "text": "1m",
             "value": "1m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "5m" %>,
             "text": "5m",
             "value": "5m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "15m" %>,
             "text": "15m",
             "value": "15m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "30m" %>,
             "text": "30m",
             "value": "30m"
           },
           {
-            "selected": false,
+            "selected": <%= @default_selected_interval == "1h" %>,
             "text": "1h",
             "value": "1h"
           }

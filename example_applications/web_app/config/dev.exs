@@ -22,7 +22,9 @@ config :web_app, WebApp.PromEx,
   drop_metrics_groups: [],
   grafana: [
     host: System.get_env("GRAFANA_HOST", "http://grafana:3000"),
-    auth_token: System.get_env("GRAFANA_TOKEN", ""),
+    # auth_token: System.get_env("GRAFANA_TOKEN", ""),
+    username: "admin",
+    password: "admin",
     upload_dashboards_on_start: true,
     folder_name: "Web App Dashboards",
     annotate_app_lifecycle: true
@@ -63,6 +65,12 @@ config :web_app, WebAppWeb.Endpoint,
       cd: Path.expand("../assets", __DIR__)
     ]
   ]
+
+config :web_app, WebAppWeb.InternalEndpoint,
+  http: [port: 4001],
+  debug_errors: true,
+  code_reloader: true,
+  check_origin: false
 
 # ## SSL Support
 #

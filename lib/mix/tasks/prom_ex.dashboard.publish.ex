@@ -1,6 +1,21 @@
 defmodule Mix.Tasks.PromEx.Dashboard.Publish do
   @moduledoc """
-  This will publish dashboards to Grafana for a PromEx module.
+  This mix task will publish dashboards to Grafana for a PromEx module. It is
+  recommended that you use the functionality that is part of the PromEx supervision
+  tree in order to upload dashboards as opposed to this, given that mix may not
+  always be available (like in a mix release). This is more so a convenience for
+  testing and validating dashboards without starting the whole application.
+
+  The following CLI flags are supported:
+  ```md
+  -m, --module   The PromEx module which will be used to render the dashboards.
+                 This is needed to fetch any relevant assigns from the
+                 `c:PromEx.dashboard_assigns/0` callback and to get the Grafana
+                 configuration from app config.
+
+  -t, --timeout  The timeout value defines how long the mix task will wait while
+                 uploading dashboards.
+  ```
   """
 
   @shortdoc "Upload dashboards to Grafana"
@@ -85,9 +100,7 @@ defmodule Mix.Tasks.PromEx.Dashboard.Publish do
 
       {:EXIT, ^pid, error_reason} ->
         IO.error(
-          "PromEx was unable to upload your dashboards to Grafana because:\n#{
-            Code.format_string!(inspect(error_reason))
-          }"
+          "PromEx was unable to upload your dashboards to Grafana because:\n#{Code.format_string!(inspect(error_reason))}"
         )
     after
       timeout ->

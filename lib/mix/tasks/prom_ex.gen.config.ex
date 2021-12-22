@@ -125,6 +125,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
          more details regarding configuring PromEx:
          ```
          config :<%= @otp_app %>, <%= @module_name %>.PromEx,
+           disabled: false,
            manual_metrics_start_delay: :no_delay,
            drop_metrics_groups: [],
            grafana: :disabled,
@@ -133,7 +134,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
 
       2. Add this module to your application supervision tree. It should be one of the first
          things that is started so that no Telemetry events are missed. For example, if PromEx
-         is started after your Repo module, you will miss Ecto's init events and the dashbaords
+         is started after your Repo module, you will miss Ecto's init events and the dashboards
          will be missing some data points:
          ```
          def start(_type, _args) do
@@ -179,10 +180,11 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           # PromEx built in plugins
           Plugins.Application,
           Plugins.Beam
-          # {Plugins.Phoenix, router: <%= @module_name %>Web.Router},
+          # {Plugins.Phoenix, router: <%= @module_name %>Web.Router, endpoint: <%= @module_name %>Web.Endpoint},
           # Plugins.Ecto,
           # Plugins.Oban,
           # Plugins.PhoenixLiveView,
+          # Plugins.Absinthe,
           # Plugins.Broadway
 
           # Add your own PromEx metrics plugins
@@ -193,7 +195,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
       @impl true
       def dashboard_assigns do
         [
-          datasource_id: "<%= @datasource_id %>"
+          datasource_id: "<%= @datasource_id %>",
+          default_selected_interval: "30s"
         ]
       end
 
@@ -206,7 +209,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
           # {:prom_ex, "phoenix.json"},
           # {:prom_ex, "ecto.json"},
           # {:prom_ex, "oban.json"},
-          # {:prom_ex, "phoenix_live_view.json"},
+          # {:prom_ex, "phoenix_live_view.json"}
+          # {:prom_ex, "absinthe.json"},
           # {:prom_ex, "broadway.json"}
 
           # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}

@@ -39,6 +39,12 @@ config :web_app, WebAppWeb.Endpoint,
   pubsub_server: WebApp.PubSub,
   live_view: [signing_salt: "6mGOJvNQ"]
 
+config :web_app, WebAppWeb.InternalEndpoint,
+  url: [host: "localhost"],
+  secret_key_base: "5fBSdz+TtF5BpvdQA4BVXsADOz4AUIrUeUPDy4CUpZb37kCLgrLT0Tfhq7fBT5TC",
+  render_errors: [view: WebAppWeb.ErrorView, accepts: ~w(json), layout: false],
+  pubsub_server: WebApp.PubSub
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

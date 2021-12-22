@@ -49,7 +49,7 @@ defmodule PromEx do
   ## Options
 
   * `:otp_app` - This is a REQUIRED field and is used by PromEx to fetch the application
-    configuration values for the various PromEx caputure modules. Make sure that this value
+    configuration values for the various PromEx capture modules. Make sure that this value
     matches the `:app` value in `project/0` from your `mix.exs` file. If you use the PromEx
     `mix prom_ex.create` mix task this will be done automatically for you.
 
@@ -67,15 +67,18 @@ defmodule PromEx do
     - [X] Oban (https://hexdocs.pm/oban/Oban.Telemetry.html)
     - [X] Phoenix (https://hexdocs.pm/phoenix/Phoenix.Logger.html)
     - [X] Phoenix LiveView (https://hexdocs.pm/phoenix_live_view/telemetry.html)
-    - [~] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
+    - [X] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
+    - [X] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
+    - [X] PlugRouter (https://hexdocs.pm/plug/1.12.1/Plug.Router.html#module-telemetry)
+    - [X] Broadway (https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
 
   Backlog Elixir library metrics:
-    - [ ] Absinthe (https://hexdocs.pm/absinthe/1.5.3/telemetry.html)
-    - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] Finch (https://hexdocs.pm/finch/Finch.Telemetry.html#content)
+    - [ ] Swoosh (https://hexdocs.pm/swoosh/1.5.0/Swoosh.html#module-telemetry)
+    - [ ] ChromicPDF (https://hexdocs.pm/chromic_pdf/ChromicPDF.html#module-telemetry-support)
+    - [ ] Dataloader (https://hexdocs.pm/dataloader/telemetry.html)
     - [ ] GenRMQ (https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Publisher.Telemetry.html and https://hexdocs.pm/gen_rmq/3.0.0/GenRMQ.Consumer.Telemetry.html)
     - [ ] Plug (https://hexdocs.pm/plug/Plug.Telemetry.html)
-    - [ ] PlugCowboy (https://hexdocs.pm/plug_cowboy/2.4.0/Plug.Cowboy.html#module-instrumentation)
     - [ ] Redix (https://hexdocs.pm/redix/Redix.Telemetry.html)
     - [ ] Tesla (https://hexdocs.pm/tesla/Tesla.Middleware.Telemetry.html)
     - [ ] Memcachex (https://hexdocs.pm/memcachex/0.5.0/Memcache.html#module-telemetry)
@@ -102,13 +105,13 @@ defmodule PromEx do
 
   alias Telemetry.Metrics.{Counter, Distribution, LastValue, Sum, Summary}
 
-  alias PromEx.TelemetryMetricsPrometheus.Core
+  alias TelemetryMetricsPrometheus.Core
 
   @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
   @type measurements_mfa() :: {module(), atom(), list()}
 
   @type plugin_definition() :: module() | {module(), keyword()}
-  @type dashboard_definition() :: {atom(), String.t()}
+  @type dashboard_definition() :: {atom(), String.t()} | {atom(), String.t(), keyword(String.t())}
 
   @doc """
   A simple pass-through to fetch all of the currently configured metrics. This is
@@ -144,6 +147,7 @@ defmodule PromEx do
       end
 
     # Generate process names under calling module namespace
+    ets_cron_flusher_name = Module.concat([calling_module, ETSCronFlusher])
     manual_metrics_name = Module.concat([calling_module, ManualMetricsManager])
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
@@ -164,52 +168,64 @@ defmodule PromEx do
       def init(_) do
         # Get module init options from module callback
         %PromEx.Config{
+          disabled: disabled,
           manual_metrics_start_delay: manual_metrics_start_delay,
           drop_metrics_groups: drop_metrics_groups,
           grafana_config: grafana_config,
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
 
-        # Default plugin and dashboard opts
-        default_plugin_opts = [otp_app: unquote(otp_app)]
-        default_dashboard_opts = [otp_app: unquote(otp_app)]
+        # If the PromEx supervision tree is disabled, then skip it
+        if disabled do
+          :ignore
+        else
+          # Default plugin and dashboard opts
+          default_plugin_opts = [otp_app: unquote(otp_app)]
+          default_dashboard_opts = [otp_app: unquote(otp_app)]
 
-        # Configure each of the desired plugins
-        plugins =
-          __MODULE__.plugins()
-          |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
+          # Configure each of the desired plugins
+          plugins =
+            __MODULE__.plugins()
+            |> PromEx.init_plugins(default_plugin_opts, drop_metrics_groups)
 
-        # Extract the various metrics types from all of the plugins
-        telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
-        poll_metrics = Map.get(plugins, :poll_metrics, [])
-        manual_metrics = Map.get(plugins, :manual_metrics, [])
+          # Extract the various metrics types from all of the plugins
+          telemetry_metrics = Map.get(plugins, :telemetry_metrics, [])
+          poll_metrics = Map.get(plugins, :poll_metrics, [])
+          manual_metrics = Map.get(plugins, :manual_metrics, [])
 
-        # Start the relevant child processes depending on configuration
-        children =
-          []
-          |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
-          |> PromEx.manual_metrics_child_spec(manual_metrics, manual_metrics_start_delay, unquote(manual_metrics_name))
-          |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
-          |> PromEx.dashboard_uploader_child_spec(
-            grafana_config,
-            __MODULE__,
-            default_dashboard_opts,
-            unquote(dashboard_uploader_name)
-          )
-          |> PromEx.metrics_server_child_spec(
-            metrics_server_config,
-            __MODULE__,
-            unquote(metrics_server_name)
-          )
-          |> PromEx.lifecycle_annotator_child_spec(
-            grafana_config,
-            __MODULE__,
-            unquote(otp_app),
-            unquote(lifecycle_annotator_name)
-          )
-          |> Enum.reverse()
+          # Start the relevant child processes depending on configuration
+          children =
+            []
+            |> PromEx.ets_cron_flusher_child_spec(__MODULE__, unquote(ets_cron_flusher_name))
+            |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
+            |> PromEx.manual_metrics_child_spec(
+              manual_metrics,
+              manual_metrics_start_delay,
+              unquote(manual_metrics_name)
+            )
+            |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
+            |> PromEx.dashboard_uploader_child_spec(
+              grafana_config,
+              __MODULE__,
+              default_dashboard_opts,
+              unquote(dashboard_uploader_name)
+            )
+            |> PromEx.metrics_server_child_spec(
+              metrics_server_config,
+              __MODULE__,
+              unquote(metrics_server_name)
+            )
+            |> PromEx.lifecycle_annotator_child_spec(
+              grafana_config,
+              __MODULE__,
+              unquote(otp_app),
+              unquote(lifecycle_annotator_name)
+            )
+            |> Enum.reverse()
 
-        Supervisor.init(children, strategy: :one_for_one)
+          # Start the PromEx supervision tree
+          Supervisor.init(children, strategy: :one_for_one)
+        end
       end
 
       @doc false
@@ -252,24 +268,17 @@ defmodule PromEx do
           :default ->
             :default
 
-          _folder_name ->
-            otp_app_name =
-              unquote(otp_app)
-              |> Atom.to_string()
-
-            module_name = Atom.to_string(__MODULE__)
-            string_uid = "#{otp_app_name}:#{module_name}:prom_ex_dashboards"
-
+          folder_name ->
             # Grafana limits us to 40 character UIDs...so taking the MD5 of
             # a complete unique identifier to use as the UID
             :md5
-            |> :crypto.hash(string_uid)
+            |> :crypto.hash(folder_name)
             |> Base.encode16()
         end
       end
 
       @doc false
-      def __grafana_dashboard_uid__(dashboard_otp_app, dashboard_path) do
+      def __grafana_dashboard_uid__(dashboard_otp_app, dashboard_path, dashboard_title) do
         otp_app_name =
           unquote(otp_app)
           |> Atom.to_string()
@@ -277,7 +286,7 @@ defmodule PromEx do
         module_name = Atom.to_string(__MODULE__)
         dashboard_otp_app_name = Atom.to_string(dashboard_otp_app)
 
-        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}"
+        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}:#{dashboard_title}"
 
         # Grafana limits us to 40 character UIDs...so taking the MD5 of
         # a complete unique identifier to use as the UID
@@ -300,6 +309,9 @@ defmodule PromEx do
 
       @doc false
       def __lifecycle_annotator_name__, do: unquote(lifecycle_annotator_name)
+
+      @doc false
+      def __ets_cron_flusher_name__, do: unquote(ets_cron_flusher_name)
 
       defoverridable PromEx
     end
@@ -344,6 +356,13 @@ defmodule PromEx do
       Core,
       name: process_name, metrics: metrics, require_seconds: false, consistent_units: true, start_async: false
     }
+
+    [spec | acc]
+  end
+
+  @doc false
+  def ets_cron_flusher_child_spec(acc, prom_ex_module, process_name) do
+    spec = {PromEx.ETSCronFlusher, name: process_name, prom_ex_module: prom_ex_module}
 
     [spec | acc]
   end
@@ -499,14 +518,14 @@ defmodule PromEx do
       # metrics pollers don't have name collisions. While String.to_atom/1
       # is being used here, it is assumed that this is trusted input and not
       # infinitely bounded.
-      uniqe_poll_value =
+      unique_poll_value =
         poll_rate
         |> Integer.to_string()
         |> String.to_atom()
 
       {
         :telemetry_poller,
-        name: Module.concat([prom_ex_module, Poller, uniqe_poll_value]), measurements: measurements, period: poll_rate
+        name: Module.concat([prom_ex_module, Poller, unique_poll_value]), measurements: measurements, period: poll_rate
       }
     end)
   end
@@ -532,12 +551,14 @@ defmodule PromEx do
   defp init_plugin({module, opts}, default_plugin_opts, function) when is_atom(module) do
     opts = Keyword.merge(default_plugin_opts, opts)
 
+    # credo:disable-for-lines:3 Credo.Check.Refactor.Apply
     module
     |> apply(function, [opts])
     |> normalize_plugin()
   end
 
   defp init_plugin(module, default_plugin_opts, function) when is_atom(module) do
+    # credo:disable-for-lines:3 Credo.Check.Refactor.Apply
     module
     |> apply(function, [default_plugin_opts])
     |> normalize_plugin()

@@ -9,8 +9,6 @@ defmodule PromEx.DashboardRenderer do
   @type t :: %__MODULE__{
           file_type: :eex | :json | nil,
           relative_path: String.t(),
-          full_path: String.t(),
-          otp_app: atom(),
           assigns: keyword() | nil,
           file_contents: String.t(),
           rendered_file: String.t() | nil,
@@ -41,16 +39,17 @@ defmodule PromEx.DashboardRenderer do
   This is more so for convenience so that you don't need to write out `.eex` everywhere
   given that all PromEx 1st party dashboards are EEx templates.
   """
-  @spec build(otp_app :: atom(), dashboard_relative_path :: String.t()) :: __MODULE__.t()
-  def build(otp_app, dashboard_relative_path) do
+  @spec build(dashboard_otp_app :: atom(), dashboard_relative_path :: String.t(), metrics_otp_app :: atom()) ::
+          __MODULE__.t()
+  def build(dashboard_otp_app, dashboard_relative_path, metrics_otp_app) do
     base_def = %__MODULE__{
-      otp_app: otp_app,
+      otp_app: dashboard_otp_app,
       relative_path: dashboard_relative_path,
-      assigns: []
+      assigns: default_plugin_assigns(metrics_otp_app)
     }
 
     dashboard_full_path =
-      otp_app
+      dashboard_otp_app
       |> :code.priv_dir()
       |> :erlang.list_to_binary()
       |> Path.join(dashboard_relative_path)
@@ -79,27 +78,32 @@ defmodule PromEx.DashboardRenderer do
   Renders the dashboard. If it is an EEx file then the PromEx module assigns are passed. Else
   if it is a raw json file then it is passed through untouched.
   """
-  @spec render_dashboard(__MODULE__.t()) :: __MODULE__.t()
-  def render_dashboard(%__MODULE__{valid_file?: false} = dashboard_render) do
+  @spec render_dashboard(__MODULE__.t(), prom_ex_module :: module()) :: __MODULE__.t()
+  def render_dashboard(%__MODULE__{valid_file?: false} = dashboard_render, _) do
     dashboard_render
   end
 
-  def render_dashboard(%__MODULE__{file_type: :json} = dashboard_render) do
+  def render_dashboard(%__MODULE__{file_type: :json} = dashboard_render, _) do
     %{dashboard_render | rendered_file: dashboard_render.file_contents}
   end
 
-  def render_dashboard(%__MODULE__{file_type: :eex, assigns: assigns, file_contents: contents} = dashboard_render) do
-    case EEx.eval_string(contents, assigns: assigns) do
-      nil ->
-        %{
-          dashboard_render
-          | valid_file?: false,
-            error: {:invalid_eex_template, "Failed to render EEx dashboard template due to missing assigns."}
-        }
+  def render_dashboard(%__MODULE__{assigns: assigns} = dashboard_render, prom_ex_module) do
+    configured_title = Keyword.fetch!(assigns, :title)
 
-      rendered_file ->
-        %{dashboard_render | rendered_file: rendered_file}
-    end
+    non_configurable_assigns = [
+      uid:
+        prom_ex_module.__grafana_dashboard_uid__(
+          dashboard_render.otp_app,
+          dashboard_render.relative_path,
+          configured_title
+        )
+    ]
+
+    %__MODULE__{file_type: :eex, assigns: assigns, file_contents: contents} =
+      merge_assigns(dashboard_render, non_configurable_assigns)
+
+    rendered_file = EEx.eval_string(contents, assigns: assigns)
+    %{dashboard_render | rendered_file: rendered_file}
   end
 
   @doc """
@@ -138,5 +142,24 @@ defmodule PromEx.DashboardRenderer do
       {:error, reason} ->
         %{dashboard_render | valid_file?: false, full_path: path, error: {:file_read_error, reason}}
     end
+  end
+
+  defp default_plugin_assigns(otp_app) do
+    [
+      # View defaults
+      default_selected_interval: "30s",
+
+      # Metrics prefix defaults
+      absinthe_metric_prefix: "#{otp_app}_prom_ex_absinthe",
+      application_metric_prefix: "#{otp_app}_prom_ex_application",
+      beam_metric_prefix: "#{otp_app}_prom_ex_beam",
+      plug_cowboy_metric_prefix: "#{otp_app}_prom_ex_plug_cowboy",
+      plug_router_metric_prefix: "#{otp_app}_prom_ex_plug_router",
+      ecto_metric_prefix: "#{otp_app}_prom_ex_ecto",
+      oban_metric_prefix: "#{otp_app}_prom_ex_oban",
+      phoenix_metric_prefix: "#{otp_app}_prom_ex_phoenix",
+      phoenix_live_view_metric_prefix: "#{otp_app}_prom_ex_phoenix_live_view",
+      prom_ex_metric_prefix: "#{otp_app}_prom_ex_prom_ex"
+    ]
   end
 end

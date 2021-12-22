@@ -20,22 +20,22 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-elixir@v1
         with:
-          elixir-version: '1.11.2'
-          otp-version: '23.1'
+          elixir-version: '1.12.3'
+          otp-version: '24.1'
       - name: Restore dependencies cache
         uses: actions/cache@v2
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-
+          key: ${{ runner.os }}-mix-v2-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-v2-
       - name: Install dependencies
         run: mix deps.get
       - name: Restore PLT cache
         uses: actions/cache@v2
         with:
           path: priv/plts
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-
+          key: ${{ runner.os }}-mix-v2-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-v2-
       - name: Mix Formatter
         run: mix format --check-formatted
       - name: Check for compiler warnings
@@ -56,9 +56,12 @@ jobs:
         elixir:
           - '1.10'
           - '1.11'
+          - '1.12'
+          - '1.13'
         otp:
-          - '22.0.2'
+          - '22.0'
           - '23.0'
+          - '24.0'
 
     steps:
       - name: Checkout code
@@ -72,8 +75,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-
+          key: ${{ runner.os }}-mix-v2-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-v2-
       - name: Install dependencies
         run: mix deps.get
       - name: ExUnit tests

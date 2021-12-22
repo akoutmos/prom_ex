@@ -1,5 +1,238 @@
 [
   %{
+    event: [:phoenix, :live_view, :handle_event, :exception],
+    measurements: %{duration: 1_726_645},
+    metadata: %{
+      event: "suggest",
+      kind: :error,
+      params: %{"_target" => ["q"], "q" => "a"},
+      reason: :badarith,
+      socket: %{
+        __struct__: Phoenix.LiveView.Socket,
+        assigns: %{
+          __changed__: %{},
+          flash: %{},
+          live_action: :index,
+          query: "",
+          results: %{}
+        },
+        endpoint: WebAppWeb.Endpoint,
+        fingerprints:
+          {34_061_566_683_452_391_960_580_918_577_869_205_053,
+           %{2 => {205_703_469_609_921_369_150_412_838_263_460_442_328, %{}}}},
+        host_uri: %{
+          __struct__: URI,
+          authority: nil,
+          fragment: nil,
+          host: "localhost",
+          path: nil,
+          port: 4000,
+          query: nil,
+          scheme: "http",
+          userinfo: nil
+        },
+        id: "phx-FsLZedbBRuAP2AGZ",
+        parent_pid: nil,
+        private: %{
+          __changed__: %{},
+          lifecycle: %{
+            __struct__: Phoenix.LiveView.Lifecycle,
+            handle_event: [],
+            handle_info: [],
+            handle_params: [],
+            mount: []
+          },
+          root_view: WebAppWeb.PageLive
+        },
+        redirected: nil,
+        router: WebAppWeb.Router,
+        view: WebAppWeb.PageLive
+      },
+      stacktrace: [
+        {WebAppWeb.PageLive, :handle_event, 3, [file: 'lib/web_app_web/live/page_live.ex', line: 24]},
+        {Phoenix.LiveView.Channel, :"-view_handle_event/3-fun-0-", 3,
+         [file: 'lib/phoenix_live_view/channel.ex', line: 349]},
+        {:telemetry, :span, 3,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+           line: 293
+         ]},
+        {Phoenix.LiveView.Channel, :handle_info, 2, [file: 'lib/phoenix_live_view/channel.ex', line: 206]},
+        {:gen_server, :try_dispatch, 4, [file: 'gen_server.erl', line: 695]},
+        {:gen_server, :handle_msg, 6, [file: 'gen_server.erl', line: 771]},
+        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+      ],
+      telemetry_span_context: :erlang.make_ref()
+    }
+  },
+  %{
+    event: [:phoenix, :live_view, :mount, :exception],
+    measurements: %{duration: 20168},
+    metadata: %{
+      kind: :error,
+      params: %{},
+      reason: :badarith,
+      socket: %{
+        __struct__: Phoenix.LiveView.Socket,
+        assigns: %{__changed__: %{}, flash: %{}, live_action: :index},
+        endpoint: WebAppWeb.Endpoint,
+        fingerprints: {nil, %{}},
+        host_uri: %{
+          __struct__: URI,
+          authority: nil,
+          fragment: nil,
+          host: "localhost",
+          path: nil,
+          port: 4000,
+          query: nil,
+          scheme: "http",
+          userinfo: nil
+        },
+        id: "phx-FsLYeH2SC6QLjwIC",
+        parent_pid: nil,
+        private: %{
+          __changed__: %{},
+          assign_new: {%{}, []},
+          connect_info: %{},
+          connect_params: %{},
+          lifecycle: %{
+            __struct__: Phoenix.LiveView.Lifecycle,
+            handle_event: [],
+            handle_info: [],
+            handle_params: [],
+            mount: []
+          },
+          root_view: WebAppWeb.PageLive
+        },
+        redirected: nil,
+        root_pid: nil,
+        router: WebAppWeb.Router,
+        transport_pid: nil,
+        view: WebAppWeb.PageLive
+      },
+      stacktrace: [
+        {WebAppWeb.PageLive, :mount, 3, [file: 'lib/web_app_web/live/page_live.ex', line: 14]},
+        {Phoenix.LiveView.Utils, :"-maybe_call_live_view_mount!/4-fun-0-", 5,
+         [file: 'lib/phoenix_live_view/utils.ex', line: 301]},
+        {:telemetry, :span, 3,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+           line: 293
+         ]},
+        {Phoenix.LiveView.Static, :call_mount_and_handle_params!, 5,
+         [file: 'lib/phoenix_live_view/static.ex', line: 260]},
+        {Phoenix.LiveView.Static, :render, 3, [file: 'lib/phoenix_live_view/static.ex', line: 110]},
+        {Phoenix.LiveView.Controller, :live_render, 3, [file: 'lib/phoenix_live_view/controller.ex', line: 35]},
+        {Phoenix.Router, :__call__, 2, [file: 'lib/phoenix/router.ex', line: 355]},
+        {WebAppWeb.Endpoint, :plug_builder_call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
+        {WebAppWeb.Endpoint, :"call (overridable 3)", 2, [file: 'lib/plug/debugger.ex', line: 136]},
+        {WebAppWeb.Endpoint, :call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
+        {Phoenix.Endpoint.Cowboy2Handler, :init, 4, [file: 'lib/phoenix/endpoint/cowboy2_handler.ex', line: 54]},
+        {:cowboy_handler, :execute, 2,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_handler.erl',
+           line: 37
+         ]},
+        {:cowboy_stream_h, :execute, 3,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           line: 306
+         ]},
+        {:cowboy_stream_h, :request_process, 3,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           line: 295
+         ]},
+        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+      ],
+      telemetry_span_context: :erlang.make_ref()
+    }
+  },
+  %{
+    event: [:phoenix, :live_view, :mount, :exception],
+    measurements: %{duration: 8195},
+    metadata: %{
+      kind: :exit,
+      params: %{},
+      reason: {:noproc, {GenServer, :call, [BadGenServer, :test, 5000]}},
+      socket: %{
+        __struct__: Phoenix.LiveView.Socket,
+        assigns: %{__changed__: %{}, flash: %{}, live_action: :index},
+        endpoint: WebAppWeb.Endpoint,
+        fingerprints: {nil, %{}},
+        host_uri: %{
+          __struct__: URI,
+          authority: nil,
+          fragment: nil,
+          host: "localhost",
+          path: nil,
+          port: 4000,
+          query: nil,
+          scheme: "http",
+          userinfo: nil
+        },
+        id: "phx-FsLW2hz0t2WKyAIK",
+        parent_pid: nil,
+        private: %{
+          __changed__: %{},
+          assign_new: {%{}, []},
+          connect_info: %{},
+          connect_params: %{},
+          lifecycle: %{
+            __struct__: Phoenix.LiveView.Lifecycle,
+            handle_event: [],
+            handle_info: [],
+            handle_params: [],
+            mount: []
+          },
+          root_view: WebAppWeb.PageLive
+        },
+        redirected: nil,
+        root_pid: nil,
+        router: WebAppWeb.Router,
+        transport_pid: nil,
+        view: WebAppWeb.PageLive
+      },
+      stacktrace: [
+        {GenServer, :call, 3, [file: 'lib/gen_server.ex', line: 1014]},
+        {WebAppWeb.PageLive, :mount, 3, [file: 'lib/web_app_web/live/page_live.ex', line: 6]},
+        {Phoenix.LiveView.Utils, :"-maybe_call_live_view_mount!/4-fun-0-", 5,
+         [file: 'lib/phoenix_live_view/utils.ex', line: 301]},
+        {:telemetry, :span, 3,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+           line: 293
+         ]},
+        {Phoenix.LiveView.Static, :call_mount_and_handle_params!, 5,
+         [file: 'lib/phoenix_live_view/static.ex', line: 260]},
+        {Phoenix.LiveView.Static, :render, 3, [file: 'lib/phoenix_live_view/static.ex', line: 110]},
+        {Phoenix.LiveView.Controller, :live_render, 3, [file: 'lib/phoenix_live_view/controller.ex', line: 35]},
+        {Phoenix.Router, :__call__, 2, [file: 'lib/phoenix/router.ex', line: 355]},
+        {WebAppWeb.Endpoint, :plug_builder_call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
+        {WebAppWeb.Endpoint, :"call (overridable 3)", 2, [file: 'lib/plug/debugger.ex', line: 136]},
+        {WebAppWeb.Endpoint, :call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
+        {Phoenix.Endpoint.Cowboy2Handler, :init, 4, [file: 'lib/phoenix/endpoint/cowboy2_handler.ex', line: 54]},
+        {:cowboy_handler, :execute, 2,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_handler.erl',
+           line: 37
+         ]},
+        {:cowboy_stream_h, :execute, 3,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           line: 306
+         ]},
+        {:cowboy_stream_h, :request_process, 3,
+         [
+           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           line: 295
+         ]},
+        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+      ],
+      telemetry_span_context: :erlang.make_ref()
+    }
+  },
+  %{
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 518_187_700},
     metadata: %{

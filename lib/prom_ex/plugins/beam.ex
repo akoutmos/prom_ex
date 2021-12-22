@@ -9,6 +9,11 @@ defmodule PromEx.Plugins.Beam do
   This plugin supports the following options:
   - `poll_rate`: This is option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
+  - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+    `[otp_app, :prom_ex, :beam]`. If this changes you will also want to set `beam_metric_prefix`
+    in your `dashboard_assigns` to the snakecase version of your prefix, the default
+    `beam_metric_prefix` is `{otp_app}_prom_ex_beam`.
+
   This plugin exposes the following metric groups:
   - `:beam_memory_polling_metrics`
   - `:beam_internal_polling_metrics`
@@ -45,15 +50,13 @@ defmodule PromEx.Plugins.Beam do
 
   use PromEx.Plugin
 
-  require Logger
-
   @memory_event [:prom_ex, :plugin, :beam, :memory]
 
   @impl true
   def polling_metrics(opts) do
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
     otp_app = Keyword.fetch!(opts, :otp_app)
-    metric_prefix = PromEx.metric_prefix(otp_app, :beam)
+    metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :beam))
 
     # TODO: Investigate Microstate accounting metrics
     # http://erlang.org/doc/man/erlang.html#statistics_microstate_accounting
@@ -73,7 +76,7 @@ defmodule PromEx.Plugins.Beam do
   @impl true
   def manual_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
-    metric_prefix = PromEx.metric_prefix(otp_app, :beam)
+    metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :beam))
 
     [
       beam_cpu_topology_info(metric_prefix),
@@ -204,6 +207,12 @@ defmodule PromEx.Plugins.Beam do
           metric_prefix ++ [:system, :smp_support, :info],
           event_name: [:prom_ex, :plugin, :beam, :smp_support],
           description: "Whether the BEAM instance has been compiled with SMP support.",
+          measurement: :enabled
+        ),
+        last_value(
+          metric_prefix ++ [:system, :jit_support, :info],
+          event_name: [:prom_ex, :plugin, :beam, :jit_support],
+          description: "Whether the BEAM instance is running with the JIT compiler.",
           measurement: :enabled
         ),
         last_value(
@@ -392,6 +401,15 @@ defmodule PromEx.Plugins.Beam do
           description: "The total amount of memory currently allocated to Erlang processes.",
           measurement: :processes,
           unit: :byte
+        ),
+
+        # Capture the total memory allocated to :persistent_term
+        last_value(
+          metric_prefix ++ [:memory, :persistent_term, :total, :bytes],
+          event_name: @memory_event,
+          description: "The total amount of memory currently allocated to Erlang :persistent_term.",
+          measurement: :persistent_term,
+          unit: :byte
         )
       ]
     )
@@ -399,9 +417,12 @@ defmodule PromEx.Plugins.Beam do
 
   @doc false
   def execute_memory_metrics do
+    %{memory: persistent_term_memory} = :persistent_term.info()
+
     memory_measurements =
       :erlang.memory()
       |> Map.new()
+      |> Map.put(:persistent_term, persistent_term_memory)
 
     :telemetry.execute(@memory_event, memory_measurements, %{})
   end
@@ -480,7 +501,16 @@ defmodule PromEx.Plugins.Beam do
     word_size = :erlang.system_info(:wordsize)
     version = :otp_release |> :erlang.system_info() |> :erlang.list_to_binary() |> String.to_integer()
 
+    jit_enabled =
+      try do
+        if :erlang.system_info(:emu_flavor) == :jit, do: 1, else: 0
+      rescue
+        _error ->
+          0
+      end
+
     :telemetry.execute([:prom_ex, :plugin, :beam, :smp_support], %{enabled: smp_enabled}, %{})
+    :telemetry.execute([:prom_ex, :plugin, :beam, :jit_support], %{enabled: jit_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :thread_support], %{enabled: thread_support_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :time_correction_support], %{enabled: time_correction_enabled}, %{})
     :telemetry.execute([:prom_ex, :plugin, :beam, :word_size_bytes], %{size: word_size}, %{})

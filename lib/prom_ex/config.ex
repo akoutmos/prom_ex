@@ -13,6 +13,7 @@ defmodule PromEx.Config do
 
   ```elixir
   config :web_app, WebApp.PromEx,
+    disabled: false,
     manual_metrics_start_delay: :no_delay,
     drop_metrics_groups: [],
     grafana: :disabled,
@@ -21,7 +22,7 @@ defmodule PromEx.Config do
 
   In this configuration, the Grafana dashboards are not uploaded on application start, and a standalone HTTP metrics server is not
   started. In addition, the `PromEx.ManualMetricsManager` is started without any time delay, and all metrics groups from all the plugins
-  are regestered and set up.
+  are registered and set up.
 
   If you would like to set up PromEx to communicate with Grafana, your config would look something like:
 
@@ -29,7 +30,9 @@ defmodule PromEx.Config do
   config :web_app, WebApp.PromEx,
     grafana: [
       host: "http://localhost:3000",
-      auth_token: "<YOUR_AUTH_TOKEN_HERE>",
+      username: "<YOUR_USERNAME>",  # Or authenticate via Basic Auth
+      password: "<YOUR_PASSWORD>"
+      auth_token: "<YOUR_AUTH_TOKEN_HERE>", # Or authenticate via API Token
       upload_dashboards_on_start: true # This is an optional setting and will default to `true`
     ]
     ```
@@ -63,6 +66,10 @@ defmodule PromEx.Config do
 
   ## Option Details
 
+  * `:disabled` - This option will diable the PromEx supervision tree entirely and will not
+    start any metris collectors. This is primarily used for disabling PromEx during testing. Default
+    value: false
+
   * `:manual_metrics_start_delay` - Manual metrics are gathered once on start up and then only when
     you call `PromEx.ManualMetricsManager.refresh_metrics/1`. Sometimes, you may have metrics
     that require your entire supervision tree to be started in order to fetch accurate data.
@@ -75,14 +82,20 @@ defmodule PromEx.Config do
     tracking. For example, if your application does not leverage Phoenix channels at all but
     you still would like to use the `PromEx.Plugins.Phoenix` plugin, you can pass
     `[:phoenix_channel_event_metrics]` as the value to `:drop_metrics_groups` and that set of
-    metrics will not be caputred. Default value: `[]`
+    metrics will not be captured. Default value: `[]`
 
   * `:grafana` - This key contains the configuration information for connecting to Grafana. Its
     configuration options are:
 
     * `:host` - The host address of your Grafana instance. In order for PromEx to communicate with
-      Grafana this valueshould be in the format `protocol://host:port` like `http://localhost:3000`
+      Grafana this value should be in the format `protocol://host:port` like `http://localhost:3000`
       for example.
+
+    * `:username` - The username that was created in Grafana so that PromEx can upload dashboards
+      via the API.
+
+    * `:password` - The password that was created in Grafana so that PromEx can upload dashboards
+      via the API.
 
     * `:auth_token` - The auth token that was created in Grafana so that PromEx can upload dashboards
       via the API.
@@ -93,7 +106,7 @@ defmodule PromEx.Config do
 
     * `:folder_name` - The name of the folder that PromEx will put all of the project dashboards in.
       PromEx will automatically generate a unique ID for the folder based on the project's otp_app
-      value so that it can access the correct folder in Grafana. This also makes sure that differnt
+      value so that it can access the correct folder in Grafana. This also makes sure that different
       Elixir projects running in the same cluster and publishing dashboards to Grafana do not collide
       with one another. If no name is provided, then the dashboards will all be uploaded to the default
       Grafana folder.
@@ -150,6 +163,7 @@ defmodule PromEx.Config do
   """
 
   @type t :: %__MODULE__{
+          disabled: boolean(),
           manual_metrics_start_delay: :no_delay | pos_integer(),
           drop_metrics_groups: MapSet.t(),
           grafana_config: map(),
@@ -157,6 +171,7 @@ defmodule PromEx.Config do
         }
 
   defstruct [
+    :disabled,
     :manual_metrics_start_delay,
     :drop_metrics_groups,
     :grafana_config,
@@ -180,6 +195,7 @@ defmodule PromEx.Config do
       |> generate_metrics_server_config()
 
     %__MODULE__{
+      disabled: Keyword.get(opts, :disabled, false),
       manual_metrics_start_delay: Keyword.get(opts, :manual_metrics_start_delay, :no_delay),
       drop_metrics_groups: opts |> Keyword.get(:drop_metrics_groups, []) |> MapSet.new(),
       grafana_config: grafana_config,
@@ -192,7 +208,9 @@ defmodule PromEx.Config do
   defp generate_grafana_config(grafana_opts) do
     %{
       host: grafana_opts |> get_grafana_config(:host) |> normalize_host(),
-      auth_token: get_grafana_config(grafana_opts, :auth_token),
+      username: Keyword.get(grafana_opts, :username),
+      password: Keyword.get(grafana_opts, :password),
+      auth_token: Keyword.get(grafana_opts, :auth_token),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
       folder_name: Keyword.get(grafana_opts, :folder_name, :default),
       annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false)

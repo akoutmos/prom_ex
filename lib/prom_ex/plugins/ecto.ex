@@ -6,7 +6,13 @@ if Code.ensure_loaded?(Ecto) do
     variable dropdowns for the repo value will be broken.
 
     This plugin supports the following options:
-    - `otp_app`: This is a REQUIRED option and is the name of you application in snake case (e.g. :my_cool_app).
+    - `otp_app`: This is an OPTIONAL option and is the name of you application in snake case (e.g. :my_cool_app). By
+      default the otp_app set for the prom_ex module that this plugin is defined in is used.
+
+    - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
+      `[otp_app, :prom_ex, :ecto]`. If this changes you will also want to set `ecto_metric_prefix`
+      in your `dashboard_assigns` to the snakecase version of your prefix, the default
+      `ecto_metric_prefix` is `{otp_app}_prom_ex_ecto`.
 
     - `repos`: This is an OPTIONAL option and is a list with the full module name of your Ecto Repos (e.g [MyApp.Repo]).
        If you do not provide this value, PromEx will attempt to resolve your Repo modules via the
@@ -31,15 +37,13 @@ if Code.ensure_loaded?(Ecto) do
 
     use PromEx.Plugin
 
-    require Logger
-
     @init_event [:ecto, :repo, :init]
     @query_event [:prom_ex, :plugin, :ecto, :query]
 
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :ecto)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :ecto))
 
       repo_event_prefixes =
         opts
@@ -176,6 +180,20 @@ if Code.ensure_loaded?(Ecto) do
             unit: {:native, :millisecond}
           ),
 
+          # Capture the total time (the sum of all other measurements)
+          distribution(
+            metric_prefix ++ [:repo, :query, :total, :time, :milliseconds],
+            event_name: @query_event,
+            measurement: :total_time,
+            description: "The sum of the other time measurements.",
+            tags: [:repo, :source, :command],
+            tag_values: &ecto_query_tag_values/1,
+            reporter_options: [
+              buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+            ],
+            unit: {:native, :millisecond}
+          ),
+
           # Capture the number of results returned
           distribution(
             metric_prefix ++ [:repo, :query, :results, :returned],
@@ -183,7 +201,7 @@ if Code.ensure_loaded?(Ecto) do
             measurement: fn _measurement, %{result: result} ->
               normalize_results_returned(result)
             end,
-            description: "The time spent executing the query.",
+            description: "The number of result rows returned from a query.",
             tags: [:repo, :source, :command],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
