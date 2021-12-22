@@ -90,10 +90,9 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The Phoenix Endpoint module currently active for config metrics.",
+      "description": "The Broadway module currently selected for viewing metrics.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -110,70 +109,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 8,
+        "w": 6,
         "x": 0,
-        "y": 1
-      },
-      "id": 32,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
-          "fields": "/^endpoint$/",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "<%= @phoenix_metric_prefix %>_endpoint_port_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Server Endpoint",
-      "transformations": [
-        {
-          "id": "labelsToFields",
-          "options": {}
-        }
-      ],
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The port that the server is listening on.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 8,
-        "x": 8,
         "y": 1
       },
       "id": 30,
@@ -186,15 +123,17 @@
           "calcs": [
             "last"
           ],
-          "fields": "/^port$/",
+          "fields": "/^name$/",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "<%= @phoenix_metric_prefix %>_endpoint_port_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
+          "exemplar": true,
+          "expr": "<%= @otp_app %>_prom_ex_broadway_init_status_info{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -203,7 +142,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Server Port",
+      "title": "Broadway Module",
       "transformations": [
         {
           "id": "labelsToFields",
@@ -214,70 +153,17 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The URL that the server is configured to be accessed from.",
+      "description": "The settings that were set for the selected Broadway module.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
           "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 8,
-        "x": 16,
-        "y": 1
-      },
-      "id": 31,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "/^url$/",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "<%= @phoenix_metric_prefix %>_endpoint_url_info{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}",
-          "format": "table",
-          "interval": "",
-          "legendFormat": "",
-          "queryType": "randomWalk",
-          "refId": "A"
-        }
-      ],
-      "title": "Server URL",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "noValue": "No data",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -287,33 +173,160 @@
               },
               {
                 "color": "red",
-                "value": 0
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "center"
               },
               {
-                "color": "yellow",
-                "value": 70
-              },
-              {
-                "color": "green",
-                "value": 90
+                "id": "unit",
+                "value": "locale"
               }
             ]
           },
-          "unit": "percent"
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Config"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value": {
+                        "index": 1,
+                        "text": "Batcher batch size"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds": {
+                        "index": 0,
+                        "text": "Batch timeout (milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value": {
+                        "index": 2,
+                        "text": "Batcher concurrency"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds": {
+                        "index": 3,
+                        "text": "Batcher hibernate after (milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds": {
+                        "index": 4,
+                        "text": "Default hibernate after (milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds": {
+                        "index": 5,
+                        "text": "Max duration (milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value": {
+                        "index": 6,
+                        "text": "Default max restarts"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds": {
+                        "index": 7,
+                        "text": "Default resubscribe interval (milliseconds)"
+                      },
+                      "<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds": {
+                        "index": 8,
+                        "text": "Default shutdown interval (milliseconds)"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 44,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "8.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value|<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "title": "Broadway Module Settings",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "instance": true,
+              "job": true,
+              "name": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Value",
+              "__name__": "Config"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "The number of messages processed in the last 24 hours.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "locale"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 6,
-        "x": 0,
-        "y": 5
+        "x": 12,
+        "y": 1
       },
-      "id": 21,
+      "id": 24,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
-        "justifyMode": "center",
+        "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -322,12 +335,14 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
+          "exemplar": true,
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -336,30 +351,93 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Apdex Score (Last 24h)",
+      "title": "Messages processed (Last 24h)",
       "type": "stat"
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of responses that resulted in 400s or 500s over the past 24 hours.",
+      "description": "The number of messages processed in the last 24 hours.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 1
-              },
+              }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "id": 46,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.0.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h]))",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Batches processed (Last 24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": "<%= @datasource_id %>",
+      "description": "A percentage of Broadway message that resulted in an error over the past 24 hours.",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
               {
                 "color": "red",
-                "value": 5
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 99
               }
             ]
           },
@@ -370,7 +448,7 @@
       "gridPos": {
         "h": 6,
         "w": 6,
-        "x": 6,
+        "x": 0,
         "y": 5
       },
       "id": 22,
@@ -386,12 +464,14 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])) OR on() vector(0)",
+          "exemplar": true,
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -400,71 +480,15 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Error Percentage (Last 24h)",
+      "title": "Message Error Percentage (Last 24h)",
       "type": "stat"
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The amount of data transferred by Phoenix in a 24 hour rolling window.",
+      "description": "The number of messages processed in the last hour.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 12,
-        "y": 5
-      },
-      "id": 24,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Data Transferred (Last 24h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The amount of requests received by Phoenix in a 24 hour rolling window.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
+          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -480,12 +504,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 6,
-        "x": 18,
-        "y": 5
+        "x": 12,
+        "y": 9
       },
-      "id": 23,
+      "id": 45,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -498,12 +522,14 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])))",
+          "exemplar": true,
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -512,45 +538,36 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Total Requests Received (Last 24h)",
+      "title": "Messages processed (Last 1h)",
       "type": "stat"
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the previous hour of requests.",
+      "description": "The number of messages processed in the last hour.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
+          "decimals": 0,
           "mappings": [],
-          "noValue": "No data available",
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 70
-              },
-              {
                 "color": "green",
-                "value": 90
+                "value": null
               }
             ]
           },
-          "unit": "percent"
+          "unit": "locale"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 6,
-        "x": 0,
-        "y": 11
+        "x": 18,
+        "y": 9
       },
-      "id": 25,
+      "id": 47,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -563,12 +580,14 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
+          "exemplar": true,
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -577,31 +596,35 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Apdex Score (Last 1h)",
+      "title": "Batches processed (Last 1h)",
       "type": "stat"
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of responses that resulted in 400s or 500s over the past hour.",
+      "description": "A percentage of Broadway message that resulted in an error over the past hour.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [],
-          "noValue": "No data available",
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "percentage",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
-                "color": "#EAB839",
-                "value": 1
+                "color": "orange",
+                "value": 70
               },
               {
-                "color": "red",
-                "value": 5
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "green",
+                "value": 99
               }
             ]
           },
@@ -612,10 +635,10 @@
       "gridPos": {
         "h": 6,
         "w": 6,
-        "x": 6,
+        "x": 0,
         "y": 11
       },
-      "id": 26,
+      "id": 38,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -628,12 +651,14 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])) OR on() vector(0)",
+          "exemplar": true,
+          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -642,119 +667,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Error Percentage (Last 1h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The amount of data transferred by Phoenix in the past hour.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 12,
-        "y": 11
-      },
-      "id": 27,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Data Transferred (Last 1h)",
-      "type": "stat"
-    },
-    {
-      "datasource": "<%= @datasource_id %>",
-      "description": "The amount of requests received by Phoenix in the past hour.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "locale"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 11
-      },
-      "id": 28,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.1.3",
-      "targets": [
-        {
-          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])))",
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Total Requests Received (Last 1h)",
+      "title": "Message Error Percentage (Last 1h)",
       "type": "stat"
     },
     {
@@ -768,7 +681,7 @@
       },
       "id": 2,
       "panels": [],
-      "title": "HTTP Details",
+      "title": "Message Details",
       "type": "row"
     },
     {
@@ -785,13 +698,7 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the request time spread across all requests (regardless of path).",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "A heatmap showing the processing time across all of the messages (regardless of processor key).",
       "gridPos": {
         "h": 13,
         "w": 12,
@@ -809,7 +716,8 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -819,7 +727,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Request Time",
+      "title": "Message Processing Time",
       "tooltip": {
         "show": true,
         "showHistogram": true
@@ -857,13 +765,7 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the response payload size spread across all requests (regardless of path).",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "A heatmap showing the processing time across all of the messages that resulted in an exception (regardless of processor key).",
       "gridPos": {
         "h": 13,
         "w": 12,
@@ -873,7 +775,7 @@
       "heatmap": {},
       "hideZeroBuckets": true,
       "highlightCards": true,
-      "id": 12,
+      "id": 48,
       "legend": {
         "show": true
       },
@@ -881,7 +783,8 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -891,7 +794,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Response Payload Size",
+      "title": "Message Exception Time",
       "tooltip": {
         "show": true,
         "showHistogram": true
@@ -904,7 +807,7 @@
       "xBucketSize": null,
       "yAxis": {
         "decimals": null,
-        "format": "decbytes",
+        "format": "ms",
         "logBase": 1,
         "max": null,
         "min": null,
@@ -921,13 +824,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average request time per path per status code per HTTP method.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "The average processing time per processor key.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -954,8 +851,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -965,9 +865,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key)",
           "interval": "",
-          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
+          "legendFormat": "{{ processor_key }}",
           "refId": "A"
         }
       ],
@@ -975,7 +876,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average HTTP Request Time",
+      "title": "Average Message Processing Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -992,7 +893,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "Processing Time",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1018,13 +919,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average response size per path per status code per HTTP method.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "The average processing time per processor key that resulted in an exception.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1034,7 +929,7 @@
         "y": 31
       },
       "hiddenSeries": false,
-      "id": 13,
+      "id": 49,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -1051,8 +946,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1062,9 +960,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key, reason) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key, reason)",
           "interval": "",
-          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
+          "legendFormat": "{{ processor_key }} :: {{ reason }}",
           "refId": "A"
         }
       ],
@@ -1072,7 +971,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average HTTP Response Size",
+      "title": "Average Message Exception Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1088,8 +987,8 @@
       },
       "yaxes": [
         {
-          "format": "decbytes",
-          "label": "Response Size",
+          "format": "ms",
+          "label": "Processing Time",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1115,13 +1014,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "Shows the number of requests coming into certain paths and the resulting response codes.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "Shows the number of messages that we processed per processor key.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1148,8 +1041,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1159,9 +1055,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "exemplar": true,
+          "expr": "irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
           "interval": "",
-          "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
+          "legendFormat": "{{ processor_key }}",
           "refId": "A"
         }
       ],
@@ -1169,7 +1066,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Path Requests",
+      "title": "Messages Processed",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1186,7 +1083,7 @@
       "yaxes": [
         {
           "format": "locale",
-          "label": "Requests",
+          "label": "Messages",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1212,13 +1109,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The aggregate response status of all the requests.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "Shows the number of messages that we processed per processor key that resulted in exceptions.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1228,11 +1119,13 @@
         "y": 44
       },
       "hiddenSeries": false,
-      "id": 10,
+      "id": 50,
       "legend": {
         "alignAsTable": true,
         "avg": false,
         "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
         "max": true,
         "min": false,
         "rightSide": true,
@@ -1243,8 +1136,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1254,29 +1150,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "exemplar": true,
+          "expr": "irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
           "interval": "",
-          "legendFormat": "2xx",
+          "legendFormat": "{{ processor_key }} :: {{ reason }}",
           "refId": "A"
-        },
-        {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-          "interval": "",
-          "legendFormat": "4xx",
-          "refId": "B"
-        },
-        {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
-          "interval": "",
-          "legendFormat": "5xx",
-          "refId": "C"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Response Status Codes",
+      "title": "Message Exceptions",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1292,8 +1177,8 @@
       },
       "yaxes": [
         {
-          "format": "short",
-          "label": "Requests",
+          "format": "locale",
+          "label": "Messages",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1305,7 +1190,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -1324,103 +1209,8 @@
       },
       "id": 4,
       "panels": [],
-      "title": "Channel Details",
+      "title": "Batch Details",
       "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "<%= @datasource_id %>",
-      "description": "How many channel joins have occurred over time.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 0,
-        "y": 58
-      },
-      "hiddenSeries": false,
-      "id": 15,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pluginVersion": "7.1.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_joined_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
-          "interval": "",
-          "legendFormat": "{{ transport }} :: {{ result }}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Channel Join Events",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "Channel joins",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
     },
     {
       "cards": {
@@ -1436,23 +1226,17 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the request time spread across all channel events.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "A heatmap showing the processing time across all of the batches (regardless of batcher key).",
       "gridPos": {
         "h": 13,
         "w": 12,
-        "x": 12,
+        "x": 0,
         "y": 58
       },
       "heatmap": {},
       "hideZeroBuckets": true,
       "highlightCards": true,
-      "id": 16,
+      "id": 51,
       "legend": {
         "show": true
       },
@@ -1460,7 +1244,8 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1470,7 +1255,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Channel Message Handle Time",
+      "title": "Batch Processing Time",
       "tooltip": {
         "show": true,
         "showHistogram": true
@@ -1500,13 +1285,102 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The average response time for a channel message.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
+      "description": "The average number of messages in a batch that were successful",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 12,
+        "y": 58
       },
+      "hiddenSeries": false,
+      "id": 54,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.0.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_success_size_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_success_size_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
+          "interval": "",
+          "legendFormat": "{{ batcher }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Average Successful Messages per Batch",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "locale",
+          "label": "Processing Time",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "<%= @datasource_id %>",
+      "description": "The average processing time per batcher key.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1516,7 +1390,7 @@
         "y": 71
       },
       "hiddenSeries": false,
-      "id": 17,
+      "id": 52,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -1533,8 +1407,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1544,9 +1421,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_channel_handled_in_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
           "interval": "",
-          "legendFormat": "{{ transport }} :: {{ result }}",
+          "legendFormat": "{{ batcher }}",
           "refId": "A"
         }
       ],
@@ -1554,7 +1432,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average Channel Response Time",
+      "title": "Average Batch Processing Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1571,7 +1449,7 @@
       "yaxes": [
         {
           "format": "ms",
-          "label": "Response Time",
+          "label": "Processing Time",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1590,20 +1468,6 @@
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 84
-      },
-      "id": 34,
-      "panels": [],
-      "title": "Socket Details",
-      "type": "row"
     },
     {
       "aliasColors": {},
@@ -1611,185 +1475,17 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "How many socket connections have occurred over time.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "description": "The average number of messages in a batch that failed to process",
       "fill": 1,
       "fillGradient": 0,
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 0,
-        "y": 85
-      },
-      "hiddenSeries": false,
-      "id": 35,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pluginVersion": "7.1.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
-          "interval": "",
-          "legendFormat": "{{ transport }} :: {{ result }}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Socket Connection Events",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "Channel joins",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "cards": {
-        "cardPadding": null,
-        "cardRound": null
-      },
-      "color": {
-        "cardColor": "#b4ff00",
-        "colorScale": "sqrt",
-        "colorScheme": "interpolateOranges",
-        "exponent": 0.5,
-        "mode": "spectrum"
-      },
-      "dataFormat": "tsbuckets",
-      "datasource": "<%= @datasource_id %>",
-      "description": "A heatmap showing the request time spread across all socket connections.",
       "gridPos": {
         "h": 13,
         "w": 12,
         "x": 12,
-        "y": 85
-      },
-      "heatmap": {},
-      "hideZeroBuckets": true,
-      "highlightCards": true,
-      "id": 36,
-      "legend": {
-        "show": true
-      },
-      "pluginVersion": "7.1.3",
-      "reverseYBuckets": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
-          "format": "heatmap",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{ le }}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Socket Connection Time",
-      "tooltip": {
-        "show": true,
-        "showHistogram": true
-      },
-      "type": "heatmap",
-      "xAxis": {
-        "show": true
-      },
-      "xBucketNumber": null,
-      "xBucketSize": null,
-      "yAxis": {
-        "decimals": null,
-        "format": "ms",
-        "logBase": 1,
-        "max": null,
-        "min": null,
-        "show": true,
-        "splitFactor": null
-      },
-      "yBucketBound": "auto",
-      "yBucketNumber": null,
-      "yBucketSize": null
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "<%= @datasource_id %>",
-      "description": "The average time it connects to establish a socket connection.",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 13,
-        "w": 12,
-        "x": 0,
-        "y": 98
+        "y": 71
       },
       "hiddenSeries": false,
-      "id": 37,
+      "id": 55,
       "legend": {
         "alignAsTable": true,
         "avg": false,
@@ -1806,8 +1502,11 @@
       "lines": true,
       "linewidth": 1,
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
-      "pluginVersion": "7.1.3",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1817,9 +1516,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]) / irate(<%= @phoenix_metric_prefix %>_socket_connected_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
+          "exemplar": true,
+          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_failure_size_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_failure_size_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
           "interval": "",
-          "legendFormat": "{{ transport }} :: {{ result }}",
+          "legendFormat": "{{ batcher }}",
           "refId": "A"
         }
       ],
@@ -1827,7 +1527,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average Socket Connection Time",
+      "title": "Average Failed Messages per Batch",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1843,8 +1543,103 @@
       },
       "yaxes": [
         {
-          "format": "ms",
-          "label": "Response Time",
+          "format": "locale",
+          "label": "Processing Time",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "<%= @datasource_id %>",
+      "description": "Shows the number of batches that we processed per batch key.",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 13,
+        "w": 12,
+        "x": 0,
+        "y": 84
+      },
+      "hiddenSeries": false,
+      "id": 53,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.0.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
+          "interval": "",
+          "legendFormat": "{{ batcher }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Batches Processed",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "locale",
+          "label": "Messages",
           "logBase": 1,
           "max": null,
           "min": "0",
@@ -1866,28 +1661,32 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 26,
+  "schemaVersion": 30,
   "style": "dark",
-  "tags": ["PromEx", "Phoenix", "<%= @otp_app %>"],
+  "tags": ["PromEx", "Broadway", "<%= @otp_app %>"],
   "templating": {
     "list": [
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+        "description": null,
+        "error": null,
         "hide": 0,
         "includeAll": false,
         "label": "Prometheus Job",
         "multi": false,
         "name": "job",
         "options": [],
-        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, job)",
+        "query": {
+          "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, job)",
+          "refId": "prometheus-job-Variable-Query"
+        },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 6,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -1895,14 +1694,19 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "description": null,
+        "error": null,
         "hide": 0,
         "includeAll": false,
         "label": "Application Instance",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
+        "query": {
+          "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+          "refId": "prometheus-instance-Variable-Query"
+        },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1915,20 +1719,24 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @phoenix_metric_prefix %>_endpoint_port_info, endpoint)",
+        "definition": "label_values(<%= @otp_app %>_prom_ex_broadway_init_status_info, name)",
+        "description": null,
+        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": "Phoenix Endpoint",
+        "label": "Broadway Module",
         "multi": false,
-        "name": "endpoint",
+        "name": "broadway_module",
         "options": [],
-        "query": "label_values(<%= @phoenix_metric_prefix %>_endpoint_port_info, endpoint)",
+        "query": {
+          "query": "label_values(<%= @otp_app %>_prom_ex_broadway_init_status_info, name)",
+          "refId": "StandardVariableQuery"
+        },
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -1937,11 +1745,8 @@
         "auto": false,
         "auto_count": 30,
         "auto_min": "10s",
-        "current": {
-          "selected": false,
-          "text": "30s",
-          "value": "30s"
-        },
+        "description": null,
+        "error": null,
         "hide": 0,
         "label": "Interval",
         "name": "interval",

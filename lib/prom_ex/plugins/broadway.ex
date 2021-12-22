@@ -152,28 +152,28 @@ if Code.ensure_loaded?(Broadway) do
             event_name: @init_topology_batchers_proxy_event,
             description: "The Broadway batchers hibernate after value.",
             measurement: fn _measurements, %{hibernate_after: hibernate_after} -> hibernate_after end,
-            tags: [:name]
+            tags: [:name, :batcher]
           ),
           last_value(
             metric_prefix ++ [:init, :batcher, :concurrency, :value],
             event_name: @init_topology_batchers_proxy_event,
             description: "The Broadway batchers concurrency value.",
             measurement: fn _measurements, %{concurrency: concurrency} -> concurrency end,
-            tags: [:name]
+            tags: [:name, :batcher]
           ),
           last_value(
             metric_prefix ++ [:init, :batcher, :batch_size, :value],
             event_name: @init_topology_batchers_proxy_event,
             description: "The Broadway batchers batch size value.",
             measurement: fn _measurements, %{batch_size: batch_size} -> batch_size end,
-            tags: [:name]
+            tags: [:name, :batcher]
           ),
           last_value(
             metric_prefix ++ [:init, :batcher, :batch_timeout, :milliseconds],
             event_name: @init_topology_batchers_proxy_event,
             description: "The Broadway batchers timeout value.",
             measurement: fn _measurements, %{batch_timeout: batch_timeout} -> batch_timeout end,
-            tags: [:name]
+            tags: [:name, :batcher]
           )
         ]
       )
@@ -278,7 +278,7 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @millisecond_duration_buckets
             ],
-            tags: [:batch_key, :batcher, :name],
+            tags: [:batcher, :name],
             tag_values: &extract_batcher_tag_values/1,
             unit: {:native, :millisecond}
           ),
@@ -292,7 +292,7 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @message_batch_size_buckets
             ],
-            tags: [:batch_key, :batcher, :name],
+            tags: [:batcher, :name],
             tag_values: &extract_batcher_tag_values/1
           ),
           distribution(
@@ -305,7 +305,7 @@ if Code.ensure_loaded?(Broadway) do
             reporter_options: [
               buckets: @message_batch_size_buckets
             ],
-            tags: [:batch_key, :batcher, :name],
+            tags: [:batcher, :name],
             tag_values: &extract_batcher_tag_values/1
           )
         ]
