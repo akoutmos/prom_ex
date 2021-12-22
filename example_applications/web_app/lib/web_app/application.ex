@@ -37,9 +37,9 @@ defmodule WebApp.Application do
       # WebApp.RandomWorkGenerator
 
       # Work generator for Broadway
-      # WebApp.TempTracker,
-      # WebApp.CityProducer,
-      # WebApp.TempProcessor
+      WebApp.TempTracker,
+      WebApp.CityProducer,
+      WebApp.TempProcessor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

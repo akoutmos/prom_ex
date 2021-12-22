@@ -60,27 +60,27 @@ defmodule WebApp.PromEx do
   def plugins do
     [
       # PromEx built in plugins
-      Plugins.Application,
-      Plugins.Beam,
-      {Plugins.Phoenix, endpoint: WebAppWeb.Endpoint, router: WebAppWeb.Router},
-      # OR
-      #      {
-      #        Plugins.Phoenix,
-      #        endpoints: [
-      #          {WebAppWeb.Endpoint,
-      #           routers: [WebAppWeb.Router], additional_routes: @additional_routes},
-      #          {WebAppWeb.InternalEndpoint,
-      #           routers: [WebAppWeb.InternalRouter], event_prefix: [:internal, :endpoint]}
-      #        ]
-      #      },
-      {Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
-      {Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
-      Plugins.PhoenixLiveView,
-      {Plugins.PlugRouter, routers: [WebAppWeb.Router], event_prefix: [:phoenix, :endpoint]},
-      {Plugins.PlugCowboy,
-       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
+      # Plugins.Application,
+      # Plugins.Beam,
+      # {Plugins.Phoenix, endpoint: WebAppWeb.Endpoint, router: WebAppWeb.Router},
+      # # OR
+      # #      {
+      # #        Plugins.Phoenix,
+      # #        endpoints: [
+      # #          {WebAppWeb.Endpoint,
+      # #           routers: [WebAppWeb.Router], additional_routes: @additional_routes},
+      # #          {WebAppWeb.InternalEndpoint,
+      # #           routers: [WebAppWeb.InternalRouter], event_prefix: [:internal, :endpoint]}
+      # #        ]
+      # #      },
+      # {Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
+      # {Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
+      # Plugins.PhoenixLiveView,
+      # {Plugins.PlugRouter, routers: [WebAppWeb.Router], event_prefix: [:phoenix, :endpoint]},
+      # {Plugins.PlugCowboy,
+      #  ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
 
-      # PromEx.Plugins.Broadway
+      PromEx.Plugins.Broadway
 
       # Add your own PromEx metrics plugins
       # WebApp.Users.PromEx
