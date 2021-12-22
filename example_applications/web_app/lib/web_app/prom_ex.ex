@@ -60,9 +60,9 @@ defmodule WebApp.PromEx do
   def plugins do
     [
       # PromEx built in plugins
-      # Plugins.Application,
-      # Plugins.Beam,
-      # {Plugins.Phoenix, endpoint: WebAppWeb.Endpoint, router: WebAppWeb.Router},
+      Plugins.Application,
+      Plugins.Beam,
+      {Plugins.Phoenix, endpoint: WebAppWeb.Endpoint, router: WebAppWeb.Router},
       # # OR
       # #      {
       # #        Plugins.Phoenix,
@@ -73,13 +73,12 @@ defmodule WebApp.PromEx do
       # #           routers: [WebAppWeb.InternalRouter], event_prefix: [:internal, :endpoint]}
       # #        ]
       # #      },
-      # {Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
-      # {Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
-      # Plugins.PhoenixLiveView,
-      # {Plugins.PlugRouter, routers: [WebAppWeb.Router], event_prefix: [:phoenix, :endpoint]},
-      # {Plugins.PlugCowboy,
-      #  ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]}
-
+      {Plugins.Ecto, repos: [WebApp.Repo, WebApp.Repo2]},
+      {Plugins.Oban, oban_supervisors: [Oban, Oban.SuperSecret]},
+      Plugins.PhoenixLiveView,
+      {Plugins.PlugRouter, routers: [WebAppWeb.Router], event_prefix: [:phoenix, :endpoint]},
+      {Plugins.PlugCowboy,
+       ignore_routes: ["/metrics"], routers: [WebAppWeb.Router, WebAppWeb.InternalRouter]},
       PromEx.Plugins.Broadway
 
       # Add your own PromEx metrics plugins
