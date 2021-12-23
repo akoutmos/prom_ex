@@ -3,9 +3,6 @@ if Code.ensure_loaded?(Broadway) do
     @moduledoc """
     This plugin captures metrics emitted by Broadway.
 
-    This plugin supports the following options:
-    - `placeholder`: This is a placeholder
-
     This plugin exposes the following metric groups:
     - `:broadway_init_event_metrics`
     - `:broadway_message_event_metrics`

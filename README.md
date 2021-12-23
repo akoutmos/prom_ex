@@ -225,10 +225,10 @@ PromEx provides the following utilities to you in order to achieve your observab
 | `PromEx.Plugins.Ecto`            | Stable      | Collect query metrics emitted by Ecto                                  |
 | `PromEx.Plugins.Oban`            | Stable      | Collect queue processing metrics emitted by Oban                       |
 | `PromEx.Plugins.PhoenixLiveView` | Stable      | Collect metrics emitted by Phoenix LiveView                            |
-| `PromEx.Plugins.Absinthe`        | Beta        | Collect GraphQL metrics emitted by Absinthe                            |
-| `PromEx.Plugins.PlugCowboy`      | Beta        | Collect HTTP request metrics emitted by Plug.Cowboy                    |
-| `PromEx.Plugins.PlugRouter`      | Beta        | Collect HTTP request metrics emitted by Plug.Router and Plug.Telemetry |
-| `PromEx.Plugins.Broadway`        | Coming soon | Collect message processing metrics emitted by Broadway                 |
+| `PromEx.Plugins.Absinthe`        | Stable      | Collect GraphQL metrics emitted by Absinthe                            |
+| `PromEx.Plugins.PlugCowboy`      | Stable      | Collect HTTP request metrics emitted by Plug.Cowboy                    |
+| `PromEx.Plugins.PlugRouter`      | Stable      | Collect HTTP request metrics emitted by Plug.Router and Plug.Telemetry |
+| `PromEx.Plugins.Broadway`        | Beta        | Collect message processing metrics emitted by Broadway                 |
 | `PromEx.Plugins.Finch`           | Coming soon | Collect HTTP request metrics emitted by Finch                          |
 | `PromEx.Plugins.Redix`           | Coming soon | Collect Redis request metrics emitted by Redix                         |
 | More to come...                  |             |                                                                        |

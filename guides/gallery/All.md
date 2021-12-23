@@ -40,3 +40,10 @@ The Phoenix LiveView dashboard presents information regarding the various LiveVi
 execute them.
 
 <img align="center" width="100%" src="guides/images/liveview_dashboard.png" alt="Phoenix LiveView Dashboard">
+
+## Broadway
+
+The Broadway dashboard presents information regarding the messages the Broadway has processed as well as how
+it has processed message batches.
+
+<img align="center" width="100%" src="guides/images/broadway_dashboard.png" alt="Broadway Dashboard">
