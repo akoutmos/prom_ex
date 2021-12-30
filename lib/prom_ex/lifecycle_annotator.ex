@@ -56,7 +56,6 @@ defmodule PromEx.LifecycleAnnotator do
           git_sha
 
         :error ->
-          Logger.warn("GIT_SHA environment variable has not been defined")
           "Not available"
       end
 
@@ -66,7 +65,6 @@ defmodule PromEx.LifecycleAnnotator do
           git_sha
 
         :error ->
-          Logger.warn("GIT_AUTHOR environment variable has not been defined")
           "Not available"
       end
 
