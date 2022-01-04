@@ -13,7 +13,7 @@ In order for PromEx to be able to load the appropriate metrics from your plugins
 - `manual_metrics/1`
 
 Each of these callbacks is supposed to return a list of metrics of that type. For example, `polling_metrics/1` needs to
-return a list of `PromEx.MetricTypes.Polling` structs (a single struct is also an acceptable return). By doing this, you
+return a list of `PromEx.MetricTypes.Polling` structs (a single struct is also an acceptable return). By doing this, your
 plugin can load your metrics and deal with the nuances of each metric type properly. Each of the `MetricTypes` structs
 all have a field called `:metrics`. This field contains a list of all the `Telemetry.Metrics` definitions that were
 provided to the struct `build` function.
