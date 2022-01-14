@@ -95,6 +95,7 @@ defmodule PromEx.DashboardUploader do
          prom_ex_module
        ) do
     user_provided_assigns = prom_ex_module.dashboard_assigns()
+    {dashboard_opts, apply_function} = Keyword.pop(dashboard_opts, :apply_function, fn dashboard -> dashboard end)
 
     default_title =
       prom_ex_module.__otp_app__()
@@ -119,6 +120,7 @@ defmodule PromEx.DashboardUploader do
     |> DashboardRenderer.merge_assigns(dashboard_opts)
     |> DashboardRenderer.render_dashboard(prom_ex_module)
     |> DashboardRenderer.decode_dashboard()
+    |> DashboardRenderer.apply_dashboard_function(apply_function)
   end
 
   defp normalize_file_name(path) do
