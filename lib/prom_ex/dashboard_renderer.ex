@@ -129,7 +129,7 @@ defmodule PromEx.DashboardRenderer do
   This function will execute an MFA on the rendered dashboard to give the user one final chance to
   adjust the dashboard and tweak it to their needs.
   """
-  @spec apply_dashboard_mfa(__MODULE__.t(), (map() -> map())) :: __MODULE__.t()
+  @spec apply_dashboard_function(__MODULE__.t(), (map() -> map())) :: __MODULE__.t()
   def apply_dashboard_function(%__MODULE__{valid_file?: false} = dashboard_render, _) do
     dashboard_render
   end
