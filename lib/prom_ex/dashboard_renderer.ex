@@ -139,7 +139,7 @@ defmodule PromEx.DashboardRenderer do
         apply_function
       ) do
     updated_dashboard = apply_function.(decoded_dashboard)
-    %{dashboard_render | decoded_dashboard: decoded_dashboard}
+    %{dashboard_render | decoded_dashboard: updated_dashboard}
   end
 
   @doc """

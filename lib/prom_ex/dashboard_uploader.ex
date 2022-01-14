@@ -66,8 +66,8 @@ defmodule PromEx.DashboardUploader do
       dashboard
       |> handle_dashboard_render(default_dashboard_opts, prom_ex_module)
       |> case do
-        %DashboardRenderer{valid_json?: true, rendered_file: rendered_dashboard, full_path: full_path} ->
-          upload_dashboard(rendered_dashboard, grafana_conn, upload_opts, full_path)
+        %DashboardRenderer{valid_json?: true, decoded_dashboard: dashboard_definition, full_path: full_path} ->
+          upload_dashboard(dashboard_definition, grafana_conn, upload_opts, full_path)
 
         %DashboardRenderer{full_path: path, error: error} ->
           Logger.info(
@@ -95,7 +95,7 @@ defmodule PromEx.DashboardUploader do
          prom_ex_module
        ) do
     user_provided_assigns = prom_ex_module.dashboard_assigns()
-    {dashboard_opts, apply_function} = Keyword.pop(dashboard_opts, :apply_function, fn dashboard -> dashboard end)
+    {apply_function, dashboard_opts} = Keyword.pop(dashboard_opts, :apply_function, fn dashboard -> dashboard end)
 
     default_title =
       prom_ex_module.__otp_app__()
@@ -133,7 +133,9 @@ defmodule PromEx.DashboardUploader do
     end
   end
 
-  defp upload_dashboard(dashboard_contents, grafana_conn, upload_opts, full_dashboard_path) do
+  defp upload_dashboard(dashboard_definition, grafana_conn, upload_opts, full_dashboard_path) do
+    dashboard_contents = Jason.encode!(dashboard_definition)
+
     case GrafanaClient.upload_dashboard(grafana_conn, dashboard_contents, upload_opts) do
       {:ok, _response_payload} ->
         Logger.info("PromEx.DashboardUploader successfully uploaded #{full_dashboard_path} to Grafana.")

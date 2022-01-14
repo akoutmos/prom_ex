@@ -51,8 +51,8 @@ defmodule WebApp.MixProject do
       {:broadway, "~> 1.0.0"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       # {:prom_ex, "~> 1.5.0"}
-      # {:prom_ex, path: "../../"}
-      {:prom_ex, github: "akoutmos/prom_ex", branch: "apply_dashboard_function"}
+      {:prom_ex, path: "../../"}
+      # {:prom_ex, github: "akoutmos/prom_ex", branch: "apply_dashboard_function"}
     ]
   end
 

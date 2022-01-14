@@ -115,6 +115,6 @@ defmodule WebApp.PromEx do
 
   @doc false
   def tweak_broadway_dashboard(dashboard) do
-    IO.inspect(dashboard, label: "Dashboard")
+    %{dashboard | "title" => "My really cool custom title for BROADWAY"}
   end
 end
