@@ -34,6 +34,40 @@ defmodule PromEx.DashboardUploaderTest do
     end
   end
 
+  defmodule CustomDashboardApplyFunction do
+    use PromEx, otp_app: :prom_ex
+
+    alias PromEx.Plugins.{Application, Beam, Ecto, Phoenix}
+
+    @impl true
+    def plugins do
+      [
+        {Application, otp_app: :prom_ex},
+        {Phoenix, router: TestApp.Router, endpoint: TestApp.Endpoint},
+        {Beam, poll_rate: 500},
+        {Ecto, otp_app: :prom_ex, repos: [Test.Repo]}
+      ]
+    end
+
+    @impl true
+    def dashboard_assigns do
+      [
+        otp_app: :prom_ex,
+        datasource_id: "prometheus"
+      ]
+    end
+
+    @impl true
+    def dashboards do
+      [{:prom_ex, "application.json", apply_function: &__MODULE__.tweak_dashboard_title/1}]
+    end
+
+    @doc false
+    def tweak_dashboard_title(dashboard) do
+      %{dashboard | "title" => "My really cool custom title"}
+    end
+  end
+
   setup do
     bypass = Bypass.open()
     {:ok, bypass: bypass}
@@ -77,6 +111,72 @@ defmodule PromEx.DashboardUploaderTest do
 
              wait_for_process(pid, 1_000)
            end) =~ "Recieved a 401 from Grafana because"
+  end
+
+  test "should apply any custom functions to the dashboard if provided", %{bypass: bypass} do
+    response_payload = """
+    {
+      "id":1,
+      "uid": "nErXDvCkzz",
+      "title": "Department ABC",
+      "url": "/dashboards/f/nErXDvCkzz/department-abc",
+      "hasAcl": false,
+      "canSave": true,
+      "canEdit": true,
+      "canAdmin": true,
+      "createdBy": "admin",
+      "created": "2018-01-31T17:43:12+01:00",
+      "updatedBy": "admin",
+      "updated": "2018-01-31T17:43:12+01:00",
+      "version": 1
+    }
+    """
+
+    Application.put_env(:prom_ex, CustomDashboardApplyFunction,
+      grafana: [
+        host: endpoint_url(bypass.port),
+        auth_token: "random_token",
+        folder_name: "Web App Dashboards",
+        annotate_app_lifecycle: false
+      ]
+    )
+
+    folder_uid = CustomDashboardApplyFunction.__grafana_folder_uid__()
+
+    Bypass.expect_once(bypass, "GET", "/api/folders/#{folder_uid}", fn conn ->
+      Plug.Conn.resp(conn, 200, response_payload)
+    end)
+
+    Bypass.expect_once(bypass, "PUT", "/api/folders/#{folder_uid}", fn conn ->
+      Plug.Conn.resp(conn, 200, response_payload)
+    end)
+
+    Bypass.expect_once(bypass, "POST", "/api/dashboards/db", fn conn ->
+      {:ok, body, conn} = Plug.Conn.read_body(conn, [])
+
+      assert body
+             |> Jason.decode!()
+             |> get_in(["dashboard", "title"]) == "My really cool custom title"
+
+      Plug.Conn.resp(conn, 200, response_payload)
+    end)
+
+    assert capture_log(fn ->
+             {:ok, pid} =
+               start_supervised(
+                 {
+                   DashboardUploader,
+                   [
+                     name: CustomDashboardApplyFunction.__dashboard_uploader_name__(),
+                     prom_ex_module: CustomDashboardApplyFunction,
+                     default_dashboard_opts: []
+                   ]
+                 },
+                 restart: :temporary
+               )
+
+             wait_for_process(pid, 1_000)
+           end) =~ "PromEx.DashboardUploader successfully uploaded"
   end
 
   test "should check for existing folders", %{bypass: bypass} do
