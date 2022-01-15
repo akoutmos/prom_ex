@@ -133,7 +133,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "<%= @otp_app %>_prom_ex_broadway_init_status_info{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "expr": "<%= @broadway_metric_prefix %>_init_status_info{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -202,15 +202,15 @@
                 "value": [
                   {
                     "options": {
-                      "<%= @otp_app %>_prom_ex_broadway_init_processor_concurrency_value": {
+                      "<%= @broadway_metric_prefix %>_init_processor_concurrency_value": {
                         "index": 0,
                         "text": "Processor Concurrency"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_processor_hibernate_after_milliseconds": {
+                      "<%= @broadway_metric_prefix %>_init_processor_hibernate_after_milliseconds": {
                         "index": 2,
                         "text": "Hibernate After (in milliseconds)"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_processor_max_demand_value": {
+                      "<%= @broadway_metric_prefix %>_init_processor_max_demand_value": {
                         "index": 1,
                         "text": "Max Demand"
                       }
@@ -250,7 +250,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_processor_concurrency_value|<%= @otp_app %>_prom_ex_broadway_init_processor_max_demand_value|<%= @otp_app %>_prom_ex_broadway_init_processor_hibernate_after_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "expr": "{__name__=~\"<%= @broadway_metric_prefix %>_init_processor_concurrency_value|<%= @broadway_metric_prefix %>_init_processor_max_demand_value|<%= @broadway_metric_prefix %>_init_processor_hibernate_after_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -336,19 +336,19 @@
                 "value": [
                   {
                     "options": {
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value": {
+                      "<%= @broadway_metric_prefix %>_init_batcher_batch_size_value": {
                         "index": 1,
                         "text": "Batch Size"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds": {
+                      "<%= @broadway_metric_prefix %>_init_batcher_batch_timeout_milliseconds": {
                         "index": 0,
                         "text": "Batch Timeout (in milliseconds)"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value": {
+                      "<%= @broadway_metric_prefix %>_init_batcher_concurrency_value": {
                         "index": 2,
                         "text": "Batcher Concurrency "
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds": {
+                      "<%= @broadway_metric_prefix %>_init_batcher_hibernate_after_milliseconds": {
                         "index": 3,
                         "text": "Hibernate After (in milliseconds)"
                       }
@@ -388,7 +388,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_timeout_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_batcher_batch_size_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_concurrency_value|<%= @otp_app %>_prom_ex_broadway_init_batcher_hibernate_after_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "expr": "{__name__=~\"<%= @broadway_metric_prefix %>_init_batcher_batch_timeout_milliseconds|<%= @broadway_metric_prefix %>_init_batcher_batch_size_value|<%= @broadway_metric_prefix %>_init_batcher_concurrency_value|<%= @broadway_metric_prefix %>_init_batcher_hibernate_after_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -469,23 +469,23 @@
                 "value": [
                   {
                     "options": {
-                      "<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds": {
+                      "<%= @broadway_metric_prefix %>_init_hibernate_after_default_milliseconds": {
                         "index": 4,
                         "text": "Default Hibernate After (in milliseconds)"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds": {
+                      "<%= @broadway_metric_prefix %>_init_max_duration_default_milliseconds": {
                         "index": 2,
                         "text": "Default Max Duration (in milliseconds)"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value": {
+                      "<%= @broadway_metric_prefix %>_init_max_restarts_default_value": {
                         "index": 1,
                         "text": "Default Max Restarts"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds": {
+                      "<%= @broadway_metric_prefix %>_init_resubscribe_interval_default_milliseconds": {
                         "index": 3,
                         "text": "Default Resubscribe Interval (in milliseconds)"
                       },
-                      "<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds": {
+                      "<%= @broadway_metric_prefix %>_init_shutdown_default_milliseconds": {
                         "index": 0,
                         "text": "Default Shutdown (in milliseconds)"
                       }
@@ -517,7 +517,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "{__name__=~\"<%= @otp_app %>_prom_ex_broadway_init_shutdown_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_max_restarts_default_value|<%= @otp_app %>_prom_ex_broadway_init_max_duration_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_resubscribe_interval_default_milliseconds|<%= @otp_app %>_prom_ex_broadway_init_hibernate_after_default_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
+          "expr": "{__name__=~\"<%= @broadway_metric_prefix %>_init_shutdown_default_milliseconds|<%= @broadway_metric_prefix %>_init_max_restarts_default_value|<%= @broadway_metric_prefix %>_init_max_duration_default_milliseconds|<%= @broadway_metric_prefix %>_init_resubscribe_interval_default_milliseconds|<%= @broadway_metric_prefix %>_init_hibernate_after_default_milliseconds\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -606,7 +606,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) / sum(increase({__name__=~\"<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count|<%= @broadway_metric_prefix %>_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -664,7 +664,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h]))",
+          "expr": "sum(increase(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -722,7 +722,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h]))",
+          "expr": "sum(increase(<%= @broadway_metric_prefix %>_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -793,7 +793,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) / sum(increase({__name__=~\"<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count|<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) / sum(increase({__name__=~\"<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count|<%= @broadway_metric_prefix %>_process_message_exception_duration_milliseconds_count\", job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -851,7 +851,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h]))",
+          "expr": "sum(increase(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -909,7 +909,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(increase(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h]))",
+          "expr": "sum(increase(<%= @broadway_metric_prefix %>_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -968,7 +968,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1035,7 +1035,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_message_exception_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1117,7 +1117,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key) / sum(irate(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key)",
           "interval": "",
           "legendFormat": "{{ processor_key }}",
           "refId": "A"
@@ -1212,7 +1212,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key, reason) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key, reason)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_message_exception_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key, reason) / sum(irate(<%= @broadway_metric_prefix %>_process_message_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(processor_key, reason)",
           "interval": "",
           "legendFormat": "{{ processor_key }} :: {{ reason }}",
           "refId": "A"
@@ -1307,7 +1307,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "irate(<%= @otp_app %>_prom_ex_broadway_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
+          "expr": "irate(<%= @broadway_metric_prefix %>_process_message_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ processor_key }}",
           "refId": "A"
@@ -1402,7 +1402,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "irate(<%= @otp_app %>_prom_ex_broadway_process_message_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
+          "expr": "irate(<%= @broadway_metric_prefix %>_process_message_exception_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ processor_key }} :: {{ reason }}",
           "refId": "A"
@@ -1496,7 +1496,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_batch_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1578,7 +1578,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_success_size_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_success_size_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_batch_success_size_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @broadway_metric_prefix %>_process_batch_success_size_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
           "interval": "",
           "legendFormat": "{{ batcher }}",
           "refId": "A"
@@ -1673,7 +1673,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_batch_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @broadway_metric_prefix %>_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
           "interval": "",
           "legendFormat": "{{ batcher }}",
           "refId": "A"
@@ -1768,7 +1768,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_failure_size_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @otp_app %>_prom_ex_broadway_process_batch_failure_size_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
+          "expr": "sum(irate(<%= @broadway_metric_prefix %>_process_batch_failure_size_sum{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher) / sum(irate(<%= @broadway_metric_prefix %>_process_batch_failure_size_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])) by(batcher)",
           "interval": "",
           "legendFormat": "{{ batcher }}",
           "refId": "A"
@@ -1863,7 +1863,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "irate(<%= @otp_app %>_prom_ex_broadway_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
+          "expr": "irate(<%= @broadway_metric_prefix %>_process_batch_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", name=\"$broadway_module\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ batcher }}",
           "refId": "A"
@@ -1964,7 +1964,7 @@
       {
         "allValue": null,
         "datasource": "<%= @datasource_id %>",
-        "definition": "label_values(<%= @otp_app %>_prom_ex_broadway_init_status_info, name)",
+        "definition": "label_values(<%= @broadway_metric_prefix %>_init_status_info, name)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -1973,7 +1973,7 @@
         "multi": false,
         "name": "broadway_module",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_broadway_init_status_info, name)",
+        "query": "label_values(<%= @broadway_metric_prefix %>_init_status_info, name)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,

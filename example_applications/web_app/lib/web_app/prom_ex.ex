@@ -106,10 +106,15 @@ defmodule WebApp.PromEx do
       {:prom_ex, "phoenix_live_view.json"},
       {:prom_ex, "plug_cowboy.json"},
       {:prom_ex, "plug_router.json"},
-      {:prom_ex, "broadway.json"}
+      {:prom_ex, "broadway.json", apply_function: &__MODULE__.tweak_broadway_dashboard/1}
 
       # Add your dashboard definitions here with the format: {:otp_app, "path_in_priv"}
       # {:web_app, "/grafana_dashboards/user_metrics.json"}
     ]
+  end
+
+  @doc false
+  def tweak_broadway_dashboard(dashboard) do
+    %{dashboard | "title" => "My really cool custom title for BROADWAY"}
   end
 end

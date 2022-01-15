@@ -176,43 +176,46 @@ if Code.ensure_loaded?(Broadway) do
       )
     end
 
+    @doc false
+    def proxy_broadway_init_event(_event_name, _measurements, %{config: config}, _config) do
+      # Invoking Broadway module
+      broadway_module =
+        config
+        |> Keyword.fetch!(:name)
+        |> Utils.normalize_module_name()
+
+      # Extract all of the processors and proxy for each processor
+      config
+      |> Keyword.get(:processors, [])
+      |> Enum.each(fn {processor, processor_options} ->
+        metadata =
+          processor_options
+          |> Map.new()
+          |> Map.put(:processor, processor)
+          |> Map.put(:name, broadway_module)
+
+        :telemetry.execute(@init_topology_processors_proxy_event, %{}, metadata)
+      end)
+
+      # Extract all of the batchers and proxy for each batcher
+      config
+      |> Keyword.get(:batchers, [])
+      |> Enum.each(fn {batcher, batcher_options} ->
+        metadata =
+          batcher_options
+          |> Map.new()
+          |> Map.put(:batcher, batcher)
+          |> Map.put(:name, broadway_module)
+
+        :telemetry.execute(@init_topology_batchers_proxy_event, %{}, metadata)
+      end)
+    end
+
     defp set_up_telemetry_proxies(init_topology_event, otp_app) do
       :telemetry.attach(
         [:prom_ex, :broadway, :proxy, otp_app],
         init_topology_event,
-        fn _event_name, _measurements, %{config: config}, _config ->
-          # Invoking Broadway module
-          broadway_module =
-            config
-            |> Keyword.fetch!(:name)
-            |> Utils.normalize_module_name()
-
-          # Extract all of the processors and proxy for each processor
-          config
-          |> Keyword.get(:processors, [])
-          |> Enum.each(fn {processor, processor_options} ->
-            metadata =
-              processor_options
-              |> Map.new()
-              |> Map.put(:processor, processor)
-              |> Map.put(:name, broadway_module)
-
-            :telemetry.execute(@init_topology_processors_proxy_event, %{}, metadata)
-          end)
-
-          # Extract all of the batchers and proxy for each batcher
-          config
-          |> Keyword.get(:batchers, [])
-          |> Enum.each(fn {batcher, batcher_options} ->
-            metadata =
-              batcher_options
-              |> Map.new()
-              |> Map.put(:batcher, batcher)
-              |> Map.put(:name, broadway_module)
-
-            :telemetry.execute(@init_topology_batchers_proxy_event, %{}, metadata)
-          end)
-        end,
+        &__MODULE__.proxy_broadway_init_event/4,
         %{}
       )
     end

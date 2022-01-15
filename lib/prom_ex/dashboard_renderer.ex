@@ -126,6 +126,23 @@ defmodule PromEx.DashboardRenderer do
   end
 
   @doc """
+  This function will execute a provided function on the rendered dashboard to give the user a chance to
+  adjust the dashboard definition.
+  """
+  @spec apply_dashboard_function(__MODULE__.t(), (map() -> map())) :: __MODULE__.t()
+  def apply_dashboard_function(%__MODULE__{valid_file?: false} = dashboard_render, _) do
+    dashboard_render
+  end
+
+  def apply_dashboard_function(
+        %__MODULE__{decoded_dashboard: decoded_dashboard} = dashboard_render,
+        apply_function
+      ) do
+    updated_dashboard = apply_function.(decoded_dashboard)
+    %{dashboard_render | decoded_dashboard: updated_dashboard}
+  end
+
+  @doc """
   This function will merge in the provided assigns to the struct's assigns. These assigns will
   then be used during the `render_dashboard/1` call to render any EEx template statements.
   """
@@ -153,6 +170,7 @@ defmodule PromEx.DashboardRenderer do
       absinthe_metric_prefix: "#{otp_app}_prom_ex_absinthe",
       application_metric_prefix: "#{otp_app}_prom_ex_application",
       beam_metric_prefix: "#{otp_app}_prom_ex_beam",
+      broadway_metric_prefix: "#{otp_app}_prom_ex_broadway",
       plug_cowboy_metric_prefix: "#{otp_app}_prom_ex_plug_cowboy",
       plug_router_metric_prefix: "#{otp_app}_prom_ex_plug_router",
       ecto_metric_prefix: "#{otp_app}_prom_ex_ecto",
