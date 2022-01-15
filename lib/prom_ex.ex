@@ -86,6 +86,7 @@ defmodule PromEx do
     - [ ] Horde - [Telemetry docs](https://github.com/derekkraan/horde/blob/master/lib/horde/supervisor_telemetry_poller.ex)
     - [ ] Cachex - (Need to open up PR)
     - [ ] Quantum - [Telemetry docs](https://hexdocs.pm/quantum/3.3.0/telemetry.html#content)
+    - [ ] ETS - [Erlang docs](https://www.erlang.org/doc/man/ets.html#info-1)
 
   Database cron based metrics:
     - [ ] Postgres (https://github.com/pawurb/ecto_psql_extras for inspiration)
