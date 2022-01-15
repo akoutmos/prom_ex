@@ -377,8 +377,7 @@ if Code.ensure_loaded?(Phoenix) do
           })
 
         _ ->
-          # TODO: Change this to warning as warn is deprecated as of Elixir 1.11
-          Logger.warn("Could not resolve path for request")
+          Logger.warning("Could not resolve path for request")
       end
     end
 
@@ -395,8 +394,7 @@ if Code.ensure_loaded?(Phoenix) do
           })
 
         _ ->
-          # TODO: Change this to warning as warn is deprecated as of Elixir 1.11
-          Logger.warn("Could not resolve path for request")
+          Logger.warning("Could not resolve path for request")
       end
     end
 
