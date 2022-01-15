@@ -46,7 +46,7 @@ defmodule PromEx.MixProject do
     [
       # Required dependencies
       {:jason, "~> 1.2"},
-      {:finch, "~> 0.9.0"},
+      {:finch, "~> 0.10.2"},
       {:telemetry, "~> 1.0.0"},
       {:telemetry_poller, "~> 1.0.0"},
       {:telemetry_metrics, "~> 0.6.1"},
@@ -60,11 +60,11 @@ defmodule PromEx.MixProject do
       {:ecto, ">= 3.5.0", optional: true},
       {:oban, ">= 2.4.0", optional: true},
       {:absinthe, ">= 1.6.0", optional: true},
-      {:broadway, ">= 1.0.0", optional: true},
+      {:broadway, ">= 1.0.2", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.26.0", only: :dev},
+      {:ex_doc, "~> 0.27.3", only: :dev},
       {:excoveralls, "~> 0.14.4", only: :test, runtime: false},
       {:doctor, "~> 0.18.0", only: :dev},
       {:credo, "~> 1.6.1", only: :dev},
