@@ -76,6 +76,7 @@ defmodule PromEx.MixProject do
   defp docs do
     [
       main: "readme",
+      source_ref: "master",
       logo: "guides/images/logo.svg",
       extras: [
         "README.md",
