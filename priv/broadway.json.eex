@@ -549,7 +549,7 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of Broadway message that resulted in an error over the past 24 hours.",
+      "description": "A percentage of Broadway messages that did not result in errors over the past 24 hours.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
@@ -615,7 +615,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Message Error Percentage (Last 24h)",
+      "title": "Message Success Percentage (Last 24h)",
       "type": "stat"
     },
     {
@@ -736,7 +736,7 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "A percentage of Broadway message that resulted in an error over the past hour.",
+      "description": "A percentage of Broadway messages that did not result in errors over the past hour.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
@@ -802,7 +802,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Message Error Percentage (Last 1h)",
+      "title": "Message Success Percentage (Last 1h)",
       "type": "stat"
     },
     {
