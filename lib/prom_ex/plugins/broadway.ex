@@ -30,6 +30,32 @@ if Code.ensure_loaded?(Broadway) do
       end
     end
     ```
+
+    To correctly capture per-message metrics and error rate, add the following transform to your pipeline:
+    ```
+    defmodule WebApp.MyPipeline do
+      use Broadway
+
+      alias Broadway.Message
+
+      def start_link(_opts) do
+        Broadway.start_link(__MODULE__,
+          name: __MODULE__,
+          producer: [
+            ...
+            transformer: {__MODULE__, :transform, []}
+          ]
+        )
+      end
+
+      def transform(event, _opts) do
+        %Message{
+          data: event,
+          acknowledger: {__MODULE__, :ack_id, :ack_data}
+        }
+      end
+    end
+    ```
     """
 
     use PromEx.Plugin
