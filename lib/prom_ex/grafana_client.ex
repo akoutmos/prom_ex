@@ -27,6 +27,7 @@ defmodule PromEx.GrafanaClient do
            | {:error, reason :: Mint.TransportError.t()}
 
   @doc false
+  @spec child_spec(term) :: Supervisor.child_spec()
   def child_spec(init_arg) do
     Finch.child_spec(init_arg)
   end
