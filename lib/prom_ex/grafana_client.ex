@@ -22,12 +22,33 @@ defmodule PromEx.GrafanaClient do
   }
 
   @typep handler_response ::
-           {:ok, result :: map()} | {:error, reason :: atom()} | {:error, reason :: Mint.TransportError.t()}
+           {:ok, result :: map()}
+           | {:error, reason :: atom()}
+           | {:error, reason :: Mint.TransportError.t()}
+
+  @doc false
+  def child_spec(init_arg) do
+    Finch.child_spec(init_arg)
+  end
+
+  @doc """
+  Build a grafana client connection.
+  """
+  @spec build_conn(prom_ex_module :: module()) :: Connection.t()
+  def build_conn(prom_ex_module) do
+    name = prom_ex_module.__grafana_client_name__()
+    %PromEx.Config{grafana_config: grafana_config} = prom_ex_module.init_opts()
+    Connection.build(name, grafana_config)
+  end
 
   @doc """
   Used to create a new dashboard or update an existing dashboard.
   """
-  @spec upload_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t(), opts :: keyword()) ::
+  @spec upload_dashboard(
+          grafana_conn :: Connection.t(),
+          dashboard_file_path :: String.t(),
+          opts :: keyword()
+        ) ::
           handler_response()
   def upload_dashboard(%Connection{} = grafana_conn, dashboard_contents, opts \\ []) do
     headers = grafana_headers(:post, grafana_conn.authorization)
@@ -43,7 +64,8 @@ defmodule PromEx.GrafanaClient do
   Used to get the dashboard definition currently in Grafana for the provided dashboard file.
   If the ID does not exist in Grafana an error tuple will be returned.
   """
-  @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) :: handler_response()
+  @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) ::
+          handler_response()
   def get_dashboard(%Connection{} = grafana_conn, dashboard_contents) do
     headers = grafana_headers(:get, grafana_conn.authorization)
 
@@ -61,7 +83,11 @@ defmodule PromEx.GrafanaClient do
   @doc """
   Used to create a new folder in Grafana
   """
-  @spec create_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), title :: String.t()) ::
+  @spec create_folder(
+          grafana_conn :: Connection.t(),
+          folder_uid :: String.t(),
+          title :: String.t()
+        ) ::
           handler_response()
   def create_folder(%Connection{} = grafana_conn, folder_uid, title) do
     headers = grafana_headers(:post, grafana_conn.authorization)
@@ -133,7 +159,11 @@ defmodule PromEx.GrafanaClient do
   @doc """
   Used to create annotations on dashboard panels
   """
-  @spec create_annotation(grafana_conn :: Connection.t(), tags :: [String.t()], message :: String.t()) ::
+  @spec create_annotation(
+          grafana_conn :: Connection.t(),
+          tags :: [String.t()],
+          message :: String.t()
+        ) ::
           handler_response()
   def create_annotation(%Connection{} = grafana_conn, tags, message) do
     headers = grafana_headers(:post, grafana_conn.authorization)
@@ -164,6 +194,7 @@ defmodule PromEx.GrafanaClient do
 
       unknown_response ->
         Logger.warn("Recieved an unhandled response from Grafana because: #{inspect(unknown_response)}")
+
         {:error, :unkown}
     end
   end

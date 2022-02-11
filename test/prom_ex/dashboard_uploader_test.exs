@@ -95,6 +95,12 @@ defmodule PromEx.DashboardUploaderTest do
       Plug.Conn.resp(conn, 401, response_payload)
     end)
 
+    {:ok, _} =
+      start_supervised(
+        {PromEx.GrafanaClient, [name: DefaultPromExSetUp.__grafana_client_name__()]},
+        restart: :temporary
+      )
+
     assert capture_log(fn ->
              {:ok, pid} =
                start_supervised(
@@ -161,6 +167,12 @@ defmodule PromEx.DashboardUploaderTest do
       Plug.Conn.resp(conn, 200, response_payload)
     end)
 
+    {:ok, _} =
+      start_supervised(
+        {PromEx.GrafanaClient, [name: CustomDashboardApplyFunction.__grafana_client_name__()]},
+        restart: :temporary
+      )
+
     assert capture_log(fn ->
              {:ok, pid} =
                start_supervised(
@@ -220,6 +232,12 @@ defmodule PromEx.DashboardUploaderTest do
     Bypass.expect_once(bypass, "POST", "/api/dashboards/db", fn conn ->
       Plug.Conn.resp(conn, 200, response_payload)
     end)
+
+    {:ok, _} =
+      start_supervised(
+        {PromEx.GrafanaClient, [name: DefaultPromExSetUp.__grafana_client_name__()]},
+        restart: :temporary
+      )
 
     assert capture_log(fn ->
              {:ok, pid} =
@@ -294,6 +312,12 @@ defmodule PromEx.DashboardUploaderTest do
 
       Plug.Conn.resp(conn, 200, response_payload)
     end)
+
+    {:ok, _} =
+      start_supervised(
+        {PromEx.GrafanaClient, [name: DefaultPromExSetUp.__grafana_client_name__()]},
+        restart: :temporary
+      )
 
     assert capture_log(fn ->
              {:ok, pid} =
@@ -397,6 +421,12 @@ defmodule PromEx.DashboardUploaderTest do
 
       Plug.Conn.resp(conn, 200, response_payload)
     end)
+
+    {:ok, _} =
+      start_supervised(
+        {PromEx.GrafanaClient, [name: DefaultPromExSetUp.__grafana_client_name__()]},
+        restart: :temporary
+      )
 
     logs =
       capture_log(fn ->

@@ -53,6 +53,12 @@ defmodule PromEx.LifecycleAnnotatorTest do
       Plug.Conn.resp(conn, 200, response_payload)
     end)
 
+    {:ok, _} =
+      start_supervised(
+        {PromEx.GrafanaClient, [name: DefaultPromExSetUp.__grafana_client_name__()]},
+        restart: :temporary
+      )
+
     {:ok, pid} =
       start_supervised(
         {

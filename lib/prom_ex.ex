@@ -152,6 +152,7 @@ defmodule PromEx do
     manual_metrics_name = Module.concat([calling_module, ManualMetricsManager])
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
+    grafana_client_name = Module.concat([calling_module, GrafanaClient])
     metrics_server_name = Module.concat([calling_module, MetricsServer])
     lifecycle_annotator_name = Module.concat([calling_module, LifecycleAnnotator])
 
@@ -205,6 +206,11 @@ defmodule PromEx do
               unquote(manual_metrics_name)
             )
             |> PromEx.poller_child_specs(poll_metrics, __MODULE__)
+            |> PromEx.grafana_client_child_spec(
+              grafana_config,
+              __MODULE__,
+              unquote(grafana_client_name)
+            )
             |> PromEx.dashboard_uploader_child_spec(
               grafana_config,
               __MODULE__,
@@ -303,6 +309,9 @@ defmodule PromEx do
       def __metrics_collector_name__, do: unquote(metrics_collector_name)
 
       @doc false
+      def __grafana_client_name__, do: unquote(grafana_client_name)
+
+      @doc false
       def __dashboard_uploader_name__, do: unquote(dashboard_uploader_name)
 
       @doc false
@@ -384,6 +393,17 @@ defmodule PromEx do
     telemetry_poller_children = generate_telemetry_poller_child_spec(prom_ex_module, metrics)
 
     telemetry_poller_children ++ acc
+  end
+
+  @doc false
+  def grafana_client_child_spec(acc, :disabled, _, _) do
+    acc
+  end
+
+  def grafana_client_child_spec(acc, _, _, process_name) do
+    spec = {PromEx.GrafanaClient, name: process_name}
+
+    [spec | acc]
   end
 
   @doc false
