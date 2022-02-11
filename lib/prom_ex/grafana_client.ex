@@ -157,22 +157,40 @@ defmodule PromEx.GrafanaClient do
   end
 
   @doc """
-  Used to create annotations on dashboard panels
+  Used to create annotations on dashboard panels.
+
+  ## Option Details
+
+  * `:dashboard_id` - Create a dashboard specific annotation. Optional
+  * `:panel_id` - Create a panel specific annotation. Optional
+  * `:time` - Specify the time of the annotation. When non is supplied the annotation is inferred by grafana. Optional
+  * `:time_end` - Specify to great a region annotation. Optional
+
   """
   @spec create_annotation(
           grafana_conn :: Connection.t(),
           tags :: [String.t()],
-          message :: String.t()
+          message :: String.t(),
+          opts :: keyword()
         ) ::
           handler_response()
-  def create_annotation(%Connection{} = grafana_conn, tags, message) do
+  def create_annotation(%Connection{} = grafana_conn, tags, message, opts \\ []) do
     headers = grafana_headers(:post, grafana_conn.authorization)
 
     payload =
-      Jason.encode!(%{
+      opts
+      |> Keyword.take([:dashboard_id, :panel_id, :time, :time_end])
+      |> Enum.into(%{
         tags: tags,
         text: message
       })
+      |> Map.new(fn
+        {:dashboard_id, v} -> {:dashboardId, v}
+        {:panel_id, v} -> {:panelId, v}
+        {:time_end, v} -> {:timeEnd, v}
+        {k, v} -> {k, v}
+      end)
+      |> Jason.encode!()
 
     :post
     |> Finch.build("#{grafana_conn.base_url}/api/annotations", headers, payload)
