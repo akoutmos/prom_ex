@@ -46,7 +46,7 @@ defmodule PromEx.GrafanaClientTest do
       {:ok, body, conn} = Plug.Conn.read_body(conn, [])
 
       details = Jason.decode!(body)
-      assert details["time"] == "2022-01-01T00:00:00Z"
+      assert details["time"] == 1_640_995_200_000
       assert details["tags"] == ["some", "tags"]
       assert details["text"] == "message"
       assert %{} == Map.drop(details, ["time", "tags", "text"])
@@ -89,8 +89,8 @@ defmodule PromEx.GrafanaClientTest do
       details = Jason.decode!(body)
       assert details["dashboardId"] == 1
       assert details["panelId"] == 2
-      assert details["time"] == "2022-01-01T00:00:00Z"
-      assert details["timeEnd"] == "2022-01-02T00:00:00Z"
+      assert details["time"] == 1_640_995_200_000
+      assert details["timeEnd"] == 1_641_081_600_000
       assert details["tags"] == ["some", "tags"]
       assert details["text"] == "message"
 

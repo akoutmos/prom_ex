@@ -187,6 +187,8 @@ defmodule PromEx.GrafanaClient do
       |> Map.new(fn
         {:dashboard_id, v} -> {:dashboardId, v}
         {:panel_id, v} -> {:panelId, v}
+        {:time, %DateTime{} = dt} -> {:time, DateTime.to_unix(dt, :millisecond)}
+        {:time_end, %DateTime{} = dt} -> {:timeEnd, DateTime.to_unix(dt, :millisecond)}
         {:time_end, v} -> {:timeEnd, v}
         {k, v} -> {k, v}
       end)
