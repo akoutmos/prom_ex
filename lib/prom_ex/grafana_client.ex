@@ -22,12 +22,34 @@ defmodule PromEx.GrafanaClient do
   }
 
   @typep handler_response ::
-           {:ok, result :: map()} | {:error, reason :: atom()} | {:error, reason :: Mint.TransportError.t()}
+           {:ok, result :: map()}
+           | {:error, reason :: atom()}
+           | {:error, reason :: Mint.TransportError.t()}
+
+  @doc false
+  @spec child_spec(term) :: Supervisor.child_spec()
+  def child_spec(init_arg) do
+    Finch.child_spec(init_arg)
+  end
+
+  @doc """
+  Build a grafana client connection.
+  """
+  @spec build_conn(prom_ex_module :: module()) :: Connection.t()
+  def build_conn(prom_ex_module) do
+    name = prom_ex_module.__grafana_client_name__()
+    %PromEx.Config{grafana_config: grafana_config} = prom_ex_module.init_opts()
+    Connection.build(name, grafana_config)
+  end
 
   @doc """
   Used to create a new dashboard or update an existing dashboard.
   """
-  @spec upload_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t(), opts :: keyword()) ::
+  @spec upload_dashboard(
+          grafana_conn :: Connection.t(),
+          dashboard_file_path :: String.t(),
+          opts :: keyword()
+        ) ::
           handler_response()
   def upload_dashboard(%Connection{} = grafana_conn, dashboard_contents, opts \\ []) do
     headers = grafana_headers(:post, grafana_conn.authorization)
@@ -43,7 +65,8 @@ defmodule PromEx.GrafanaClient do
   Used to get the dashboard definition currently in Grafana for the provided dashboard file.
   If the ID does not exist in Grafana an error tuple will be returned.
   """
-  @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) :: handler_response()
+  @spec get_dashboard(grafana_conn :: Connection.t(), dashboard_file_path :: String.t()) ::
+          handler_response()
   def get_dashboard(%Connection{} = grafana_conn, dashboard_contents) do
     headers = grafana_headers(:get, grafana_conn.authorization)
 
@@ -61,7 +84,11 @@ defmodule PromEx.GrafanaClient do
   @doc """
   Used to create a new folder in Grafana
   """
-  @spec create_folder(grafana_conn :: Connection.t(), folder_uid :: String.t(), title :: String.t()) ::
+  @spec create_folder(
+          grafana_conn :: Connection.t(),
+          folder_uid :: String.t(),
+          title :: String.t()
+        ) ::
           handler_response()
   def create_folder(%Connection{} = grafana_conn, folder_uid, title) do
     headers = grafana_headers(:post, grafana_conn.authorization)
@@ -131,18 +158,42 @@ defmodule PromEx.GrafanaClient do
   end
 
   @doc """
-  Used to create annotations on dashboard panels
+  Used to create annotations on dashboard panels.
+
+  ## Option Details
+
+  * `:dashboard_id` - Create a dashboard specific annotation. Optional
+  * `:panel_id` - Create a panel specific annotation. Optional
+  * `:time` - Specify the time of the annotation. When non is supplied the annotation is inferred by grafana. Optional
+  * `:time_end` - Specify to great a region annotation. Optional
+
   """
-  @spec create_annotation(grafana_conn :: Connection.t(), tags :: [String.t()], message :: String.t()) ::
+  @spec create_annotation(
+          grafana_conn :: Connection.t(),
+          tags :: [String.t()],
+          message :: String.t(),
+          opts :: keyword()
+        ) ::
           handler_response()
-  def create_annotation(%Connection{} = grafana_conn, tags, message) do
+  def create_annotation(%Connection{} = grafana_conn, tags, message, opts \\ []) do
     headers = grafana_headers(:post, grafana_conn.authorization)
 
     payload =
-      Jason.encode!(%{
+      opts
+      |> Keyword.take([:dashboard_id, :panel_id, :time, :time_end])
+      |> Enum.into(%{
         tags: tags,
         text: message
       })
+      |> Map.new(fn
+        {:dashboard_id, v} -> {:dashboardId, v}
+        {:panel_id, v} -> {:panelId, v}
+        {:time, %DateTime{} = dt} -> {:time, DateTime.to_unix(dt, :millisecond)}
+        {:time_end, %DateTime{} = dt} -> {:timeEnd, DateTime.to_unix(dt, :millisecond)}
+        {:time_end, v} -> {:timeEnd, v}
+        {k, v} -> {k, v}
+      end)
+      |> Jason.encode!()
 
     :post
     |> Finch.build("#{grafana_conn.base_url}/api/annotations", headers, payload)
@@ -164,6 +215,7 @@ defmodule PromEx.GrafanaClient do
 
       unknown_response ->
         Logger.warn("Recieved an unhandled response from Grafana because: #{inspect(unknown_response)}")
+
         {:error, :unkown}
     end
   end

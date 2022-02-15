@@ -19,7 +19,7 @@ defmodule PromEx.DashboardUploader do
 
   require Logger
 
-  alias PromEx.{DashboardRenderer, GrafanaClient, GrafanaClient.Connection}
+  alias PromEx.{DashboardRenderer, GrafanaClient}
 
   @doc """
   Used to start the DashboardUploader process
@@ -45,11 +45,7 @@ defmodule PromEx.DashboardUploader do
     } = state
 
     %PromEx.Config{grafana_config: grafana_config} = prom_ex_module.init_opts()
-
-    # Start Finch process and build Grafana connection
-    finch_name = Module.concat([prom_ex_module, __MODULE__, Finch])
-    Finch.start_link(name: finch_name)
-    grafana_conn = Connection.build(finch_name, grafana_config)
+    grafana_conn = GrafanaClient.build_conn(prom_ex_module)
 
     upload_opts =
       case grafana_config.folder_name do
@@ -75,11 +71,6 @@ defmodule PromEx.DashboardUploader do
           )
       end
     end)
-
-    # No longer need this short-lived Finch process
-    finch_name
-    |> Process.whereis()
-    |> Process.exit(:normal)
 
     # Kill the uploader process as there is no more work to do
     {:stop, :normal, :ok}
