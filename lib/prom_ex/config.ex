@@ -138,15 +138,15 @@ defmodule PromEx.Config do
       read/write access to a directory in order to download and copy the GrafanaAgent binary. This is the
       full path to that directory.
 
-    * `:metrics_server_path` - The path where the Prometheus metrics are exposed
-
-    * `:metrics_server_port` - The port that the metrics server is running on
-
-    * `:grafana_agent_config` - The configuration file that GrafanaAgent is started with. This option
+    * `:config_opts` - The configuration file that GrafanaAgent is started with. This option
       can either accept an MFA that will return a string of the full path where the YAML configuration
       file is, or a keyword list with options so that PromEx can generate a config file for you. If you
       take the route where PromEx generates a config file for you, you must provide the following
       otions:
+
+      * `:metrics_server_path` - The path where the Prometheus metrics are exposed
+
+      * `:metrics_server_port` - The port that the metrics server is running on
 
       * `:agent_port` - What port should GrafanaAgent run on.
 
@@ -283,16 +283,21 @@ defmodule PromEx.Config do
     %{
       version: get_grafana_agent_config(grafana_agent_opts, :version),
       working_directory: Keyword.get(grafana_agent_opts, :working_directory),
-      metrics_server_path: Keyword.get(grafana_agent_opts, :metrics_server_path, "/metrics"),
-      metrics_server_port: Keyword.get(grafana_agent_opts, :metrics_server_port, 4000),
-      grafana_agent_config: %{
-        scrape_interval: nil,
-        bearer_token: nil,
-        log_level: nil,
-        prometheus_url: nil,
-        prometheus_username: nil,
-        prometheus_password: nil
-      }
+      config_opts: grafana_agent_opts |> get_grafana_agent_config(:config_opts) |> extract_opts_for_config()
+    }
+  end
+
+  defp extract_opts_for_config(opts) do
+    %{
+      scrape_interval: Keyword.get(opts, :scrape_interval, "5s"),
+      bearer_token: Keyword.get(opts, :bearer_token, "blank"),
+      log_level: Keyword.get(opts, :log_level, "error"),
+      agent_port: Keyword.get(opts, :agent_port, "4040"),
+      prometheus_url: get_grafana_agent_config(opts, :prometheus_url),
+      prometheus_username: get_grafana_agent_config(opts, :prometheus_username),
+      prometheus_password: get_grafana_agent_config(opts, :prometheus_password),
+      metrics_server_path: Keyword.get(opts, :metrics_server_path, "/metrics"),
+      metrics_server_port: Keyword.get(opts, :metrics_server_port, 4000)
     }
   end
 

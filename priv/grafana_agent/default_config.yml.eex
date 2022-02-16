@@ -1,9 +1,9 @@
 server:
-  http_listen_port: <%= @grafana_agent_port %>
+  http_listen_port: <%= @agent_port %>
   log_level: <%= @log_level %>
 
 prometheus:
-  wal_directory: "<%= @base_dir %>/prom_wal"
+  wal_directory: "<%= @wal_dir %>"
   global:
     scrape_interval: <%= @scrape_interval %>
   configs:
@@ -11,7 +11,7 @@ prometheus:
       scrape_configs:
         - job_name: <%= @otp_app %>
           metrics_path: <%= @metrics_server_path %>
-          bearer_token: "<%= @prometheus_auth_token %>"
+          bearer_token: "<%= @bearer_token %>"
           static_configs:
             - targets: ["127.0.0.1:<%= @metrics_server_port %>"]
           metric_relabel_configs:

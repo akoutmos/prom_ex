@@ -62,9 +62,8 @@ defmodule PromEx.GrafanaAgent.Downloader do
 
     # Download the agent, verify it, and unzip it
     with :ok <- do_download_grafana_agent(download_url, zip_download_path),
-         :ok <- verify_zip_download(zip_download_path, agent_version),
-         :ok <- unzip_grafana_agent(zip_download_path, binary_path) do
-      :ok
+         :ok <- verify_zip_download(zip_download_path, agent_version) do
+      unzip_grafana_agent(zip_download_path, binary_path)
     end
   end
 
@@ -77,7 +76,7 @@ defmodule PromEx.GrafanaAgent.Downloader do
     File.write(binary_path, unzipped_contents)
     File.chmod!(binary_path, 0o755)
 
-    :ok
+    {:ok, binary_path}
   end
 
   defp verify_zip_download(zip_download_path, agent_version) do
