@@ -382,17 +382,6 @@ if Code.ensure_loaded?(Oban) do
             keep: keep_function_filter
           ),
           last_value(
-            metric_prefix ++ [:init, :circuit, :backoff, :milliseconds],
-            event_name: @init_event,
-            description: "The Oban supervisor's circuit backoff value.",
-            measurement: fn _measurements, %{conf: config} ->
-              config.circuit_backoff
-            end,
-            tags: [:name],
-            tag_values: &oban_init_tag_values/1,
-            keep: keep_function_filter
-          ),
-          last_value(
             metric_prefix ++ [:init, :shutdown, :grace, :period, :milliseconds],
             event_name: @init_event,
             description: "The Oban supervisor's shutdown grace period value.",

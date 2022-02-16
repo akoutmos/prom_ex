@@ -153,6 +153,7 @@ defmodule PromEx do
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
     grafana_client_name = Module.concat([calling_module, GrafanaClient])
+    grafana_agent_name = Module.concat([calling_module, GrafanaAgent])
     metrics_server_name = Module.concat([calling_module, MetricsServer])
     lifecycle_annotator_name = Module.concat([calling_module, LifecycleAnnotator])
 
@@ -174,6 +175,7 @@ defmodule PromEx do
           manual_metrics_start_delay: manual_metrics_start_delay,
           drop_metrics_groups: drop_metrics_groups,
           grafana_config: grafana_config,
+          grafana_agent_config: grafana_agent_config,
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
 
@@ -210,6 +212,11 @@ defmodule PromEx do
               grafana_config,
               __MODULE__,
               unquote(grafana_client_name)
+            )
+            |> PromEx.grafana_agent_child_spec(
+              grafana_agent_config,
+              __MODULE__,
+              unquote(grafana_agent_name)
             )
             |> PromEx.dashboard_uploader_child_spec(
               grafana_config,
@@ -312,6 +319,9 @@ defmodule PromEx do
       def __grafana_client_name__, do: unquote(grafana_client_name)
 
       @doc false
+      def __grafana_agent_name__, do: unquote(grafana_agent_name)
+
+      @doc false
       def __dashboard_uploader_name__, do: unquote(dashboard_uploader_name)
 
       @doc false
@@ -402,6 +412,20 @@ defmodule PromEx do
 
   def grafana_client_child_spec(acc, _, _, process_name) do
     spec = {PromEx.GrafanaClient, name: process_name}
+
+    [spec | acc]
+  end
+
+  @doc false
+  def grafana_agent_child_spec(acc, :disabled, _, _) do
+    acc
+  end
+
+  def grafana_agent_child_spec(acc, grafana_agent_config, prom_ex_module, process_name) do
+    spec = {
+      PromEx.GrafanaAgent,
+      name: process_name, prom_ex_module: prom_ex_module, grafana_agent_config: grafana_agent_config
+    }
 
     [spec | acc]
   end

@@ -122,6 +122,46 @@ defmodule PromEx.Config do
         - Git SHA of the last commit (if the GIT_SHA environment variable is present)
         - Git author of the last commit (if the GIT_AUTHOR environment variable is present)
 
+  * `:grafana_agent` - This key contains the configuration information for running GrafanaAgent via a
+    a port in order to push metrics to a Prometheus instance via `remote_write` functionality:
+
+    * `:version` - The version of GrafanaAgent that you want to run. This is a 3 element tuple with the
+      format: `{VERSION, OS, ARCH}`. Below are the supported values for each (The downloaded artifacts
+      are validated against their known SHA256 values so that you can be sure you are not downloading
+      any malicious binaries and running them):
+
+      * VERSION: `["0.23.0", "0.22.0", "0.21.2", "0.20.1"]`
+      * OS: `[:darwin, :linux]`
+      * ARCH: `[:amd64, :arm64]`
+
+    * `:working_directory` - In order to leverage the GrafanaAgent functionality, PromEx needs to have
+      read/write access to a directory in order to download and copy the GrafanaAgent binary. This is the
+      full path to that directory.
+
+    * `:metrics_server_path` - The path where the Prometheus metrics are exposed
+
+    * `:metrics_server_port` - The port that the metrics server is running on
+
+    * `:grafana_agent_config` - The configuration file that GrafanaAgent is started with. This option
+      can either accept an MFA that will return a string of the full path where the YAML configuration
+      file is, or a keyword list with options so that PromEx can generate a config file for you. If you
+      take the route where PromEx generates a config file for you, you must provide the following
+      otions:
+
+      * `:agent_port` - What port should GrafanaAgent run on.
+
+      * `:scrape_interval` - How often should GrafanaAgent scrape the application.
+
+      * `:bearer_token` - The bearer token that GrafanaAgent should attach to the request to your app.
+
+      * `:log_level` - The logging level for GrafanaAgent.
+
+      * `:prometheus_url` - The url to your Prometheus instance.
+
+      * `:prometheus_username` - The username to the hosted Prometheus instance
+
+      * `:prometheus_password` - The password to the hosted Prometheus instance
+
   * `:metrics_server` - This key contains the configuration information needed to run a standalone
     HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
     metrics. Its configuration options are:
@@ -156,9 +196,11 @@ defmodule PromEx.Config do
   """
 
   @typedoc """
+  - `disabled`: Whether PromEx will start up the metric collection supervision tree.
   - `manual_metrics_start_delay`: How the ManualMetricsManager worker process should be started (instantly or with a millisecond delay).
   - `drop_metrics_groups`: A list of metrics groups that should be omitted from the metrics collection process.
   - `grafana_config`: A map containing all the relevant settings to connect to Grafana.
+  - `grafana_agent_config`: A map containing all the relevant settings to connect to GrafanaAgent.
   - `metrics_server_config`: A map containing all the relevant settings to start a standalone HTTP Cowboy server for metrics.
   """
 
@@ -167,6 +209,7 @@ defmodule PromEx.Config do
           manual_metrics_start_delay: :no_delay | pos_integer(),
           drop_metrics_groups: MapSet.t(),
           grafana_config: map(),
+          grafana_agent_config: map(),
           metrics_server_config: map()
         }
 
@@ -175,6 +218,7 @@ defmodule PromEx.Config do
     :manual_metrics_start_delay,
     :drop_metrics_groups,
     :grafana_config,
+    :grafana_agent_config,
     :metrics_server_config
   ]
 
@@ -189,6 +233,11 @@ defmodule PromEx.Config do
       |> Keyword.get(:grafana, :disabled)
       |> generate_grafana_config()
 
+    grafana_agent_config =
+      opts
+      |> Keyword.get(:grafana_agent, :disabled)
+      |> generate_grafana_agent_config()
+
     metrics_server_config =
       opts
       |> Keyword.get(:metrics_server, :disabled)
@@ -199,6 +248,7 @@ defmodule PromEx.Config do
       manual_metrics_start_delay: Keyword.get(opts, :manual_metrics_start_delay, :no_delay),
       drop_metrics_groups: opts |> Keyword.get(:drop_metrics_groups, []) |> MapSet.new(),
       grafana_config: grafana_config,
+      grafana_agent_config: grafana_agent_config,
       metrics_server_config: metrics_server_config
     }
   end
@@ -224,6 +274,35 @@ defmodule PromEx.Config do
 
       :error ->
         raise "When configuring the Grafana client for PromEx, the #{inspect(config_key)} key is required."
+    end
+  end
+
+  defp generate_grafana_agent_config(:disabled), do: :disabled
+
+  defp generate_grafana_agent_config(grafana_agent_opts) do
+    %{
+      version: get_grafana_agent_config(grafana_agent_opts, :version),
+      working_directory: Keyword.get(grafana_agent_opts, :working_directory),
+      metrics_server_path: Keyword.get(grafana_agent_opts, :metrics_server_path, "/metrics"),
+      metrics_server_port: Keyword.get(grafana_agent_opts, :metrics_server_port, 4000),
+      grafana_agent_config: %{
+        scrape_interval: nil,
+        bearer_token: nil,
+        log_level: nil,
+        prometheus_url: nil,
+        prometheus_username: nil,
+        prometheus_password: nil
+      }
+    }
+  end
+
+  defp get_grafana_agent_config(grafana_agent_opts, config_key) do
+    case Keyword.fetch(grafana_agent_opts, config_key) do
+      {:ok, value} ->
+        value
+
+      :error ->
+        raise "When configuring the GrafanaAgent client for PromEx, the #{inspect(config_key)} key is required."
     end
   end
 
