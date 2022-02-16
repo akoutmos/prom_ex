@@ -42,6 +42,11 @@ defmodule PromEx.GrafanaAgent.Downloader do
   This function will download the desired GrafanaAgent binary and store it in the
   proided GrafanaAgent directory.
   """
+  @spec download_grafana_agent(
+          {version :: String.t(), os :: atom(), arch :: atom()},
+          download_directory :: String.t(),
+          bin_directory :: String.t()
+        ) :: {:ok, String.t()} | {:error, String.t()}
   def download_grafana_agent({version, os, arch} = agent_version, download_directory, bin_directory)
       when is_supported_agent(version, os, arch) do
     download_url = build_download_url(version, os, arch)

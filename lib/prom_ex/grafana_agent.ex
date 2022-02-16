@@ -8,12 +8,13 @@ defmodule PromEx.GrafanaAgent do
 
   require Logger
 
-  alias PromEx.GrafanaAgent.Downloader
   alias PromEx.GrafanaAgent.ConfigRenderer
+  alias PromEx.GrafanaAgent.Downloader
 
   @doc """
   Start the GrafanaAgent GenServer
   """
+  @spec start_link(opts :: keyword()) :: GenServer.on_start()
   def start_link(opts) do
     {name, remaining_opts} = Keyword.pop(opts, :name)
     state = Map.new(remaining_opts)

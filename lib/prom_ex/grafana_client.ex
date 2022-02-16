@@ -88,8 +88,7 @@ defmodule PromEx.GrafanaClient do
           grafana_conn :: Connection.t(),
           folder_uid :: String.t(),
           title :: String.t()
-        ) ::
-          handler_response()
+        ) :: handler_response()
   def create_folder(%Connection{} = grafana_conn, folder_uid, title) do
     headers = grafana_headers(:post, grafana_conn.authorization)
 

@@ -205,9 +205,6 @@ web_app_prom_ex_oban_init_dispatch_cooldown_milliseconds{name="Oban"} 5
 # HELP web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds The Oban supervisor's shutdown grace period value.
 # TYPE web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds gauge
 web_app_prom_ex_oban_init_shutdown_grace_period_milliseconds{name="Oban"} 15000
-# HELP web_app_prom_ex_oban_init_circuit_backoff_milliseconds The Oban supervisor's circuit backoff value.
-# TYPE web_app_prom_ex_oban_init_circuit_backoff_milliseconds gauge
-web_app_prom_ex_oban_init_circuit_backoff_milliseconds{name="Oban"} 30000
 # HELP web_app_prom_ex_oban_init_status_info Information regarding the initialized oban supervisor.
 # TYPE web_app_prom_ex_oban_init_status_info gauge
 web_app_prom_ex_oban_init_status_info{name="Oban",node="a000037d44aa",plugins="Oban.Plugins.Pruner, Oban.Plugins.Stager",prefix="public",queues="default, events, media",repo="WebApp.Repo"} 1

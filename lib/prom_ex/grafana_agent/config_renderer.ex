@@ -7,6 +7,7 @@ defmodule PromEx.GrafanaAgent.ConfigRenderer do
   @doc """
   Generate and write the GrafanaAgent config file.
   """
+  @spec generate_config_file(opts :: map(), config_dir :: String.t()) :: String.t()
   def generate_config_file(opts, config_dir) do
     template_config =
       :prom_ex
@@ -26,8 +27,5 @@ defmodule PromEx.GrafanaAgent.ConfigRenderer do
     File.write(config_file_path, rendered_config)
 
     config_file_path
-  end
-
-  defp render_config_file() do
   end
 end
