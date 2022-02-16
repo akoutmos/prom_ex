@@ -39,7 +39,7 @@ defmodule PromEx.GrafanaAgent do
       :prom_ex
       |> :code.priv_dir()
       |> List.to_string()
-      |> Kernel.<>("/grafana_agent/port_wrapper.sh")
+      |> Path.join("/grafana_agent/port_wrapper.sh")
 
     state =
       state
