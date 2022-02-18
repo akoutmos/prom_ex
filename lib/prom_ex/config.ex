@@ -123,7 +123,7 @@ defmodule PromEx.Config do
         - Git author of the last commit (if the GIT_AUTHOR environment variable is present)
 
   * `:grafana_agent` - This key contains the configuration information for running GrafanaAgent via a
-    a port in order to push metrics to a Prometheus instance via `remote_write` functionality:
+    port in order to push metrics to a Prometheus instance via `remote_write` functionality:
 
     * `:version` - The version of GrafanaAgent that you want to run. This is a 3 element tuple with the
       format: `{VERSION, OS, ARCH}`. Below are the supported values for each (The downloaded artifacts
