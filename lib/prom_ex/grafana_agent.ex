@@ -16,7 +16,7 @@ defmodule PromEx.GrafanaAgent do
   """
   @spec start_link(opts :: keyword()) :: GenServer.on_start()
   def start_link(opts) do
-    {name, remaining_opts} = Keyword.pop(opts, :name)
+    {name, remaining_opts} = Keyword.pop!(opts, :name)
     state = Map.new(remaining_opts)
 
     GenServer.start_link(__MODULE__, state, name: name)
