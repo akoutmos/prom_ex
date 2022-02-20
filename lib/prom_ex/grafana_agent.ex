@@ -71,7 +71,7 @@ defmodule PromEx.GrafanaAgent do
   end
 
   defp start_agent(%{port_wrapper_path: port_wrapper_path, binary_path: binary_path, config_file_path: config_file_path}) do
-    Logger.info("Starting GrafanAgent")
+    Logger.info("Starting GrafanaAgent")
 
     {:spawn_executable, port_wrapper_path}
     |> Port.open([
@@ -130,11 +130,15 @@ defmodule PromEx.GrafanaAgent do
     wal_dir = Path.join(base_directory, "/prom_wal")
     File.mkdir_p!(wal_dir)
 
+    # Get the hostname for the instance
+    {:ok, hostname} = :inet.gethostname()
+
     state
     |> Map.get(:grafana_agent_config)
     |> Map.get(:config_opts)
     |> Map.put(:wal_dir, wal_dir)
     |> Map.put(:otp_app, state.prom_ex_module.__otp_app__())
+    |> Map.put(:hostname, hostname)
     |> ConfigRenderer.generate_config_file(config_dir)
   end
 end

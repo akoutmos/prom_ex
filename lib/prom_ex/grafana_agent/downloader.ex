@@ -72,6 +72,10 @@ defmodule PromEx.GrafanaAgent.Downloader do
     end
   end
 
+  def download_grafana_agent(agent_version, _, _) do
+    raise "Invalid or unsupported agent version tuple #{inspect(agent_version)}"
+  end
+
   defp unzip_grafana_agent(zip_download_path, binary_path) do
     # Extract the zip file
     zip_contents = File.read!(zip_download_path)

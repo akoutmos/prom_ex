@@ -16,13 +16,7 @@ defmodule PromEx.GrafanaAgent.ConfigRenderer do
       |> Path.join("/grafana_agent/default_config.yml.eex")
       |> File.read!()
 
-    {:ok, hostname} = :inet.gethostname()
-
-    assigns =
-      opts
-      |> Map.put(:hostname, hostname)
-
-    rendered_config = EEx.eval_string(template_config, assigns: assigns)
+    rendered_config = EEx.eval_string(template_config, assigns: opts)
     config_file_path = Path.join(config_dir, "agent.yml")
     File.write(config_file_path, rendered_config)
 
