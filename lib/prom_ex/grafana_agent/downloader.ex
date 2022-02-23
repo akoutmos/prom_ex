@@ -5,6 +5,9 @@ defmodule PromEx.GrafanaAgent.Downloader do
 
   require Logger
 
+  @latest_grafana_agent_version "0.23.0"
+  @supported_grafana_agent_versions ["0.23.0", "0.22.0", "0.21.2", "0.20.1"]
+
   @valid_agent_versions %{
     # All the SHA hashes for version 0.23.0
     {"0.23.0", :darwin, :amd64} => "643044b35ed4bdfd9866a43b70e39d64f16709f9685b89a03b299da8834661b0",
@@ -31,25 +34,20 @@ defmodule PromEx.GrafanaAgent.Downloader do
     {"0.20.1", :linux, :arm64} => "d96bd5ac1fbeceb0d96c648f84a7f4a98ff89557602e732ac5d6feaea4f2f334"
   }
 
-  defguardp is_valid_version(version) when version in ["0.23.0", "0.22.0", "0.21.2", "0.20.1"]
-  defguardp is_valid_os(version) when version in [:darwin, :linux]
-  defguardp is_valid_arch(version) when version in [:amd64, :arm64]
-
-  defguardp is_supported_agent(version, os, arch)
-            when is_valid_version(version) and is_valid_os(os) and is_valid_arch(arch)
+  defguardp is_valid_version(version) when version in @supported_grafana_agent_versions
 
   @doc """
   This function will download the desired GrafanaAgent binary and store it in the
   proided GrafanaAgent directory.
   """
   @spec download_grafana_agent(
-          {version :: String.t(), os :: atom(), arch :: atom()},
+          version :: String.t(),
           download_directory :: String.t(),
           bin_directory :: String.t()
         ) :: {:ok, String.t()} | {:error, String.t()}
-  def download_grafana_agent({version, os, arch} = agent_version, download_directory, bin_directory)
-      when is_supported_agent(version, os, arch) do
-    download_url = build_download_url(version, os, arch)
+  def download_grafana_agent(agent_version, download_directory, bin_directory) when is_valid_version(agent_version) do
+    agent_version = get_download_version(agent_version)
+    download_url = build_download_url(agent_version)
 
     zip_file_name =
       download_url
@@ -72,8 +70,29 @@ defmodule PromEx.GrafanaAgent.Downloader do
     end
   end
 
-  def download_grafana_agent(agent_version, _, _) do
-    raise "Invalid or unsupported agent version tuple #{inspect(agent_version)}"
+  def download_grafana_agent(_agent_version, _, _) do
+    raise "Invalid GrafanaAgent version provided. Supported version are: #{inspect(@supported_grafana_agent_versions)}"
+  end
+
+  @doc """
+  Get the latest version of GrafanaAgent (that PromEx supports).
+  """
+  @spec latest_version :: String.t()
+  def latest_version do
+    @latest_grafana_agent_version
+  end
+
+  defp get_download_version(agent_version) do
+    arch_str = :erlang.system_info(:system_architecture)
+    [arch | _] = arch_str |> List.to_string() |> String.split("-")
+
+    case {:os.type(), arch, :erlang.system_info(:wordsize) * 8} do
+      {{:unix, :darwin}, arch, 64} when arch in ~w(arm aarch64) -> {agent_version, :darwin, :arm64}
+      {{:unix, :darwin}, "x86_64", 64} -> {agent_version, :darwin, :amd64}
+      {{:unix, :linux}, "aarch64", 64} -> {agent_version, :linux, :arm64}
+      {{:unix, _osname}, arch, 64} when arch in ~w(x86_64 amd64) -> {agent_version, :linux, :amd64}
+      unsupported_arch -> raise "Unsupported architecture: #{inspect(unsupported_arch)}"
+    end
   end
 
   defp unzip_grafana_agent(zip_download_path, binary_path) do
@@ -108,7 +127,7 @@ defmodule PromEx.GrafanaAgent.Downloader do
     end
   end
 
-  defp build_download_url(version, os, arch) do
+  defp build_download_url({version, os, arch}) do
     "https://github.com/grafana/agent/releases/download/v#{version}/agent-#{os}-#{arch}.zip"
   end
 

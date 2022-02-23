@@ -84,16 +84,5 @@ defmodule PromEx.ConfigTest do
         ]
       )
     end
-
-    test "should raise an error if there are missing GrafanaAgent fields" do
-      assert_raise RuntimeError,
-                   "When configuring the GrafanaAgent client for PromEx, the :version key is required.",
-                   fn ->
-                     Config.build(grafana_agent: [])
-                   end
-    end
-
-    #    test "" do
-    #    end
   end
 end

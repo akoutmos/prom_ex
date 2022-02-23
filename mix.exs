@@ -64,7 +64,7 @@ defmodule PromEx.MixProject do
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.27.3", only: :dev},
+      {:ex_doc, "~> 0.28.2", only: :dev},
       {:excoveralls, "~> 0.14.4", only: :test, runtime: false},
       {:doctor, "~> 0.18.0", only: :dev},
       {:credo, "~> 1.6.1", only: :dev},

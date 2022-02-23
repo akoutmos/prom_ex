@@ -125,14 +125,23 @@ defmodule PromEx.Config do
   * `:grafana_agent` - This key contains the configuration information for running GrafanaAgent via a
     port in order to push metrics to a Prometheus instance via `remote_write` functionality:
 
-    * `:version` - The version of GrafanaAgent that you want to run. This is a 3 element tuple with the
-      format: `{VERSION, OS, ARCH}`. Below are the supported values for each (The downloaded artifacts
-      are validated against their known SHA256 values so that you can be sure you are not downloading
-      any malicious binaries and running them):
+    > ### Environment dependencies {: .warning}
+    >
+    > If your application is running inside of an Alpine Linux container (or any environment that
+    > is based on [musl](https://www.musl-libc.org/) as opposed to
+    > [glibc](https://www.gnu.org/software/libc/), be sure to add `libc6-compat` to to your list
+    > of packages. In addition, you'll also need bash running, as this port is wrapped by a
+    > [bash script](https://hexdocs.pm/elixir/1.12/Port.html#module-zombie-operating-system-processes).
+    > For example, in a Dockerfile you would add:
+    > `RUN apk add --no-cache bash libc6-compat`
 
-      * VERSION: `["0.23.0", "0.22.0", "0.21.2", "0.20.1"]`
-      * OS: `[:darwin, :linux]`
-      * ARCH: `[:amd64, :arm64]`
+    * `:version` - The version of GrafanaAgent that you want to run. This is a string denoting the
+      GrafanaAgent release version. Below are the supported versions (the downloaded artifacts
+      are validated against their known SHA256 values so that you can be sure you are not downloading
+      any malicious binaries and running them). By default, PromEx will use the result of
+      `PromEx.GrafanaAgent.Downloader.latest_version()` if no value is provided.
+
+      * Supported versions are `["0.23.0", "0.22.0", "0.21.2", "0.20.1"]`
 
     * `:working_directory` - In order to leverage the GrafanaAgent functionality, PromEx needs to have
       read/write access to a directory in order to download and copy the GrafanaAgent binary. This is the
@@ -207,6 +216,8 @@ defmodule PromEx.Config do
   - `grafana_agent_config`: A map containing all the relevant settings to connect to GrafanaAgent.
   - `metrics_server_config`: A map containing all the relevant settings to start a standalone HTTP Cowboy server for metrics.
   """
+
+  alias PromEx.GrafanaAgent.Downloader
 
   @type t :: %__MODULE__{
           disabled: boolean(),
@@ -285,7 +296,7 @@ defmodule PromEx.Config do
 
   defp generate_grafana_agent_config(grafana_agent_opts) do
     %{
-      version: get_grafana_agent_config(grafana_agent_opts, :version),
+      version: Keyword.get(grafana_agent_opts, :version, Downloader.latest_version()),
       working_directory: Keyword.get(grafana_agent_opts, :working_directory),
       config_opts: grafana_agent_opts |> get_grafana_agent_config(:config_opts) |> extract_opts_for_config()
     }
