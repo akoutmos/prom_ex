@@ -13,6 +13,8 @@ defmodule PromEx.GrafanaAgent.ConfigRendererTest do
         scrape_interval: "5s",
         otp_app: "TestApp",
         metrics_server_path: "/cool-metrics",
+        metrics_server_scheme: :https,
+        metrics_server_host: "localhost",
         bearer_token: "super_secret",
         metrics_server_port: "1234",
         hostname: "localhost",

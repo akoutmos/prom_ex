@@ -144,11 +144,13 @@ defmodule PromEx.Config do
       take the route where PromEx generates a config file for you, you must provide the following
       otions:
 
-      * `:metrics_server_path` - The path where the Prometheus metrics are exposed
+      * `:metrics_server_path` - The path where the Prometheus metrics are exposed.
 
-      * `:metrics_server_port` - The port that the metrics server is running on
+      * `:metrics_server_port` - The port that the metrics server is running on.
 
-      * `:metrics_server_scheme` - Whether the app reachable via HTTPS or HTTP
+      * `:metrics_server_scheme` - Whether the app reachable via HTTPS or HTTP.
+
+      * `:metrics_server_host` - The host to scrape for metrics.
 
       * `:agent_port` - What port should GrafanaAgent run on.
 
@@ -300,6 +302,7 @@ defmodule PromEx.Config do
       prometheus_password: get_grafana_agent_config(opts, :prometheus_password),
       metrics_server_path: Keyword.get(opts, :metrics_server_path, "/metrics"),
       metrics_server_port: Keyword.get(opts, :metrics_server_port, 4000),
+      metrics_server_host: Keyword.get(opts, :metrics_server_host, "localhost"),
       metrics_server_scheme: Keyword.get(opts, :metrics_server_scheme, :https)
     }
   end

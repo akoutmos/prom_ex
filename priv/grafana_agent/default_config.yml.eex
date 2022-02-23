@@ -14,7 +14,7 @@ prometheus:
           scheme: <%= @metrics_server_scheme %>
           bearer_token: "<%= @bearer_token %>"
           static_configs:
-            - targets: ["127.0.0.1:<%= @metrics_server_port %>"]
+            - targets: ["<%= @metrics_server_host %>:<%= @metrics_server_port %>"]
           metric_relabel_configs:
             - source_labels: [ instance ]
               target_label: instance
