@@ -148,6 +148,8 @@ defmodule PromEx.Config do
 
       * `:metrics_server_port` - The port that the metrics server is running on
 
+      * `:metrics_server_scheme` - Whether the app reachable via HTTPS or HTTP
+
       * `:agent_port` - What port should GrafanaAgent run on.
 
       * `:scrape_interval` - How often should GrafanaAgent scrape the application.
@@ -297,7 +299,8 @@ defmodule PromEx.Config do
       prometheus_username: get_grafana_agent_config(opts, :prometheus_username),
       prometheus_password: get_grafana_agent_config(opts, :prometheus_password),
       metrics_server_path: Keyword.get(opts, :metrics_server_path, "/metrics"),
-      metrics_server_port: Keyword.get(opts, :metrics_server_port, 4000)
+      metrics_server_port: Keyword.get(opts, :metrics_server_port, 4000),
+      metrics_server_scheme: Keyword.get(opts, :metrics_server_scheme, :https)
     }
   end
 

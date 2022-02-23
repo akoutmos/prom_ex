@@ -1,4 +1,4 @@
 {
   "skip_files": ["test/"],
-  "minimum_coverage": 85
+  "minimum_coverage": 80
 }
