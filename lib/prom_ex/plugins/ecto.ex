@@ -133,7 +133,7 @@ if Code.ensure_loaded?(Ecto) do
             tags: [:repo],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
-              buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+              buckets: [10, 50, 250, 1_000, 5_000, 10_000]
             ],
             unit: {:native, :millisecond}
           ),
@@ -147,7 +147,7 @@ if Code.ensure_loaded?(Ecto) do
             tags: [:repo],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
-              buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+              buckets: [10, 50, 250, 1_000, 5_000, 10_000]
             ],
             unit: {:native, :millisecond}
           ),
@@ -161,7 +161,7 @@ if Code.ensure_loaded?(Ecto) do
             tags: [:repo],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
-              buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+              buckets: [5, 50, 100, 500, 2_500]
             ],
             unit: {:native, :millisecond}
           ),
@@ -175,7 +175,7 @@ if Code.ensure_loaded?(Ecto) do
             tags: [:repo, :source, :command],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
-              buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+              buckets: [10, 50, 250, 2_500, 10_000, 30_000]
             ],
             unit: {:native, :millisecond}
           ),
@@ -189,7 +189,7 @@ if Code.ensure_loaded?(Ecto) do
             tags: [:repo, :source, :command],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
-              buckets: [1, 10, 50, 100, 500, 1_000, 5_000, 10_000]
+              buckets: [10, 50, 250, 2_500, 10_000, 30_000]
             ],
             unit: {:native, :millisecond}
           ),
@@ -205,7 +205,7 @@ if Code.ensure_loaded?(Ecto) do
             tags: [:repo, :source, :command],
             tag_values: &ecto_query_tag_values/1,
             reporter_options: [
-              buckets: [1, 10, 50, 100, 250, 500, 1_000, 5_000]
+              buckets: [5, 10, 50, 100, 500, 1_000]
             ],
             drop: fn %{result: result} ->
               normalize_results_returned(result) == :drop_data_point

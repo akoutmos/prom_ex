@@ -70,7 +70,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     end
 
     defp live_view_event_metrics(metric_prefix) do
-      bucket_intervals = [10, 100, 250, 500, 1_000, 2_000, 5_000, 10_000]
+      bucket_intervals = [10, 100, 500, 1_000, 2_500, 5_000, 10_000]
 
       Event.build(
         :phoenix_live_view_event_metrics,

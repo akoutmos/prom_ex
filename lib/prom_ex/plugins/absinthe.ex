@@ -90,7 +90,7 @@ if Code.ensure_loaded?(Absinthe) do
             measurement: :duration,
             description: "The time it takes for the Absinthe to publish subscription data.",
             reporter_options: [
-              buckets: [50, 100, 250, 500, 1_000, 2_500, 5_000, 10_000, 20_000]
+              buckets: [10, 100, 500, 1_000, 5_000, 10_000, 30_000]
             ],
             tag_values: &subscription_stop_tag_values/1,
             tags: event_tags,
@@ -120,7 +120,7 @@ if Code.ensure_loaded?(Absinthe) do
             measurement: :duration,
             description: "The time it takes for the Absinthe to complete the operation.",
             reporter_options: [
-              buckets: [50, 100, 250, 500, 1_000, 2_500, 5_000, 10_000, 20_000]
+              buckets: [10, 100, 500, 1_000, 5_000, 10_000, 30_000]
             ],
             tag_values: &operation_execute_stop_tag_values/1,
             tags: event_tags,
@@ -138,7 +138,7 @@ if Code.ensure_loaded?(Absinthe) do
             end,
             description: "The estimated complexity for a given Absinthe operation.",
             reporter_options: [
-              buckets: [5, 10, 25, 50, 100, 200]
+              buckets: [10, 50, 100, 200, 500]
             ],
             tag_values: &operation_execute_stop_tag_values/1,
             tags: event_tags,
