@@ -1,5 +1,5 @@
 defmodule PromEx.Plugins.PhoenixLiveViewTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias PromEx.Plugins.PhoenixLiveView
   alias PromEx.Test.Support.{Events, Metrics}
