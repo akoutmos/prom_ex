@@ -1,135 +1,97 @@
-# HELP web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds The time it takes for the application to receive the HTTP request body.
-# HELP web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds The time it takes for the application to process HTTP requests.
-# HELP web_app_prom_ex_plug_cowboy_http_requests_total The number of requests that have been serviced.
-# HELP web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds The time it takes for the application to send the HTTP response.
-# HELP web_app_prom_ex_plug_cowboy_http_response_size_bytes The size of the HTTP response payload.
 # HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
-# TYPE web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds histogram
-# TYPE web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds histogram
-# TYPE web_app_prom_ex_plug_cowboy_http_requests_total counter
-# TYPE web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds histogram
-# TYPE web_app_prom_ex_plug_cowboy_http_response_size_bytes histogram
 # TYPE web_app_prom_ex_prom_ex_status_info gauge
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1024"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="128"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="16"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="2"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="2048"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="256"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="32"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="4"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="512"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="64"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="8"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1024"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="128"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="16"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="2"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="2048"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="256"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="32"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="4"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="512"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="64"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="8"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_count{method="GET",path="Unknown",status="200"} 2
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_count{method="GET",path="Unknown",status="undefined"} 1
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_sum{method="GET",path="Unknown",status="200"} 0.0
-web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_sum{method="GET",path="Unknown",status="undefined"} 0.0
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1024"} 2
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="128"} 2
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="16"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="2"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="2048"} 2
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="256"} 2
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="32"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="4"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="512"} 2
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="64"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="8"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1"} 0
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1024"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="128"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="16"} 0
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="2"} 0
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="2048"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="256"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="32"} 0
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="4"} 0
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="512"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="64"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="8"} 0
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_count{method="GET",path="Unknown",status="200"} 2
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_count{method="GET",path="Unknown",status="undefined"} 1
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_sum{method="GET",path="Unknown",status="200"} 117.96199999999999
-web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_sum{method="GET",path="Unknown",status="undefined"} 53.504
-web_app_prom_ex_plug_cowboy_http_requests_total{method="GET",path="Unknown",status="200"} 2
-web_app_prom_ex_plug_cowboy_http_requests_total{method="GET",path="Unknown",status="undefined"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1024"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="128"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="16"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="2"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="2048"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="256"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="32"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="4"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="512"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="64"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="8"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1024"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="128"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="16"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="2"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="2048"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="256"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="32"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="4"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="512"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="64"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="8"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_count{method="GET",path="Unknown",status="200"} 2
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_count{method="GET",path="Unknown",status="undefined"} 1
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_sum{method="GET",path="Unknown",status="200"} 0.0
-web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_sum{method="GET",path="Unknown",status="undefined"} 0.0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="1"} 0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="1024"} 0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="1048576"} 2
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="16"} 0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="16384"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="256"} 0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="262144"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="4"} 0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="4096"} 0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="4194304"} 2
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="64"} 0
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="65536"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="1"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="1024"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="1048576"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="16"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="16384"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="256"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="262144"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="4"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="4096"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="4194304"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="64"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="65536"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_count{method="GET",path="Unknown",status="200"} 2
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_count{method="GET",path="Unknown",status="undefined"} 1
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_sum{method="GET",path="Unknown",status="200"} 373313
-web_app_prom_ex_plug_cowboy_http_response_size_bytes_sum{method="GET",path="Unknown",status="undefined"} 0
 web_app_prom_ex_prom_ex_status_info 1
+# HELP web_app_prom_ex_plug_cowboy_http_requests_total The number of requests that have been serviced.
+# TYPE web_app_prom_ex_plug_cowboy_http_requests_total counter
+web_app_prom_ex_plug_cowboy_http_requests_total{method="GET",path="Unknown",status="undefined"} 1
+web_app_prom_ex_plug_cowboy_http_requests_total{method="GET",path="Unknown",status="200"} 2
+# HELP web_app_prom_ex_plug_cowboy_http_response_size_bytes The size of the HTTP response payload.
+# TYPE web_app_prom_ex_plug_cowboy_http_response_size_bytes histogram
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="64"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="512"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="4096"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="65536"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="262144"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="1048576"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="4194304"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="16777216"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_sum{method="GET",path="Unknown",status="undefined"} 0
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_count{method="GET",path="Unknown",status="undefined"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="64"} 0
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="512"} 0
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="4096"} 0
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="65536"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="262144"} 1
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="1048576"} 2
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="4194304"} 2
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="16777216"} 2
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_sum{method="GET",path="Unknown",status="200"} 373313
+web_app_prom_ex_plug_cowboy_http_response_size_bytes_count{method="GET",path="Unknown",status="200"} 2
+# HELP web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds The time it takes for the application to receive the HTTP request body.
+# TYPE web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds histogram
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="10"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="100"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="500"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1000"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="5000"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="10000"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="30000"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_sum{method="GET",path="Unknown",status="undefined"} 0.0
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_count{method="GET",path="Unknown",status="undefined"} 1
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="10"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="100"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="500"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1000"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="5000"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="10000"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="30000"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_sum{method="GET",path="Unknown",status="200"} 0.0
+web_app_prom_ex_plug_cowboy_http_request_body_duration_milliseconds_count{method="GET",path="Unknown",status="200"} 2
+# HELP web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds The time it takes for the application to send the HTTP response.
+# TYPE web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds histogram
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="10"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="100"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="500"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1000"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="5000"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="10000"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="30000"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_sum{method="GET",path="Unknown",status="200"} 0.0
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_count{method="GET",path="Unknown",status="200"} 2
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="10"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="100"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="500"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1000"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="5000"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="10000"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="30000"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_sum{method="GET",path="Unknown",status="undefined"} 0.0
+web_app_prom_ex_plug_cowboy_http_response_duration_milliseconds_count{method="GET",path="Unknown",status="undefined"} 1
+# HELP web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds The time it takes for the application to process HTTP requests.
+# TYPE web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds histogram
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="10"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="100"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="500"} 2
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="1000"} 2
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="5000"} 2
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="10000"} 2
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="30000"} 2
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="200",le="+Inf"} 2
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_sum{method="GET",path="Unknown",status="200"} 117.96199999999999
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_count{method="GET",path="Unknown",status="200"} 2
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="10"} 0
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="100"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="500"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="1000"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="5000"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="10000"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="30000"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_bucket{method="GET",path="Unknown",status="undefined",le="+Inf"} 1
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_sum{method="GET",path="Unknown",status="undefined"} 53.504
+web_app_prom_ex_plug_cowboy_http_request_duration_milliseconds_count{method="GET",path="Unknown",status="undefined"} 1
