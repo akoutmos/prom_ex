@@ -84,6 +84,13 @@ defmodule PromEx.Config do
     `[:phoenix_channel_event_metrics]` as the value to `:drop_metrics_groups` and that set of
     metrics will not be captured. Default value: `[]`
 
+  * `ets_flush_interval` - This value denotes how often the metrics ETS table is compacted. In order
+    to keep things performant and as low-overhead as possible, Telemetry metrics are buffered up in
+    ETS until a request is made to retrieve metrics from the PromEx process. If no requests come in
+    to extract the metrics, the ETS table can grow infinitely. Luckily, PromEx bundles a GenServer
+    that periodically compacts ETS. This config value determines how often ETS should be compacted.
+    Default value: `7_500`
+
   * `:grafana` - This key contains the configuration information for connecting to Grafana. Its
     configuration options are:
 
@@ -212,6 +219,7 @@ defmodule PromEx.Config do
   - `disabled`: Whether PromEx will start up the metric collection supervision tree.
   - `manual_metrics_start_delay`: How the ManualMetricsManager worker process should be started (instantly or with a millisecond delay).
   - `drop_metrics_groups`: A list of metrics groups that should be omitted from the metrics collection process.
+  - `ets_flush_interval`: How often should the ETS buffer table be compacted.
   - `grafana_config`: A map containing all the relevant settings to connect to Grafana.
   - `grafana_agent_config`: A map containing all the relevant settings to connect to GrafanaAgent.
   - `metrics_server_config`: A map containing all the relevant settings to start a standalone HTTP Cowboy server for metrics.
@@ -223,6 +231,7 @@ defmodule PromEx.Config do
           disabled: boolean(),
           manual_metrics_start_delay: :no_delay | pos_integer(),
           drop_metrics_groups: MapSet.t(),
+          ets_flush_interval: :integer,
           grafana_config: map(),
           grafana_agent_config: map(),
           metrics_server_config: map()
@@ -232,6 +241,7 @@ defmodule PromEx.Config do
     :disabled,
     :manual_metrics_start_delay,
     :drop_metrics_groups,
+    :ets_flush_interval,
     :grafana_config,
     :grafana_agent_config,
     :metrics_server_config
@@ -262,6 +272,7 @@ defmodule PromEx.Config do
       disabled: Keyword.get(opts, :disabled, false),
       manual_metrics_start_delay: Keyword.get(opts, :manual_metrics_start_delay, :no_delay),
       drop_metrics_groups: opts |> Keyword.get(:drop_metrics_groups, []) |> MapSet.new(),
+      ets_flush_interval: Keyword.get(opts, :ets_flush_interval, 7_500),
       grafana_config: grafana_config,
       grafana_agent_config: grafana_agent_config,
       metrics_server_config: metrics_server_config

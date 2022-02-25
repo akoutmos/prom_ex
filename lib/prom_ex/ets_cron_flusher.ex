@@ -42,7 +42,7 @@ defmodule PromEx.ETSCronFlusher do
 
   @impl true
   def handle_continue(:start_cron_flusher, state) do
-    timer_ref = schedule_flush()
+    timer_ref = schedule_flush(state)
     {:noreply, %{state | timer_ref: timer_ref}}
   end
 
@@ -50,7 +50,7 @@ defmodule PromEx.ETSCronFlusher do
   def handle_info(:flush_ets, state) do
     PromEx.get_metrics(state.prom_ex_module)
 
-    timer_ref = schedule_flush()
+    timer_ref = schedule_flush(state)
     {:noreply, %{state | timer_ref: timer_ref}}
   end
 
@@ -59,11 +59,11 @@ defmodule PromEx.ETSCronFlusher do
     # Cancel the existing timer
     Process.cancel_timer(state.timer_ref)
 
-    timer_ref = schedule_flush()
+    timer_ref = schedule_flush(state)
     {:noreply, %{state | timer_ref: timer_ref}}
   end
 
-  defp schedule_flush do
-    Process.send_after(self(), :flush_ets, 7_500)
+  defp schedule_flush(%{ets_flush_interval: ets_flush_interval}) do
+    Process.send_after(self(), :flush_ets, ets_flush_interval)
   end
 end
