@@ -1902,7 +1902,7 @@
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info{job=\"$job\"}, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,

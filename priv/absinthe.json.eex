@@ -1707,7 +1707,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
+          "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info{job=\"$job\"}, instance)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,

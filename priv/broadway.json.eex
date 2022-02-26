@@ -1951,7 +1951,7 @@
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info, instance)",
+        "query": "label_values(<%= @otp_app %>_prom_ex_prom_ex_status_info{job=\"$job\"}, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
