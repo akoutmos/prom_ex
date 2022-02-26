@@ -272,7 +272,7 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
+      "description": "The Apdex score of the app based on a satisfactory response time of 500ms and a tolerable response time of 1000ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the last 24 hours of requests.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -327,7 +327,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[24h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1000\", status=~\"2..\"}[24h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -517,7 +517,7 @@
     },
     {
       "datasource": "<%= @datasource_id %>",
-      "description": "The Apdex score of the app based on a satisfactory response time of 256ms and a tolerable response time of 1024ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the previous hour of requests.",
+      "description": "The Apdex score of the app based on a satisfactory response time of 500ms and a tolerable response time of 1000ms. This only takes into account how long Phoenix has been handling the request and only requests that resulted in a 2xx status code. The score is based on the previous hour of requests.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -568,7 +568,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1024\", status=~\"2..\"}[1h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"256\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1000\", status=~\"2..\"}[1h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
