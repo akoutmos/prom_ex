@@ -1989,8 +1989,8 @@
         "auto_min": "10s",
         "current": {
           "selected": false,
-          "text": "30s",
-          "value": "30s"
+          "text": "<%= @default_selected_interval %>",
+          "value": "<%= @default_selected_interval %>"
         },
         "description": null,
         "error": null,
