@@ -168,9 +168,15 @@ defmodule PromEx.Config do
 
       * `:metrics_server_host` - The host to scrape for metrics.
 
+      * `:instance` - This value denotes what instance the metrics are associated with. This value
+        is a string and defaults to the hostname.
+
+      * `:job` - This value denotes what job the metrics are associated with. This value
+        is a string and defaults to the otp_app.
+
       * `:agent_port` - What port should GrafanaAgent run on.
 
-      * `:scrape_interval` - How often should GrafanaAgent scrape the application.
+      * `:scrape_interval` - How often should GrafanaAgent scrape the application. The default is `15s`.
 
       * `:bearer_token` - The bearer token that GrafanaAgent should attach to the request to your app.
 
@@ -315,7 +321,7 @@ defmodule PromEx.Config do
 
   defp extract_opts_for_config(opts) do
     %{
-      scrape_interval: Keyword.get(opts, :scrape_interval, "5s"),
+      scrape_interval: Keyword.get(opts, :scrape_interval, "15s"),
       bearer_token: Keyword.get(opts, :bearer_token, "blank"),
       log_level: Keyword.get(opts, :log_level, "error"),
       agent_port: Keyword.get(opts, :agent_port, "4040"),

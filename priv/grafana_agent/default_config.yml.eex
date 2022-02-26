@@ -7,9 +7,9 @@ prometheus:
   global:
     scrape_interval: <%= @scrape_interval %>
   configs:
-    - name: <%= @otp_app %>
+    - name: <%= @job %>
       scrape_configs:
-        - job_name: <%= @otp_app %>
+        - job_name: <%= @job %>
           metrics_path: <%= @metrics_server_path %>
           scheme: <%= @metrics_server_scheme %>
           bearer_token: "<%= @bearer_token %>"
@@ -19,7 +19,7 @@ prometheus:
             - source_labels: [ instance ]
               target_label: instance
               action: replace
-              replacement: "<%= @hostname %>"
+              replacement: "<%= @instance %>"
 
       remote_write:
         - url: "<%= @prometheus_url %>"
