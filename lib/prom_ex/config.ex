@@ -325,6 +325,8 @@ defmodule PromEx.Config do
       bearer_token: Keyword.get(opts, :bearer_token, "blank"),
       log_level: Keyword.get(opts, :log_level, "error"),
       agent_port: Keyword.get(opts, :agent_port, "4040"),
+      job: Keyword.get(opts, :job, nil),
+      instance: Keyword.get(opts, :instance, nil),
       prometheus_url: get_grafana_agent_config(opts, :prometheus_url),
       prometheus_username: get_grafana_agent_config(opts, :prometheus_username),
       prometheus_password: get_grafana_agent_config(opts, :prometheus_password),

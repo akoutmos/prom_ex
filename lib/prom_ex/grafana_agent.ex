@@ -134,13 +134,27 @@ defmodule PromEx.GrafanaAgent do
     |> Map.get(:grafana_agent_config)
     |> Map.get(:config_opts)
     |> Map.put(:wal_dir, wal_dir)
-    |> Map.put_new(:job, state.prom_ex_module.__otp_app__())
-    |> Map.put_new_lazy(:instance, fn ->
-      # Get the hostname for the instance
-      {:ok, hostname} = :inet.gethostname()
-
-      hostname
-    end)
+    |> maybe_put_job(state)
+    |> maybe_put_instance()
     |> ConfigRenderer.generate_config_file(config_dir)
+  end
+
+  defp maybe_put_job(%{job: nil} = opts, state) do
+    Map.put(opts, :job, state.prom_ex_module.__otp_app__())
+  end
+
+  defp maybe_put_job(opts, _state) do
+    opts
+  end
+
+  defp maybe_put_instance(%{instance: nil} = opts) do
+    # Get the hostname for the instance
+    {:ok, hostname} = :inet.gethostname()
+
+    Map.put(opts, :instance, hostname)
+  end
+
+  defp maybe_put_instance(opts) do
+    opts
   end
 end
