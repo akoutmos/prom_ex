@@ -52,8 +52,6 @@ defmodule PromEx.Plugins.Application do
 
   use PromEx.Plugin
 
-  require Logger
-
   @filter_out_apps [
     :iex,
     :inets,
@@ -151,7 +149,6 @@ defmodule PromEx.Plugins.Application do
         git_sha
 
       :error ->
-        Logger.warn("GIT_SHA environment variable has not been defined")
         "Git SHA not available"
     end
   end
@@ -163,7 +160,6 @@ defmodule PromEx.Plugins.Application do
         git_sha
 
       :error ->
-        Logger.warn("GIT_AUTHOR environment variable has not been defined")
         "Git author not available"
     end
   end
