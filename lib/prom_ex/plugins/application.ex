@@ -54,10 +54,19 @@ defmodule PromEx.Plugins.Application do
 
   require Logger
 
+  @filter_out_apps [
+    :iex,
+    :inets,
+    :logger,
+    :runtime_tools,
+    :ssl,
+    :crypto
+  ]
+
   @impl true
   def manual_metrics(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
-    apps = Keyword.get(opts, :deps, :all)
+    deps = Keyword.get(opts, :deps, :all)
     git_sha_mfa = Keyword.get(opts, :git_sha_mfa, {__MODULE__, :git_sha, []})
     git_author_mfa = Keyword.get(opts, :git_author_mfa, {__MODULE__, :git_author, []})
     metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :application))
@@ -65,7 +74,7 @@ defmodule PromEx.Plugins.Application do
     [
       Manual.build(
         :application_versions_manual_metrics,
-        {__MODULE__, :apps_running, [otp_app, apps, git_sha_mfa, git_author_mfa]},
+        {__MODULE__, :apps_running, [otp_app, deps, git_sha_mfa, git_author_mfa]},
         [
           # Capture information regarding the primary application (i.e the user's application)
           last_value(
@@ -160,63 +169,44 @@ defmodule PromEx.Plugins.Application do
   end
 
   @doc false
-  def apps_running(otp_app, apps, git_sha_mfa, git_author_mfa) do
-    started_apps =
-      Application.started_applications()
-      |> Enum.map(fn {app, _description, version} ->
-        {app, :erlang.iolist_to_binary(version)}
-      end)
-      |> Map.new()
+  def apps_running(otp_app, deps, git_sha_mfa, git_author_mfa) do
+    # Loop through all of the dependencies
+    filtered_deps =
+      if deps == :all do
+        otp_app
+        |> Application.spec()
+        |> Keyword.get(:applications)
+        |> Enum.reject(fn
+          app when app in @filter_out_apps -> true
+          _ -> false
+        end)
+      else
+        deps
+      end
 
-    started_apps = if apps == :all, do: started_apps, else: Map.take(started_apps, apps)
-
-    loaded_only_apps =
-      Application.loaded_applications()
-      |> Enum.map(fn {app, _description, version} ->
-        {app, :erlang.iolist_to_binary(version)}
-      end)
-      |> Map.new()
-      |> Map.drop(Map.keys(started_apps))
-
-    loaded_only_apps = if apps == :all, do: loaded_only_apps, else: Map.take(loaded_only_apps, apps)
+    filtered_deps
+    |> Enum.each(fn app ->
+      :telemetry.execute(
+        [otp_app | [:application, :dependency, :info]],
+        %{status: 1},
+        %{
+          name: app,
+          version: Application.spec(app)[:vsn],
+          modules: length(Application.spec(app)[:modules])
+        }
+      )
+    end)
 
     # Emit primary app details
     :telemetry.execute(
       [otp_app | [:application, :primary, :info]],
-      %{
-        status: if(Map.has_key?(started_apps, otp_app), do: 1, else: 0)
-      },
+      %{status: 1},
       %{
         name: otp_app,
-        version:
-          Map.get_lazy(started_apps, otp_app, fn ->
-            Map.get(loaded_only_apps, otp_app, "undefined")
-          end),
+        version: Application.spec(otp_app)[:vsn],
         modules: length(Application.spec(otp_app)[:modules])
       }
     )
-
-    started_apps = Map.delete(started_apps, otp_app)
-    loaded_only_apps = Map.delete(loaded_only_apps, otp_app)
-
-    # Loop through other desired apps and fetch details
-    started_apps
-    |> Enum.each(fn {app, version} ->
-      :telemetry.execute(
-        [otp_app | [:application, :dependency, :info]],
-        %{status: 1},
-        %{name: app, version: version, modules: length(Application.spec(app)[:modules])}
-      )
-    end)
-
-    loaded_only_apps
-    |> Enum.each(fn {app, version} ->
-      :telemetry.execute(
-        [otp_app | [:application, :dependency, :info]],
-        %{status: 0},
-        %{name: app, version: version, modules: length(Application.spec(app)[:modules])}
-      )
-    end)
 
     # Publish Git SHA data
     {module, function, args} = git_sha_mfa
