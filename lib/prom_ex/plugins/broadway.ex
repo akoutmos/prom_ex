@@ -65,8 +65,8 @@ if Code.ensure_loaded?(Broadway) do
     alias Broadway.{BatchInfo, Message, Options}
     alias PromEx.Utils
 
-    @millisecond_duration_buckets [10, 50, 100, 500, 1_000, 10_000, 30_000, 60_000]
-    @message_batch_size_buckets [1, 5, 10, 20, 50, 100, 500]
+    @millisecond_duration_buckets [10, 100, 500, 1_000, 10_000, 30_000, 60_000]
+    @message_batch_size_buckets [1, 5, 10, 20, 50, 100]
 
     @init_topology_event [:broadway, :topology, :init]
     @message_stop_event [:broadway, :processor, :message, :stop]

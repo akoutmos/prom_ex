@@ -1,27 +1,59 @@
 # HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
 # TYPE web_app_prom_ex_prom_ex_status_info gauge
 web_app_prom_ex_prom_ex_status_info 1
+# HELP web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds The time it takes for the live view to complete the handle_event callback that resulted in an exception.
+# TYPE web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds histogram
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="100"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="500"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="1000"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="2500"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="5000"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10000"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="+Inf"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_sum{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 1.726645
+web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 1
 # HELP web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds The time it takes for the live view to complete the handle_event callback.
 # TYPE web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds histogram
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="10"} 1
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="100"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="250"} 1
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="500"} 1
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="1000"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="2000"} 1
+web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="2500"} 1
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="5000"} 1
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="10000"} 1
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_bucket{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive",le="+Inf"} 1
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_sum{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive"} 0.044399999999999995
 web_app_prom_ex_phoenix_live_view_handle_event_duration_milliseconds_count{action="page",event="select_refresh",module="Phoenix.LiveDashboard.PageLive"} 1
+# HELP web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds The time it takes for the live view to complete the mount callback that resulted in an exception
+# TYPE web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds histogram
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="10"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="100"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="500"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="1000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="2500"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="5000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="10000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="+Inf"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc"} 0.008195
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="100"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="500"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="1000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="2500"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="5000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10000"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="+Inf"} 1
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 0.020168
+web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 1
 # HELP web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds The time it takes for the live view to complete the mount callback.
 # TYPE web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds histogram
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="10"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="100"} 1
-web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="250"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="500"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="1000"} 1
-web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="2000"} 1
+web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="2500"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="5000"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="10000"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="home",module="Phoenix.LiveDashboard.PageLive",le="+Inf"} 1
@@ -29,10 +61,9 @@ web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_sum{action="home",
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{action="home",module="Phoenix.LiveDashboard.PageLive"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="10"} 11
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="100"} 13
-web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="250"} 13
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="500"} 13
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="1000"} 13
-web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="2000"} 13
+web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="2500"} 13
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="5000"} 13
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="10000"} 13
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="page",module="Phoenix.LiveDashboard.PageLive",le="+Inf"} 13
@@ -40,49 +71,11 @@ web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_sum{action="page",
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{action="page",module="Phoenix.LiveDashboard.PageLive"} 13
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="10"} 0
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="100"} 0
-web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="250"} 0
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="500"} 0
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="1000"} 1
-web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="2000"} 1
+web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="2500"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="5000"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="10000"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_bucket{action="index",module="WebAppWeb.PageLive",le="+Inf"} 1
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_sum{action="index",module="WebAppWeb.PageLive"} 518.1877
 web_app_prom_ex_phoenix_live_view_mount_duration_milliseconds_count{action="index",module="WebAppWeb.PageLive"} 1
-# HELP web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds The time it takes for the live view to complete the mount callback that resulted in an exception
-# TYPE web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds histogram
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="+Inf"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="10"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="100"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="1000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="10000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="2000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="250"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="500"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc",le="5000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{action="index",kind="exit",module="WebAppWeb.PageLive",reason="Noproc"} 0.008195
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="+Inf"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="100"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="1000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="2000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="250"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="500"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_bucket{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="5000"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_count{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 1
-web_app_prom_ex_phoenix_live_view_mount_exception_duration_milliseconds_sum{action="index",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 0.020168
-# HELP web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds The time it takes for the live view to complete the handle_event callback that resulted in an exception.
-# TYPE web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds histogram
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="+Inf"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="100"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="1000"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="10000"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="2000"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="250"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="500"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_bucket{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError",le="5000"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_count{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 1
-web_app_prom_ex_phoenix_live_view_handle_event_exception_duration_milliseconds_sum{action="index",event="suggest",kind="error",module="WebAppWeb.PageLive",reason="ArithmeticError"} 1.726645

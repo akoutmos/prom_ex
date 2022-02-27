@@ -170,7 +170,7 @@ if Code.ensure_loaded?(Plug.Router) do
             measurement: :duration,
             description: "The time it takes for the application to process HTTP requests.",
             reporter_options: [
-              buckets: exponential!(1, 2, 12)
+              buckets: [10, 100, 500, 1_000, 5_000, 10_000, 30_000]
             ],
             drop: drop_ignored(ignore_routes, routers),
             tag_values: &get_tags(&1),
@@ -182,7 +182,7 @@ if Code.ensure_loaded?(Plug.Router) do
             event_name: @stop_event,
             description: "The size of the HTTP response payload.",
             reporter_options: [
-              buckets: exponential!(1, 4, 12)
+              buckets: [64, 512, 4_096, 65_536, 262_144, 1_048_576, 4_194_304, 16_777_216]
             ],
             measurement: &resp_body_size/2,
             drop: drop_ignored(ignore_routes, routers),

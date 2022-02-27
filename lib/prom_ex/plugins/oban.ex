@@ -178,8 +178,8 @@ if Code.ensure_loaded?(Oban) do
     end
 
     defp oban_job_event_metrics(metric_prefix, keep_function_filter) do
-      job_attempt_buckets = [1, 2, 3, 5, 10]
-      job_duration_buckets = [1, 50, 100, 250, 500, 1_000, 5_000, 10_000]
+      job_attempt_buckets = [1, 5, 10]
+      job_duration_buckets = [10, 100, 500, 1_000, 5_000, 20_000]
 
       Event.build(
         :oban_job_event_metrics,
@@ -279,7 +279,7 @@ if Code.ensure_loaded?(Oban) do
             measurement: :duration,
             description: "How long it took to dispatch the job.",
             reporter_options: [
-              buckets: [1, 50, 100, 250, 500, 1_000, 5_000, 10_000]
+              buckets: [10, 100, 500, 1_000, 5_000, 10_000]
             ],
             unit: {:native, :millisecond},
             tag_values: &producer_tag_values/1,
@@ -294,7 +294,7 @@ if Code.ensure_loaded?(Oban) do
             end,
             description: "The number of jobs that were dispatched.",
             reporter_options: [
-              buckets: [5, 10, 25, 50, 100]
+              buckets: [5, 10, 50, 100]
             ],
             tag_values: &producer_tag_values/1,
             tags: [:queue, :name],
@@ -306,7 +306,7 @@ if Code.ensure_loaded?(Oban) do
             measurement: :duration,
             description: "How long it took for the producer to raise an exception.",
             reporter_options: [
-              buckets: [1, 50, 100, 250, 500, 1_000, 5_000, 10_000]
+              buckets: [10, 100, 500, 1_000, 5_000, 10_000]
             ],
             unit: {:native, :millisecond},
             tag_values: &producer_tag_values/1,
@@ -378,17 +378,6 @@ if Code.ensure_loaded?(Oban) do
             description: "Information regarding the initialized oban supervisor.",
             measurement: fn _measurements -> 1 end,
             tags: [:name, :node, :plugins, :prefix, :queues, :repo],
-            tag_values: &oban_init_tag_values/1,
-            keep: keep_function_filter
-          ),
-          last_value(
-            metric_prefix ++ [:init, :circuit, :backoff, :milliseconds],
-            event_name: @init_event,
-            description: "The Oban supervisor's circuit backoff value.",
-            measurement: fn _measurements, %{conf: config} ->
-              config.circuit_backoff
-            end,
-            tags: [:name],
             tag_values: &oban_init_tag_values/1,
             keep: keep_function_filter
           ),

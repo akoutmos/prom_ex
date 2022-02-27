@@ -258,7 +258,8 @@
               "Time": true,
               "__name__": true,
               "instance": true,
-              "job": true
+              "job": true,
+              "Value": true
             },
             "indexByName": {
               "Time": 0,
@@ -599,7 +600,7 @@
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info, instance)",
+        "query": "label_values(<%= @prom_ex_metric_prefix %>_status_info{job=\"$job\"}, instance)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,

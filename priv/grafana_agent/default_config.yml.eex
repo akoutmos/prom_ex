@@ -1,0 +1,28 @@
+server:
+  http_listen_port: <%= @agent_port %>
+  log_level: <%= @log_level %>
+
+prometheus:
+  wal_directory: "<%= @wal_dir %>"
+  global:
+    scrape_interval: <%= @scrape_interval %>
+  configs:
+    - name: <%= @job %>
+      scrape_configs:
+        - job_name: <%= @job %>
+          metrics_path: <%= @metrics_server_path %>
+          scheme: <%= @metrics_server_scheme %>
+          bearer_token: "<%= @bearer_token %>"
+          static_configs:
+            - targets: ["<%= @metrics_server_host %>:<%= @metrics_server_port %>"]
+          metric_relabel_configs:
+            - source_labels: [ instance ]
+              target_label: instance
+              action: replace
+              replacement: "<%= @instance %>"
+
+      remote_write:
+        - url: "<%= @prometheus_url %>"
+          basic_auth:
+            username: "<%= @prometheus_username %>"
+            password: "<%= @prometheus_password %>"

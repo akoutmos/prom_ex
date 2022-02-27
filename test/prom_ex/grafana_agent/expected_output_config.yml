@@ -1,0 +1,28 @@
+server:
+  http_listen_port: 12345
+  log_level: error
+
+prometheus:
+  wal_directory: "/tmp/test/wal"
+  global:
+    scrape_interval: 5s
+  configs:
+    - name: TestApp
+      scrape_configs:
+        - job_name: TestApp
+          metrics_path: /cool-metrics
+          scheme: https
+          bearer_token: "super_secret"
+          static_configs:
+            - targets: ["localhost:1234"]
+          metric_relabel_configs:
+            - source_labels: [ instance ]
+              target_label: instance
+              action: replace
+              replacement: "localhost"
+
+      remote_write:
+        - url: "www.my-prometheus.com"
+          basic_auth:
+            username: "prom_user"
+            password: "prom_pass"
