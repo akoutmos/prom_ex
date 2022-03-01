@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broadway metrics prefix.
 - Broadway dashboard panel descriptions and titles.
 - Fixed the `:default_selected_interval` option in all dashboards.
+- Phoenix plugin manual metrics were ignoring the metric prefix option.
 
 ### Changed
 
