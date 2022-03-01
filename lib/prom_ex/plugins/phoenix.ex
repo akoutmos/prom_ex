@@ -168,7 +168,7 @@ if Code.ensure_loaded?(Phoenix) do
     @impl true
     def manual_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :phoenix)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix))
 
       [
         endpoint_info(metric_prefix, opts)
