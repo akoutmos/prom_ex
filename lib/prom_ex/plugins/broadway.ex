@@ -79,7 +79,7 @@ if Code.ensure_loaded?(Broadway) do
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = PromEx.metric_prefix(otp_app, :broadway)
+      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :broadway))
 
       # Telemetry metrics will emit warnings if multiple handlers with the same names are defined.
       # As a result, this plugin supports gathering metrics on multiple processors and batches, but needs
