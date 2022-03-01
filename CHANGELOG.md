@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2021-03-01
+
+### Added
+
+- Added ability to execute arbitrary function on resulting dashboard for user customization.
+- The GrafanaClient is now considered part of the public API, and users can interact with Grafana directly. For example,
+  users can publish their own Grafana annotations in addition to the annotations provided by PromEx.
+- Added the ability to start GrafanaAgent via a port so that metrics can be published via `remote_write` to an other
+  Prometheus instance. For example, if you are using GrafanaCloud, you can use PromEx to push metrics right to
+  GrafanaCloud using the appropriate configuration. This feature is currently only available for Linux and OS X.
+- The `ETSCronFlusher` GenServer can now be configured to flush the ETS buffer at whatever time interval you desire. The
+  default is still every 7.5s.
+
+### Fixed
+
+- Broadway metrics prefix.
+- Broadway dashboard panel descriptions and titles.
+- Fixed the `:default_selected_interval` option in all dashboards.
+- Phoenix plugin manual metrics were ignoring the metric prefix option.
+
+### Changed
+
+- Application plugin no longer logs warnings for missing GIT env vars.
+- LifecycleAnnotator no longer logs warnings for missing GIT env vars.
+- All plugin distribution buckets have been redefined. The reason for this being that prior to PromEx 1.7, some of the
+  distribution buckets were a bit wasteful and were not adding value in terms of metrics data points. With this change,
+  users should notice a decline in data point cardinality without compromising resolution.
+- Application plugin has changed how it fetches dependency information. It is now using `Applciation.spec/1` to get the
+  list of applications that are started with your application. This should reduce noise in the Grafana dashboard as all
+  the default OTP and Elixir applications will not show up.
+- All Grafana dashboard now have a default panel sort order where the largest timeseries plot is first in the list when
+  hovering over the visuals.
+- All Grafana dashboards now filter the instance filter based on the selected job filter.
+- The Oban plugin no longer collects metrics related to `:circuit` events as those have been removed from Oban starting
+  with version 2.11 (https://github.com/sorentwo/oban/pull/606). The Oban dashboard will be updated in the next release
+  to remove the unused panels.
+
 ## [1.6.0] - 2021-12-22
 
 ### Added
