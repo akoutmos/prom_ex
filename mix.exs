@@ -94,7 +94,7 @@ defmodule PromEx.MixProject do
   defp package do
     [
       name: "prom_ex",
-      files: ~w(lib priv/*.eex mix.exs README.md LICENSE CHANGELOG.md),
+      files: ~w(lib priv/grafana_agent priv/*.eex mix.exs README.md LICENSE CHANGELOG.md),
       licenses: ["MIT"],
       maintainers: ["Alex Koutmos"],
       links: %{
