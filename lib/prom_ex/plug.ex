@@ -17,9 +17,8 @@ defmodule PromEx.Plug do
 
     @impl true
     def call(conn, env_var) do
-      auth_header = Plug.Conn.get_req_header(conn, "authorization")
-
-      System.get_env(env_var) == auth_header
+      expected_secret = System.fetch_env!(env_var)
+      match?([^expected_secret], Plug.Conn.get_req_header(conn, "authorization"))
     end
   end
   ```
