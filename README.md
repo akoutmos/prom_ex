@@ -38,6 +38,7 @@
 - [Installation](#installation)
 - [Supporting PromEx](#supporting-promex)
 - [Setting Up PromEx](#setting-up-promex)
+- [Technical Support](#technical-support)
 - [Adding Your Metrics](#adding-your-metrics)
 - [Design Philosophy](#design-philosophy)
 - [Available Plugins](#available-plugins)
@@ -161,6 +162,21 @@ my_cool_app_application_dependency_info{modules="4",name="telemetry_poller",vers
 
 Be sure to check out the module docs for each plugin that you choose to use to ensure that you are familiar
 with all of the options that they provide.
+
+## Technical Support
+
+Is your company using or going to use PromEx in production and you need some help? Perhaps you want to create
+some custom Grafana dashboards and PromEx plugins specific to your business KPIs? What ever your observability
+needs may be, I can definitely help you and your business out!
+
+Feel free to reach out to me via [Twitter](https://twitter.com/akoutmos), [Elixir Slack](https://elixir-lang.slack.com/archives/D60LPD0N8),
+or my consultancy `Contact Us` form:
+
+<p align="center">
+  <a href="https://stagira.com" target="_blank">
+    <img align="center" width="40%" src="guides/images/stagira.png" alt="Technical support">
+  </a>
+</p>
 
 ## Adding Your Metrics
 
