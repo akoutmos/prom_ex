@@ -47,10 +47,10 @@ defmodule PromEx.MixProject do
       # Required dependencies
       {:jason, "~> 1.2"},
       {:finch, "~> 0.10.2"},
-      {:telemetry, "~> 1.0.0"},
-      {:telemetry_poller, "~> 1.0.0"},
+      {:telemetry, "~> 1.0"},
+      {:telemetry_poller, "~> 1.0"},
       {:telemetry_metrics, "~> 0.6.1"},
-      {:telemetry_metrics_prometheus_core, "~> 1.0.2"},
+      {:telemetry_metrics_prometheus_core, "~> 1.0"},
       {:plug_cowboy, "~> 2.5.1"},
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
