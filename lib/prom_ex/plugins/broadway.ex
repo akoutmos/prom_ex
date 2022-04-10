@@ -31,6 +31,8 @@ if Code.ensure_loaded?(Broadway) do
     end
     ```
 
+    ## GenStage Producer
+
     To correctly capture per-message metrics and error rate, add the following transform to your pipeline:
     ```
     defmodule WebApp.MyPipeline do
@@ -54,15 +56,25 @@ if Code.ensure_loaded?(Broadway) do
           acknowledger: {__MODULE__, :ack_id, :ack_data}
         }
       end
+
+      def ack(:ack_id, _successful_messages, _failed_messages) do
+        :ok
+      end
     end
     ```
+
+    ## BroadwayRabbitMQ.Producer
+
+    There's no need to configure an acknowledger on messages when using BroadwayRabbitMQ.
+
+    `BroadwayRabbitMQ.Producer` handles acking messages internally, which involves a unique `:delivery_tag` and `AMQP`.
     """
 
     use PromEx.Plugin
 
     require Logger
 
-    alias Broadway.{BatchInfo, Message, Options}
+    alias Broadway.{BatchInfo, Options}
     alias PromEx.Utils
 
     @millisecond_duration_buckets [10, 100, 500, 1_000, 10_000, 30_000, 60_000]
@@ -268,12 +280,7 @@ if Code.ensure_loaded?(Broadway) do
               buckets: @millisecond_duration_buckets
             ],
             tags: [:processor_key, :name],
-            tag_values: fn %{processor_key: processor_key, message: %Message{acknowledger: {acknowledger, _, _}}} ->
-              %{
-                processor_key: processor_key,
-                name: Utils.normalize_module_name(acknowledger)
-              }
-            end,
+            tag_values: &extract_message_tag_values/1,
             unit: {:native, :millisecond}
           ),
           distribution(
@@ -338,6 +345,13 @@ if Code.ensure_loaded?(Broadway) do
       )
     end
 
+    defp extract_message_tag_values(%{processor_key: processor_key, topology_name: name}) do
+      %{
+        processor_key: processor_key,
+        name: Utils.normalize_module_name(name)
+      }
+    end
+
     defp extract_batcher_tag_values(%{batch_info: batch_info = %BatchInfo{}, topology_name: name}) do
       %{
         name: Utils.normalize_module_name(name),
@@ -362,7 +376,7 @@ if Code.ensure_loaded?(Broadway) do
            kind: kind,
            reason: reason,
            stacktrace: stacktrace,
-           message: %Message{acknowledger: {acknowledger, _, _}}
+           topology_name: name
          }) do
       reason = Utils.normalize_exception(kind, reason, stacktrace)
 
@@ -370,7 +384,7 @@ if Code.ensure_loaded?(Broadway) do
         processor_key: processor_key,
         kind: kind,
         reason: reason,
-        name: Utils.normalize_module_name(acknowledger)
+        name: Utils.normalize_module_name(name)
       }
     end
   end
