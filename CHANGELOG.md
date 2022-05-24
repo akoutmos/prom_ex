@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New Oban plugin metric, total inserted time, the diff of inserted_at and attempted_at
+
 ## [1.7.1] - 2021-03-02
 
 ### Fixed
