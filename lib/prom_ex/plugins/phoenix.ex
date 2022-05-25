@@ -12,6 +12,9 @@ if Code.ensure_loaded?(Phoenix) do
       in your `dashboard_assigns` to the snakecase version of your prefix, the default
       `phoenix_metric_prefix` is `{otp_app}_prom_ex_phoenix`.
 
+    - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+      `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
     ### Single Endpoint/Router
     - `router`: This option is REQUIRED and is the full module name of your Phoenix Router (e.g MyAppWeb.Router).
 
@@ -146,6 +149,7 @@ if Code.ensure_loaded?(Phoenix) do
 
     alias Phoenix.Socket
     alias Plug.Conn
+    alias PromEx.Utils
 
     @stop_event [:prom_ex, :plugin, :phoenix, :stop]
 
@@ -154,14 +158,15 @@ if Code.ensure_loaded?(Phoenix) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix))
       phoenix_event_prefixes = fetch_event_prefixes!(opts)
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
 
       set_up_telemetry_proxy(phoenix_event_prefixes)
 
       # Event metrics definitions
       [
         http_events(metric_prefix, opts),
-        channel_events(metric_prefix),
-        socket_events(metric_prefix)
+        channel_events(metric_prefix, duration_unit),
+        socket_events(metric_prefix, duration_unit)
       ]
     end
 
@@ -244,13 +249,15 @@ if Code.ensure_loaded?(Phoenix) do
       routers = fetch_routers!(opts)
       additional_routes = fetch_additional_routes!(opts)
       http_metrics_tags = [:status, :method, :path, :controller, :action]
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
 
       Event.build(
         :phoenix_http_event_metrics,
         [
           # Capture request duration information
           distribution(
-            metric_prefix ++ [:http, :request, :duration, :milliseconds],
+            metric_prefix ++ [:http, :request, :duration, duration_unit_plural],
             event_name: @stop_event,
             measurement: :duration,
             description: "The time it takes for the application to respond to HTTP requests.",
@@ -259,7 +266,7 @@ if Code.ensure_loaded?(Phoenix) do
             ],
             tag_values: get_conn_tags(routers, additional_routes),
             tags: http_metrics_tags,
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
 
           # Capture response payload size information
@@ -293,7 +300,9 @@ if Code.ensure_loaded?(Phoenix) do
       )
     end
 
-    defp channel_events(metric_prefix) do
+    defp channel_events(metric_prefix, duration_unit) do
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :phoenix_channel_event_metrics,
         [
@@ -314,7 +323,7 @@ if Code.ensure_loaded?(Phoenix) do
 
           # Capture channel handle_in duration
           distribution(
-            metric_prefix ++ [:channel, :handled_in, :duration, :milliseconds],
+            metric_prefix ++ [:channel, :handled_in, :duration, duration_unit_plural],
             event_name: [:phoenix, :channel_handled_in],
             measurement: :duration,
             description: "The time it takes for the application to respond to channel messages.",
@@ -327,19 +336,21 @@ if Code.ensure_loaded?(Phoenix) do
               }
             end,
             tags: [:endpoint],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           )
         ]
       )
     end
 
-    defp socket_events(metric_prefix) do
+    defp socket_events(metric_prefix, duration_unit) do
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :phoenix_socket_event_metrics,
         [
           # Capture socket connection duration
           distribution(
-            metric_prefix ++ [:socket, :connected, :duration, :milliseconds],
+            metric_prefix ++ [:socket, :connected, :duration, duration_unit_plural],
             event_name: [:phoenix, :socket_connected],
             measurement: :duration,
             description: "The time it takes for the application to establish a socket connection.",
@@ -354,7 +365,7 @@ if Code.ensure_loaded?(Phoenix) do
               }
             end,
             tags: [:result, :transport, :endpoint],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           )
         ]
       )

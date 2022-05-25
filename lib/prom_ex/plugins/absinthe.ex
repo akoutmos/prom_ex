@@ -20,6 +20,9 @@ if Code.ensure_loaded?(Absinthe) do
       in your `dashboard_assigns` to the snakecase version of your prefix, the default
       `absinthe_metric_prefix` is `{otp_app}_prom_ex_absinthe`.
 
+    - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+      `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
     This plugin exposes the following metric groups:
     - `:absinthe_execute_event_metrics`
     - `:absinthe_subscription_event_metrics`
@@ -50,6 +53,8 @@ if Code.ensure_loaded?(Absinthe) do
 
     use PromEx.Plugin
 
+    alias PromEx.Utils
+
     # @operation_execute_start_event [:absinthe, :execute, :operation, :start]
     @operation_execute_stop_event [:absinthe, :execute, :operation, :stop]
     # @subscription_publish_start_event [:absinthe, :subscription, :publish, :start]
@@ -78,6 +83,9 @@ if Code.ensure_loaded?(Absinthe) do
         |> Keyword.get(:ignored_entrypoints, [])
         |> MapSet.new()
 
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       event_tags = [:schema, :operation_type, :entrypoint]
 
       Event.build(
@@ -85,7 +93,7 @@ if Code.ensure_loaded?(Absinthe) do
         [
           # Capture GraphQL request duration information
           distribution(
-            metric_prefix ++ [:subscription, :duration, :milliseconds],
+            metric_prefix ++ [:subscription, :duration, duration_unit_plural],
             event_name: @subscription_publish_stop_event,
             measurement: :duration,
             description: "The time it takes for the Absinthe to publish subscription data.",
@@ -94,7 +102,7 @@ if Code.ensure_loaded?(Absinthe) do
             ],
             tag_values: &subscription_stop_tag_values/1,
             tags: event_tags,
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             drop: entrypoint_in_ignore_set?(ignored_entrypoints)
           )
         ]
@@ -108,6 +116,9 @@ if Code.ensure_loaded?(Absinthe) do
         |> Keyword.get(:ignored_entrypoints, [])
         |> MapSet.new()
 
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       event_tags = [:schema, :operation_type, :entrypoint]
 
       Event.build(
@@ -115,7 +126,7 @@ if Code.ensure_loaded?(Absinthe) do
         [
           # Capture GraphQL request duration information
           distribution(
-            metric_prefix ++ [:execute, :duration, :milliseconds],
+            metric_prefix ++ [:execute, :duration, duration_unit_plural],
             event_name: @operation_execute_stop_event,
             measurement: :duration,
             description: "The time it takes for the Absinthe to complete the operation.",
@@ -124,7 +135,7 @@ if Code.ensure_loaded?(Absinthe) do
             ],
             tag_values: &operation_execute_stop_tag_values/1,
             tags: event_tags,
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             drop: entrypoint_in_ignore_set?(ignored_entrypoints)
           ),
 

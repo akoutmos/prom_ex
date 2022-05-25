@@ -77,7 +77,6 @@ if Code.ensure_loaded?(Broadway) do
     alias Broadway.{BatchInfo, Options}
     alias PromEx.Utils
 
-    @millisecond_duration_buckets [10, 100, 500, 1_000, 10_000, 30_000, 60_000]
     @message_batch_size_buckets [1, 5, 10, 20, 50, 100]
 
     @init_topology_event [:broadway, :topology, :init]
@@ -92,6 +91,7 @@ if Code.ensure_loaded?(Broadway) do
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :broadway))
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
 
       # Telemetry metrics will emit warnings if multiple handlers with the same names are defined.
       # As a result, this plugin supports gathering metrics on multiple processors and batches, but needs
@@ -102,13 +102,15 @@ if Code.ensure_loaded?(Broadway) do
 
       # Event metrics definitions
       [
-        topology_init_events(metric_prefix),
-        handle_message_events(metric_prefix),
-        handle_batch_events(metric_prefix)
+        topology_init_events(metric_prefix, duration_unit),
+        handle_message_events(metric_prefix, duration_unit),
+        handle_batch_events(metric_prefix, duration_unit)
       ]
     end
 
-    defp topology_init_events(metric_prefix) do
+    defp topology_init_events(metric_prefix, duration_unit) do
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :broadway_init_event_metrics,
         [
@@ -121,7 +123,7 @@ if Code.ensure_loaded?(Broadway) do
             tag_values: &extract_init_tag_values/1
           ),
           last_value(
-            metric_prefix ++ [:init, :hibernate_after, :default, :milliseconds],
+            metric_prefix ++ [:init, :hibernate_after, :default, duration_unit_plural],
             event_name: @init_topology_event,
             description: "The Broadway supervisor's hibernate after default value.",
             measurement: extract_default_config_measurement(:hibernate_after),
@@ -129,7 +131,7 @@ if Code.ensure_loaded?(Broadway) do
             tag_values: &extract_init_tag_values/1
           ),
           last_value(
-            metric_prefix ++ [:init, :resubscribe_interval, :default, :milliseconds],
+            metric_prefix ++ [:init, :resubscribe_interval, :default, duration_unit_plural],
             event_name: @init_topology_event,
             description: "The Broadway supervisor's resubscribe interval default value.",
             measurement: extract_default_config_measurement(:resubscribe_interval),
@@ -137,13 +139,13 @@ if Code.ensure_loaded?(Broadway) do
             tag_values: &extract_init_tag_values/1
           ),
           last_value(
-            metric_prefix ++ [:init, :max, :duration, :default, :milliseconds],
+            metric_prefix ++ [:init, :max, :duration, :default, duration_unit_plural],
             event_name: @init_topology_event,
-            description: "The Broadway supervisor's max seconds default value (in milliseconds).",
+            description: "The Broadway supervisor's max seconds default value (in #{duration_unit_plural}).",
             measurement: extract_default_config_measurement(:max_seconds),
             tags: [:name],
             tag_values: &extract_init_tag_values/1,
-            unit: {:second, :millisecond}
+            unit: {:second, duration_unit}
           ),
           last_value(
             metric_prefix ++ [:init, :max_restarts, :default, :value],
@@ -154,7 +156,7 @@ if Code.ensure_loaded?(Broadway) do
             tag_values: &extract_init_tag_values/1
           ),
           last_value(
-            metric_prefix ++ [:init, :shutdown, :default, :milliseconds],
+            metric_prefix ++ [:init, :shutdown, :default, duration_unit_plural],
             event_name: @init_topology_event,
             description: "The Broadway supervisor's shutdown default value.",
             measurement: extract_default_config_measurement(:shutdown),
@@ -162,7 +164,7 @@ if Code.ensure_loaded?(Broadway) do
             tag_values: &extract_init_tag_values/1
           ),
           last_value(
-            metric_prefix ++ [:init, :processor, :hibernate_after, :milliseconds],
+            metric_prefix ++ [:init, :processor, :hibernate_after, duration_unit_plural],
             event_name: @init_topology_processors_proxy_event,
             description: "The Broadway processors hibernate after value.",
             measurement: fn _measurements, %{hibernate_after: hibernate_after} -> hibernate_after end,
@@ -183,7 +185,7 @@ if Code.ensure_loaded?(Broadway) do
             tags: [:name, :processor]
           ),
           last_value(
-            metric_prefix ++ [:init, :batcher, :hibernate_after, :milliseconds],
+            metric_prefix ++ [:init, :batcher, :hibernate_after, duration_unit_plural],
             event_name: @init_topology_batchers_proxy_event,
             description: "The Broadway batchers hibernate after value.",
             measurement: fn _measurements, %{hibernate_after: hibernate_after} -> hibernate_after end,
@@ -204,7 +206,7 @@ if Code.ensure_loaded?(Broadway) do
             tags: [:name, :batcher]
           ),
           last_value(
-            metric_prefix ++ [:init, :batcher, :batch_timeout, :milliseconds],
+            metric_prefix ++ [:init, :batcher, :batch_timeout, duration_unit_plural],
             event_name: @init_topology_batchers_proxy_event,
             description: "The Broadway batchers timeout value.",
             measurement: fn _measurements, %{batch_timeout: batch_timeout} -> batch_timeout end,
@@ -267,53 +269,57 @@ if Code.ensure_loaded?(Broadway) do
       end
     end
 
-    defp handle_message_events(metric_prefix) do
+    defp handle_message_events(metric_prefix, duration_unit) do
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :broadway_message_event_metrics,
         [
           distribution(
-            metric_prefix ++ [:process, :message, :duration, :milliseconds],
+            metric_prefix ++ [:process, :message, :duration, duration_unit_plural],
             event_name: @message_stop_event,
             measurement: :duration,
             description: "The time it takes Broadway to process a message.",
             reporter_options: [
-              buckets: @millisecond_duration_buckets
+              buckets: buckets_for_unit(duration_unit)
             ],
             tags: [:processor_key, :name],
             tag_values: &extract_message_tag_values/1,
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
           distribution(
-            metric_prefix ++ [:process, :message, :exception, :duration, :milliseconds],
+            metric_prefix ++ [:process, :message, :exception, :duration, duration_unit_plural],
             event_name: @message_exception_event,
             measurement: :duration,
             description: "The time it takes Broadway to process a message that results in an error.",
             reporter_options: [
-              buckets: @millisecond_duration_buckets
+              buckets: buckets_for_unit(duration_unit)
             ],
             tags: [:processor_key, :name, :kind, :reason],
             tag_values: &extract_exception_tag_values/1,
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           )
         ]
       )
     end
 
-    defp handle_batch_events(metric_prefix) do
+    defp handle_batch_events(metric_prefix, duration_unit) do
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :broadway_batch_event_metrics,
         [
           distribution(
-            metric_prefix ++ [:process, :batch, :duration, :milliseconds],
+            metric_prefix ++ [:process, :batch, :duration, duration_unit_plural],
             event_name: @batch_stop_event,
             measurement: :duration,
             description: "The time it takes Broadway to process a batch of messages.",
             reporter_options: [
-              buckets: @millisecond_duration_buckets
+              buckets: buckets_for_unit(duration_unit)
             ],
             tags: [:batcher, :name],
             tag_values: &extract_batcher_tag_values/1,
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
           distribution(
             metric_prefix ++ [:process, :batch, :failure, :size],
@@ -386,6 +392,15 @@ if Code.ensure_loaded?(Broadway) do
         reason: reason,
         name: Utils.normalize_module_name(name)
       }
+    end
+
+    defp buckets_for_unit(unit) do
+      case unit do
+        :nanosecond -> [1, 100, 1_000, 2_000, 10_000, 50_000, 1_000_000]
+        :microsecond -> [10_000, 100_000, 500_000, 1_000_000, 10_000_000, 30_000_000, 60_000_000]
+        :millisecond -> [10, 100, 500, 1_000, 10_000, 30_000, 60_000]
+        :second -> [1, 5, 10, 100, 500, 1_000, 10_000]
+      end
     end
   end
 else

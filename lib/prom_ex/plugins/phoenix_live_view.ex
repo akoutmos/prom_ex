@@ -10,6 +10,9 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
       `phoenix_live_view_metric_prefix` in your `dashboard_assigns` to the snakecase version of your
       prefix, the default `phoenix_live_view_metric_prefix` is `{otp_app}_prom_ex_phoenix_live_view`.
 
+    - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+      `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
     This plugin exposes the following metric groups:
     - `:phoenix_live_view_event_metrics`
     - `:phoenix_live_view_component_event_metrics`
@@ -61,22 +64,24 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix_live_view))
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
 
       # Event metrics definitions
       [
-        live_view_event_metrics(metric_prefix),
+        live_view_event_metrics(metric_prefix, duration_unit),
         live_component_event_metrics(metric_prefix)
       ]
     end
 
-    defp live_view_event_metrics(metric_prefix) do
+    defp live_view_event_metrics(metric_prefix, duration_unit) do
       bucket_intervals = [10, 100, 500, 1_000, 2_500, 5_000, 10_000]
+      duration_unit_plural = String.to_atom("#{duration_unit}s")
 
       Event.build(
         :phoenix_live_view_event_metrics,
         [
           distribution(
-            metric_prefix ++ [:mount, :duration, :milliseconds],
+            metric_prefix ++ [:mount, :duration, duration_unit_plural],
             event_name: @live_view_mount_stop,
             measurement: :duration,
             description: "The time it takes for the live view to complete the mount callback.",
@@ -85,10 +90,10 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
             ],
             tag_values: &get_mount_socket_tags/1,
             tags: [:action, :module],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
           distribution(
-            metric_prefix ++ [:mount, :exception, :duration, :milliseconds],
+            metric_prefix ++ [:mount, :exception, :duration, duration_unit_plural],
             event_name: @live_view_mount_exception,
             measurement: :duration,
             description:
@@ -98,10 +103,10 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
             ],
             tag_values: &get_mount_exception_tags/1,
             tags: [:action, :module, :kind, :reason],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
           distribution(
-            metric_prefix ++ [:handle_event, :duration, :milliseconds],
+            metric_prefix ++ [:handle_event, :duration, duration_unit_plural],
             event_name: @live_view_handle_event_stop,
             measurement: :duration,
             description: "The time it takes for the live view to complete the handle_event callback.",
@@ -110,10 +115,10 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
             ],
             tag_values: &get_handle_event_socket_tags/1,
             tags: [:event, :action, :module],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
           distribution(
-            metric_prefix ++ [:handle_event, :exception, :duration, :milliseconds],
+            metric_prefix ++ [:handle_event, :exception, :duration, duration_unit_plural],
             event_name: @live_view_handle_event_exception,
             measurement: :duration,
             description:
@@ -123,7 +128,7 @@ if Code.ensure_loaded?(Phoenix.LiveView) do
             ],
             tag_values: &get_handle_event_exception_socket_tags/1,
             tags: [:event, :action, :module, :kind, :reason],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           )
         ]
       )

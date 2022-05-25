@@ -13,6 +13,9 @@ if Code.ensure_loaded?(Plug.Router) do
 
     - `event_prefix`: **Required**, allows you to set the event prefix defined in your `Plug.Telemetry` configuration:
 
+    - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+      `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
     ```
     defmodule WebApp.Router do
       use Plug.Router
@@ -160,12 +163,15 @@ if Code.ensure_loaded?(Plug.Router) do
         |> Keyword.get(:ignore_routes, [])
         |> MapSet.new()
 
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
+      duration_unit_plural = PromEx.Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :plug_router_http_event_metrics,
         [
           # Capture request duration information
           distribution(
-            metric_prefix ++ [:http, :request, :duration, :milliseconds],
+            metric_prefix ++ [:http, :request, :duration, duration_unit_plural],
             event_name: @stop_event,
             measurement: :duration,
             description: "The time it takes for the application to process HTTP requests.",
@@ -175,7 +181,7 @@ if Code.ensure_loaded?(Plug.Router) do
             drop: drop_ignored(ignore_routes, routers),
             tag_values: &get_tags(&1),
             tags: http_metrics_tags,
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
           distribution(
             metric_prefix ++ [:http, :response, :size, :bytes],

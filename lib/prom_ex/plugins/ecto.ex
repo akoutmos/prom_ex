@@ -18,6 +18,9 @@ if Code.ensure_loaded?(Ecto) do
        If you do not provide this value, PromEx will attempt to resolve your Repo modules via the
        `:ecto_repos` configuration on your OTP app.
 
+    - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+      `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
     This plugin exposes the following metric groups:
     - `:ecto_init_event_metrics`
     - `:ecto_query_event_metrics`
@@ -44,6 +47,7 @@ if Code.ensure_loaded?(Ecto) do
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :ecto))
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
 
       repo_event_prefixes =
         opts
@@ -68,7 +72,7 @@ if Code.ensure_loaded?(Ecto) do
       # Event metrics definitions
       [
         init_metrics(metric_prefix),
-        query_metrics(metric_prefix)
+        query_metrics(metric_prefix, duration_unit)
       ]
     end
 
@@ -120,13 +124,15 @@ if Code.ensure_loaded?(Ecto) do
       )
     end
 
-    defp query_metrics(metric_prefix) do
+    defp query_metrics(metric_prefix, duration_unit) do
+      duration_unit_plural = String.to_atom("#{duration_unit}s")
+
       Event.build(
         :ecto_query_event_metrics,
         [
           # Capture the db connection idle time
           distribution(
-            metric_prefix ++ [:repo, :query, :idle, :time, :milliseconds],
+            metric_prefix ++ [:repo, :query, :idle, :time, duration_unit_plural],
             event_name: @query_event,
             measurement: :idle_time,
             description: "The time the connection spent waiting before being checked out for the query.",
@@ -135,12 +141,12 @@ if Code.ensure_loaded?(Ecto) do
             reporter_options: [
               buckets: [10, 50, 250, 1_000, 5_000, 10_000]
             ],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
 
           # Capture the db connection queue time
           distribution(
-            metric_prefix ++ [:repo, :query, :queue, :time, :milliseconds],
+            metric_prefix ++ [:repo, :query, :queue, :time, duration_unit_plural],
             event_name: @query_event,
             measurement: :queue_time,
             description: "The time spent waiting to check out a database connection.",
@@ -149,12 +155,12 @@ if Code.ensure_loaded?(Ecto) do
             reporter_options: [
               buckets: [10, 50, 250, 1_000, 5_000, 10_000]
             ],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
 
           # Capture the db query decode time
           distribution(
-            metric_prefix ++ [:repo, :query, :decode, :time, :milliseconds],
+            metric_prefix ++ [:repo, :query, :decode, :time, duration_unit_plural],
             event_name: @query_event,
             measurement: :decode_time,
             description: "The time spent decoding the data received from the database.",
@@ -163,12 +169,12 @@ if Code.ensure_loaded?(Ecto) do
             reporter_options: [
               buckets: [5, 50, 100, 500, 2_500]
             ],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
 
           # Capture the query execution time
           distribution(
-            metric_prefix ++ [:repo, :query, :execution, :time, :milliseconds],
+            metric_prefix ++ [:repo, :query, :execution, :time, duration_unit_plural],
             event_name: @query_event,
             measurement: :query_time,
             description: "The time spent executing the query.",
@@ -177,12 +183,12 @@ if Code.ensure_loaded?(Ecto) do
             reporter_options: [
               buckets: [10, 50, 250, 2_500, 10_000, 30_000]
             ],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
 
           # Capture the total time (the sum of all other measurements)
           distribution(
-            metric_prefix ++ [:repo, :query, :total, :time, :milliseconds],
+            metric_prefix ++ [:repo, :query, :total, :time, duration_unit_plural],
             event_name: @query_event,
             measurement: :total_time,
             description: "The sum of the other time measurements.",
@@ -191,7 +197,7 @@ if Code.ensure_loaded?(Ecto) do
             reporter_options: [
               buckets: [10, 50, 250, 2_500, 10_000, 30_000]
             ],
-            unit: {:native, :millisecond}
+            unit: {:native, duration_unit}
           ),
 
           # Capture the number of results returned
