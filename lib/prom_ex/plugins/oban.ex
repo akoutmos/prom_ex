@@ -221,7 +221,7 @@ if Code.ensure_loaded?(Oban) do
             tag_values: &job_complete_tag_values/1,
             tags: [:name, :queue, :state, :worker],
             unit: {:native, :millisecond},
-            keep: keep_function_filter
+            keep: &filter_snoozed_jobs(&1, keep_function_filter)
           ),
           distribution(
             metric_prefix ++ [:job, :complete, :attempts],
@@ -459,6 +459,9 @@ if Code.ensure_loaded?(Oban) do
           raise "Invalid :oban_supervisors option value."
       end
     end
+
+    defp filter_snoozed_jobs(%{state: :snoozed}, _original_keep_filter), do: false
+    defp filter_snoozed_jobs(metadata, original_keep_filter), do: original_keep_filter.(metadata)
 
     defp keep_oban_instance_metrics(oban_supervisors) do
       fn
