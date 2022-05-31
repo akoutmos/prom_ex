@@ -813,7 +813,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -969,7 +969,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
