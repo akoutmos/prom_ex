@@ -149,6 +149,8 @@ if Code.ensure_loaded?(Phoenix) do
 
     @stop_event [:prom_ex, :plugin, :phoenix, :stop]
 
+    @unknown_value "Unknown"
+
     @impl true
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
@@ -243,7 +245,7 @@ if Code.ensure_loaded?(Phoenix) do
     defp http_events(metric_prefix, opts) do
       routers = fetch_routers!(opts)
       additional_routes = fetch_additional_routes!(opts)
-      http_metrics_tags = [:status, :method, :path, :controller, :action]
+      http_metrics_tags = [:endpoint, :status, :method, :path, :controller, :action]
 
       Event.build(
         :phoenix_http_event_metrics,
@@ -363,21 +365,10 @@ if Code.ensure_loaded?(Phoenix) do
     defp get_conn_tags(routers, []) do
       fn
         %{conn: %Conn{} = conn} ->
-          default_route_tags = %{
-            path: "Unknown",
-            controller: "Unknown",
-            action: "Unknown"
-          }
-
-          conn
-          |> do_get_router_info(routers, default_route_tags)
-          |> Map.merge(%{
-            status: conn.status,
-            method: conn.method
-          })
+          merge_conn_tags(conn, routers, default_route_tags())
 
         _ ->
-          Logger.warning("Could not resolve path for request")
+          Logger.warning("Could not resolve tags for request")
       end
     end
 
@@ -385,20 +376,37 @@ if Code.ensure_loaded?(Phoenix) do
       fn
         %{conn: %Conn{} = conn} ->
           default_route_tags = handle_additional_routes_check(conn, additional_routes)
-
-          conn
-          |> do_get_router_info(routers, default_route_tags)
-          |> Map.merge(%{
-            status: conn.status,
-            method: conn.method
-          })
+          merge_conn_tags(conn, routers, default_route_tags)
 
         _ ->
-          Logger.warning("Could not resolve path for request")
+          Logger.warning("Could not resolve tags for request")
       end
     end
 
-    defp do_get_router_info(conn, routers, default_route_tags) do
+    defp merge_conn_tags(conn, routers, default_route_tags) do
+      endpoint_tags = do_get_endpoint_tags(conn)
+      router_tags = do_get_router_tags(conn, routers, default_route_tags)
+
+      default_route_tags
+      |> Map.merge(endpoint_tags)
+      |> Map.merge(router_tags)
+      |> Map.merge(%{status: conn.status, method: conn.method})
+    end
+
+    defp do_get_endpoint_tags(conn) do
+      case conn do
+        %{private: %{phoenix_endpoint: endpoint}} ->
+          %{endpoint: normalize_module_name(endpoint)}
+
+        %{socket: %{endpoint: endpoint}} ->
+          %{endpoint: normalize_module_name(endpoint)}
+
+        _ ->
+          %{}
+      end
+    end
+
+    defp do_get_router_tags(conn, routers, default_route_tags) do
       routers
       |> Enum.find_value(default_route_tags, fn router ->
         case Phoenix.Router.route_info(router, conn.method, conn.request_path, "") do
@@ -416,33 +424,28 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     defp handle_additional_routes_check(%Conn{request_path: request_path}, additional_routes) do
-      default_tags = %{
-        path: "Unknown",
-        controller: "Unknown",
-        action: "Unknown"
-      }
-
       additional_routes
-      |> Enum.find_value(default_tags, fn {path_label, route_check} ->
+      |> Enum.find_value(default_route_tags(), fn {path_label, route_check} ->
         cond do
           is_binary(route_check) and route_check == request_path ->
-            %{
-              path: path_label,
-              controller: "NA",
-              action: "NA"
-            }
+            default_route_tags(path: path_label, controller: "NA", action: "NA")
 
           match?(%Regex{}, route_check) and Regex.match?(route_check, request_path) ->
-            %{
-              path: path_label,
-              controller: "NA",
-              action: "NA"
-            }
+            default_route_tags(path: path_label, controller: "NA", action: "NA")
 
           true ->
             false
         end
       end)
+    end
+
+    defp default_route_tags(opts \\ []) do
+      %{
+        path: Keyword.get(opts, :path, @unknown_value),
+        controller: Keyword.get(opts, :controller, @unknown_value),
+        action: Keyword.get(opts, :action, @unknown_value),
+        endpoint: Keyword.get(opts, :endpoint, @unknown_value)
+      }
     end
 
     defp set_up_telemetry_proxy(phoenix_event_prefixes) do
@@ -473,7 +476,7 @@ if Code.ensure_loaded?(Phoenix) do
     defp normalize_module_name(name), do: name
 
     defp normalize_action(action) when is_atom(action), do: action
-    defp normalize_action(_action), do: "Unknown"
+    defp normalize_action(_action), do: @unknown_value
 
     defp fetch_additional_routes!(opts) do
       opts
