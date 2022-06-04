@@ -327,7 +327,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1000\", status=~\"2..\"}[24h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[24h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", le=\"500\", status=~\"2..\"}[24h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", le=\"1000\", status=~\"2..\"}[24h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", le=\"500\", status=~\"2..\"}[24h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", status=~\"2..\"}[24h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -391,7 +391,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", status=~\"4..|5..\"}[24h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[24h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -447,7 +447,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[24h]))",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[24h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -503,7 +503,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[24h])))",
+          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[24h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -572,7 +572,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"1000\", status=~\"2..\"}[1h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", le=\"500\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", status=~\"2..\"}[1h]))\n) * 100",
+          "expr": "(\n  (\n    sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", le=\"500\", status=~\"2..\"}[1h])) + \n    (sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", le=\"1000\", status=~\"2..\"}[1h])) - sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", le=\"500\", status=~\"2..\"}[1h]))) / 2\n  ) \n  / \n  sum(increase(<%= @phoenix_metric_prefix %>_http_request_duration_milliseconds_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", status=~\"2..\"}[1h]))\n) * 100",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -637,7 +637,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])) OR on() vector(0)",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\", status=~\"4..|5..\"}[1h])) / sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\",}[1h])) OR on() vector(0)",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -693,7 +693,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[1h]))",
+          "expr": "sum(increase(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[1h]))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -749,7 +749,7 @@
       "pluginVersion": "7.1.3",
       "targets": [
         {
-          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[1h])))",
+          "expr": "round(sum(increase(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[1h])))",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -885,7 +885,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\"}[$interval])) by (le)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_bucket{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1066,7 +1066,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\"}[$interval])) by(path, status)",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_sum{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by(path, status) / sum(irate(<%= @phoenix_metric_prefix %>_http_response_size_bytes_count{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])) by(path, status)",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -1163,7 +1163,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\"}[$interval])",
+          "expr": "irate(<%= @phoenix_metric_prefix %>_http_requests_total{job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval])",
           "interval": "",
           "legendFormat": "{{ method }} {{ path }} :: {{ status }}",
           "refId": "A"
@@ -1258,19 +1258,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"2..\", job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]))",
           "interval": "",
           "legendFormat": "2xx",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"4..\", job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]))",
           "interval": "",
           "legendFormat": "4xx",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\"}[$interval]))",
+          "expr": "sum(irate(<%= @phoenix_metric_prefix %>_http_requests_total{status=~\"5..\", job=\"$job\", instance=\"$instance\", endpoint=\"$endpoint\"}[$interval]))",
           "interval": "",
           "legendFormat": "5xx",
           "refId": "C"
