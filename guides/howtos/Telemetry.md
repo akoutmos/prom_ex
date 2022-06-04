@@ -72,8 +72,8 @@ doing the following:
 
 ```elixir
 :telemetry.attach(
+  "my-handler-1",
   [:my_cool_app, :accounts, :new_user, :success],
-  query_event,
   fn _event_name, _event_measurement, event_metadata, _config ->
     Logger.debug("User has registered: #{inspect(event_metadata)}")
   end,
@@ -81,8 +81,8 @@ doing the following:
 )
 
 :telemetry.attach(
+  "my-handler-2",
   [:my_cool_app, :accounts, :new_user, :error],
-  query_event,
   fn _event_name, _event_measurement, event_metadata, _config ->
     Logger.warn("User failed to register: #{inspect(event_metadata)}")
   end,
