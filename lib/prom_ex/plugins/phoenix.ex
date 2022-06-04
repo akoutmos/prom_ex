@@ -365,7 +365,7 @@ if Code.ensure_loaded?(Phoenix) do
     defp get_conn_tags(routers, []) do
       fn
         %{conn: %Conn{} = conn} ->
-          merge_conn_tags(conn, routers, default_route_tags())
+          merge_conn_tags(conn, routers, default_conn_tags())
 
         _ ->
           Logger.warning("Could not resolve tags for request")
@@ -375,19 +375,19 @@ if Code.ensure_loaded?(Phoenix) do
     defp get_conn_tags(routers, additional_routes) do
       fn
         %{conn: %Conn{} = conn} ->
-          default_route_tags = handle_additional_routes_check(conn, additional_routes)
-          merge_conn_tags(conn, routers, default_route_tags)
+          default_conn_tags = handle_additional_routes_check(conn, additional_routes)
+          merge_conn_tags(conn, routers, default_conn_tags)
 
         _ ->
           Logger.warning("Could not resolve tags for request")
       end
     end
 
-    defp merge_conn_tags(conn, routers, default_route_tags) do
+    defp merge_conn_tags(conn, routers, default_conn_tags) do
       endpoint_tags = do_get_endpoint_tags(conn)
-      router_tags = do_get_router_tags(conn, routers, default_route_tags)
+      router_tags = do_get_router_tags(conn, routers, default_conn_tags)
 
-      default_route_tags
+      default_conn_tags
       |> Map.merge(endpoint_tags)
       |> Map.merge(router_tags)
       |> Map.merge(%{status: conn.status, method: conn.method})
@@ -406,9 +406,9 @@ if Code.ensure_loaded?(Phoenix) do
       end
     end
 
-    defp do_get_router_tags(conn, routers, default_route_tags) do
+    defp do_get_router_tags(conn, routers, default_conn_tags) do
       routers
-      |> Enum.find_value(default_route_tags, fn router ->
+      |> Enum.find_value(default_conn_tags, fn router ->
         case Phoenix.Router.route_info(router, conn.method, conn.request_path, "") do
           :error ->
             false
@@ -425,13 +425,13 @@ if Code.ensure_loaded?(Phoenix) do
 
     defp handle_additional_routes_check(%Conn{request_path: request_path}, additional_routes) do
       additional_routes
-      |> Enum.find_value(default_route_tags(), fn {path_label, route_check} ->
+      |> Enum.find_value(default_conn_tags(), fn {path_label, route_check} ->
         cond do
           is_binary(route_check) and route_check == request_path ->
-            default_route_tags(path: path_label, controller: "NA", action: "NA")
+            default_conn_tags(path: path_label, controller: "NA", action: "NA")
 
           match?(%Regex{}, route_check) and Regex.match?(route_check, request_path) ->
-            default_route_tags(path: path_label, controller: "NA", action: "NA")
+            default_conn_tags(path: path_label, controller: "NA", action: "NA")
 
           true ->
             false
@@ -439,7 +439,7 @@ if Code.ensure_loaded?(Phoenix) do
       end)
     end
 
-    defp default_route_tags(opts \\ []) do
+    defp default_conn_tags(opts \\ []) do
       %{
         path: Keyword.get(opts, :path, @unknown_value),
         controller: Keyword.get(opts, :controller, @unknown_value),
