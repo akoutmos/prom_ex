@@ -61,6 +61,7 @@ defmodule PromEx.MixProject do
       {:oban, ">= 2.4.0", optional: true},
       {:absinthe, ">= 1.6.0", optional: true},
       {:broadway, ">= 1.0.2", optional: true},
+      {:tesla, ">= 1.4.0", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
