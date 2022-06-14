@@ -52,7 +52,7 @@ if Code.ensure_loaded?(Ecto) do
         end)
         |> Enum.map(fn repo ->
           otp_app
-          |> Application.get_env(repo)
+          |> Application.get_env(repo, [])
           |> Keyword.get_lazy(:telemetry_prefix, fn ->
             telemetry_prefix(repo)
           end)
