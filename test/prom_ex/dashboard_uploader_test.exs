@@ -116,7 +116,7 @@ defmodule PromEx.DashboardUploaderTest do
                )
 
              wait_for_process(pid, 1_000)
-           end) =~ "Recieved a 401 from Grafana because"
+           end) =~ "Received a 401 from Grafana because"
   end
 
   test "should apply any custom functions to the dashboard if provided", %{bypass: bypass} do
