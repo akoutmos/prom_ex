@@ -132,6 +132,35 @@ web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="+Inf"} 3
 web_app_prom_ex_oban_job_queue_time_milliseconds_sum{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker"} 137.731
 web_app_prom_ex_oban_job_queue_time_milliseconds_count{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker"} 3
+# HELP web_app_prom_ex_oban_job_inserted_time_milliseconds The amount of time from Oban job insertion to job attempt.
+# TYPE web_app_prom_ex_oban_job_inserted_time_milliseconds histogram
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="+Inf"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="10"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="100"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="1000"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="20000"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="500"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="5000"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="+Inf"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="10"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="100"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="1000"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="20000"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="500"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="5000"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="+Inf"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="10"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="100"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="1000"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="20000"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="500"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="5000"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_count{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker"} 8
+web_app_prom_ex_oban_job_inserted_time_milliseconds_count{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker"} 1
+web_app_prom_ex_oban_job_inserted_time_milliseconds_count{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker"} 3
+web_app_prom_ex_oban_job_inserted_time_milliseconds_sum{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker"} 0.38451099999999994
+web_app_prom_ex_oban_job_inserted_time_milliseconds_sum{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker"} 4.2999999999999995e-5
+web_app_prom_ex_oban_job_inserted_time_milliseconds_sum{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker"} 1.37e-4
 # HELP web_app_prom_ex_oban_job_processing_duration_milliseconds The amount of time it takes to processes an Oban job.
 # TYPE web_app_prom_ex_oban_job_processing_duration_milliseconds histogram
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="10"} 0

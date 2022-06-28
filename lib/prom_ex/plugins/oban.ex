@@ -211,6 +211,19 @@ if Code.ensure_loaded?(Oban) do
             keep: keep_function_filter
           ),
           distribution(
+            metric_prefix ++ [:job, :inserted, :time, :milliseconds],
+            event_name: @job_complete_event,
+            measurement: &job_inserted_time_in_queue/2,
+            description: "The amount of time from Oban job insertion to job attempt.",
+            reporter_options: [
+              buckets: job_duration_buckets
+            ],
+            tag_values: &job_complete_tag_values/1,
+            tags: [:name, :queue, :state, :worker],
+            unit: {:native, :millisecond},
+            keep: &filter_snoozed_jobs(&1, keep_function_filter)
+          ),
+          distribution(
             metric_prefix ++ [:job, :complete, :attempts],
             event_name: @job_complete_event,
             measurement: fn _measurement, %{attempt: attempt} ->
@@ -316,6 +329,9 @@ if Code.ensure_loaded?(Oban) do
         ]
       )
     end
+
+    defp job_inserted_time_in_queue(_measure, metadata),
+      do: DateTime.diff(metadata.job.attempted_at, metadata.job.inserted_at, :millisecond)
 
     defp job_complete_tag_values(metadata) do
       config =
@@ -443,6 +459,9 @@ if Code.ensure_loaded?(Oban) do
           raise "Invalid :oban_supervisors option value."
       end
     end
+
+    defp filter_snoozed_jobs(%{state: :snoozed}, _original_keep_filter), do: false
+    defp filter_snoozed_jobs(metadata, original_keep_filter), do: original_keep_filter.(metadata)
 
     defp keep_oban_instance_metrics(oban_supervisors) do
       fn
