@@ -7,7 +7,7 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "glob-parent": ">=5.1.2",
+    "glob-parent": ">=6.0.1",
     "normalize-url": ">=4.5.1",
     "nprogress": "^0.2.0",
     "phoenix": "file:../deps/phoenix",
