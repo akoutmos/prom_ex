@@ -45,6 +45,7 @@ defmodule Mix.Tasks.PromEx.Dashboard.Publish do
         raise "#{prom_ex_module} is not a valid PromEx module because #{inspect(reason)}"
     end
     |> check_grafana_configuration()
+    |> start_finch()
     |> upload_dashboards(uploader_process_name, timeout)
   end
 
@@ -76,6 +77,19 @@ defmodule Mix.Tasks.PromEx.Dashboard.Publish do
     if prom_ex_module.init_opts().grafana_config == :disabled do
       raise "#{prom_ex_module} has the Grafana option disabled. Please update your configuration and rerun."
     end
+
+    prom_ex_module
+  end
+
+  defp start_finch(prom_ex_module) do
+    client_name = Module.concat([prom_ex_module, GrafanaClient])
+
+    Supervisor.start_link(
+      [
+        {PromEx.GrafanaClient, name: client_name}
+      ],
+      strategy: :one_for_one
+    )
 
     prom_ex_module
   end
