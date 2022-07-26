@@ -52,7 +52,6 @@ jobs:
     strategy:
       matrix:
         elixir:
-          - '1.12'
           - '1.13'
         otp:
           - '24.0'
