@@ -22,20 +22,18 @@ jobs:
         with:
           elixir-version: '1.13.4'
           otp-version: '25.0'
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-v2-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-v2-
+      - name: Restore cache
+        uses: actions/cache@v3
+          with:
+            path: |
+              deps
+              _build
+              priv/plts
+            key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+            restore-keys: |
+              ${{ runner.os }}-mix-
       - name: Install dependencies
         run: mix deps.get
-      - name: Restore PLT cache
-        uses: actions/cache@v2
-        with:
-          path: priv/plts
-          key: ${{ runner.os }}-mix-v2-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-v2-
       - name: Mix Formatter
         run: mix format --check-formatted
       - name: Check for compiler warnings
@@ -68,12 +66,13 @@ jobs:
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-v2-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-v2-
+      - name: Restore cache
+        uses: actions/cache@v3
+          with:
+            path: deps
+            key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+            restore-keys: |
+              ${{ runner.os }}-mix-
       - name: Install dependencies
         run: mix deps.get
       - name: ExUnit tests
