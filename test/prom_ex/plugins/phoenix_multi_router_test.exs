@@ -33,11 +33,6 @@ defmodule PromEx.Plugins.PhoenixMultiRouterTest do
     start_supervised!(WebApp.PromEx)
     Events.execute_all(:phoenix_multi_router)
 
-    metrics =
-      WebApp.PromEx
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:phoenix_multi_router)
+    Metrics.assert_prom_ex_metics(WebApp.PromEx, :phoenix_multi_router)
   end
 end

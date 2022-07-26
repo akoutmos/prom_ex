@@ -19,11 +19,6 @@ defmodule PromEx.Plugins.EctoTest do
     start_supervised!(WebApp.PromEx)
     Events.execute_all(:ecto)
 
-    metrics =
-      WebApp.PromEx
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:ecto)
+    Metrics.assert_prom_ex_metics(WebApp.PromEx, :ecto)
   end
 end
