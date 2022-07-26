@@ -24,14 +24,14 @@ jobs:
           otp-version: '25.0'
       - name: Restore cache
         uses: actions/cache@v3
-          with:
-            path: |
-              deps
-              _build
-              priv/plts
-            key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-            restore-keys: |
-              ${{ runner.os }}-mix-
+        with:
+          path: |
+            deps
+            _build
+            priv/plts
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - name: Install dependencies
         run: mix deps.get
       - name: Mix Formatter
@@ -68,11 +68,11 @@ jobs:
           otp-version: ${{ matrix.otp }}
       - name: Restore cache
         uses: actions/cache@v3
-          with:
-            path: deps
-            key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-            restore-keys: |
-              ${{ runner.os }}-mix-
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - name: Install dependencies
         run: mix deps.get
       - name: ExUnit tests
