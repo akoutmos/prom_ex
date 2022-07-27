@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.7.1] - 2021-03-02
+## [1.7.1] - 2022-03-02
 
 ### Fixed
 
 - Added missing priv dir to release.
 
-## [1.7.0] - 2021-03-01
+## [1.7.0] - 2022-03-01
 
 ### Added
 
