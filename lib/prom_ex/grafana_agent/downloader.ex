@@ -14,24 +14,28 @@ defmodule PromEx.GrafanaAgent.Downloader do
     {"0.23.0", :darwin, :arm64} => "e94f7fd0e1ef9fb497cff4f1260cc22967d6a5b003dd2c99f494f9e457482dda",
     {"0.23.0", :linux, :amd64} => "9c846f8a1f7829f257759d63db6725831d7bfaba36f1689cdb1a12e92bb91b75",
     {"0.23.0", :linux, :arm64} => "3b85ce425026302028f7f07d41fa4fc14e9f028ffe7c9067194753cfa719e0d3",
+    {"0.23.0", :freebsd, :amd64} => "ec067782cc0fcd9c4e951fd6dd0d8013df7f5ed2cd0acb495ab3acfeb6e72b92",
 
     # All the SHA hashes for version 0.22.0
     {"0.22.0", :darwin, :amd64} => "1641b70c63fd077a7218b4f7edfca2ef96d103753f6e202611a694306c58ce58",
     {"0.22.0", :darwin, :arm64} => "671244ef0f262c71d9194a1db6765a16261d782ebb608df74558219d0a6ef561",
     {"0.22.0", :linux, :amd64} => "7d0611f51fa3da042a9d67cabc5fd3b6529dad75368f8858d234719db1b94c55",
     {"0.22.0", :linux, :arm64} => "152027ce40072db581fed8c6d58aad5df58b6e8ed2b85858a5df955391db4a8b",
+    {"0.22.0", :freebsd, :amd64} => "a70d8d268e695906b484d2bd1302d744786571e211ba019e5cef907d4589f82f",
 
     # All the SHA hashes for version 0.21.2
     {"0.21.2", :darwin, :amd64} => "cbd8744f0b280a392dc51441818917fdfb7738187a6281c8ab07a0aca0bb6bcb",
     {"0.21.2", :darwin, :arm64} => "3148ddfb0fac53d256a0e30cc9ce20e13cf2db02476fe08fd9b4f44521e38bc0",
     {"0.21.2", :linux, :amd64} => "2fb5b2017de181ed4cf1b6fbe6813ee490f0e316bb1b3770c566330658f4586d",
     {"0.21.2", :linux, :arm64} => "daba91ec861dbc9db22b08f4ef8c70721d5725804a59d5a62040a5decbea79fa",
+    {"0.21.2", :freebsd, :amd64} => "f5bed6ee6113f6940d9b1a29e3067b6f2e54843e1e292dfc54651374823605f0",
 
     # All the SHA hashes for version 0.20.1
     {"0.20.1", :darwin, :amd64} => "ada22a835742f9a89e39bc2fbf31de2d876e597b8813fd2c51decf1b2bc8b858",
     {"0.20.1", :darwin, :arm64} => "a62d7ee2397aedb5d85abf6fa9376132cee2097c2e7b00f5a3c66ae967997107",
     {"0.20.1", :linux, :amd64} => "d62f6cc8c9fb35bcb19486c6c4c07b100edfb25eb3fb223230c0e1dd302c7d11",
-    {"0.20.1", :linux, :arm64} => "d96bd5ac1fbeceb0d96c648f84a7f4a98ff89557602e732ac5d6feaea4f2f334"
+    {"0.20.1", :linux, :arm64} => "d96bd5ac1fbeceb0d96c648f84a7f4a98ff89557602e732ac5d6feaea4f2f334",
+    {"0.20.1", :freebsd, :amd64} => "bb64766e1a14bf46db4a59b64a60a5a1d2f2815fbe914392a754e4d1bb4d6e72"
   }
 
   defguardp is_valid_version(version) when version in @supported_grafana_agent_versions
@@ -90,6 +94,7 @@ defmodule PromEx.GrafanaAgent.Downloader do
       {{:unix, :darwin}, arch, 64} when arch in ~w(arm aarch64) -> {agent_version, :darwin, :arm64}
       {{:unix, :darwin}, "x86_64", 64} -> {agent_version, :darwin, :amd64}
       {{:unix, :linux}, "aarch64", 64} -> {agent_version, :linux, :arm64}
+      {{:unix, :freebsd}, "amd64", 64} -> {agent_version, :freebsd, :amd64}
       {{:unix, _osname}, arch, 64} when arch in ~w(x86_64 amd64) -> {agent_version, :linux, :amd64}
       unsupported_arch -> raise "Unsupported architecture: #{inspect(unsupported_arch)}"
     end
