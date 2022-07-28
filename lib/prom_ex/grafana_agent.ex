@@ -1,7 +1,7 @@
 defmodule PromEx.GrafanaAgent do
   @moduledoc """
   This GenServer is responsible for starting the Grafana Agent
-  binary via a port and ensurnig that it stays up and running.
+  binary via a port and ensuring that it stays up and running.
   """
 
   use GenServer

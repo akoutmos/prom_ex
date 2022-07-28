@@ -1,6 +1,6 @@
 defmodule PromEx.Utils do
   @moduledoc """
-  This module prodvides several general purpose utilities
+  This module provides several general purpose utilities
   for use in PromEx plugs.
   """
 
