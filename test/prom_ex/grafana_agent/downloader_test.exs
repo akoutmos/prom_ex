@@ -51,6 +51,7 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
       {{:unix, :darwin}, arch, 64} when arch in ~w(arm aarch64) -> {:darwin, :arm64}
       {{:unix, :darwin}, "x86_64", 64} -> {:darwin, :amd64}
       {{:unix, :linux}, "aarch64", 64} -> {:linux, :arm64}
+      {{:unix, :freebsd}, "amd64", 64} -> {:freebsd, :amd64}
       {{:unix, _osname}, arch, 64} when arch in ~w(x86_64 amd64) -> {:linux, :amd64}
     end
   end
