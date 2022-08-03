@@ -176,6 +176,8 @@ defmodule PromEx.Config do
 
       * `:agent_port` - What port should GrafanaAgent run on.
 
+      * `:grpc_port` - What port should GrafanaAgent gRPC server run on.
+
       * `:scrape_interval` - How often should GrafanaAgent scrape the application. The default is `15s`.
 
       * `:bearer_token` - The bearer token that GrafanaAgent should attach to the request to your app.
@@ -325,6 +327,7 @@ defmodule PromEx.Config do
       bearer_token: Keyword.get(opts, :bearer_token, "blank"),
       log_level: Keyword.get(opts, :log_level, "error"),
       agent_port: Keyword.get(opts, :agent_port, "4040"),
+      grpc_port: Keyword.get(opts, :grpc_port, "9095"),
       job: Keyword.get(opts, :job, nil),
       instance: Keyword.get(opts, :instance, nil),
       prometheus_url: get_grafana_agent_config(opts, :prometheus_url),
