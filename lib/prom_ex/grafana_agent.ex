@@ -95,7 +95,7 @@ defmodule PromEx.GrafanaAgent do
     end
   end
 
-  defp do_download_grafana_agent(%{grafana_agent_config: config} = state) do
+  defp do_download_grafana_agent(%{grafana_agent_config: config, prom_ex_module: prom_ex_module} = state) do
     # Get the root path where all GrafanaAgent related items will reside
     base_directory = get_base_directory(state)
 
@@ -108,7 +108,7 @@ defmodule PromEx.GrafanaAgent do
 
     # Download the configured GrafanaAgent binary
     config.version
-    |> Downloader.download_grafana_agent(download_dir, bin_dir)
+    |> Downloader.download_grafana_agent(download_dir, bin_dir, prom_ex_module)
     |> case do
       {:ok, binary_path} ->
         binary_path
