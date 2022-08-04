@@ -48,6 +48,20 @@ defmodule Mix.Tasks.PromEx.Gen.ConfigTest do
     assert contents =~ ~r/use PromEx, otp_app: :sample/
   end
 
+  test "module can be provided as an arg", ctx do
+    capture_io(fn ->
+      File.cd!(ctx.tmp_dir, fn -> run(~w(-d an_id -o sample -m AnotherPromEx)) end)
+    end)
+
+    contents =
+      ctx.sample_app_dir
+      |> Path.join("another_prom_ex.ex")
+      |> File.read!()
+
+    # Module name
+    assert contents =~ ~r/defmodule Sample.AnotherPromEx/
+  end
+
   test "prompts user for confirmation if config is already generated", ctx do
     # File did not exist previously
     assert capture_io(fn ->

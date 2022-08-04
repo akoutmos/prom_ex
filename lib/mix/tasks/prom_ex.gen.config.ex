@@ -7,17 +7,22 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
 
   The following CLI flags are supported:
   ```md
-  -d, --datasource  The datasource that the dashboards will be reading from to populate
-                    their time series data. This `datasource` value should align with
-                    what is configured in Grafana from the Prometheus instance's
-                    `datasource_id`.
+  -d, --datasource      The datasource that the dashboards will be reading from to populate
+                        their time series data. This `datasource` value should align with
+                        what is configured in Grafana from the Prometheus instance's
+                        `datasource_id`.
 
-  -o, --otp_app     The OTP application that PromEx is being installed in. This
-                    should be provided as the snake case atom (minus the leading
-                    colon). For example, if the `:app` value in your `mix.exs` file
-                    is `:my_cool_app`, this argument should be provided as `my_cool_app`.
-                    By default PromEx will read your `mix.exs` file to determine the OTP
-                    application value so this is an OPTIONAL argument.
+  -o, --otp_app         The OTP application that PromEx is being installed in. This
+                        should be provided as the snake case atom (minus the leading
+                        colon). For example, if the `:app` value in your `mix.exs` file
+                        is `:my_cool_app`, this argument should be provided as `my_cool_app`.
+                        By default PromEx will read your `mix.exs` file to determine the OTP
+                        application value so this is an OPTIONAL argument.
+
+  -m, --prom_ex_module  Optional name of the PromEx module that will be created. This should
+                        be provided as an unscoped module name, and it will be saved to the
+                        corresponding file, e.g. `-m OpsPromEx` will save to `ops_prom_ex.ex`.
+
   ```
   """
 
@@ -33,7 +38,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
     Mix.Task.run("compile")
 
     # Get CLI args
-    %{otp_app: otp_app, datasource: datasource_id} =
+    %{otp_app: otp_app, datasource: datasource_id, prom_ex_module: prom_ex_module} =
       args
       |> parse_options()
       |> Map.put_new_lazy(:otp_app, fn ->
@@ -41,6 +46,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
         |> Keyword.get(:app)
         |> Atom.to_string()
       end)
+      |> Map.put_new(:prom_ex_module, "PromEx")
       |> case do
         %{otp_app: _otp_app, datasource: _datasource_id} = required_args ->
           required_args
@@ -51,7 +57,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
 
     # Generate relevant path info
     project_root = File.cwd!()
-    path = Path.join([project_root, "lib", otp_app, "prom_ex.ex"])
+    filename = Macro.underscore(prom_ex_module)
+    path = Path.join([project_root, "lib", otp_app, "#{filename}.ex"])
     dirname = Path.dirname(path)
 
     unless File.exists?(dirname) do
@@ -68,10 +75,10 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
 
     if write_file do
       # Write out the config file
-      create_config_file(path, otp_app, datasource_id)
+      create_config_file(path, otp_app, datasource_id, prom_ex_module)
       IO.info("Successfully wrote out #{path}")
 
-      first_line = "| Be sure to follow the @moduledoc instructions in #{Macro.camelize(otp_app)}.PromEx |"
+      first_line = "| Be sure to follow the @moduledoc instructions in #{Macro.camelize(otp_app)}.#{prom_ex_module} |"
       line_length = String.length(first_line) - 2
       second_line = "| to complete the PromEx setup process" <> String.duplicate(" ", line_length - 37) <> "|"
       divider = "+" <> String.duplicate("-", line_length) <> "+"
@@ -83,8 +90,8 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
   end
 
   defp parse_options(args) do
-    cli_options = [otp_app: :string, datasource: :string]
-    cli_aliases = [o: :otp_app, d: :datasource]
+    cli_options = [otp_app: :string, datasource: :string, prom_ex_module: :string]
+    cli_aliases = [o: :otp_app, d: :datasource, m: :prom_ex_module]
 
     args
     |> OptionParser.parse(aliases: cli_aliases, strict: cli_options)
@@ -97,13 +104,14 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
     end
   end
 
-  defp create_config_file(path, otp_app, datasource_id) do
+  defp create_config_file(path, otp_app, datasource_id, prom_ex_module) do
     module_name = Macro.camelize(otp_app)
 
     assigns = [
       datasource_id: datasource_id,
       module_name: module_name,
-      otp_app: otp_app
+      otp_app: otp_app,
+      prom_ex_module: prom_ex_module
     ]
 
     module_template =
@@ -116,7 +124,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
 
   defp prom_ex_module_template do
     """
-    defmodule <%= @module_name %>.PromEx do
+    defmodule <%= @module_name %>.<%= @prom_ex_module %> do
       @moduledoc \"\"\"
       Be sure to add the following to finish setting up PromEx:
 
@@ -124,7 +132,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
          configure the necessary bit of PromEx. Be sure to check out `PromEx.Config` for
          more details regarding configuring PromEx:
          ```
-         config :<%= @otp_app %>, <%= @module_name %>.PromEx,
+         config :<%= @otp_app %>, <%= @module_name %>.<%= @prom_ex_module %>,
            disabled: false,
            manual_metrics_start_delay: :no_delay,
            drop_metrics_groups: [],
@@ -139,7 +147,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
          ```
          def start(_type, _args) do
            children = [
-             <%= @module_name %>.PromEx,
+             <%= @module_name %>.<%= @prom_ex_module %>,
 
              ...
            ]
@@ -159,7 +167,7 @@ defmodule Mix.Tasks.PromEx.Gen.Config do
 
            ...
 
-           plug PromEx.Plug, prom_ex_module: <%= @module_name %>.PromEx
+           plug PromEx.Plug, prom_ex_module: <%= @module_name %>.<%= @prom_ex_module %>
 
            ...
          end
