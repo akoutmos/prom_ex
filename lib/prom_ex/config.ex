@@ -188,6 +188,8 @@ defmodule PromEx.Config do
 
       * `:prometheus_password` - The password to the hosted Prometheus instance
 
+      * `:template_file` - The full path to the template used to render the agent config file.
+
   * `:metrics_server` - This key contains the configuration information needed to run a standalone
     HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
     metrics. Its configuration options are:
