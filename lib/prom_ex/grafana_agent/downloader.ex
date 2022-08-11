@@ -47,9 +47,11 @@ defmodule PromEx.GrafanaAgent.Downloader do
   @spec download_grafana_agent(
           version :: String.t(),
           download_directory :: String.t(),
-          bin_directory :: String.t()
+          bin_directory :: String.t(),
+          agent :: module()
         ) :: {:ok, String.t()} | {:error, String.t()}
-  def download_grafana_agent(agent_version, download_directory, bin_directory) when is_valid_version(agent_version) do
+  def download_grafana_agent(agent_version, download_directory, bin_directory, agent)
+      when is_valid_version(agent_version) do
     agent_version = get_download_version(agent_version)
     download_url = build_download_url(agent_version)
 
@@ -68,13 +70,13 @@ defmodule PromEx.GrafanaAgent.Downloader do
     binary_path = "#{bin_directory}/#{binary_file_name}"
 
     # Download the agent, verify it, and unzip it
-    with :ok <- do_download_grafana_agent(download_url, zip_download_path),
+    with :ok <- do_download_grafana_agent(download_url, zip_download_path, agent),
          :ok <- verify_zip_download(zip_download_path, agent_version) do
       unzip_grafana_agent(zip_download_path, binary_path)
     end
   end
 
-  def download_grafana_agent(_agent_version, _, _) do
+  def download_grafana_agent(_agent_version, _, _, _) do
     raise "Invalid GrafanaAgent version provided. Supported version are: #{inspect(@supported_grafana_agent_versions)}"
   end
 
@@ -136,7 +138,7 @@ defmodule PromEx.GrafanaAgent.Downloader do
     "https://github.com/grafana/agent/releases/download/v#{version}/agent-#{os}-#{arch}.zip"
   end
 
-  defp do_download_grafana_agent(download_url, zip_file_path) do
+  defp do_download_grafana_agent(download_url, zip_file_path, agent) do
     if File.exists?(zip_file_path) do
       Logger.info("GrafanaAgent zip archive already present")
 
@@ -144,12 +146,14 @@ defmodule PromEx.GrafanaAgent.Downloader do
     else
       Logger.info("Fetching GrafanaAgent zip archive")
 
-      {:ok, finch_pid} = Finch.start_link(name: __MODULE__.AgentFetcher)
+      fetcher = Module.concat(agent, AgentFetcher)
+
+      {:ok, finch_pid} = Finch.start_link(name: fetcher)
 
       {:ok, %Finch.Response{headers: headers}} =
         :get
         |> Finch.build(download_url)
-        |> Finch.request(__MODULE__.AgentFetcher)
+        |> Finch.request(fetcher)
 
       {_, redirect_url} =
         Enum.find(headers, fn
@@ -161,7 +165,7 @@ defmodule PromEx.GrafanaAgent.Downloader do
       {:ok, %Finch.Response{body: body}} =
         :get
         |> Finch.build(redirect_url)
-        |> Finch.request(__MODULE__.AgentFetcher)
+        |> Finch.request(fetcher)
 
       File.write!(zip_file_path, body)
 

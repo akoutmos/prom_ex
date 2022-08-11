@@ -8,6 +8,7 @@ defmodule PromEx.GrafanaAgent.ConfigRendererTest do
     test "should generate a configuration yaml file with the correct substitutions", %{tmp_dir: tmp_dir} do
       template_args = %{
         agent_port: "12345",
+        grpc_port: "54321",
         log_level: "error",
         wal_dir: "/tmp/test/wal",
         scrape_interval: "5s",
