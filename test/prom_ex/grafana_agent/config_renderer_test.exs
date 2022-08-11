@@ -30,5 +30,22 @@ defmodule PromEx.GrafanaAgent.ConfigRendererTest do
       assert File.exists?(expected_file_path)
       assert File.read!(expected_file_path) == File.read!("#{__DIR__}/expected_output_config.yml")
     end
+
+    @tag :tmp_dir
+    test "should configure template", %{tmp_dir: tmp_dir} do
+      template_file = Path.join(tmp_dir, "my_template.yml.eex")
+      File.write!(template_file, "foo: <%= @foo %>")
+
+      template_args = %{
+        foo: "this is a foo",
+        template_file: template_file
+      }
+
+      ConfigRenderer.generate_config_file(template_args, tmp_dir)
+      expected_file_path = "#{tmp_dir}/agent.yml"
+
+      assert File.exists?(expected_file_path)
+      assert File.read!(expected_file_path) == "foo: this is a foo"
+    end
   end
 end
