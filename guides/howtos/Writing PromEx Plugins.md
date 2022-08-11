@@ -20,7 +20,7 @@ provided to the struct `build` function.
 
 ## Adding Event Metrics
 
-To have your custom plugin expose event based metrics, implement a `event_metrics/1` function and build our a collection
+To have your custom plugin expose event based metrics, implement a `event_metrics/1` function and build out a collection
 of `Telemetry.Metrics` structs (`distribution`, `counter`, `last_value`, and `sum`). Be sure to look at plugins like
 `PromEx.Plugins.Phoenix` for more in depth examples.
 
