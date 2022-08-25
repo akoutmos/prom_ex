@@ -232,9 +232,12 @@ defmodule PromEx do
             )
             |> PromEx.lifecycle_annotator_child_spec(
               grafana_config,
-              __MODULE__,
-              unquote(otp_app),
-              unquote(lifecycle_annotator_name)
+              name: unquote(lifecycle_annotator_name),
+              prom_ex_module: __MODULE__,
+              otp_app: unquote(otp_app),
+              git_sha_mfa: nil,
+              git_author_mfa: nil,
+              app_version_mfa: nil
             )
             |> Enum.reverse()
 
@@ -458,20 +461,15 @@ defmodule PromEx do
   end
 
   @doc false
-  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: true}, prom_ex_module, otp_app, process_name) do
-    spec = {
-      PromEx.LifecycleAnnotator,
-      name: process_name, prom_ex_module: prom_ex_module, otp_app: otp_app
-    }
-
-    [spec | acc]
+  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: true}, opts) do
+    [{PromEx.LifecycleAnnotator, opts} | acc]
   end
 
-  def lifecycle_annotator_child_spec(acc, :disabled, _, _, _) do
+  def lifecycle_annotator_child_spec(acc, :disabled, _) do
     acc
   end
 
-  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: false}, _, _, _) do
+  def lifecycle_annotator_child_spec(acc, %{annotate_app_lifecycle: false}, _) do
     acc
   end
 
