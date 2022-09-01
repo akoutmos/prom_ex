@@ -83,6 +83,7 @@ defmodule PromEx.MixProject do
         "guides/howtos/Writing PromEx Plugins.md",
         "guides/howtos/Telemetry.md",
         "guides/howtos/Running Multiple Agents.md",
+        "guides/howtos/Seeding Metrics.md",
         "guides/gallery/All.md"
       ],
       groups_for_extras: [
