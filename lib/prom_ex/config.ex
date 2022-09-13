@@ -192,6 +192,8 @@ defmodule PromEx.Config do
 
       * `:template_file` - The full path to the template used to render the agent config file.
 
+      * all of these keys, and any additional ones, will be provided as EEx vars to the template file.
+
   * `:metrics_server` - This key contains the configuration information needed to run a standalone
     HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
     metrics. Its configuration options are:
@@ -325,21 +327,22 @@ defmodule PromEx.Config do
 
   defp extract_opts_for_config(opts) do
     %{
-      scrape_interval: Keyword.get(opts, :scrape_interval, "15s"),
-      bearer_token: Keyword.get(opts, :bearer_token, "blank"),
-      log_level: Keyword.get(opts, :log_level, "error"),
-      agent_port: Keyword.get(opts, :agent_port, "4040"),
-      grpc_port: Keyword.get(opts, :grpc_port, "9095"),
-      job: Keyword.get(opts, :job, nil),
-      instance: Keyword.get(opts, :instance, nil),
+      scrape_interval: "15s",
+      bearer_token: "blank",
+      log_level: "error",
+      agent_port: "4040",
+      grpc_port: "9095",
+      job: nil,
+      instance: nil,
       prometheus_url: get_grafana_agent_config(opts, :prometheus_url),
       prometheus_username: get_grafana_agent_config(opts, :prometheus_username),
       prometheus_password: get_grafana_agent_config(opts, :prometheus_password),
-      metrics_server_path: Keyword.get(opts, :metrics_server_path, "/metrics"),
-      metrics_server_port: Keyword.get(opts, :metrics_server_port, 4000),
-      metrics_server_host: Keyword.get(opts, :metrics_server_host, "localhost"),
-      metrics_server_scheme: Keyword.get(opts, :metrics_server_scheme, :https)
+      metrics_server_path: "/metrics",
+      metrics_server_port: 4000,
+      metrics_server_host: "localhost",
+      metrics_server_scheme: :https
     }
+    |> Map.merge(Map.new(opts))
   end
 
   defp get_grafana_agent_config(grafana_agent_opts, config_key) do
