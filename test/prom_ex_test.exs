@@ -242,13 +242,13 @@ defmodule PromExTest do
     end
 
     test "default" do
-      assert PromEx.grafana_client_child_spec([], [], PromEx, ProcessName) == [
+      assert PromEx.grafana_client_child_spec([], %{}, PromEx, ProcessName) == [
                {PromEx.GrafanaClient, name: ProcessName}
              ]
     end
 
     test "finch_pools" do
-      assert PromEx.grafana_client_child_spec([], [finch_pools: [size: 1]], PromEx, ProcessName) == [
+      assert PromEx.grafana_client_child_spec([], %{finch_pools: [size: 1]}, PromEx, ProcessName) == [
                {PromEx.GrafanaClient, name: ProcessName, pools: [size: 1]}
              ]
     end
