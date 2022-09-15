@@ -46,18 +46,6 @@ defmodule PromEx.ConfigTest do
              } = config
     end
 
-    test "should include finch_pools if provided" do
-      config =
-        Config.build(
-          grafana: [
-            host: "https://my-grafana-instance.com/",
-            finch_pools: %{default: [size: 1]}
-          ]
-        )
-
-      assert config.grafana_config.finch_pools == %{default: [size: 1]}
-    end
-
     test "should generate default grafana agent config" do
       config =
         Config.build(
