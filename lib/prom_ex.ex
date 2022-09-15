@@ -415,7 +415,7 @@ defmodule PromEx do
 
   def grafana_client_child_spec(acc, grafana_config, _, process_name) do
     opts =
-      if pools = Map.get(grafana_config, :finch_pools, nil) do
+      if pools = Map.fetch!(grafana_config, :finch_pools) do
         [pools: pools]
       else
         []

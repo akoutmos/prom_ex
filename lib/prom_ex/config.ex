@@ -304,7 +304,8 @@ defmodule PromEx.Config do
       auth_token: Keyword.get(grafana_opts, :auth_token),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
       folder_name: Keyword.get(grafana_opts, :folder_name, :default),
-      annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false)
+      annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false),
+      finch_pools: Keyword.get(grafana_opts, :finch_pools, nil)
     }
   end
 
