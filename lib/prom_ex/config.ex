@@ -31,7 +31,7 @@ defmodule PromEx.Config do
     grafana: [
       host: "http://localhost:3000",
       username: "<YOUR_USERNAME>",  # Or authenticate via Basic Auth
-      password: "<YOUR_PASSWORD>"
+      password: "<YOUR_PASSWORD>",
       auth_token: "<YOUR_AUTH_TOKEN_HERE>", # Or authenticate via API Token
       upload_dashboards_on_start: true # This is an optional setting and will default to `true`
     ]
