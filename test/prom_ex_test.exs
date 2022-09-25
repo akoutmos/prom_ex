@@ -235,4 +235,22 @@ defmodule PromExTest do
              |> Process.exit(:normal)
     end
   end
+
+  describe "grafana_client_child_spec" do
+    test ":disabled" do
+      assert PromEx.grafana_client_child_spec([], :disabled, PromEx, ProcessName) == []
+    end
+
+    test "default" do
+      assert PromEx.grafana_client_child_spec([], %{finch_pools: nil}, PromEx, ProcessName) == [
+               {PromEx.GrafanaClient, name: ProcessName}
+             ]
+    end
+
+    test "finch_pools" do
+      assert PromEx.grafana_client_child_spec([], %{finch_pools: %{default: [size: 1]}}, PromEx, ProcessName) == [
+               {PromEx.GrafanaClient, name: ProcessName, pools: %{default: [size: 1]}}
+             ]
+    end
+  end
 end

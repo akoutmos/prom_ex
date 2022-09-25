@@ -413,8 +413,16 @@ defmodule PromEx do
     acc
   end
 
-  def grafana_client_child_spec(acc, _, _, process_name) do
-    spec = {PromEx.GrafanaClient, name: process_name}
+  def grafana_client_child_spec(acc, grafana_config, _, process_name) do
+    opts =
+      if pools = Map.fetch!(grafana_config, :finch_pools) do
+        [pools: pools]
+      else
+        []
+      end
+      |> Keyword.put(:name, process_name)
+
+    spec = {PromEx.GrafanaClient, opts}
 
     [spec | acc]
   end

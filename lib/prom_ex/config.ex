@@ -129,6 +129,9 @@ defmodule PromEx.Config do
         - Git SHA of the last commit (if the GIT_SHA environment variable is present)
         - Git author of the last commit (if the GIT_AUTHOR environment variable is present)
 
+    * `:finch_pools` - (optional) A map that will be passed to Finch.start_link/1 as the :pools key,
+      which can be used to configure protocol, pool size, HTTP host headers, proxy server, etc.
+
   * `:grafana_agent` - This key contains the configuration information for running GrafanaAgent via a
     port in order to push metrics to a Prometheus instance via `remote_write` functionality:
 
@@ -301,7 +304,8 @@ defmodule PromEx.Config do
       auth_token: Keyword.get(grafana_opts, :auth_token),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
       folder_name: Keyword.get(grafana_opts, :folder_name, :default),
-      annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false)
+      annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false),
+      finch_pools: Keyword.get(grafana_opts, :finch_pools, nil)
     }
   end
 

@@ -38,7 +38,8 @@ defmodule PromEx.ConfigTest do
                  host: "https://my-grafana-instance.com",
                  password: nil,
                  upload_dashboards_on_start: true,
-                 username: nil
+                 username: nil,
+                 finch_pools: nil
                },
                manual_metrics_start_delay: :no_delay,
                metrics_server_config: :disabled
