@@ -149,7 +149,7 @@ defmodule PromEx.Config do
       GrafanaAgent release version. Below are the supported versions (the downloaded artifacts
       are validated against their known SHA256 values so that you can be sure you are not downloading
       any malicious binaries and running them). By default, PromEx will use the result of
-      `PromEx.GrafanaAgent.Downloader.latest_version()` if no value is provided.
+      `PromEx.GrafanaAgent.Downloader.default_version()` if no value is provided.
 
       * Supported versions are `["0.23.0", "0.22.0", "0.21.2", "0.20.1"]`
 
@@ -323,7 +323,7 @@ defmodule PromEx.Config do
 
   defp generate_grafana_agent_config(grafana_agent_opts) do
     %{
-      version: Keyword.get(grafana_agent_opts, :version, Downloader.latest_version()),
+      version: Keyword.get(grafana_agent_opts, :version, Downloader.default_version()),
       working_directory: Keyword.get(grafana_agent_opts, :working_directory),
       config_opts: grafana_agent_opts |> get_grafana_agent_config(:config_opts) |> extract_opts_for_config()
     }
