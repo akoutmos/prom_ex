@@ -61,7 +61,8 @@ defmodule PromEx.Utils do
   Converts a `time_unit` to its plural form.
   """
   @spec make_plural_atom(System.time_unit()) :: atom()
-  def make_plural_atom(word) do
-    String.to_existing_atom("#{Atom.to_string(word)}s")
-  end
+  def make_plural_atom(:second), do: :seconds
+  def make_plural_atom(:millisecond), do: :milliseconds
+  def make_plural_atom(:microsecond), do: :microseconds
+  def make_plural_atom(:nanosecond), do: :nanoseconds
 end
