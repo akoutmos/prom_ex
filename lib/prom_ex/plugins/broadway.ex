@@ -57,8 +57,14 @@ if Code.ensure_loaded?(Broadway) do
         }
       end
 
-      def ack(:ack_id, _successful_messages, _failed_messages) do
-        :ok
+      # Since the transformer wraps the %Broadway.Message{} in another %Broadway.Message{}, this breaks the ack so we need to manually trigger the ack.
+      def ack(:ack_id, successful_messages, failed_messages) do
+        Broadway.Acknowledger.ack_messages(
+          successful_messages
+          |> Enum.reduce([], fn %Message{data: %Message{} = message}, acc -> [message | acc] end),
+          failed_messages
+          |> Enum.reduce([], fn %Message{data: %Message{} = message}, acc -> [message | acc] end)
+        )
       end
     end
     ```
