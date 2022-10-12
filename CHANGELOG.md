@@ -7,13 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.7.1] - 2021-03-02
+## [1.8.0] - 2022-10-08
+
+### Added
+
+- Ability to customize time units via `:duration_unit` in plugins [#140](https://github.com/akoutmos/prom_ex/pull/140)
+- Download Grafana Agent on FreeBSD [#156](https://github.com/akoutmos/prom_ex/pull/156)
+- Ability to configure configure Grafana HTTP client Finch pools [#169](https://github.com/akoutmos/prom_ex/pull/169)
+- Ability to pass additional params to GrafanaAgent config templates [161](https://github.com/akoutmos/prom_ex/pull/161)
+- Ability to run multiple GrafanaAgent instances [#157](https://github.com/akoutmos/prom_ex/pull/157)
+- Support for GrafanaAgent 28
+
+## [1.7.1] - 2022-03-02
 
 ### Fixed
 
 - Added missing priv dir to release.
 
-## [1.7.0] - 2021-03-01
+## [1.7.0] - 2022-03-01
 
 ### Added
 

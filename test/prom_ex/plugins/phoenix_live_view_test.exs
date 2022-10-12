@@ -17,12 +17,7 @@ defmodule PromEx.Plugins.PhoenixLiveViewTest do
     start_supervised!(WebApp.PromEx)
     Events.execute_all(:phoenix_live_view)
 
-    metrics =
-      WebApp.PromEx
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:phoenix_live_view)
+    Metrics.assert_prom_ex_metics(WebApp.PromEx, :phoenix_live_view)
   end
 
   describe "event_metrics/1" do

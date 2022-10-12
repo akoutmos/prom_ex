@@ -30,8 +30,8 @@ defmodule PromEx.Config do
   config :web_app, WebApp.PromEx,
     grafana: [
       host: "http://localhost:3000",
-      username: "<YOUR_USERNAME>",  # Or authenticate via Basic Auth
-      password: "<YOUR_PASSWORD>"
+      username: "<YOUR_USERNAME>",  # Authenticate via Basic Auth
+      password: "<YOUR_PASSWORD>",
       auth_token: "<YOUR_AUTH_TOKEN_HERE>", # Or authenticate via API Token
       upload_dashboards_on_start: true # This is an optional setting and will default to `true`
     ]
@@ -66,8 +66,8 @@ defmodule PromEx.Config do
 
   ## Option Details
 
-  * `:disabled` - This option will diable the PromEx supervision tree entirely and will not
-    start any metris collectors. This is primarily used for disabling PromEx during testing. Default
+  * `:disabled` - This option will disable the PromEx supervision tree entirely and will not
+    start any metrics collectors. This is primarily used for disabling PromEx during testing. Default
     value: false
 
   * `:manual_metrics_start_delay` - Manual metrics are gathered once on start up and then only when
@@ -129,6 +129,9 @@ defmodule PromEx.Config do
         - Git SHA of the last commit (if the GIT_SHA environment variable is present)
         - Git author of the last commit (if the GIT_AUTHOR environment variable is present)
 
+    * `:finch_pools` - (optional) A map that will be passed to Finch.start_link/1 as the :pools key,
+      which can be used to configure protocol, pool size, HTTP host headers, proxy server, etc.
+
   * `:grafana_agent` - This key contains the configuration information for running GrafanaAgent via a
     port in order to push metrics to a Prometheus instance via `remote_write` functionality:
 
@@ -146,7 +149,7 @@ defmodule PromEx.Config do
       GrafanaAgent release version. Below are the supported versions (the downloaded artifacts
       are validated against their known SHA256 values so that you can be sure you are not downloading
       any malicious binaries and running them). By default, PromEx will use the result of
-      `PromEx.GrafanaAgent.Downloader.latest_version()` if no value is provided.
+      `PromEx.GrafanaAgent.Downloader.default_version()` if no value is provided.
 
       * Supported versions are `["0.23.0", "0.22.0", "0.21.2", "0.20.1"]`
 
@@ -158,7 +161,7 @@ defmodule PromEx.Config do
       can either accept an MFA that will return a string of the full path where the YAML configuration
       file is, or a keyword list with options so that PromEx can generate a config file for you. If you
       take the route where PromEx generates a config file for you, you must provide the following
-      otions:
+      options:
 
       * `:metrics_server_path` - The path where the Prometheus metrics are exposed.
 
@@ -176,6 +179,8 @@ defmodule PromEx.Config do
 
       * `:agent_port` - What port should GrafanaAgent run on.
 
+      * `:grpc_port` - What port should GrafanaAgent gRPC server run on.
+
       * `:scrape_interval` - How often should GrafanaAgent scrape the application. The default is `15s`.
 
       * `:bearer_token` - The bearer token that GrafanaAgent should attach to the request to your app.
@@ -187,6 +192,10 @@ defmodule PromEx.Config do
       * `:prometheus_username` - The username to the hosted Prometheus instance
 
       * `:prometheus_password` - The password to the hosted Prometheus instance
+
+      * `:template_file` - The full path to the template used to render the agent config file.
+
+      * all of these keys, and any additional ones, will be provided as EEx vars to the template file.
 
   * `:metrics_server` - This key contains the configuration information needed to run a standalone
     HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
@@ -295,7 +304,8 @@ defmodule PromEx.Config do
       auth_token: Keyword.get(grafana_opts, :auth_token),
       upload_dashboards_on_start: Keyword.get(grafana_opts, :upload_dashboards_on_start, true),
       folder_name: Keyword.get(grafana_opts, :folder_name, :default),
-      annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false)
+      annotate_app_lifecycle: Keyword.get(grafana_opts, :annotate_app_lifecycle, false),
+      finch_pools: Keyword.get(grafana_opts, :finch_pools, nil)
     }
   end
 
@@ -313,7 +323,7 @@ defmodule PromEx.Config do
 
   defp generate_grafana_agent_config(grafana_agent_opts) do
     %{
-      version: Keyword.get(grafana_agent_opts, :version, Downloader.latest_version()),
+      version: Keyword.get(grafana_agent_opts, :version, Downloader.default_version()),
       working_directory: Keyword.get(grafana_agent_opts, :working_directory),
       config_opts: grafana_agent_opts |> get_grafana_agent_config(:config_opts) |> extract_opts_for_config()
     }
@@ -321,20 +331,22 @@ defmodule PromEx.Config do
 
   defp extract_opts_for_config(opts) do
     %{
-      scrape_interval: Keyword.get(opts, :scrape_interval, "15s"),
-      bearer_token: Keyword.get(opts, :bearer_token, "blank"),
-      log_level: Keyword.get(opts, :log_level, "error"),
-      agent_port: Keyword.get(opts, :agent_port, "4040"),
-      job: Keyword.get(opts, :job, nil),
-      instance: Keyword.get(opts, :instance, nil),
+      scrape_interval: "15s",
+      bearer_token: "blank",
+      log_level: "error",
+      agent_port: "4040",
+      grpc_port: "9095",
+      job: nil,
+      instance: nil,
       prometheus_url: get_grafana_agent_config(opts, :prometheus_url),
       prometheus_username: get_grafana_agent_config(opts, :prometheus_username),
       prometheus_password: get_grafana_agent_config(opts, :prometheus_password),
-      metrics_server_path: Keyword.get(opts, :metrics_server_path, "/metrics"),
-      metrics_server_port: Keyword.get(opts, :metrics_server_port, 4000),
-      metrics_server_host: Keyword.get(opts, :metrics_server_host, "localhost"),
-      metrics_server_scheme: Keyword.get(opts, :metrics_server_scheme, :https)
+      metrics_server_path: "/metrics",
+      metrics_server_port: 4000,
+      metrics_server_host: "localhost",
+      metrics_server_scheme: :https
     }
+    |> Map.merge(Map.new(opts))
   end
 
   defp get_grafana_agent_config(grafana_agent_opts, config_key) do

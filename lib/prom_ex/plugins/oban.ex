@@ -17,6 +17,9 @@ if Code.ensure_loaded?(Oban) do
 
     - `poll_rate`: This option is OPTIONAL and is the rate at which poll metrics are refreshed (default is 5 seconds).
 
+    - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+      `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
     This plugin exposes the following metric groups:
     - `:oban_init_event_metrics`
     - `:oban_job_event_metrics`
@@ -50,6 +53,8 @@ if Code.ensure_loaded?(Oban) do
 
     use PromEx.Plugin
 
+    alias PromEx.Utils
+
     import Ecto.Query, only: [group_by: 3, select: 3]
 
     # Oban events
@@ -68,6 +73,7 @@ if Code.ensure_loaded?(Oban) do
     def event_metrics(opts) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :oban))
+      duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
 
       oban_supervisors = get_oban_supervisors(opts)
       keep_function_filter = keep_oban_instance_metrics(oban_supervisors)
@@ -76,9 +82,9 @@ if Code.ensure_loaded?(Oban) do
       set_up_init_proxy_event(metric_prefix)
 
       [
-        oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter),
-        oban_job_event_metrics(metric_prefix, keep_function_filter),
-        oban_producer_event_metrics(metric_prefix, keep_function_filter),
+        oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter, duration_unit),
+        oban_job_event_metrics(metric_prefix, keep_function_filter, duration_unit),
+        oban_producer_event_metrics(metric_prefix, keep_function_filter, duration_unit),
         oban_circuit_breaker_event_metrics(metric_prefix, keep_function_filter)
       ]
     end
@@ -177,15 +183,16 @@ if Code.ensure_loaded?(Oban) do
       }
     end
 
-    defp oban_job_event_metrics(metric_prefix, keep_function_filter) do
+    defp oban_job_event_metrics(metric_prefix, keep_function_filter, duration_unit) do
       job_attempt_buckets = [1, 5, 10]
       job_duration_buckets = [10, 100, 500, 1_000, 5_000, 20_000]
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
 
       Event.build(
         :oban_job_event_metrics,
         [
           distribution(
-            metric_prefix ++ [:job, :processing, :duration, :milliseconds],
+            metric_prefix ++ [:job, :processing, :duration, duration_unit_plural],
             event_name: @job_complete_event,
             measurement: :duration,
             description: "The amount of time it takes to processes an Oban job.",
@@ -194,11 +201,11 @@ if Code.ensure_loaded?(Oban) do
             ],
             tag_values: &job_complete_tag_values/1,
             tags: [:name, :queue, :state, :worker],
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             keep: keep_function_filter
           ),
           distribution(
-            metric_prefix ++ [:job, :queue, :time, :milliseconds],
+            metric_prefix ++ [:job, :queue, :time, duration_unit_plural],
             event_name: @job_complete_event,
             measurement: :queue_time,
             description: "The amount of time that the Oban job was waiting in queue for processing.",
@@ -207,7 +214,7 @@ if Code.ensure_loaded?(Oban) do
             ],
             tag_values: &job_complete_tag_values/1,
             tags: [:name, :queue, :state, :worker],
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             keep: keep_function_filter
           ),
           distribution(
@@ -225,7 +232,7 @@ if Code.ensure_loaded?(Oban) do
             keep: keep_function_filter
           ),
           distribution(
-            metric_prefix ++ [:job, :exception, :duration, :milliseconds],
+            metric_prefix ++ [:job, :exception, :duration, duration_unit_plural],
             event_name: @job_exception_event,
             measurement: :duration,
             description: "The amount of time it took to process a job the encountered an exception.",
@@ -234,11 +241,11 @@ if Code.ensure_loaded?(Oban) do
             ],
             tag_values: &job_exception_tag_values/1,
             tags: [:name, :queue, :state, :worker, :kind, :error],
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             keep: keep_function_filter
           ),
           distribution(
-            metric_prefix ++ [:job, :exception, :queue, :time, :milliseconds],
+            metric_prefix ++ [:job, :exception, :queue, :time, duration_unit_plural],
             event_name: @job_exception_event,
             measurement: :queue_time,
             description:
@@ -248,7 +255,7 @@ if Code.ensure_loaded?(Oban) do
             ],
             tag_values: &job_exception_tag_values/1,
             tags: [:name, :queue, :state, :worker, :kind, :error],
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             keep: keep_function_filter
           ),
           distribution(
@@ -269,19 +276,21 @@ if Code.ensure_loaded?(Oban) do
       )
     end
 
-    defp oban_producer_event_metrics(metric_prefix, keep_function_filter) do
+    defp oban_producer_event_metrics(metric_prefix, keep_function_filter, duration_unit) do
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :oban_producer_event_metrics,
         [
           distribution(
-            metric_prefix ++ [:producer, :duration, :milliseconds],
+            metric_prefix ++ [:producer, :duration, duration_unit_plural],
             event_name: @producer_complete_event,
             measurement: :duration,
             description: "How long it took to dispatch the job.",
             reporter_options: [
               buckets: [10, 100, 500, 1_000, 5_000, 10_000]
             ],
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             tag_values: &producer_tag_values/1,
             tags: [:queue, :name],
             keep: keep_function_filter
@@ -301,14 +310,14 @@ if Code.ensure_loaded?(Oban) do
             keep: keep_function_filter
           ),
           distribution(
-            metric_prefix ++ [:producer, :exception, :duration, :milliseconds],
+            metric_prefix ++ [:producer, :exception, :duration, duration_unit_plural],
             event_name: @producer_exception_event,
             measurement: :duration,
             description: "How long it took for the producer to raise an exception.",
             reporter_options: [
               buckets: [10, 100, 500, 1_000, 5_000, 10_000]
             ],
-            unit: {:native, :millisecond},
+            unit: {:native, duration_unit},
             tag_values: &producer_tag_values/1,
             tags: [:queue, :name],
             keep: keep_function_filter
@@ -368,7 +377,9 @@ if Code.ensure_loaded?(Oban) do
       }
     end
 
-    defp oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter) do
+    defp oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter, duration_unit) do
+      duration_unit_plural = Utils.make_plural_atom(duration_unit)
+
       Event.build(
         :oban_init_event_metrics,
         [
@@ -382,7 +393,7 @@ if Code.ensure_loaded?(Oban) do
             keep: keep_function_filter
           ),
           last_value(
-            metric_prefix ++ [:init, :shutdown, :grace, :period, :milliseconds],
+            metric_prefix ++ [:init, :shutdown, :grace, :period, duration_unit_plural],
             event_name: @init_event,
             description: "The Oban supervisor's shutdown grace period value.",
             measurement: fn _measurements, %{conf: config} ->
@@ -393,7 +404,7 @@ if Code.ensure_loaded?(Oban) do
             keep: keep_function_filter
           ),
           last_value(
-            metric_prefix ++ [:init, :dispatch, :cooldown, :milliseconds],
+            metric_prefix ++ [:init, :dispatch, :cooldown, duration_unit_plural],
             event_name: @init_event,
             description: "The Oban supervisor's dispatch cooldown value.",
             measurement: fn _measurements, %{conf: config} ->

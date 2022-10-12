@@ -40,24 +40,14 @@ defmodule PromEx.Plugins.PhoenixTest do
     start_supervised!(WebApp.PromExSingleEndpoint)
     Events.execute_all(:phoenix)
 
-    metrics =
-      WebApp.PromExSingleEndpoint
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:phoenix)
+    Metrics.assert_prom_ex_metics(WebApp.PromExSingleEndpoint, :phoenix)
   end
 
   test "telemetry events are accumulated for multiple endpoint configuration" do
     start_supervised!(WebApp.PromExMultipleEndpoint)
     Events.execute_all(:phoenix)
 
-    metrics =
-      WebApp.PromExMultipleEndpoint
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:phoenix)
+    Metrics.assert_prom_ex_metics(WebApp.PromExMultipleEndpoint, :phoenix)
   end
 
   describe "event_metrics/1" do

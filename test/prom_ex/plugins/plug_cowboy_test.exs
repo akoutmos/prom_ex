@@ -19,12 +19,7 @@ defmodule PromEx.Plugins.PlugCowboyTest do
     start_supervised!(WebApp.PromEx)
     Events.execute_all(:plug_cowboy)
 
-    metrics =
-      WebApp.PromEx
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:plug_cowboy)
+    Metrics.assert_prom_ex_metics(WebApp.PromEx, :plug_cowboy)
   end
 
   describe "event_metrics/1" do

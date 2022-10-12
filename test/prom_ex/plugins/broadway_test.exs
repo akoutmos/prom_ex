@@ -25,12 +25,7 @@ defmodule PromEx.Plugins.BroadwayTest do
     start_supervised!(WebApp.PromEx)
     Events.execute_all(:broadway)
 
-    metrics =
-      WebApp.PromEx
-      |> PromEx.get_metrics()
-      |> Metrics.sort()
-
-    assert metrics == Metrics.read_expected(:broadway)
+    Metrics.assert_prom_ex_metics(WebApp.PromEx, :broadway)
   end
 
   describe "event_metrics/1" do

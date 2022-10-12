@@ -24,6 +24,9 @@ defmodule PromEx.Plugins.Application do
     in your `dashboard_assigns` to the snakecase version of your prefix, the default
     `application_metric_prefix` is `{otp_app}_prom_ex_application`.
 
+  - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+    `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
   This plugin exposes the following metric groups:
   - `:application_versions_manual_metrics`
 
@@ -119,6 +122,8 @@ defmodule PromEx.Plugins.Application do
     otp_app = Keyword.fetch!(opts, :otp_app)
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
     metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :application))
+    duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
+    duration_unit_plural = PromEx.Utils.make_plural_atom(duration_unit)
 
     Polling.build(
       :application_time_polling_metrics,
@@ -126,11 +131,12 @@ defmodule PromEx.Plugins.Application do
       {__MODULE__, :execute_time_metrics, []},
       [
         last_value(
-          metric_prefix ++ [:uptime, :milliseconds, :count],
+          metric_prefix ++ [:uptime, duration_unit_plural, :count],
           event_name: [:prom_ex, :plugin, :application, :uptime, :count],
-          description: "The total number of wall clock milliseconds that have passed since the application started.",
+          description:
+            "The total number of wall clock #{duration_unit_plural} that have passed since the application started.",
           measurement: :count,
-          unit: :millisecond
+          unit: duration_unit
         )
       ]
     )

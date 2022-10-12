@@ -1,7 +1,7 @@
 defmodule PromEx.GrafanaAgent do
   @moduledoc """
   This GenServer is responsible for starting the Grafana Agent
-  binary via a port and ensurnig that it stays up and running.
+  binary via a port and ensuring that it stays up and running.
   """
 
   use GenServer
@@ -100,22 +100,34 @@ defmodule PromEx.GrafanaAgent do
     base_directory = get_base_directory(state)
 
     # Create the necessary directory structure in the base dir
-    download_dir = Path.join(base_directory, "/download")
-    File.mkdir_p!(download_dir)
-
     bin_dir = Path.join(base_directory, "/bin")
     File.mkdir_p!(bin_dir)
 
     # Download the configured GrafanaAgent binary
-    config.version
-    |> Downloader.download_grafana_agent(download_dir, bin_dir)
+    bin_dir
+    |> Downloader.download(override_version: config.version)
     |> case do
-      {:ok, binary_path} ->
+      {:ok, [binary_path], []} ->
         binary_path
 
       {:error, reason} ->
         raise "Failed to download GrafanaAgent: #{inspect(reason)}"
+
+      :skip ->
+        derive_existing_bin_path(bin_dir)
     end
+  end
+
+  defp derive_existing_bin_path(bin_dir) do
+    bin_dir
+    |> File.ls!()
+    |> Enum.find_value(fn file ->
+      if Regex.match?(~r/agent-(?:linux|darwin|freebsd|windows)-(?:amd64|arm64)/, file) do
+        Path.join(bin_dir, file)
+      else
+        nil
+      end
+    end)
   end
 
   defp do_generate_config(state) do

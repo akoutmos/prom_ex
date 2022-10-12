@@ -38,10 +38,82 @@ defmodule PromEx.ConfigTest do
                  host: "https://my-grafana-instance.com",
                  password: nil,
                  upload_dashboards_on_start: true,
-                 username: nil
+                 username: nil,
+                 finch_pools: nil
                },
                manual_metrics_start_delay: :no_delay,
                metrics_server_config: :disabled
+             } = config
+    end
+
+    test "should generate default grafana agent config" do
+      config =
+        Config.build(
+          grafana_agent: [
+            config_opts: [
+              prometheus_url: "https://prometheus",
+              prometheus_username: "prometheus-user",
+              prometheus_password: "prometheus-password"
+            ]
+          ]
+        )
+
+      assert %PromEx.Config{
+               grafana_agent_config: %{
+                 config_opts: %{
+                   prometheus_url: "https://prometheus",
+                   prometheus_username: "prometheus-user",
+                   prometheus_password: "prometheus-password",
+                   scrape_interval: "15s",
+                   bearer_token: "blank",
+                   log_level: "error",
+                   agent_port: "4040",
+                   grpc_port: "9095",
+                   job: nil,
+                   instance: nil,
+                   metrics_server_path: "/metrics",
+                   metrics_server_port: 4000,
+                   metrics_server_host: "localhost",
+                   metrics_server_scheme: :https
+                 }
+               }
+             } = config
+    end
+
+    test "should override existing keys, and pass additional keys to grafana agent config" do
+      config =
+        Config.build(
+          grafana_agent: [
+            config_opts: [
+              prometheus_url: "https://prometheus",
+              prometheus_username: "prometheus-user",
+              prometheus_password: "prometheus-password",
+              agent_port: "4141",
+              template_file: "path/to/template",
+              foo: "bar"
+            ]
+          ]
+        )
+
+      assert %PromEx.Config{
+               grafana_agent_config: %{
+                 config_opts: %{
+                   # required
+                   prometheus_url: "https://prometheus",
+                   prometheus_username: "prometheus-user",
+                   prometheus_password: "prometheus-password",
+
+                   # default
+                   scrape_interval: "15s",
+
+                   # override
+                   agent_port: "4141",
+
+                   # new keys
+                   template_file: "path/to/template",
+                   foo: "bar"
+                 }
+               }
              } = config
     end
 

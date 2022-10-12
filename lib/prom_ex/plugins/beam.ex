@@ -14,6 +14,9 @@ defmodule PromEx.Plugins.Beam do
     in your `dashboard_assigns` to the snakecase version of your prefix, the default
     `beam_metric_prefix` is `{otp_app}_prom_ex_beam`.
 
+  - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
+    `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
+
   This plugin exposes the following metric groups:
   - `:beam_memory_polling_metrics`
   - `:beam_internal_polling_metrics`
@@ -57,6 +60,7 @@ defmodule PromEx.Plugins.Beam do
     poll_rate = Keyword.get(opts, :poll_rate, 5_000)
     otp_app = Keyword.fetch!(opts, :otp_app)
     metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :beam))
+    duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
 
     # TODO: Investigate Microstate accounting metrics
     # http://erlang.org/doc/man/erlang.html#statistics_microstate_accounting
@@ -69,7 +73,7 @@ defmodule PromEx.Plugins.Beam do
       memory_metrics(metric_prefix, poll_rate),
       mnesia_metrics(metric_prefix, poll_rate),
       distribution_metrics(metric_prefix, poll_rate),
-      beam_internal_metrics(metric_prefix, poll_rate)
+      beam_internal_metrics(metric_prefix, poll_rate, duration_unit)
     ]
   end
 
@@ -104,7 +108,9 @@ defmodule PromEx.Plugins.Beam do
     )
   end
 
-  defp beam_internal_metrics(metric_prefix, poll_rate) do
+  defp beam_internal_metrics(metric_prefix, poll_rate, duration_unit) do
+    duration_unit_plural = String.to_atom("#{duration_unit}s")
+
     Polling.build(
       :beam_internal_polling_metrics,
       poll_rate,
@@ -158,11 +164,12 @@ defmodule PromEx.Plugins.Beam do
           unit: :byte
         ),
         last_value(
-          metric_prefix ++ [:stats, :uptime, :milliseconds, :count],
+          metric_prefix ++ [:stats, :uptime, duration_unit_plural, :count],
           event_name: [:prom_ex, :plugin, :beam, :uptime, :count],
-          description: "The total number of wall clock milliseconds that have passed since the system started.",
+          description:
+            "The total number of wall clock #{duration_unit_plural} that have passed since the system started.",
           measurement: :count,
-          unit: :millisecond
+          unit: duration_unit
         ),
         last_value(
           metric_prefix ++ [:stats, :port, :count],

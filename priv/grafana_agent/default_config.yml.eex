@@ -1,5 +1,6 @@
 server:
   http_listen_port: <%= @agent_port %>
+  grpc_listen_port: <%= @grpc_port %>
   log_level: <%= @log_level %>
 
 prometheus:
