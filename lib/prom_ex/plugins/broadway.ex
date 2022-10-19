@@ -30,44 +30,6 @@ if Code.ensure_loaded?(Broadway) do
       end
     end
     ```
-
-    ## GenStage Producer
-
-    To correctly capture per-message metrics and error rate, add the following transform to your pipeline:
-    ```
-    defmodule WebApp.MyPipeline do
-      use Broadway
-
-      alias Broadway.Message
-
-      def start_link(_opts) do
-        Broadway.start_link(__MODULE__,
-          name: __MODULE__,
-          producer: [
-            ...
-            transformer: {__MODULE__, :transform, []}
-          ]
-        )
-      end
-
-      def transform(event, _opts) do
-        %Message{
-          data: event,
-          acknowledger: {__MODULE__, :ack_id, :ack_data}
-        }
-      end
-
-      def ack(:ack_id, _successful_messages, _failed_messages) do
-        :ok
-      end
-    end
-    ```
-
-    ## BroadwayRabbitMQ.Producer
-
-    There's no need to configure an acknowledger on messages when using BroadwayRabbitMQ.
-
-    `BroadwayRabbitMQ.Producer` handles acking messages internally, which involves a unique `:delivery_tag` and `AMQP`.
     """
 
     use PromEx.Plugin
