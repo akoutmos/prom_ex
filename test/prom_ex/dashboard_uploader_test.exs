@@ -366,7 +366,7 @@ defmodule PromEx.DashboardUploaderTest do
       }
       """
 
-      Plug.Conn.resp(conn, 400, response_payload)
+      Plug.Conn.resp(conn, 409, response_payload)
     end)
 
     Bypass.expect_once(bypass, "GET", "/api/folders", fn conn ->

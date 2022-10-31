@@ -168,7 +168,8 @@ defmodule PromEx.DashboardUploader do
       {:ok, folder_details} ->
         folder_details
 
-      {:error, :bad_request} ->
+      {:error, reason} ->
+        Logger.error("PromEx.DashboardUploader failed to create folder in Grafana: #{inspect(reason)}.")
         {:ok, all_folders} = GrafanaClient.get_all_folders(grafana_conn)
 
         all_folders

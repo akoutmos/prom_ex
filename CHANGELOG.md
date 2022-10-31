@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to run multiple GrafanaAgent instances [#157](https://github.com/akoutmos/prom_ex/pull/157)
 - Support for GrafanaAgent 28
 
+### Fixed
+
+- Application crashing on startup from being unable to upload dashboards due to folder UID changing [#177](https://github.com/akoutmos/prom_ex/pull/177)
+
 ## [1.7.1] - 2022-03-02
 
 ### Fixed
