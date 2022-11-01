@@ -18,6 +18,7 @@ defmodule PromEx.GrafanaClient do
     401 => :unauthorized,
     403 => :forbidden,
     404 => :not_found,
+    409 => :already_exists,
     412 => :already_exists
   }
 
