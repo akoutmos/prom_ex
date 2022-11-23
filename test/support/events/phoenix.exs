@@ -4120,5 +4120,116 @@
       },
       options: []
     }
+  },
+  %{
+    event: [:phoenix, :endpoint, :stop],
+    measurements: %{duration: 335_366_105},
+    metadata: %{
+      conn: %{
+        __struct__: Plug.Conn,
+        adapter:
+          {Plug.Cowboy.Conn,
+           %{
+             bindings: %{},
+             body_length: 0,
+             cert: :undefined,
+             has_body: false,
+             headers: %{
+               "accept" =>
+                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+               "accept-encoding" => "gzip, deflate, br",
+               "accept-language" => "en-US,en;q=0.9",
+               "cache-control" => "no-cache",
+               "connection" => "keep-alive",
+               "cookie" =>
+                 "_web_app_key=SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYNjI2TEUteGtpeDcwczNzMXdiT2FUakpz.dv3_U0ixALpjrQ5DsBqexNfeQ2pPPH0v0WHUD6BU1Ik",
+               "host" => "otherhost:4000",
+               "pragma" => "no-cache",
+               "sec-fetch-dest" => "document",
+               "sec-fetch-mode" => "navigate",
+               "sec-fetch-site" => "none",
+               "sec-fetch-user" => "?1",
+               "sec-gpc" => "1",
+               "upgrade-insecure-requests" => "1",
+               "user-agent" =>
+                 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+             },
+             host: "otherhost",
+             host_info: :undefined,
+             method: "GET",
+             path: "/",
+             path_info: :undefined,
+             peer: {{127, 0, 0, 1}, 45816},
+             pid: nil,
+             port: 4000,
+             qs: "",
+             ref: WebAppWeb.Endpoint.HTTP,
+             scheme: "http",
+             sock: {{127, 0, 0, 1}, 4000},
+             streamid: 20,
+             version: :"HTTP/1.1"
+           }},
+        assigns: %{},
+        before_send: [],
+        body_params: %{__struct__: Plug.Conn.Unfetched, aspect: :body_params},
+        cookies: %{
+          "_web_app_key" =>
+            "SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYNjI2TEUteGtpeDcwczNzMXdiT2FUakpz.dv3_U0ixALpjrQ5DsBqexNfeQ2pPPH0v0WHUD6BU1Ik"
+        },
+        halted: false,
+        host: "otherhost",
+        method: "GET",
+        owner: nil,
+        params: %{},
+        path_info: :undefined,
+        path_params: %{},
+        port: 4000,
+        private: %{
+          phoenix_endpoint: WebAppWeb.Endpoint,
+          phoenix_request_logger: {"request_logger", "request_logger"}
+        },
+        query_params: %{},
+        query_string: "",
+        remote_ip: {127, 0, 0, 1},
+        req_cookies: %{
+          "_web_app_key" =>
+            "SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYNjI2TEUteGtpeDcwczNzMXdiT2FUakpz.dv3_U0ixALpjrQ5DsBqexNfeQ2pPPH0v0WHUD6BU1Ik"
+        },
+        req_headers: [
+          {"accept",
+           "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"},
+          {"accept-encoding", "gzip, deflate, br"},
+          {"accept-language", "en-US,en;q=0.9"},
+          {"cache-control", "no-cache"},
+          {"connection", "keep-alive"},
+          {"cookie",
+           "_web_app_key=SFMyNTY.g3QAAAABbQAAAAtfY3NyZl90b2tlbm0AAAAYNjI2TEUteGtpeDcwczNzMXdiT2FUakpz.dv3_U0ixALpjrQ5DsBqexNfeQ2pPPH0v0WHUD6BU1Ik"},
+          {"host", "otherhost:4000"},
+          {"pragma", "no-cache"},
+          {"sec-fetch-dest", "document"},
+          {"sec-fetch-mode", "navigate"},
+          {"sec-fetch-site", "none"},
+          {"sec-fetch-user", "?1"},
+          {"sec-gpc", "1"},
+          {"upgrade-insecure-requests", "1"},
+          {"user-agent",
+           "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"}
+        ],
+        request_path: "/",
+        resp_body: ["{\"", [[] | "a"], "\":", "10", 125],
+        resp_cookies: %{},
+        resp_headers: [
+          {"content-type", "application/json; charset=utf-8"},
+          {"cache-control", "max-age=0, private, must-revalidate"},
+          {"x-request-id", "FoZ8T-7wK6JKr24AAAYP"}
+        ],
+        scheme: :http,
+        script_name: [],
+        secret_key_base: "5fBSdz+TtF5BpvdQA4BVXsADOz4AUIrUeUPDy4CUpZb37kCLgrLT0Tfhq7fBT5TC",
+        state: :set,
+        status: 200
+      },
+      options: []
+    }
   }
 ]
