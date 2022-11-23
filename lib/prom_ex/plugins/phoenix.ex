@@ -264,7 +264,7 @@ if Code.ensure_loaded?(Phoenix) do
     defp http_events(metric_prefix, opts) do
       routers = fetch_routers!(opts)
       additional_routes = fetch_additional_routes!(opts)
-      http_metrics_tags = [:status, :method, :path, :controller, :action]
+      http_metrics_tags = [:status, :method, :path, :controller, :action, :host]
       duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
       duration_unit_plural = Utils.make_plural_atom(duration_unit)
 
@@ -402,7 +402,8 @@ if Code.ensure_loaded?(Phoenix) do
           |> do_get_router_info(routers, default_route_tags)
           |> Map.merge(%{
             status: conn.status,
-            method: conn.method
+            method: conn.method,
+            host: conn.host
           })
 
         _ ->
@@ -419,7 +420,8 @@ if Code.ensure_loaded?(Phoenix) do
           |> do_get_router_info(routers, default_route_tags)
           |> Map.merge(%{
             status: conn.status,
-            method: conn.method
+            method: conn.method,
+            host: conn.host
           })
 
         _ ->
@@ -430,7 +432,7 @@ if Code.ensure_loaded?(Phoenix) do
     defp do_get_router_info(conn, routers, default_route_tags) do
       routers
       |> Enum.find_value(default_route_tags, fn router ->
-        case Phoenix.Router.route_info(router, conn.method, conn.request_path, "") do
+        case Phoenix.Router.route_info(router, conn.method, conn.request_path, conn.host) do
           :error ->
             false
 
