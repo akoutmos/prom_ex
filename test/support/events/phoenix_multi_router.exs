@@ -1079,7 +1079,7 @@
     }
   },
   %{
-    event: [:phoenix, :endpoint, :stop],
+    event: [:internal, :endpoint, :stop],
     measurements: %{duration: 45265},
     metadata: %{
       conn: %{
