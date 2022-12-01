@@ -1,7 +1,5 @@
 server:
   log_level: error
-  http_listen_port: 12345
-  grpc_listen_port: 54321
 
 prometheus:
   wal_directory: "/tmp/test/wal"
