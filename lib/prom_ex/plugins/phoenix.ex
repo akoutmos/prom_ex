@@ -330,12 +330,14 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: [10, 100, 500, 1_000, 5_000, 10_000]
             ],
-            tag_values: fn %{socket: %Socket{endpoint: endpoint}} ->
+            tag_values: fn %{socket: %Socket{endpoint: endpoint, handler: handler}, event: event} ->
               %{
-                endpoint: normalize_module_name(endpoint)
+                endpoint: normalize_module_name(endpoint),
+                event: event,
+                handler: handler
               }
             end,
-            tags: [:endpoint],
+            tags: [:endpoint, :handler, :event],
             unit: {:native, duration_unit}
           )
         ]
