@@ -148,6 +148,7 @@ if Code.ensure_loaded?(Phoenix) do
     require Logger
 
     alias Phoenix.Socket
+    alias Phoenix.Socket.Message
     alias Plug.Conn
     alias PromEx.Utils
 
@@ -330,12 +331,14 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: [10, 100, 500, 1_000, 5_000, 10_000]
             ],
-            tag_values: fn %{socket: %Socket{endpoint: endpoint}} ->
+            tag_values: fn %{socket: %Socket{endpoint: endpoint}, message: %Message{topic: topic, event: event}} ->
               %{
-                endpoint: normalize_module_name(endpoint)
+                endpoint: normalize_module_name(endpoint),
+                topic: topic,
+                event: event
               }
             end,
-            tags: [:endpoint],
+            tags: [:endpoint, :handler, :topic, :event],
             unit: {:native, duration_unit}
           )
         ]
