@@ -36,6 +36,29 @@ defmodule PromEx.Plugins.PhoenixTest do
     end
   end
 
+  defmodule WebApp.PromExSingleEndpointNormalizedChannelEvents do
+    use PromEx, otp_app: :web_app
+
+    @additional_routes [
+      special_label: "/really-cool-route",
+      another_label: ~r(\/another-cool-route)
+    ]
+
+    @impl true
+    def plugins do
+      [
+        {Phoenix,
+         router: TestApp.Router,
+         additional_routes: @additional_routes,
+         endpoint: TestApp.Endpoint,
+         normalize_event_names: fn
+           "test_event" -> "test_event"
+           _ -> "unknown"
+         end}
+      ]
+    end
+  end
+
   test "telemetry events are accumulated for single endpoint configuration" do
     start_supervised!(WebApp.PromExSingleEndpoint)
     Events.execute_all(:phoenix)
@@ -48,6 +71,15 @@ defmodule PromEx.Plugins.PhoenixTest do
     Events.execute_all(:phoenix)
 
     Metrics.assert_prom_ex_metics(WebApp.PromExMultipleEndpoint, :phoenix)
+  end
+
+  test "channel events normalize according to normalize_event_names" do
+    start_supervised!(WebApp.PromExSingleEndpointNormalizedChannelEvents)
+    Events.execute_all(:phoenix)
+
+    collected_metrics = Metrics.read_collected(WebApp.PromExSingleEndpointNormalizedChannelEvents)
+
+    assert collected_metrics |> Enum.any?(&String.contains?(&1, "unknown"))
   end
 
   describe "event_metrics/1" do

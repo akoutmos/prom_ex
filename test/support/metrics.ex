@@ -12,6 +12,14 @@ defmodule PromEx.Test.Support.Metrics do
     |> sort()
   end
 
+  @spec read_collected(module()) :: [String.t()]
+  @doc false
+  def read_collected(prom_ex_module) do
+    prom_ex_module
+    |> PromEx.get_metrics()
+    |> sort()
+  end
+
   @doc false
   @spec sort(String.t()) :: [String.t()]
   def sort(metrics_string) do
@@ -23,10 +31,7 @@ defmodule PromEx.Test.Support.Metrics do
   @doc false
   @spec assert_prom_ex_metics(module(), atom()) :: :ok
   def assert_prom_ex_metics(prom_ex_module, expected_metrics_lookup) do
-    collected_metrics =
-      prom_ex_module
-      |> PromEx.get_metrics()
-      |> sort()
+    collected_metrics = read_collected(prom_ex_module)
 
     expected_metrics = read_expected(expected_metrics_lookup)
 

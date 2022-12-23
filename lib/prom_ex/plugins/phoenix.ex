@@ -35,6 +35,20 @@ if Code.ensure_loaded?(Phoenix) do
       will be set to `some-route`. You can pass in either a regular expression or a string to match the incoming
       request.
 
+    - `normalize_event_name`: This option is OPTIONAL and allows you to remap the channel event names to a different
+      name. This is useful if you want to limit the number or size of event names that are emitted.
+
+      For example, if you have a channel and only want to emit unique metrics for the 'join' and 'leave' events, you can
+      map those events to themselves and map all other events to an 'unknown' event.
+
+      ```elixir
+        fn
+          "join" -> "join"
+          "leave" -> "leave"
+          _ -> "unknown"
+        end
+      ```
+
     #### Example plugin configuration
 
     ```elixir
@@ -42,7 +56,8 @@ if Code.ensure_loaded?(Phoenix) do
       PromEx.Plugins.Phoenix,
       endpoint: MyApp.Endpoint,
       router: MyAppWeb.Public.Router,
-      event_prefix: [:admin, :endpoint]
+      event_prefix: [:admin, :endpoint],
+      normalize_event_name: fn event -> event end)
     }
     ```
 
@@ -159,13 +174,14 @@ if Code.ensure_loaded?(Phoenix) do
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix))
       phoenix_event_prefixes = fetch_event_prefixes!(opts)
       duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
+      normalize_event_name = Keyword.get(opts, :normalize_event_name, fn event -> event end)
 
       set_up_telemetry_proxy(phoenix_event_prefixes)
 
       # Event metrics definitions
       [
         http_events(metric_prefix, opts),
-        channel_events(metric_prefix, duration_unit),
+        channel_events(metric_prefix, duration_unit, normalize_event_name),
         socket_events(metric_prefix, duration_unit)
       ]
     end
@@ -300,7 +316,7 @@ if Code.ensure_loaded?(Phoenix) do
       )
     end
 
-    defp channel_events(metric_prefix, duration_unit) do
+    defp channel_events(metric_prefix, duration_unit, normalize_event_name) do
       duration_unit_plural = Utils.make_plural_atom(duration_unit)
 
       Event.build(
@@ -333,7 +349,7 @@ if Code.ensure_loaded?(Phoenix) do
             tag_values: fn %{socket: %Socket{endpoint: endpoint, handler: handler}, event: event} ->
               %{
                 endpoint: normalize_module_name(endpoint),
-                event: event,
+                event: normalize_event_name.(event),
                 handler: handler
               }
             end,

@@ -2158,6 +2158,60 @@
     }
   },
   %{
+    event: [:phoenix, :channel_handled_in],
+    measurements: %{duration: 51792},
+    metadata: %{
+      event: "test_event",
+      params: %{},
+      ref: "10",
+      socket: %{
+        __struct__: Phoenix.Socket,
+        assigns: %{},
+        channel: Phoenix.LiveReloader.Channel,
+        channel_pid: nil,
+        endpoint: WebAppWeb.Endpoint,
+        handler: Phoenix.LiveReloader.Socket,
+        id: nil,
+        joined: true,
+        join_ref: "6",
+        private: %{log_handle_in: :debug, log_join: :info},
+        pubsub_server: WebApp.PubSub,
+        ref: nil,
+        serializer: Phoenix.Socket.V2.JSONSerializer,
+        topic: "phoenix:live_reload",
+        transport: :websocket,
+        transport_pid: nil
+      }
+    }
+  },
+  %{
+    event: [:phoenix, :channel_handled_in],
+    measurements: %{duration: 51792},
+    metadata: %{
+      event: "another_test_event",
+      params: %{},
+      ref: "10",
+      socket: %{
+        __struct__: Phoenix.Socket,
+        assigns: %{},
+        channel: Phoenix.LiveReloader.Channel,
+        channel_pid: nil,
+        endpoint: WebAppWeb.Endpoint,
+        handler: Phoenix.LiveReloader.Socket,
+        id: nil,
+        joined: true,
+        join_ref: "6",
+        private: %{log_handle_in: :debug, log_join: :info},
+        pubsub_server: WebApp.PubSub,
+        ref: nil,
+        serializer: Phoenix.Socket.V2.JSONSerializer,
+        topic: "phoenix:live_reload",
+        transport: :websocket,
+        transport_pid: nil
+      }
+    }
+  },
+  %{
     event: [:phoenix, :endpoint, :stop],
     measurements: %{duration: 501_930_627},
     metadata: %{
