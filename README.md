@@ -14,7 +14,7 @@
   </a>
 
   <a href="https://github.com/akoutmos/prom_ex/actions">
-    <img alt="GitHub Workflow Status (master)" src="https://img.shields.io/github/workflow/status/akoutmos/prom_ex/PromEx%20CI/master?label=Build%20Status&style=for-the-badge">
+    <img alt="GitHub Workflow Status (master)" src="https://img.shields.io/github/actions/workflow/status/akoutmos/prom_ex/main.yml?label=Build%20Status&style=for-the-badge&branch=master">
   </a>
 
   <a href="https://coveralls.io/github/akoutmos/prom_ex?branch=master">
