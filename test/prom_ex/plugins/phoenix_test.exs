@@ -73,7 +73,7 @@ defmodule PromEx.Plugins.PhoenixTest do
     Metrics.assert_prom_ex_metics(WebApp.PromExMultipleEndpoint, :phoenix)
   end
 
-  test "channel events normalize according to normalize_event_names" do
+  test "channel events normalize according to normalize_event_name" do
     start_supervised!(WebApp.PromExSingleEndpointNormalizedChannelEvents)
     Events.execute_all(:phoenix)
 
