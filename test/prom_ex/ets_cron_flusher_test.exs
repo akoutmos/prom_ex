@@ -43,16 +43,16 @@ defmodule PromEx.ETSCronFlusherTest do
       Events.execute_all(:phoenix)
 
       assert length(get_metrics_table(DefaultPromExSetUp)) == 5
-      assert length(get_dist_table(DefaultPromExSetUp)) == 40
+      assert length(get_dist_table(DefaultPromExSetUp)) == 42
 
       Events.execute_all(:phoenix)
 
       assert length(get_metrics_table(DefaultPromExSetUp)) == 5
-      assert length(get_dist_table(DefaultPromExSetUp)) == 80
+      assert length(get_dist_table(DefaultPromExSetUp)) == 84
 
       Process.sleep(8_000)
 
-      assert length(get_metrics_table(DefaultPromExSetUp)) == 11
+      assert length(get_metrics_table(DefaultPromExSetUp)) == 13
       assert get_dist_table(DefaultPromExSetUp) == []
 
       new_timer_ref = get_timer_ref(DefaultPromExSetUp)
@@ -73,16 +73,16 @@ defmodule PromEx.ETSCronFlusherTest do
       Events.execute_all(:phoenix)
 
       assert length(get_metrics_table(ManualPromExSetUp)) == 5
-      assert length(get_dist_table(ManualPromExSetUp)) == 40
+      assert length(get_dist_table(ManualPromExSetUp)) == 42
 
       Events.execute_all(:phoenix)
 
       assert length(get_metrics_table(ManualPromExSetUp)) == 5
-      assert length(get_dist_table(ManualPromExSetUp)) == 80
+      assert length(get_dist_table(ManualPromExSetUp)) == 84
 
       Process.sleep(3_500)
 
-      assert length(get_metrics_table(ManualPromExSetUp)) == 11
+      assert length(get_metrics_table(ManualPromExSetUp)) == 13
       assert get_dist_table(ManualPromExSetUp) == []
 
       new_timer_ref = get_timer_ref(ManualPromExSetUp)

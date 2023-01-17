@@ -51,7 +51,7 @@ defmodule PromEx.Plugins.PhoenixTest do
          router: TestApp.Router,
          additional_routes: @additional_routes,
          endpoint: TestApp.Endpoint,
-         normalize_event_names: fn
+         normalize_event_name: fn
            "test_event" -> "test_event"
            _ -> "unknown"
          end}
