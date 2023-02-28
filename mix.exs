@@ -21,7 +21,16 @@ defmodule PromEx.MixProject do
         "coveralls.github": :test
       ],
       dialyzer: [
-        plt_add_apps: [:absinthe, :broadway, :ecto, :mix, :oban, :phoenix, :plug, :telemetry_metrics],
+        plt_add_apps: [
+          :absinthe,
+          :broadway,
+          :ecto,
+          :mix,
+          :oban,
+          :phoenix,
+          :plug,
+          :telemetry_metrics
+        ],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],
       package: package(),
@@ -51,7 +60,7 @@ defmodule PromEx.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_metrics_prometheus_core, "~> 1.0"},
-      {:plug_cowboy, "~> 2.5.1"},
+      {:plug_cowboy, "~> 2.6"},
       {:octo_fetch, "~> 0.2.0"},
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
@@ -151,7 +160,11 @@ defmodule PromEx.MixProject do
     readme_contents = File.read!("./README.md")
 
     massaged_readme =
-      Regex.replace(~r/<!--START-->(.|\n)*<!--END-->/, readme_contents, hex_docs_friendly_header_content)
+      Regex.replace(
+        ~r/<!--START-->(.|\n)*<!--END-->/,
+        readme_contents,
+        hex_docs_friendly_header_content
+      )
 
     File.write!("./README.md", massaged_readme)
   end
