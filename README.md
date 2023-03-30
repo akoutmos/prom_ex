@@ -112,6 +112,8 @@ defmodule MyCoolApp.Application do
 
   def start(_type, _args) do
     children = [
+      MyAppWeb.Endpoint,
+      # PromEx should be started after the Endpoint, to avoid unnecessary error messages
       MyCoolApp.PromEx,
 
       ...
