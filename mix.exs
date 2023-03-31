@@ -60,7 +60,7 @@ defmodule PromEx.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_metrics_prometheus_core, "~> 1.0"},
-      {:plug_cowboy, "~> 2.6"},
+      {:plug_cowboy, "~> 2.5 or ~> 2.6"},
       {:octo_fetch, "~> 0.2.0"},
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
