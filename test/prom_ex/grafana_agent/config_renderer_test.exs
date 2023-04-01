@@ -9,6 +9,7 @@ defmodule PromEx.GrafanaAgent.ConfigRendererTest do
       template_args = %{
         agent_port: "12345",
         grpc_port: "54321",
+        render_listen_port: true,
         log_level: "error",
         wal_dir: "/tmp/test/wal",
         scrape_interval: "5s",
@@ -46,6 +47,34 @@ defmodule PromEx.GrafanaAgent.ConfigRendererTest do
 
       assert File.exists?(expected_file_path)
       assert File.read!(expected_file_path) == "foo: this is a foo"
+    end
+
+    @tag :tmp_dir
+    test "should omnit agent_port and grpc_port from >= v0.26.0", %{tmp_dir: tmp_dir} do
+      template_args = %{
+        agent_port: "12345",
+        grpc_port: "54321",
+        render_listen_port: false,
+        log_level: "error",
+        wal_dir: "/tmp/test/wal",
+        scrape_interval: "5s",
+        job: "TestApp",
+        metrics_server_path: "/cool-metrics",
+        metrics_server_scheme: :https,
+        metrics_server_host: "localhost",
+        bearer_token: "super_secret",
+        metrics_server_port: "1234",
+        instance: "localhost",
+        prometheus_url: "www.my-prometheus.com",
+        prometheus_username: "prom_user",
+        prometheus_password: "prom_pass"
+      }
+
+      ConfigRenderer.generate_config_file(template_args, tmp_dir)
+      expected_file_path = "#{tmp_dir}/agent.yml"
+
+      assert File.exists?(expected_file_path)
+      assert File.read!(expected_file_path) == File.read!("#{__DIR__}/expected_output_config_post_v0_26.yml")
     end
   end
 end

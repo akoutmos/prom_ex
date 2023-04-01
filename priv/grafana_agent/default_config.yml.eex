@@ -1,7 +1,7 @@
 server:
+  log_level: <%= @log_level %><%= if @render_listen_port do %>
   http_listen_port: <%= @agent_port %>
-  grpc_listen_port: <%= @grpc_port %>
-  log_level: <%= @log_level %>
+  grpc_listen_port: <%= @grpc_port %><% end %>
 
 prometheus:
   wal_directory: "<%= @wal_dir %>"
@@ -17,7 +17,7 @@ prometheus:
           static_configs:
             - targets: ["<%= @metrics_server_host %>:<%= @metrics_server_port %>"]
           metric_relabel_configs:
-            - source_labels: [ instance ]
+            - source_labels: [instance]
               target_label: instance
               action: replace
               replacement: "<%= @instance %>"

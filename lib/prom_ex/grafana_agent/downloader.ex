@@ -7,6 +7,13 @@ defmodule PromEx.GrafanaAgent.Downloader do
     latest_version: "0.23.0",
     github_repo: "grafana/agent",
     download_versions: %{
+      "0.29.0" => [
+        {:darwin, :amd64, "2b51aab7cfa4daf9b18c857c85dddb9ee9086e7470c3585be661fd6577e15afe"},
+        {:darwin, :arm64, "4bf44f44a1e9f4e9c257bea8bcf63549bf4f8f575f8afca94ff0cac371f55ed9"},
+        {:linux, :amd64, "aa07cc24de9d607e6388ce85eec76b250f6a4f304ba86ec7e38fc351d9a2739a"},
+        {:linux, :arm64, "7d402893564e4054d7e1401d10031b9c2841832a2dab5212184f2b606cd08b0d"},
+        {:freebsd, :amd64, "28becd3451ae8d56f4976e87a622da7cd11ce8a02d9bd9f1ee6517785c7fd594"}
+      ],
       "0.23.0" => [
         {:darwin, :amd64, "643044b35ed4bdfd9866a43b70e39d64f16709f9685b89a03b299da8834661b0"},
         {:darwin, :arm64, "e94f7fd0e1ef9fb497cff4f1260cc22967d6a5b003dd2c99f494f9e457482dda"},
