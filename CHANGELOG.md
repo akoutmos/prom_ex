@@ -7,24 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- Support for Phoenix 1.7
-
-## [1.8.0] - 2022-10-08
+## [1.8.0] - 2023-04-01
 
 ### Added
 
+- Support for Phoenix 1.7 [#192](https://github.com/akoutmos/prom_ex/pull/192)
 - Ability to customize time units via `:duration_unit` in plugins [#140](https://github.com/akoutmos/prom_ex/pull/140)
 - Download Grafana Agent on FreeBSD [#156](https://github.com/akoutmos/prom_ex/pull/156)
 - Ability to configure configure Grafana HTTP client Finch pools [#169](https://github.com/akoutmos/prom_ex/pull/169)
 - Ability to pass additional params to GrafanaAgent config templates [161](https://github.com/akoutmos/prom_ex/pull/161)
 - Ability to run multiple GrafanaAgent instances [#157](https://github.com/akoutmos/prom_ex/pull/157)
-- Support for GrafanaAgent 28
+- Support for GrafanaAgent 29 [#184](https://github.com/akoutmos/prom_ex/pull/184)
+- Support for Telemetry >= 1.0.0 [#193](https://github.com/akoutmos/prom_ex/pull/193)
+- Ability to normalize channel event name in Phoenix plugin [#187](https://github.com/akoutmos/prom_ex/pull/187)
 
 ### Fixed
 
 - Application crashing on startup from being unable to upload dashboards due to folder UID changing [#177](https://github.com/akoutmos/prom_ex/pull/177)
+- Use topology name for message and exception tags in Broadway plugin [#134](https://github.com/akoutmos/prom_ex/pull/134)
+- Ecto plugin issue when missing repo config [#144](https://github.com/akoutmos/prom_ex/pull/144)
+- `prom_ex.dashboard.publish` Finch pool error [#127](https://github.com/akoutmos/prom_ex/pull/127) and
+  [#152](https://github.com/akoutmos/prom_ex/pull/152)
 
 ## [1.7.1] - 2022-03-02
 
