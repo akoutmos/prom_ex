@@ -44,7 +44,7 @@ defmodule MyApp.PromEx.Plugins.MyPhoenix do
           measurement: :duration,
           description: "The time it takes for the application to respond to HTTP requests.",
           reporter_options: [
-            buckets: exponential(1, 2, 12)
+            buckets: exponential!(1, 2, 12)
           ],
           tag_values: get_conn_tags(phoenix_router),
           tags: http_metrics_tags,
