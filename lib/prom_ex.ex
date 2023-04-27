@@ -128,6 +128,19 @@ defmodule PromEx do
       else: :prom_ex_down
   end
 
+  @doc """
+  Forces aggregation for all currently configured distributions (histogram). This is
+  primarily used by flusher process to prevent high memory consumptions.
+  """
+  @spec aggregate_metrics(prom_ex_module :: module()) :: :ok | :prom_ex_down
+  def aggregate_metrics(prom_ex_module) do
+    prom_ex_process_name = prom_ex_module.__metrics_collector_name__()
+
+    if Process.whereis(prom_ex_process_name),
+      do: Core.aggregate(prom_ex_process_name),
+      else: :prom_ex_down
+  end
+
   @callback init_opts :: PromEx.Config.t()
   @callback plugins :: [plugin_definition()]
   @callback dashboard_assigns :: keyword()

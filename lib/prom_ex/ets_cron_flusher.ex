@@ -48,10 +48,10 @@ defmodule PromEx.ETSCronFlusher do
 
   @impl true
   def handle_info(:flush_ets, state) do
-    PromEx.get_metrics(state.prom_ex_module)
+    PromEx.aggregate_metrics(state.prom_ex_module)
 
     timer_ref = schedule_flush(state)
-    {:noreply, %{state | timer_ref: timer_ref}}
+    {:noreply, %{state | timer_ref: timer_ref}, :hibernate}
   end
 
   @impl true
