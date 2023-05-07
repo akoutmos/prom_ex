@@ -8,6 +8,8 @@ defmodule PromEx.ETSCronFlusher do
 
   use GenServer
 
+  @flush_timeout 10_000
+
   @doc """
   Used to start the `PromEx.ETSCronFlusher` process.
   """
@@ -48,7 +50,15 @@ defmodule PromEx.ETSCronFlusher do
 
   @impl true
   def handle_info(:flush_ets, state) do
-    PromEx.get_metrics(state.prom_ex_module)
+    # In order to avoid leaking large binaries of metrics, the flush should take place
+    # inside of an ephemeral task so that the heap memory is reclaimed when the process
+    # dies
+    flush_task =
+      Task.async(fn ->
+        PromEx.get_metrics(state.prom_ex_module)
+      end)
+
+    Task.await(flush_task, @flush_timeout)
 
     timer_ref = schedule_flush(state)
     {:noreply, %{state | timer_ref: timer_ref}}
