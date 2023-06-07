@@ -198,11 +198,12 @@ if Code.ensure_loaded?(Phoenix) do
 
     defp endpoint_info(metric_prefix, opts) do
       # Fetch user options
+      otp_app = Keyword.get(opts, :otp_app)
       phoenix_endpoint = Keyword.get(opts, :endpoint) || Keyword.get(opts, :endpoints)
 
       Manual.build(
         :phoenix_endpoint_manual_metrics,
-        {__MODULE__, :execute_phoenix_endpoint_info, [phoenix_endpoint]},
+        {__MODULE__, :execute_phoenix_endpoint_info, [phoenix_endpoint, otp_app]},
         [
           last_value(
             metric_prefix ++ [:endpoint, :url, :info],
@@ -223,13 +224,14 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     @doc false
-    def execute_phoenix_endpoint_info(endpoint) do
+    def execute_phoenix_endpoint_info(endpoint, otp_app) do
       # TODO: This is a bit of a hack until Phoenix supports an init telemetry event to
       # reliably get the configuration.
       endpoint_init_checker = fn
-        count, endpoint_module, endpoint_init_checker_function when count < 10 ->
+        count, endpoint_module, endpoint_init_checker_function, otp_app when count < 10 ->
           case Process.whereis(endpoint_module) do
             pid when is_pid(pid) ->
+              IO.inspect(pid, label: "Endpoint PID")
               measurements = %{status: 1}
               url_metadata = %{url: endpoint_module.url(), endpoint: normalize_module_name(endpoint_module)}
               :telemetry.execute([:prom_ex, :plugin, :phoenix, :endpoint_url], measurements, url_metadata)
@@ -239,11 +241,16 @@ if Code.ensure_loaded?(Phoenix) do
               :telemetry.execute([:prom_ex, :plugin, :phoenix, :endpoint_port], measurements, port_metadata)
 
             _ ->
-              Process.sleep(1_000)
-              endpoint_init_checker_function.(count + 1, endpoint_module, endpoint_init_checker_function)
+              if Phoenix.Endpoint.server?(otp_app, endpoint_module) do
+                # if the endpoint started, but the process is not registered yet, wait a bit and try again
+                endpoint_init_checker_function.(count + 1, endpoint_module, endpoint_init_checker_function, otp_app)
+              else
+                # wait for the endpoint to start
+                endpoint_init_checker_function.(0, endpoint_module, endpoint_init_checker_function, otp_app)
+              end
           end
 
-        _, _, _ ->
+        _, _, _, _ ->
           :noop
       end
 
@@ -251,12 +258,12 @@ if Code.ensure_loaded?(Phoenix) do
         endpoint
         |> Enum.each(fn {endpoint_module, _} ->
           Task.start(fn ->
-            endpoint_init_checker.(0, endpoint_module, endpoint_init_checker)
+            endpoint_init_checker.(0, endpoint_module, endpoint_init_checker, otp_app)
           end)
         end)
       else
         Task.start(fn ->
-          endpoint_init_checker.(0, endpoint, endpoint_init_checker)
+          endpoint_init_checker.(0, endpoint, endpoint_init_checker, otp_app)
         end)
       end
     end
