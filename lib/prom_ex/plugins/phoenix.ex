@@ -231,7 +231,6 @@ if Code.ensure_loaded?(Phoenix) do
         count, endpoint_module, endpoint_init_checker_function, otp_app when count < 10 ->
           case Process.whereis(endpoint_module) do
             pid when is_pid(pid) ->
-              IO.inspect(pid, label: "Endpoint PID")
               measurements = %{status: 1}
               url_metadata = %{url: endpoint_module.url(), endpoint: normalize_module_name(endpoint_module)}
               :telemetry.execute([:prom_ex, :plugin, :phoenix, :endpoint_url], measurements, url_metadata)
