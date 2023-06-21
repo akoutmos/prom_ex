@@ -132,7 +132,9 @@ defmodule PromEx.DashboardUploader do
         Logger.info("PromEx.DashboardUploader successfully uploaded #{full_dashboard_path} to Grafana.")
 
       {:error, reason} ->
-        Logger.warning("PromEx.DashboardUploader failed to upload #{full_dashboard_path} to Grafana: #{inspect(reason)}")
+        Logger.warning(
+          "PromEx.DashboardUploader failed to upload #{full_dashboard_path} to Grafana: #{inspect(reason)}"
+        )
     end
   end
 
