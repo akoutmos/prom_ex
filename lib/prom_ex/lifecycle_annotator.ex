@@ -87,7 +87,7 @@ defmodule PromEx.LifecycleAnnotator do
         Logger.info("PromEx.LifecycleAnnotator successfully created start annotation in Grafana.")
 
       {:error, reason} ->
-        Logger.warn("PromEx.LifecycleAnnotator failed to create start annotation in Grafana: #{inspect(reason)}")
+        Logger.warning("PromEx.LifecycleAnnotator failed to create start annotation in Grafana: #{inspect(reason)}")
     end
 
     {:noreply, state}
@@ -107,7 +107,7 @@ defmodule PromEx.LifecycleAnnotator do
         Logger.info("PromEx.LifecycleAnnotator successfully created stop annotation in Grafana.")
 
       {:error, reason} ->
-        Logger.warn("PromEx.LifecycleAnnotator failed to create stop annotation in Grafana: #{inspect(reason)}")
+        Logger.warning("PromEx.LifecycleAnnotator failed to create stop annotation in Grafana: #{inspect(reason)}")
     end
 
     :ok

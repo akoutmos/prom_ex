@@ -57,7 +57,7 @@ defmodule PromEx.Plug do
   def call(%Conn{request_path: metrics_path} = conn, %{metrics_path: metrics_path, prom_ex_module: prom_ex_module}) do
     case PromEx.get_metrics(prom_ex_module) do
       :prom_ex_down ->
-        Logger.warn("Attempted to fetch metrics from #{prom_ex_module}, but the module has not been initialized")
+        Logger.warning("Attempted to fetch metrics from #{prom_ex_module}, but the module has not been initialized")
 
         conn
         |> put_resp_content_type("text/plain")

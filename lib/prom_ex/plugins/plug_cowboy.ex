@@ -195,7 +195,7 @@ if Code.ensure_loaded?(Plug.Cowboy) do
           }
 
         nil ->
-          Logger.warn("Cowboy failed to provide valid response status #{inspect(resp_status)}")
+          Logger.warning("Cowboy failed to provide valid response status #{inspect(resp_status)}")
           %{}
       end
     end
