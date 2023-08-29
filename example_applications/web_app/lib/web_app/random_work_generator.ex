@@ -37,7 +37,7 @@ defmodule WebApp.RandomWorkGenerator do
   end
 
   def handle_info(error, state) do
-    Logger.warn("Failed to enqueue Oban work: #{inspect(error)}")
+    Logger.warning("Failed to enqueue Oban work: #{inspect(error)}")
 
     {:noreply, state}
   end

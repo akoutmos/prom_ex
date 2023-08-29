@@ -5,7 +5,7 @@ defmodule WebApp.MixProject do
     [
       app: :web_app,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -48,7 +48,7 @@ defmodule WebApp.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:faker, "~> 0.16"},
       {:oban, "~> 2.9.0"},
-      {:broadway, "~> 1.0.0"},
+      {:broadway, "~> 1.0.2"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       # {:prom_ex, "~> 1.5.0"}
       {:prom_ex, path: "../../"}

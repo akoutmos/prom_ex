@@ -84,7 +84,7 @@ doing the following:
   "my-handler-2",
   [:my_cool_app, :accounts, :new_user, :error],
   fn _event_name, _event_measurement, event_metadata, _config ->
-    Logger.warn("User failed to register: #{inspect(event_metadata)}")
+    Logger.warning("User failed to register: #{inspect(event_metadata)}")
   end,
   %{}
 )
