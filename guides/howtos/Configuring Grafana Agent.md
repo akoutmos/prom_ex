@@ -25,3 +25,7 @@ config :my_app, MyApp.PromEx,
 ```
 
 Take note of the `metrics_server_scheme` attribute; by default, this setting is :https, and often, your services will be running behind a proxy that handles the SSL part. This implies that your service is technically serving http requests, not https. If you encounter this issue, no errors will appear in the logs, making it vital to ensure the correct value is set.
+
+Another useful tip is to maintain access to the Grafana Agent config file. Having this file at hand can facilitate smoother communication with the support team and aid in troubleshooting issues more efficiently.
+
+Upon starting your app, assuming the agent has been correctly configured, the necessary files will be downloaded to the working_directory. You can navigate to this directory to locate the config file at `{working_directory}/config/agent.yml`. Sharing this file with the Grafana Cloud support team can greatly expedite the resolution of any problems you encounter.
