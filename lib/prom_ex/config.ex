@@ -167,7 +167,7 @@ defmodule PromEx.Config do
 
       * `:metrics_server_port` - The port that the metrics server is running on.
 
-      * `:metrics_server_scheme` - Whether the app reachable via HTTPS or HTTP.
+      * `:metrics_server_scheme` - Whether the app reachable via HTTPS or HTTP (default is `https`).
 
       * `:metrics_server_host` - The host to scrape for metrics.
 
