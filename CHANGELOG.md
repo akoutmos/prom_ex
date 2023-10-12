@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2023-10-12
+
+### Added
+
+- Added host tag to phoenix plugin to handle paths depended on a subdomain [#183](https://github.com/akoutmos/prom_ex/pull/183)
+
+### Changed
+
+- Removed deprecated `Logger.warn` calls [#207](https://github.com/akoutmos/prom_ex/pull/207)
+
+### Fixed
+
+- Addressed binary memory leak in flusher GenServer [#200](https://github.com/akoutmos/prom_ex/pull/200)
+
 ## [1.8.0] - 2023-04-01
 
 ### Added
