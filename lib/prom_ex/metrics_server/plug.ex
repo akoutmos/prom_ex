@@ -45,7 +45,7 @@ defmodule PromEx.MetricsServer.Plug do
         {:bearer, %{auth_token: auth_token, path: path} = plug_opts}
       ) do
     with ["Bearer " <> req_auth_token] <- get_req_header(conn, "authorization"),
-         true <- req_auth_token == auth_token do
+         true <- req_auth_token == resolve_auth_token(auth_token) do
       call(conn, {:none, plug_opts})
     else
       _ ->
@@ -78,4 +78,7 @@ defmodule PromEx.MetricsServer.Plug do
     |> put_resp_content_type("text/plain")
     |> send_resp(404, "Not Found")
   end
+
+  defp resolve_auth_token({m, f, a}), do: apply(m, f, a)
+  defp resolve_auth_token(token), do: token
 end

@@ -25,6 +25,8 @@ defmodule PromEx.MetricsServer.PlugTest do
     end
   end
 
+  def build_auth_token, do: "abcd"
+
   setup_all do
     System.put_env("GIT_SHA", "395459c")
     System.put_env("GIT_AUTHOR", "Alex")
@@ -104,6 +106,28 @@ defmodule PromEx.MetricsServer.PlugTest do
           prom_ex_module: DefaultPromExSetUp,
           auth_strategy: :bearer,
           auth_token: "abcd"
+        })
+
+      conn =
+        :get
+        |> conn("/metrics")
+        |> put_req_header("authorization", "Bearer abcd")
+
+      response = MetricsServer.Plug.call(conn, opts)
+
+      assert response.status == 200
+      assert response.resp_body =~ "prom_ex_application_primary_info"
+      assert response.resp_body =~ "395459c"
+      assert response.resp_body =~ "Alex"
+    end
+
+    test "should return the metrics for a PromEx instance if the bearer token is MFA" do
+      opts =
+        MetricsServer.Plug.init(%{
+          path: "/metrics",
+          prom_ex_module: DefaultPromExSetUp,
+          auth_strategy: :bearer,
+          auth_token: {__MODULE__, :build_auth_token, []}
         })
 
       conn =
