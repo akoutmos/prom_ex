@@ -64,7 +64,7 @@ Documentation can be found at [https://hexdocs.pm/prom_ex](https://hexdocs.pm/pr
 
 ## Supporting PromEx
 
-PromEx has an ambition goal: To provide Prometheus metrics and Grafana dashboards for as many of the libraries in the Elixir ecosystem as possible as well as a framework so that you can manage the lifecycle of your own metrics and dashboards.
+PromEx has an ambitious goal: To provide Prometheus metrics and Grafana dashboards for as many of the libraries in the Elixir ecosystem as possible as well as a framework so that you can manage the lifecycle of your own metrics and dashboards.
 
 If you rely on PromEx to monitor your production applications, it would much appreciated if you can give back to the
 project in order to help ensure its continued development.
@@ -93,7 +93,7 @@ project in order to help ensure its continued development.
 
 ## Setting Up PromEx
 
-The goal of PromEx is to have metrics set up be as simple and streamlined as possible. In that spirit, all
+The goal of PromEx is to make setting up metrics as simple and streamlined as possible. In that spirit, all
 that you need to do to start leveraging PromEx along with the built-in plugins is to run the following mix
 task (the `YOUR_PROMETHEUS_DATASOURCE_ID` value should align with what is configured in Grafana as the name of the
 Prometheus data source):
