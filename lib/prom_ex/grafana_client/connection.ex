@@ -24,6 +24,14 @@ defmodule PromEx.GrafanaClient.Connection do
     }
   end
 
+  def build(finch_process, %{host: host, auth_token: {m, f, a}}) do
+    %__MODULE__{
+      finch_process: finch_process,
+      base_url: normalize_host(host),
+      authorization: "Bearer #{apply(m, f, a)}"
+    }
+  end
+
   def build(finch_process, %{host: host, auth_token: auth_token}) do
     %__MODULE__{
       finch_process: finch_process,

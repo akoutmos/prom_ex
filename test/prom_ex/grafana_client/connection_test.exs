@@ -3,6 +3,8 @@ defmodule PromEx.GrafanaClient.ConnectionTest do
 
   alias PromEx.GrafanaClient.Connection
 
+  def build_auth_token, do: "made_from_mfa"
+
   describe "build/1" do
     test "should properly build a connection struct with provided host, username, and password values" do
       finch_name = PromEx.TestFinchName
@@ -25,6 +27,18 @@ defmodule PromEx.GrafanaClient.ConnectionTest do
                finch_process: ^finch_name,
                base_url: ^base_url,
                authorization: "Bearer " <> ^auth_token
+             } = Connection.build(finch_name, %{host: base_url, username: nil, password: nil, auth_token: auth_token})
+    end
+
+    test "connection struct with MFA auth_token" do
+      finch_name = PromEx.TestFinchName
+      base_url = "http://localhost:3000"
+      auth_token = {__MODULE__, :build_auth_token, []}
+
+      assert %Connection{
+               finch_process: ^finch_name,
+               base_url: ^base_url,
+               authorization: "Bearer made_from_mfa"
              } = Connection.build(finch_name, %{host: base_url, username: nil, password: nil, auth_token: auth_token})
     end
   end
