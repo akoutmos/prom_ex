@@ -102,9 +102,8 @@ Prometheus data source):
 $ mix prom_ex.gen.config --datasource YOUR_PROMETHEUS_DATASOURCE_ID
 ```
 
-Then add the generated module to your `application.ex` file supervision tree (be sure to add it to the top of the
-supervisor children list so that you do not miss any init-style events from other processes like Ecto.Repo for
-example):
+Then add the generated module to your `application.ex` file supervision tree at the top of the
+supervisor children list so that you do not miss any init-style events from other processes like Ecto.Repo:
 
 ```elixir
 defmodule MyCoolApp.Application do
@@ -113,8 +112,10 @@ defmodule MyCoolApp.Application do
   def start(_type, _args) do
     children = [
       MyAppWeb.Endpoint,
-      # PromEx should be started after the Endpoint, to avoid unnecessary error messages
+      # PromEx should be started after the Endpoint, to avoid unnecessary error messages...
       MyCoolApp.PromEx,
+      # ...everything else is started after to not miss any events
+      MyCoolApp.Repo,
 
       ...
     ]
