@@ -1,0 +1,31 @@
+# HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
+# HELP web_app_prom_ex_tesla_http_request_duration_milliseconds The time it takes for an HTTP request to complete.
+# HELP web_app_prom_ex_tesla_http_requests_total The number of requests that have been made.
+# HELP web_app_prom_ex_tesla_http_response_size_bytes The size of the HTTP response payload.
+# TYPE web_app_prom_ex_prom_ex_status_info gauge
+# TYPE web_app_prom_ex_tesla_http_request_duration_milliseconds histogram
+# TYPE web_app_prom_ex_tesla_http_requests_total counter
+# TYPE web_app_prom_ex_tesla_http_response_size_bytes histogram
+web_app_prom_ex_prom_ex_status_info 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="+Inf"} 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="10"} 0
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="100"} 0
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="1000"} 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="10000"} 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="30000"} 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="500"} 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="5000"} 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_count{method="get",status="200",url="http://127.0.0.1:4000/users"} 1
+web_app_prom_ex_tesla_http_request_duration_milliseconds_sum{method="get",status="200",url="http://127.0.0.1:4000/users"} 100.115245
+web_app_prom_ex_tesla_http_requests_total{method="get",status="200",url="http://127.0.0.1:4000/users"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="+Inf"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="1048576"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="16777216"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="262144"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="4096"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="4194304"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="512"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="64"} 0
+web_app_prom_ex_tesla_http_response_size_bytes_bucket{method="get",status="200",url="http://127.0.0.1:4000/users",le="65536"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_count{method="get",status="200",url="http://127.0.0.1:4000/users"} 1
+web_app_prom_ex_tesla_http_response_size_bytes_sum{method="get",status="200",url="http://127.0.0.1:4000/users"} 260
