@@ -45,35 +45,12 @@ defmodule PromEx.LifecycleAnnotator do
       |> elem(1)
       |> :erlang.list_to_binary()
 
-    app_version =
-      otp_app
-      |> Application.spec(:vsn)
-      |> to_string()
-
-    git_sha =
-      case System.fetch_env("GIT_SHA") do
-        {:ok, git_sha} ->
-          git_sha
-
-        :error ->
-          "Not available"
-      end
-
-    git_author =
-      case System.fetch_env("GIT_AUTHOR") do
-        {:ok, git_sha} ->
-          git_sha
-
-        :error ->
-          "Not available"
-      end
-
     state =
       state
       |> Map.put(:hostname, hostname)
-      |> Map.put(:app_version, app_version)
-      |> Map.put(:git_sha, git_sha)
-      |> Map.put(:git_author, git_author)
+      |> Map.put(:app_version, get_app_version(state[:git_sha_mfa], otp_app))
+      |> Map.put(:git_sha, get_git_sha(state[:git_sha_mfa]))
+      |> Map.put(:git_author, get_git_sha(state[:git_author_mfa]))
 
     grafana_conn = GrafanaClient.build_conn(prom_ex_module)
 
@@ -122,5 +99,37 @@ defmodule PromEx.LifecycleAnnotator do
       "Git SHA - #{git_sha}",
       "Git Author - #{git_author}"
     ]
+  end
+
+  defp get_app_version({m, f, a}, _), do: apply(m, f, a)
+
+  defp get_app_version(_, otp_app) do
+    otp_app
+    |> Application.spec(:vsn)
+    |> to_string()
+  end
+
+  defp get_git_sha({m, f, a}), do: apply(m, f, a)
+
+  defp get_git_sha(_) do
+    case System.fetch_env("GIT_SHA") do
+      {:ok, git_sha} ->
+        git_sha
+
+      :error ->
+        "Git SHA not available"
+    end
+  end
+
+  defp get_git_author({m, f, a}), do: apply(m, f, a)
+
+  def get_git_author(_) do
+    case System.fetch_env("GIT_AUTHOR") do
+      {:ok, git_sha} ->
+        git_sha
+
+      :error ->
+        "Git author not available"
+    end
   end
 end
