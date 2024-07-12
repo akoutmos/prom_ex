@@ -17,7 +17,7 @@ defmodule PromEx.Plugins.BeamTest do
     start_supervised!(WebApp.PromEx)
     Events.execute_all(:beam)
 
-    Metrics.assert_prom_ex_metics(WebApp.PromEx, :beam)
+    Metrics.assert_prom_ex_metrics(WebApp.PromEx, :beam)
   end
 
   describe "event_metrics/1" do

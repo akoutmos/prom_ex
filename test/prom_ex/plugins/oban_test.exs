@@ -20,7 +20,7 @@ defmodule PromEx.Plugins.ObanTest do
 
     Events.execute_all(:oban)
 
-    Metrics.assert_prom_ex_metics(WebApp.PromEx, :oban)
+    Metrics.assert_prom_ex_metrics(WebApp.PromEx, :oban)
   end
 
   describe "event_metrics/1" do

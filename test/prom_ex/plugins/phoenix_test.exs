@@ -63,14 +63,14 @@ defmodule PromEx.Plugins.PhoenixTest do
     start_supervised!(WebApp.PromExSingleEndpoint)
     Events.execute_all(:phoenix)
 
-    Metrics.assert_prom_ex_metics(WebApp.PromExSingleEndpoint, :phoenix)
+    Metrics.assert_prom_ex_metrics(WebApp.PromExSingleEndpoint, :phoenix)
   end
 
   test "telemetry events are accumulated for multiple endpoint configuration" do
     start_supervised!(WebApp.PromExMultipleEndpoint)
     Events.execute_all(:phoenix)
 
-    Metrics.assert_prom_ex_metics(WebApp.PromExMultipleEndpoint, :phoenix)
+    Metrics.assert_prom_ex_metrics(WebApp.PromExMultipleEndpoint, :phoenix)
   end
 
   test "channel events normalize according to normalize_event_name" do

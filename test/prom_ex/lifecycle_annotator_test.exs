@@ -75,7 +75,7 @@ defmodule PromEx.LifecycleAnnotatorTest do
     # Ensure we get through the continue
     :sys.get_state(pid)
 
-    # Ensure we get another post for ther terminate callback
+    # Ensure we get another post for the terminate callback
     Bypass.expect(bypass, "POST", "/api/annotations", fn conn ->
       Plug.Conn.resp(conn, 200, response_payload)
     end)
