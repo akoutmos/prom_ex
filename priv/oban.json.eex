@@ -2559,7 +2559,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of circuit breaker trip events that occured along with what component tripped the breaker.",
+      "description": "The number of circuit breaker trip events that occurred along with what component tripped the breaker.",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -2652,7 +2652,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of circuit breaker open events that occured along with what component tripped the breaker.",
+      "description": "The number of circuit breaker open events that occurred along with what component tripped the breaker.",
       "fieldConfig": {
         "defaults": {
           "custom": {}

@@ -76,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All plugin distribution buckets have been redefined. The reason for this being that prior to PromEx 1.7, some of the
   distribution buckets were a bit wasteful and were not adding value in terms of metrics data points. With this change,
   users should notice a decline in data point cardinality without compromising resolution.
-- Application plugin has changed how it fetches dependency information. It is now using `Applciation.spec/1` to get the
+- Application plugin has changed how it fetches dependency information. It is now using `Application.spec/1` to get the
   list of applications that are started with your application. This should reduce noise in the Grafana dashboard as all
   the default OTP and Elixir applications will not show up.
 - All Grafana dashboard now have a default panel sort order where the largest timeseries plot is first in the list when

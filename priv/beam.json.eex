@@ -1543,7 +1543,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "<%= @datasource_id %>",
-      "description": "The number of context switches that have occured along with the number of reductions.",
+      "description": "The number of context switches that have occurred along with the number of reductions.",
       "fieldConfig": {
         "defaults": {
           "custom": {},

@@ -216,7 +216,7 @@ defmodule PromEx.GrafanaClient do
       unknown_response ->
         Logger.warning("Received an unhandled response from Grafana because: #{inspect(unknown_response)}")
 
-        {:error, :unkown}
+        {:error, :unknown}
     end
   end
 

@@ -15,7 +15,7 @@ defmodule WebApp.PromEx do
 
   2. Add this module to your application supervision tree. It should be one of the first
      things that is started so that no Telemetry events are missed. For example, if PromEx
-     is started after your Repo module, you will miss Ecto's init events and the dashbaords
+     is started after your Repo module, you will miss Ecto's init events and the dashboards
      will be missing some data points:
      ```
      def start(_type, _args) do
