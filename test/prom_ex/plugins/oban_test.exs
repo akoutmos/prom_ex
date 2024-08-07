@@ -15,7 +15,6 @@ defmodule PromEx.Plugins.ObanTest do
   end
 
   test "telemetry events are accumulated" do
-    start_supervised!({Registry, keys: :unique, name: Oban.Registry})
     start_supervised!(WebApp.PromEx)
 
     Events.execute_all(:oban)

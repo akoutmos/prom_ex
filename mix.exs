@@ -74,11 +74,11 @@ defmodule PromEx.MixProject do
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.28.2", only: :dev},
-      {:excoveralls, "~> 0.14.4", only: :test, runtime: false},
-      {:doctor, "~> 0.18.0", only: :dev},
-      {:credo, "~> 1.6.1", only: :dev},
-      {:dialyxir, "~> 1.1.0", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.34.2", only: :dev},
+      {:excoveralls, "~> 0.18.2", only: :test, runtime: false},
+      {:doctor, "~> 0.21.0", only: :dev},
+      {:credo, "~> 1.7.7", only: :dev},
+      {:dialyxir, "~> 1.4.3", only: :dev, runtime: false}
     ]
   end
 
