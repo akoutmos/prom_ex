@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.PromEx.Gen.ConfigTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   import ExUnit.CaptureIO
   import Mix.Tasks.PromEx.Gen.Config

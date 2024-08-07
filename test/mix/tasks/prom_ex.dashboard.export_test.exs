@@ -1,14 +1,12 @@
 defmodule Mix.Tasks.PromEx.Dashboard.ExportTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   import ExUnit.CaptureIO
 
   require IEx
 
-  alias Mix.Tasks.PromEx.{
-    Dashboard.Export,
-    Gen.Config
-  }
+  alias Mix.Tasks.PromEx.Dashboard.Export
+  alias Mix.Tasks.PromEx.Gen.Config
 
   setup do
     tmp_dir = Path.join(File.cwd!(), "tmp")
