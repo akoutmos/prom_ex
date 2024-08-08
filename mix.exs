@@ -60,6 +60,7 @@ defmodule PromEx.MixProject do
       {:telemetry_poller, "~> 1.1"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_metrics_prometheus_core, "~> 1.2"},
+      {:peep, "~> 2.0 or ~> 3.0", optional: true},
       {:plug_cowboy, ">= 2.6.0"},
       {:octo_fetch, "~> 0.4"},
 

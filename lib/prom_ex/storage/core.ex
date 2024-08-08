@@ -1,3 +1,6 @@
+# TODO: For version 2.0.0 have all of the supported adapters be
+# optional deps.
+# if Code.ensure_loaded?(TelemetryMetricsPrometheus.Core) do
 defmodule PromEx.Storage.Core do
   @behaviour PromEx.Storage
 

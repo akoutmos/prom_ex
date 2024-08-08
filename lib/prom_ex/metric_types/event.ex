@@ -9,6 +9,8 @@ defmodule PromEx.MetricTypes.Event do
   - `metrics`: A list of Telemetry Metrics structs that define the metrics.
   """
 
+  alias Telemetry.Metrics.Distribution
+
   @type t :: %__MODULE__{
           group_name: atom(),
           metrics: list(PromEx.telemetry_metrics())
@@ -25,7 +27,43 @@ defmodule PromEx.MetricTypes.Event do
   def build(group_name, metrics) do
     %__MODULE__{
       group_name: group_name,
-      metrics: metrics
+      metrics: build_buckets(group_name, metrics)
     }
   end
+
+  defp build_buckets(name, metrics) do
+    if Code.ensure_loaded?(Peep.Buckets) do
+      build_buckets_modules(name, metrics)
+    else
+      metrics
+    end
+  end
+
+  defp build_buckets_modules(name, metrics) do
+    metrics
+    |> Enum.with_index()
+    |> Enum.map(&build_bucket(name, &1))
+  end
+
+  defp build_bucket(name, {%Distribution{} = dist, idx}) do
+    reporter_options =
+      Keyword.put_new_lazy(dist.reporter_options, :peep_bucket_calculator, fn ->
+        buckets = Keyword.fetch!(dist.reporter_options, :buckets)
+
+        {:module, name, _, _} =
+          Module.create(
+            Module.concat(name, "Bucket_#{idx}"),
+            quote do
+              use Peep.Buckets.Custom, buckets: unquote(buckets)
+            end,
+            __ENV__
+          )
+
+        name
+      end)
+
+    %Distribution{dist | reporter_options: reporter_options}
+  end
+
+  defp build_bucket(_name, {other, _}), do: other
 end
