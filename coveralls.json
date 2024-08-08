@@ -1,4 +1,7 @@
 {
-  "skip_files": ["test/"],
+  "skip_files": [
+    "test/",
+    "lib/mix/"
+  ],
   "minimum_coverage": 75
 }
