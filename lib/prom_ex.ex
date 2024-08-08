@@ -106,8 +106,6 @@ defmodule PromEx do
 
   alias Telemetry.Metrics.{Counter, Distribution, LastValue, Sum, Summary}
 
-  alias TelemetryMetricsPrometheus.Core
-
   @type telemetry_metrics() :: Counter.t() | Distribution.t() | LastValue.t() | Sum.t() | Summary.t()
   @type measurements_mfa() :: {module(), atom(), list()}
 
@@ -122,10 +120,9 @@ defmodule PromEx do
   @spec get_metrics(prom_ex_module :: module()) :: String.t() | :prom_ex_down
   def get_metrics(prom_ex_module) do
     prom_ex_process_name = prom_ex_module.__metrics_collector_name__()
+    store = prom_ex_module.__store__()
 
-    if Process.whereis(prom_ex_process_name),
-      do: Core.scrape(prom_ex_process_name),
-      else: :prom_ex_down
+    PromEx.Storage.scrape(store, prom_ex_process_name)
   end
 
   @callback init_opts :: PromEx.Config.t()
@@ -146,6 +143,8 @@ defmodule PromEx do
         :error ->
           raise "Failed to initialize #{inspect(calling_module)} due to missing :otp_app option"
       end
+
+    store = Keyword.get(opts, :store, PromEx.Storage.Core)
 
     # Generate process names under calling module namespace
     ets_cron_flusher_name = Module.concat([calling_module, ETSCronFlusher])
@@ -202,7 +201,7 @@ defmodule PromEx do
           children =
             []
             |> PromEx.ets_cron_flusher_child_spec(__MODULE__, ets_flush_interval, unquote(ets_cron_flusher_name))
-            |> PromEx.metrics_collector_child_spec(telemetry_metrics, unquote(metrics_collector_name))
+            |> PromEx.metrics_collector_child_spec(unquote(store), telemetry_metrics, unquote(metrics_collector_name))
             |> PromEx.manual_metrics_child_spec(
               manual_metrics,
               manual_metrics_start_delay,
@@ -334,6 +333,9 @@ defmodule PromEx do
       @doc false
       def __ets_cron_flusher_name__, do: unquote(ets_cron_flusher_name)
 
+      @doc false
+      def __store__, do: unquote(store)
+
       defoverridable PromEx
     end
   end
@@ -372,13 +374,8 @@ defmodule PromEx do
   end
 
   @doc false
-  def metrics_collector_child_spec(acc, metrics, process_name) do
-    spec = {
-      Core,
-      name: process_name, metrics: metrics, require_seconds: false, consistent_units: true, start_async: false
-    }
-
-    [spec | acc]
+  def metrics_collector_child_spec(acc, store, metrics, process_name) do
+    [PromEx.Storage.child_spec(store, process_name, metrics) | acc]
   end
 
   @doc false
