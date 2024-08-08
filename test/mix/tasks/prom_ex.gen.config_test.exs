@@ -1,8 +1,46 @@
 defmodule Mix.Tasks.PromEx.Gen.ConfigTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   import ExUnit.CaptureIO
   import Mix.Tasks.PromEx.Gen.Config
+
+  @moduletag :mix_task
+  @moduletag :mix_task_gen_config
+
+  setup do
+    tmp_dir = Path.join(File.cwd!(), "tmp")
+
+    sample_app_dir = Path.join([tmp_dir, "lib", "sample"])
+    File.mkdir_p!(sample_app_dir)
+
+    on_exit(fn -> File.rm_rf!(tmp_dir) end)
+
+    [sample_app_dir: sample_app_dir, tmp_dir: tmp_dir]
+  end
+
+  setup ctx do
+    path = Path.join(ctx.tmp_dir, "mix.exs")
+
+    contents = """
+    defmodule Sample.MixProject do
+      use Mix.Project
+
+      def project do
+        [
+          app: :sample,
+          version: "0.1.0"
+        ]
+      end
+    end
+    """
+
+    File.write!(path, contents)
+
+    Code.ensure_compiled(Sample.MixProject)
+    Code.ensure_loaded(Sample.MixProject)
+
+    :ok
+  end
 
   test "raises if invalid args are present" do
     assert_raise RuntimeError, ~r/Invalid CLI args/, fn ->
@@ -20,14 +58,6 @@ defmodule Mix.Tasks.PromEx.Gen.ConfigTest do
     assert_raise RuntimeError, ~r/Required directory path/, fn ->
       run(~w(-d an_id -o whoa_there))
     end
-  end
-
-  setup do
-    tmp_dir = Path.join(File.cwd!(), "tmp")
-    sample_app_dir = Path.join([tmp_dir, "lib", "sample"])
-    File.mkdir_p!(sample_app_dir)
-    on_exit(fn -> File.rm_rf!(tmp_dir) end)
-    [sample_app_dir: sample_app_dir, tmp_dir: tmp_dir]
   end
 
   test "otp_app can be provided as an arg", ctx do
@@ -75,27 +105,6 @@ defmodule Mix.Tasks.PromEx.Gen.ConfigTest do
     assert capture_io([input: "y"], fn ->
              File.cd!(ctx.tmp_dir, fn -> run(~w(-d an_id -o sample)) end)
            end) =~ "Success"
-  end
-
-  setup ctx do
-    path = Path.join(ctx.tmp_dir, "mix.exs")
-
-    contents = """
-    defmodule Sample.MixProject do
-      use Mix.Project
-
-      def project do
-        [
-          app: :sample,
-          version: "0.1.0"
-        ]
-      end
-    end
-    """
-
-    File.write!(path, contents)
-    Code.ensure_compiled(Sample.MixProject)
-    :ok
   end
 
   test "otp_app is read from config if missing", ctx do

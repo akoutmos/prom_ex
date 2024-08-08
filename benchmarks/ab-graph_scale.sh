@@ -9,13 +9,13 @@ SLEEP=60
 usage()
 {
 cat << EOF
-Helper script for ab-graph that can run multple configurable runs in one go.
+Helper script for ab-graph that can run multiple configurable runs in one go.
 
 Usage: $0 OPTIONS
 
 OPTIONS:
 -c    Start concurrent connections at        (default: 5)
--e    Stop concurrent connections at         (defalt: 25)
+-e    Stop concurrent connections at         (default: 25)
 -k    Enable keepalive connections           (default: no)
 -s    Concurrent connections increment step  (default: 5)
 -n    Number of requests                     (default: 500)
@@ -24,7 +24,7 @@ OPTIONS:
 -h    Print help.
 -V    Debug mode.
 
-This script will do multple test runs of ab-graph incrementing the concurrent
+This script will do multiple test runs of ab-graph incrementing the concurrent
 connections until the limit set by -e option is reached.
 
 EOF

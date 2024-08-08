@@ -29,8 +29,8 @@ defmodule PromEx.Test.Support.Metrics do
   end
 
   @doc false
-  @spec assert_prom_ex_metics(module(), atom()) :: :ok
-  def assert_prom_ex_metics(prom_ex_module, expected_metrics_lookup) do
+  @spec assert_prom_ex_metrics(module(), atom()) :: :ok
+  def assert_prom_ex_metrics(prom_ex_module, expected_metrics_lookup) do
     collected_metrics = read_collected(prom_ex_module)
 
     expected_metrics = read_expected(expected_metrics_lookup)

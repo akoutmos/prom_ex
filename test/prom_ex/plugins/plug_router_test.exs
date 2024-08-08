@@ -25,7 +25,7 @@ defmodule PromEx.Plugins.PlugRouterTest do
     start_supervised!(TestApp.PromEx)
     Events.execute_all(:plug_router)
 
-    Metrics.assert_prom_ex_metics(TestApp.PromEx, :plug_router)
+    Metrics.assert_prom_ex_metrics(TestApp.PromEx, :plug_router)
   end
 
   describe "event_metrics/1" do

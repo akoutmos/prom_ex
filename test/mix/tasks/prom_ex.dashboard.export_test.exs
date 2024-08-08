@@ -1,21 +1,25 @@
 defmodule Mix.Tasks.PromEx.Dashboard.ExportTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   import ExUnit.CaptureIO
 
   require IEx
 
-  alias Mix.Tasks.PromEx.{
-    Dashboard.Export,
-    Gen.Config
-  }
+  alias Mix.Tasks.PromEx.Dashboard.Export
+  alias Mix.Tasks.PromEx.Gen.Config
+
+  @moduletag :mix_task
+  @moduletag :mix_task_dashboard_export
 
   setup do
     tmp_dir = Path.join(File.cwd!(), "tmp")
+
     sample_app_dir = Path.join([tmp_dir, "lib", "sample"])
     File.mkdir_p!(sample_app_dir)
+
     sample_app_priv_dir = Path.join([tmp_dir, "priv"])
     File.mkdir_p!(sample_app_priv_dir)
+
     Code.compiler_options(ignore_module_conflict: true)
     on_exit(fn -> File.rm_rf!(tmp_dir) end)
 
@@ -39,7 +43,11 @@ defmodule Mix.Tasks.PromEx.Dashboard.ExportTest do
     """
 
     File.write!(path, contents)
+
     Code.ensure_compiled(Sample.MixProject)
+    Code.ensure_loaded(Sample.MixProject)
+    Code.ensure_loaded(Mix.Tasks.PromEx.Dashboard.Export)
+
     :ok
   end
 

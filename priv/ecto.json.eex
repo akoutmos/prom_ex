@@ -534,7 +534,7 @@
           "calcs": [
             "last"
           ],
-          "fields": "/^Value$/",
+          "fields": "/init_pool_size/",
           "values": false
         },
         "textMode": "auto"
@@ -596,7 +596,7 @@
           "calcs": [
             "last"
           ],
-          "fields": "/^Value$/",
+          "fields": "/init_timeout_duration/",
           "values": false
         },
         "textMode": "auto"

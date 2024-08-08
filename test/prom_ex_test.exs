@@ -102,7 +102,7 @@ defmodule PromExTest do
       # Give the manual metrics manager a chance to capture application metrics
       Process.sleep(1_000)
 
-      # Get supervsion tree child proceses
+      # Get supervsion tree child processes
       manual_metrics_pid = Process.whereis(DefaultPromExSetUp.__manual_metrics_name__())
       metrics_collector_pid = Process.whereis(DefaultPromExSetUp.__metrics_collector_name__())
       dashboard_uploader_pid = Process.whereis(DefaultPromExSetUp.__dashboard_uploader_name__())

@@ -95,7 +95,7 @@ if Code.ensure_loaded?(Phoenix) do
     - `:phoenix_http_event_metrics`
     - `:phoenix_channel_event_metrics`
     - `:phoenix_socket_event_metrics`
-    - `:phoenix_endpoint_manual_metrics`
+    - `:phoenix_endpoint_metrics`
 
     ## Usage
 
@@ -167,6 +167,7 @@ if Code.ensure_loaded?(Phoenix) do
     alias PromEx.Utils
 
     @stop_event [:prom_ex, :plugin, :phoenix, :stop]
+    @init_event [:phoenix, :endpoint, :init]
 
     @impl true
     def event_metrics(opts) do
@@ -180,85 +181,71 @@ if Code.ensure_loaded?(Phoenix) do
 
       # Event metrics definitions
       [
+        endpoint_info(metric_prefix, opts),
         http_events(metric_prefix, opts),
         channel_events(metric_prefix, duration_unit, normalize_event_name),
         socket_events(metric_prefix, duration_unit)
       ]
     end
 
-    @impl true
-    def manual_metrics(opts) do
-      otp_app = Keyword.fetch!(opts, :otp_app)
-      metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :phoenix))
-
-      [
-        endpoint_info(metric_prefix, opts)
-      ]
-    end
-
     defp endpoint_info(metric_prefix, opts) do
       # Fetch user options
       phoenix_endpoint = Keyword.get(opts, :endpoint) || Keyword.get(opts, :endpoints)
+      keep_function_filter = keep_endpoint_metrics(phoenix_endpoint)
 
-      Manual.build(
-        :phoenix_endpoint_manual_metrics,
-        {__MODULE__, :execute_phoenix_endpoint_info, [phoenix_endpoint]},
+      Event.build(
+        :phoenix_endpoint_metrics,
         [
           last_value(
             metric_prefix ++ [:endpoint, :url, :info],
-            event_name: [:prom_ex, :plugin, :phoenix, :endpoint_url],
+            event_name: @init_event,
             description: "The configured URL of the Endpoint module.",
-            measurement: :status,
-            tags: [:url, :endpoint]
+            measurement: fn _measurements -> 1 end,
+            tag_values: &phoenix_init_tag_values/1,
+            tags: [:url, :endpoint],
+            keep: keep_function_filter
           ),
           last_value(
             metric_prefix ++ [:endpoint, :port, :info],
-            event_name: [:prom_ex, :plugin, :phoenix, :endpoint_port],
+            event_name: @init_event,
             description: "The configured port of the Endpoint module.",
-            measurement: :status,
-            tags: [:port, :endpoint]
+            measurement: fn _measurements -> 1 end,
+            tag_values: &phoenix_init_tag_values/1,
+            tags: [:port, :endpoint],
+            keep: keep_function_filter
           )
         ]
       )
     end
 
-    @doc false
-    def execute_phoenix_endpoint_info(endpoint) do
-      # TODO: This is a bit of a hack until Phoenix supports an init telemetry event to
-      # reliably get the configuration.
-      endpoint_init_checker = fn
-        count, endpoint_module, endpoint_init_checker_function when count < 10 ->
-          case Process.whereis(endpoint_module) do
-            pid when is_pid(pid) ->
-              measurements = %{status: 1}
-              url_metadata = %{url: endpoint_module.url(), endpoint: normalize_module_name(endpoint_module)}
-              :telemetry.execute([:prom_ex, :plugin, :phoenix, :endpoint_url], measurements, url_metadata)
+    defp keep_endpoint_metrics(phoenix_endpoint) when is_atom(phoenix_endpoint) do
+      keep_endpoint_metrics([phoenix_endpoint])
+    end
 
-              %URI{port: port} = endpoint_module.struct_url()
-              port_metadata = %{port: port, endpoint: normalize_module_name(endpoint_module)}
-              :telemetry.execute([:prom_ex, :plugin, :phoenix, :endpoint_port], measurements, port_metadata)
-
-            _ ->
-              Process.sleep(1_000)
-              endpoint_init_checker_function.(count + 1, endpoint_module, endpoint_init_checker_function)
-          end
-
-        _, _, _ ->
-          :noop
+    defp keep_endpoint_metrics(phoenix_endpoints) do
+      fn %{module: module} ->
+        module in phoenix_endpoints
       end
+    end
 
-      if is_list(endpoint) do
-        endpoint
-        |> Enum.each(fn {endpoint_module, _} ->
-          Task.start(fn ->
-            endpoint_init_checker.(0, endpoint_module, endpoint_init_checker)
-          end)
-        end)
-      else
-        Task.start(fn ->
-          endpoint_init_checker.(0, endpoint, endpoint_init_checker)
-        end)
-      end
+    defp phoenix_init_tag_values(%{config: config, module: module}) do
+      port =
+        cond do
+          Keyword.has_key?(config, :http) and config[:http][:port] ->
+            config[:http][:port]
+
+          Keyword.has_key?(config, :https) and config[:https][:port] ->
+            config[:https][:port]
+
+          true ->
+            "Unknown"
+        end
+
+      %{
+        endpoint: module,
+        url: module.url(),
+        port: port
+      }
     end
 
     defp http_events(metric_prefix, opts) do

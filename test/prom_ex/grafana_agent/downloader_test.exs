@@ -5,6 +5,8 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
 
   alias PromEx.GrafanaAgent.Downloader
 
+  @download_timeout 10_000
+
   describe "download/2" do
     test "should be able to download all of the listed versions" do
       OctoFetch.Test.test_all_supported_downloads(Downloader)
@@ -28,7 +30,7 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
 
       assert tmp_dir
              |> File.ls!()
-             |> Enum.sort() == ["agent-#{os}-#{arch}"]
+             |> Enum.sort() == ["grafana-agent-#{os}-#{arch}"]
 
       assert capture_log(fn ->
                assert :skip = Downloader.download(tmp_dir)
@@ -36,7 +38,7 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
 
       assert tmp_dir
              |> File.ls!()
-             |> Enum.sort() == ["agent-#{os}-#{arch}"]
+             |> Enum.sort() == ["grafana-agent-#{os}-#{arch}"]
     end
 
     @tag :tmp_dir
@@ -62,19 +64,19 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
           end)
         end)
 
-      assert Task.await(downloader_a) =~
+      assert Task.await(downloader_a, @download_timeout) =~
                "Downloading grafana/agent from https://github.com/grafana/agent/releases/download"
 
-      assert Task.await(downloader_b) =~
+      assert Task.await(downloader_b, @download_timeout) =~
                "Downloading grafana/agent from https://github.com/grafana/agent/releases/download"
 
       assert a_dir
              |> File.ls!()
-             |> Enum.sort() == ["agent-#{os}-#{arch}"]
+             |> Enum.sort() == ["grafana-agent-#{os}-#{arch}"]
 
       assert b_dir
              |> File.ls!()
-             |> Enum.sort() == ["agent-#{os}-#{arch}"]
+             |> Enum.sort() == ["grafana-agent-#{os}-#{arch}"]
     end
   end
 

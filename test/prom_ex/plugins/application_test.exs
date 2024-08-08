@@ -20,7 +20,7 @@ defmodule PromEx.Plugins.ApplicationTest do
     start_supervised!(WebApp.PromEx)
     Events.execute_all(:application)
 
-    Metrics.assert_prom_ex_metics(WebApp.PromEx, :application)
+    Metrics.assert_prom_ex_metrics(WebApp.PromEx, :application)
   end
 
   describe "event_metrics/1" do

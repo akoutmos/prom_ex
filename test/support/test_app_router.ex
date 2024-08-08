@@ -12,12 +12,12 @@ defmodule TestApp.Router do
   import Phoenix.LiveView.Router
 
   scope "/", TestApp do
-    live("/", PageLive, :index)
-    get("/users", UserController, :index)
-    get("/users/:id", UserController, :show)
-    post("/users/:id/action/level-up", UserController, :level_up)
-    post("/users", UserController, :create)
-    delete("/users/:id", UserController, :delete)
+    live "/", PageLive, :index
+    get "/users", UserController, :index
+    get "/users/:id", UserController, :show
+    post "/users/:id/action/level-up", UserController, :level_up
+    post "/users", UserController, :create
+    delete "/users/:id", UserController, :delete
   end
 end
 
@@ -27,12 +27,12 @@ defmodule TestApp.ExternalRouter do
   import Phoenix.LiveView.Router
 
   scope "/external", TestApp do
-    live("/", PageLive, :index)
-    get("/users", UserController, :index)
-    get("/users/:id", UserController, :show)
-    post("/users/:id/action/level-up", UserController, :level_up)
-    post("/users", UserController, :create)
-    delete("/users/:id", UserController, :delete)
+    live "/", PageLive, :index
+    get "/users", UserController, :index
+    get "/users/:id", UserController, :show
+    post "/users/:id/action/level-up", UserController, :level_up
+    post "/users", UserController, :create
+    delete "/users/:id", UserController, :delete
   end
 end
 
@@ -42,23 +42,23 @@ defmodule TestApp.InternalRouter do
   import Phoenix.LiveView.Router
 
   scope "/internal", TestApp do
-    live("/", PageLive, :index)
-    get("/users", UserController, :index)
-    get("/users/:id", UserController, :show)
-    post("/users/:id/action/level-up", UserController, :level_up)
-    post("/users", UserController, :create)
-    delete("/users/:id", UserController, :delete)
+    live "/", PageLive, :index
+    get "/users", UserController, :index
+    get "/users/:id", UserController, :show
+    post "/users/:id/action/level-up", UserController, :level_up
+    post "/users", UserController, :create
+    delete "/users/:id", UserController, :delete
   end
 end
 
 defmodule TestApp.PlugRouter do
   use Plug.Router
 
-  plug(PromEx.Plug, prom_ex_module: TestApp.PromEx, path: "/metrics")
-  plug(Plug.Telemetry, event_prefix: [:testapp, :plug, :router])
-  plug(Plug.Parsers, parsers: [:json], json_decoder: Jason)
-  plug(:match)
-  plug(:dispatch, builder_opts())
+  plug PromEx.Plug, prom_ex_module: TestApp.PromEx, path: "/metrics"
+  plug Plug.Telemetry, event_prefix: [:testapp, :plug, :router]
+  plug Plug.Parsers, parsers: [:json], json_decoder: Jason
+  plug :match
+  plug :dispatch
 
   get "/users/:id" do
     conn

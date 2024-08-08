@@ -49,18 +49,18 @@
         view: WebAppWeb.PageLive
       },
       stacktrace: [
-        {WebAppWeb.PageLive, :handle_event, 3, [file: 'lib/web_app_web/live/page_live.ex', line: 24]},
+        {WebAppWeb.PageLive, :handle_event, 3, [file: ~c"lib/web_app_web/live/page_live.ex", line: 24]},
         {Phoenix.LiveView.Channel, :"-view_handle_event/3-fun-0-", 3,
-         [file: 'lib/phoenix_live_view/channel.ex', line: 349]},
+         [file: ~c"lib/phoenix_live_view/channel.ex", line: 349]},
         {:telemetry, :span, 3,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
-        {Phoenix.LiveView.Channel, :handle_info, 2, [file: 'lib/phoenix_live_view/channel.ex', line: 206]},
-        {:gen_server, :try_dispatch, 4, [file: 'gen_server.erl', line: 695]},
-        {:gen_server, :handle_msg, 6, [file: 'gen_server.erl', line: 771]},
-        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+        {Phoenix.LiveView.Channel, :handle_info, 2, [file: ~c"lib/phoenix_live_view/channel.ex", line: 206]},
+        {:gen_server, :try_dispatch, 4, [file: ~c"gen_server.erl", line: 695]},
+        {:gen_server, :handle_msg, 6, [file: ~c"gen_server.erl", line: 771]},
+        {:proc_lib, :init_p_do_apply, 3, [file: ~c"proc_lib.erl", line: 226]}
       ],
       telemetry_span_context: :erlang.make_ref()
     }
@@ -111,39 +111,39 @@
         view: WebAppWeb.PageLive
       },
       stacktrace: [
-        {WebAppWeb.PageLive, :mount, 3, [file: 'lib/web_app_web/live/page_live.ex', line: 14]},
+        {WebAppWeb.PageLive, :mount, 3, [file: ~c"lib/web_app_web/live/page_live.ex", line: 14]},
         {Phoenix.LiveView.Utils, :"-maybe_call_live_view_mount!/4-fun-0-", 5,
-         [file: 'lib/phoenix_live_view/utils.ex', line: 301]},
+         [file: ~c"lib/phoenix_live_view/utils.ex", line: 301]},
         {:telemetry, :span, 3,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
         {Phoenix.LiveView.Static, :call_mount_and_handle_params!, 5,
-         [file: 'lib/phoenix_live_view/static.ex', line: 260]},
-        {Phoenix.LiveView.Static, :render, 3, [file: 'lib/phoenix_live_view/static.ex', line: 110]},
-        {Phoenix.LiveView.Controller, :live_render, 3, [file: 'lib/phoenix_live_view/controller.ex', line: 35]},
-        {Phoenix.Router, :__call__, 2, [file: 'lib/phoenix/router.ex', line: 355]},
-        {WebAppWeb.Endpoint, :plug_builder_call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
-        {WebAppWeb.Endpoint, :"call (overridable 3)", 2, [file: 'lib/plug/debugger.ex', line: 136]},
-        {WebAppWeb.Endpoint, :call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
-        {Phoenix.Endpoint.Cowboy2Handler, :init, 4, [file: 'lib/phoenix/endpoint/cowboy2_handler.ex', line: 54]},
+         [file: ~c"lib/phoenix_live_view/static.ex", line: 260]},
+        {Phoenix.LiveView.Static, :render, 3, [file: ~c"lib/phoenix_live_view/static.ex", line: 110]},
+        {Phoenix.LiveView.Controller, :live_render, 3, [file: ~c"lib/phoenix_live_view/controller.ex", line: 35]},
+        {Phoenix.Router, :__call__, 2, [file: ~c"lib/phoenix/router.ex", line: 355]},
+        {WebAppWeb.Endpoint, :plug_builder_call, 2, [file: ~c"lib/web_app_web/endpoint.ex", line: 1]},
+        {WebAppWeb.Endpoint, :"call (overridable 3)", 2, [file: ~c"lib/plug/debugger.ex", line: 136]},
+        {WebAppWeb.Endpoint, :call, 2, [file: ~c"lib/web_app_web/endpoint.ex", line: 1]},
+        {Phoenix.Endpoint.Cowboy2Handler, :init, 4, [file: ~c"lib/phoenix/endpoint/cowboy2_handler.ex", line: 54]},
         {:cowboy_handler, :execute, 2,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_handler.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_handler.erl",
            line: 37
          ]},
         {:cowboy_stream_h, :execute, 3,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl",
            line: 306
          ]},
         {:cowboy_stream_h, :request_process, 3,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl",
            line: 295
          ]},
-        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+        {:proc_lib, :init_p_do_apply, 3, [file: ~c"proc_lib.erl", line: 226]}
       ],
       telemetry_span_context: :erlang.make_ref()
     }
@@ -194,40 +194,40 @@
         view: WebAppWeb.PageLive
       },
       stacktrace: [
-        {GenServer, :call, 3, [file: 'lib/gen_server.ex', line: 1014]},
-        {WebAppWeb.PageLive, :mount, 3, [file: 'lib/web_app_web/live/page_live.ex', line: 6]},
+        {GenServer, :call, 3, [file: ~c"lib/gen_server.ex", line: 1014]},
+        {WebAppWeb.PageLive, :mount, 3, [file: ~c"lib/web_app_web/live/page_live.ex", line: 6]},
         {Phoenix.LiveView.Utils, :"-maybe_call_live_view_mount!/4-fun-0-", 5,
-         [file: 'lib/phoenix_live_view/utils.ex', line: 301]},
+         [file: ~c"lib/phoenix_live_view/utils.ex", line: 301]},
         {:telemetry, :span, 3,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
         {Phoenix.LiveView.Static, :call_mount_and_handle_params!, 5,
-         [file: 'lib/phoenix_live_view/static.ex', line: 260]},
-        {Phoenix.LiveView.Static, :render, 3, [file: 'lib/phoenix_live_view/static.ex', line: 110]},
-        {Phoenix.LiveView.Controller, :live_render, 3, [file: 'lib/phoenix_live_view/controller.ex', line: 35]},
-        {Phoenix.Router, :__call__, 2, [file: 'lib/phoenix/router.ex', line: 355]},
-        {WebAppWeb.Endpoint, :plug_builder_call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
-        {WebAppWeb.Endpoint, :"call (overridable 3)", 2, [file: 'lib/plug/debugger.ex', line: 136]},
-        {WebAppWeb.Endpoint, :call, 2, [file: 'lib/web_app_web/endpoint.ex', line: 1]},
-        {Phoenix.Endpoint.Cowboy2Handler, :init, 4, [file: 'lib/phoenix/endpoint/cowboy2_handler.ex', line: 54]},
+         [file: ~c"lib/phoenix_live_view/static.ex", line: 260]},
+        {Phoenix.LiveView.Static, :render, 3, [file: ~c"lib/phoenix_live_view/static.ex", line: 110]},
+        {Phoenix.LiveView.Controller, :live_render, 3, [file: ~c"lib/phoenix_live_view/controller.ex", line: 35]},
+        {Phoenix.Router, :__call__, 2, [file: ~c"lib/phoenix/router.ex", line: 355]},
+        {WebAppWeb.Endpoint, :plug_builder_call, 2, [file: ~c"lib/web_app_web/endpoint.ex", line: 1]},
+        {WebAppWeb.Endpoint, :"call (overridable 3)", 2, [file: ~c"lib/plug/debugger.ex", line: 136]},
+        {WebAppWeb.Endpoint, :call, 2, [file: ~c"lib/web_app_web/endpoint.ex", line: 1]},
+        {Phoenix.Endpoint.Cowboy2Handler, :init, 4, [file: ~c"lib/phoenix/endpoint/cowboy2_handler.ex", line: 54]},
         {:cowboy_handler, :execute, 2,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_handler.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_handler.erl",
            line: 37
          ]},
         {:cowboy_stream_h, :execute, 3,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl",
            line: 306
          ]},
         {:cowboy_stream_h, :request_process, 3,
          [
-           file: '/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl',
+           file: ~c"/home/apps/prom_ex/example_applications/web_app/deps/cowboy/src/cowboy_stream_h.erl",
            line: 295
          ]},
-        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+        {:proc_lib, :init_p_do_apply, 3, [file: ~c"proc_lib.erl", line: 226]}
       ],
       telemetry_span_context: :erlang.make_ref()
     }
@@ -418,11 +418,11 @@
             tick: 0
           },
           system_info: %{
-            banner: 'Erlang/OTP 22 [erts-10.7.2.7] [source] [64-bit] [smp:2:2] [ds:2:2:10] [async-threads:1] [hipe]\n',
-            dashboard_version: '0.2.10',
+            banner: "Erlang/OTP 22 [erts-10.7.2.7] [source] [64-bit] [smp:2:2] [ds:2:2:10] [async-threads:1] [hipe]\n",
+            dashboard_version: "0.2.10",
             elixir_version: "1.10.4",
-            phoenix_version: '1.5.7',
-            system_architecture: 'x86_64-pc-linux-gnu'
+            phoenix_version: "1.5.7",
+            system_architecture: "x86_64-pc-linux-gnu"
           },
           system_limits: %{atoms: 1_048_576, ports: 1_048_576, processes: 262_144},
           system_usage: %{
@@ -555,11 +555,11 @@
             tick: 0
           },
           system_info: %{
-            banner: 'Erlang/OTP 22 [erts-10.7.2.7] [source] [64-bit] [smp:2:2] [ds:2:2:10] [async-threads:1] [hipe]\n',
-            dashboard_version: '0.2.10',
+            banner: "Erlang/OTP 22 [erts-10.7.2.7] [source] [64-bit] [smp:2:2] [ds:2:2:10] [async-threads:1] [hipe]\n",
+            dashboard_version: "0.2.10",
             elixir_version: "1.10.4",
-            phoenix_version: '1.5.7',
-            system_architecture: 'x86_64-pc-linux-gnu'
+            phoenix_version: "1.5.7",
+            system_architecture: "x86_64-pc-linux-gnu"
           },
           system_limits: %{atoms: 1_048_576, ports: 1_048_576, processes: 262_144},
           system_usage: %{

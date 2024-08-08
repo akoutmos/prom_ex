@@ -328,32 +328,32 @@
       processor_key: :default,
       reason: :badarith,
       stacktrace: [
-        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: 'lib/web_app/temp_processor.ex', line: 39]},
-        {Broadway.Message, :update_data, 2, [file: 'lib/broadway/message.ex', line: 48]},
-        {WebApp.TempProcessor, :handle_message, 3, [file: 'lib/web_app/temp_processor.ex', line: 32]},
+        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: ~c"lib/web_app/temp_processor.ex", line: 39]},
+        {Broadway.Message, :update_data, 2, [file: ~c"lib/broadway/message.ex", line: 48]},
+        {WebApp.TempProcessor, :handle_message, 3, [file: ~c"lib/web_app/temp_processor.ex", line: 32]},
         {Broadway.Topology.ProcessorStage, :"-handle_messages/4-fun-0-", 6,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 156]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 156]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
         {Broadway.Topology.ProcessorStage, :handle_messages, 4,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 143]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 143]},
         {Broadway.Topology.ProcessorStage, :"-handle_events/3-fun-0-", 2,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 63]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 63]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
-        {GenStage, :consumer_dispatch, 6, [file: 'lib/gen_stage.ex', line: 2471]},
-        {GenStage, :take_pc_events, 3, [file: 'lib/gen_stage.ex', line: 2660]},
-        {:gen_server, :try_dispatch, 4, [file: 'gen_server.erl', line: 695]},
-        {:gen_server, :handle_msg, 6, [file: 'gen_server.erl', line: 771]},
-        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+        {GenStage, :consumer_dispatch, 6, [file: ~c"lib/gen_stage.ex", line: 2471]},
+        {GenStage, :take_pc_events, 3, [file: ~c"lib/gen_stage.ex", line: 2660]},
+        {:gen_server, :try_dispatch, 4, [file: ~c"gen_server.erl", line: 695]},
+        {:gen_server, :handle_msg, 6, [file: ~c"gen_server.erl", line: 771]},
+        {:proc_lib, :init_p_do_apply, 3, [file: ~c"proc_lib.erl", line: 226]}
       ],
       topology_name: WebApp.TempProcessor
     }
@@ -505,32 +505,32 @@
       processor_key: :default,
       reason: :badarith,
       stacktrace: [
-        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: 'lib/web_app/temp_processor.ex', line: 39]},
-        {Broadway.Message, :update_data, 2, [file: 'lib/broadway/message.ex', line: 48]},
-        {WebApp.TempProcessor, :handle_message, 3, [file: 'lib/web_app/temp_processor.ex', line: 32]},
+        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: ~c"lib/web_app/temp_processor.ex", line: 39]},
+        {Broadway.Message, :update_data, 2, [file: ~c"lib/broadway/message.ex", line: 48]},
+        {WebApp.TempProcessor, :handle_message, 3, [file: ~c"lib/web_app/temp_processor.ex", line: 32]},
         {Broadway.Topology.ProcessorStage, :"-handle_messages/4-fun-0-", 6,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 156]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 156]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
         {Broadway.Topology.ProcessorStage, :handle_messages, 4,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 143]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 143]},
         {Broadway.Topology.ProcessorStage, :"-handle_events/3-fun-0-", 2,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 63]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 63]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
-        {GenStage, :consumer_dispatch, 6, [file: 'lib/gen_stage.ex', line: 2471]},
-        {GenStage, :take_pc_events, 3, [file: 'lib/gen_stage.ex', line: 2660]},
-        {:gen_server, :try_dispatch, 4, [file: 'gen_server.erl', line: 695]},
-        {:gen_server, :handle_msg, 6, [file: 'gen_server.erl', line: 771]},
-        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+        {GenStage, :consumer_dispatch, 6, [file: ~c"lib/gen_stage.ex", line: 2471]},
+        {GenStage, :take_pc_events, 3, [file: ~c"lib/gen_stage.ex", line: 2660]},
+        {:gen_server, :try_dispatch, 4, [file: ~c"gen_server.erl", line: 695]},
+        {:gen_server, :handle_msg, 6, [file: ~c"gen_server.erl", line: 771]},
+        {:proc_lib, :init_p_do_apply, 3, [file: ~c"proc_lib.erl", line: 226]}
       ],
       topology_name: WebApp.TempProcessor
     }
@@ -1147,32 +1147,32 @@
       processor_key: :default,
       reason: :badarith,
       stacktrace: [
-        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: 'lib/web_app/temp_processor.ex', line: 39]},
-        {Broadway.Message, :update_data, 2, [file: 'lib/broadway/message.ex', line: 48]},
-        {WebApp.TempProcessor, :handle_message, 3, [file: 'lib/web_app/temp_processor.ex', line: 32]},
+        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: ~c"lib/web_app/temp_processor.ex", line: 39]},
+        {Broadway.Message, :update_data, 2, [file: ~c"lib/broadway/message.ex", line: 48]},
+        {WebApp.TempProcessor, :handle_message, 3, [file: ~c"lib/web_app/temp_processor.ex", line: 32]},
         {Broadway.Topology.ProcessorStage, :"-handle_messages/4-fun-0-", 6,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 156]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 156]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
         {Broadway.Topology.ProcessorStage, :handle_messages, 4,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 143]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 143]},
         {Broadway.Topology.ProcessorStage, :"-handle_events/3-fun-0-", 2,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 63]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 63]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
-        {GenStage, :consumer_dispatch, 6, [file: 'lib/gen_stage.ex', line: 2471]},
-        {GenStage, :take_pc_events, 3, [file: 'lib/gen_stage.ex', line: 2660]},
-        {:gen_server, :try_dispatch, 4, [file: 'gen_server.erl', line: 695]},
-        {:gen_server, :handle_msg, 6, [file: 'gen_server.erl', line: 771]},
-        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+        {GenStage, :consumer_dispatch, 6, [file: ~c"lib/gen_stage.ex", line: 2471]},
+        {GenStage, :take_pc_events, 3, [file: ~c"lib/gen_stage.ex", line: 2660]},
+        {:gen_server, :try_dispatch, 4, [file: ~c"gen_server.erl", line: 695]},
+        {:gen_server, :handle_msg, 6, [file: ~c"gen_server.erl", line: 771]},
+        {:proc_lib, :init_p_do_apply, 3, [file: ~c"proc_lib.erl", line: 226]}
       ],
       topology_name: WebApp.TempProcessor
     }
@@ -1897,32 +1897,32 @@
       processor_key: :default,
       reason: :badarith,
       stacktrace: [
-        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: 'lib/web_app/temp_processor.ex', line: 39]},
-        {Broadway.Message, :update_data, 2, [file: 'lib/broadway/message.ex', line: 48]},
-        {WebApp.TempProcessor, :handle_message, 3, [file: 'lib/web_app/temp_processor.ex', line: 32]},
+        {WebApp.TempProcessor, :"-handle_message/3-fun-0-", 1, [file: ~c"lib/web_app/temp_processor.ex", line: 39]},
+        {Broadway.Message, :update_data, 2, [file: ~c"lib/broadway/message.ex", line: 48]},
+        {WebApp.TempProcessor, :handle_message, 3, [file: ~c"lib/web_app/temp_processor.ex", line: 32]},
         {Broadway.Topology.ProcessorStage, :"-handle_messages/4-fun-0-", 6,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 156]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 156]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
         {Broadway.Topology.ProcessorStage, :handle_messages, 4,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 143]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 143]},
         {Broadway.Topology.ProcessorStage, :"-handle_events/3-fun-0-", 2,
-         [file: 'lib/broadway/topology/processor_stage.ex', line: 63]},
+         [file: ~c"lib/broadway/topology/processor_stage.ex", line: 63]},
         {:telemetry, :span, 3,
          [
            file:
-             '/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl',
+             "/home/akoutmos/Documents/open_source/prom_ex/example_applications/web_app/deps/telemetry/src/telemetry.erl",
            line: 293
          ]},
-        {GenStage, :consumer_dispatch, 6, [file: 'lib/gen_stage.ex', line: 2471]},
-        {GenStage, :take_pc_events, 3, [file: 'lib/gen_stage.ex', line: 2660]},
-        {:gen_server, :try_dispatch, 4, [file: 'gen_server.erl', line: 695]},
-        {:gen_server, :handle_msg, 6, [file: 'gen_server.erl', line: 771]},
-        {:proc_lib, :init_p_do_apply, 3, [file: 'proc_lib.erl', line: 226]}
+        {GenStage, :consumer_dispatch, 6, [file: ~c"lib/gen_stage.ex", line: 2471]},
+        {GenStage, :take_pc_events, 3, [file: ~c"lib/gen_stage.ex", line: 2660]},
+        {:gen_server, :try_dispatch, 4, [file: ~c"gen_server.erl", line: 695]},
+        {:gen_server, :handle_msg, 6, [file: ~c"gen_server.erl", line: 771]},
+        {:proc_lib, :init_p_do_apply, 3, [file: ~c"proc_lib.erl", line: 226]}
       ],
       topology_name: WebApp.TempProcessor
     }

@@ -83,10 +83,6 @@ project in order to help ensure its continued development.
 
 ### Bronze Sponsors
 
-<a href="https://smartlogic.io/" style="margin-right: 10px;" target="_blank">
-  <img align="center" height="50" src="guides/images/smartlogic-logo-teal-400.png" alt="SmartLogic Consultancy">
-</a>
-
 <a href="https://github.com/sponsors/akoutmos/sponsorships?sponsor=akoutmos&tier_id=17615">
   <img align="center" height="125" src="guides/images/your_logo_here.png" alt="Support the project">
 </a>

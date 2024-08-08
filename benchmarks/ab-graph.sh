@@ -23,7 +23,7 @@ Usage: $0 OPTIONS
 
 OPTIONS:
 -c    Concurrent connections  (default: 1)
--k    Enable keepalive        (defalt: no)
+-k    Enable keepalive        (default: no)
 -E    Extra parameters
 -n    Number of requests      (default: 1)
 -u    Url to test             (mandatory)
@@ -93,7 +93,7 @@ echo -e "${0} - version ${VERSION}\n"
 
 
 if [ "${CONCURRENCY}" == "" ]; then
-  echo "No concurrency set, using default value of ${DEFAULT_CONCURRENCY} simultanious clients"
+  echo "No concurrency set, using default value of ${DEFAULT_CONCURRENCY} simultaneous clients"
   CONCURRENCY=${DEFAULT_CONCURRENCY}
 fi
 

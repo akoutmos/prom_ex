@@ -27,7 +27,7 @@ Usage: $0 OPTIONS
 
 OPTIONS:
 -c    Concurrent connections  (default: 1)
--k    Enable keepalive        (defalt: no)
+-k    Enable keepalive        (default: no)
 -E    Extra parameters
 -n    Number of requests      (default: 1)
 -u    Url to test             (mandatory)
@@ -49,8 +49,8 @@ Will create the following results:
 
 #### Test results
 
-* [values.csv](exmple_results/values.csv)
-* [percentages.csv](exmple_results/values.csv)
+* [values.csv](example_results/values.csv)
+* [percentages.csv](example_results/values.csv)
 
 #### Test summary results
 * summary.txt
@@ -143,7 +143,7 @@ Usage: ./ab-graph_scale.sh OPTIONS
 
 OPTIONS:
 -c    Start concurrent connections at        (default: 5)
--e    Stop concurrent connections at         (defalt: 25)
+-e    Stop concurrent connections at         (default: 25)
 -k    Enable keepalive connections           (default: no)
 -s    Concurrent connections increment step  (default: 5)
 -n    Number of requests                     (default: 500)
