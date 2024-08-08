@@ -29,7 +29,8 @@ defmodule PromEx.MixProject do
           :oban,
           :phoenix,
           :plug,
-          :telemetry_metrics
+          :telemetry_metrics,
+          :telemetry_metrics_prometheus_core
         ],
         plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
       ],

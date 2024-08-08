@@ -10,6 +10,7 @@ defmodule PromEx.Storage.Core do
   alias TelemetryMetricsPrometheus.Core
 
   @behaviour PromEx.Storage
+  @dialyzer {:no_return, child_spec: 2}
 
   @impl true
   def scrape(name) do

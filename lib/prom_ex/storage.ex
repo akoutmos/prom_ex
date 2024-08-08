@@ -11,12 +11,12 @@ defmodule PromEx.Storage do
   @doc """
   Define child specs for gatherer process.
   """
-  @callback child_spec(atom(), Telemetry.Metrics.metrics()) :: Supervisor.child_spec()
+  @callback child_spec(atom(), list(Telemetry.Metrics.t())) :: Supervisor.child_spec()
 
   @doc """
   Extract the metrics out of the configured store.
   """
-  @spec scrape(mod :: module(), name :: module()) :: iodata()
+  @spec scrape(mod :: module(), name :: module()) :: iodata() | :prom_ex_down
   def scrape(mod, name) do
     mod.scrape(name)
   end
@@ -24,7 +24,7 @@ defmodule PromEx.Storage do
   @doc """
   Generate the process child spec for the store.
   """
-  @spec child_spec(mod :: module(), name :: module(), metrics :: list()) :: Supervisor.child_spec()
+  @spec child_spec(mod :: module(), name :: module(), metrics :: list(Telemetry.Metrics.t())) :: Supervisor.child_spec()
   def child_spec(mod, name, metrics) do
     mod.child_spec(name, metrics)
   end
