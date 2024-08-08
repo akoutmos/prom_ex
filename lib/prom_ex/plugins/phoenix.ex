@@ -181,10 +181,10 @@ if Code.ensure_loaded?(Phoenix) do
 
       # Event metrics definitions
       [
-        endpoint_info(metric_prefix, opts)
+        endpoint_info(metric_prefix, opts),
         http_events(metric_prefix, opts),
         channel_events(metric_prefix, duration_unit, normalize_event_name),
-        socket_events(metric_prefix, duration_unit),
+        socket_events(metric_prefix, duration_unit)
       ]
     end
 
