@@ -88,10 +88,11 @@ defmodule PromEx.DashboardUploader do
     user_provided_assigns = prom_ex_module.dashboard_assigns()
     {apply_function, dashboard_opts} = Keyword.pop(dashboard_opts, :apply_function, fn dashboard -> dashboard end)
 
-    default_title = Keyword.get(user_provided_assigns, :title) ||
-      prom_ex_module.__otp_app__()
-      |> Atom.to_string()
-      |> Macro.camelize()
+    default_title =
+      Keyword.get(user_provided_assigns, :title) ||
+        prom_ex_module.__otp_app__()
+        |> Atom.to_string()
+        |> Macro.camelize()
 
     default_dashboard_name =
       dashboard_relative_path
