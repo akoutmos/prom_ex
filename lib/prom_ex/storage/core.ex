@@ -2,15 +2,22 @@
 # optional deps.
 # if Code.ensure_loaded?(TelemetryMetricsPrometheus.Core) do
 defmodule PromEx.Storage.Core do
-  @behaviour PromEx.Storage
+  @moduledoc """
+  This store uses [TelemetryMetricsPrometheus.Core](https://github.com/beam-telemetry/telemetry_metrics_prometheus_core) as the storage
+  mechanism for metrics.
+  """
 
   alias TelemetryMetricsPrometheus.Core
 
+  @behaviour PromEx.Storage
+
   @impl true
   def scrape(name) do
-    if Process.whereis(name),
-      do: Core.scrape(name),
-      else: :prom_ex_down
+    if Process.whereis(name) do
+      Core.scrape(name)
+    else
+      :prom_ex_down
+    end
   end
 
   @impl true

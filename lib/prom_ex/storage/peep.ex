@@ -1,5 +1,10 @@
 if Code.ensure_loaded?(Peep) do
   defmodule PromEx.Storage.Peep do
+    @moduledoc """
+    This store uses [Peep](https://github.com/rkallos/peep) as the storage
+    mechanism for metrics.
+    """
+
     @behaviour PromEx.Storage
 
     @impl true

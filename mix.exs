@@ -118,7 +118,8 @@ defmodule PromEx.MixProject do
 
   defp aliases do
     [
-      docs: [&massage_readme/1, "docs", &copy_files/1]
+      docs: [&massage_readme/1, "docs", &copy_files/1],
+      test: ["test --exclude mix_task:true"]
     ]
   end
 
