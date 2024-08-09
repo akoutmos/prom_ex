@@ -151,7 +151,7 @@ defmodule PromEx.Config do
       any malicious binaries and running them). By default, PromEx will use the result of
       `PromEx.GrafanaAgent.Downloader.default_version()` if no value is provided.
 
-      * Supported versions are `["0.29.0", "0.23.0", "0.22.0", "0.21.2", "0.20.1"]`
+      * Supported versions are `["0.42.0"]`
 
     * `:working_directory` - In order to leverage the GrafanaAgent functionality, PromEx needs to have
       read/write access to a directory in order to download and copy the GrafanaAgent binary. This is the
