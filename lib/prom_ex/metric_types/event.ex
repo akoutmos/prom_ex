@@ -32,7 +32,7 @@ defmodule PromEx.MetricTypes.Event do
   end
 
   defp build_buckets(name, metrics) do
-    if Code.ensure_loaded?(Peep.Buckets) do
+    if PromEx.storage_adapter() == PromEx.Storage.Peep do
       build_buckets_modules(name, metrics)
     else
       metrics

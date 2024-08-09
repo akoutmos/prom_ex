@@ -53,6 +53,23 @@ defmodule PromEx do
     matches the `:app` value in `project/0` from your `mix.exs` file. If you use the PromEx
     `mix prom_ex.create` mix task this will be done automatically for you.
 
+  ## Top level PromEx Configuration
+
+  PromEx is generally configured per application per PromEx module as you saw in the previous section. The only
+  setting that is currently available globally for all instances of PromEx is that of the storage adapter. The
+  storage adapter configuration determines how PromEx captures and stores metrics. There are currently two
+  available adapters:
+
+  1. [TelemetryMetricsPrometheus.Core](https://github.com/beam-telemetry/telemetry_metrics_prometheus_core) - This is the
+  default adapter and is included with PromEx.
+  2. [Peep](https://github.com/rkallos/peep) - In order to use Peep as your storage adapter, you need to add `:peep`
+  to your list of dependencies like so: `{:peep, "~> 3.2"}`. After running `mix deps.get` you will need to add the following
+  to your `config.exs` file:
+
+      ```elixir
+      config :prom_ex, :storage_adapter, PromEx.Storage.Peep
+      ```
+
   ## PromEx Plugins
 
   All metrics collection will be delegated to plugins which can be found here:
@@ -144,7 +161,7 @@ defmodule PromEx do
           raise "Failed to initialize #{inspect(calling_module)} due to missing :otp_app option"
       end
 
-    store = Keyword.get(opts, :store, PromEx.Storage.Core)
+    store = PromEx.storage_adapter()
 
     # Generate process names under calling module namespace
     ets_cron_flusher_name = Module.concat([calling_module, ETSCronFlusher])
@@ -338,6 +355,11 @@ defmodule PromEx do
 
       defoverridable PromEx
     end
+  end
+
+  @doc false
+  def storage_adapter do
+    Application.get_env(:prom_ex, :storage_adapter, PromEx.Storage.Core)
   end
 
   @doc false
