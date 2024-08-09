@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Option to not detach polling metrics MFA calls when they encounter an error
+  (see [#236](https://github.com/akoutmos/prom_ex/issues/236) for am example).
 - Support for Peep as a metrics storage engine [#240](https://github.com/akoutmos/prom_ex/pull/240) &
   [#241](https://github.com/akoutmos/prom_ex/pull/241). Read the PromEx module docs for how this works as the
   implementation changed after this merge.
