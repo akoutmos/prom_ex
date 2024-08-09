@@ -66,10 +66,13 @@ defmodule PromEx.MetricTypes.Polling do
   end
 
   @doc false
+  @spec safe_polling_runner(mfa :: mfa()) :: :ok | :error
   def safe_polling_runner({module, function, args} = mfa) do
     apply(module, function, args)
+    :ok
   rescue
     error ->
       Logger.warning("MFA #{inspect(mfa)} encountered an error but has not been detached: #{inspect(error)}")
+      :error
   end
 end
