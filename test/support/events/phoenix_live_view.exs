@@ -236,6 +236,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 518_187_700},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{},
       session: %{"_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg"},
       socket: %{
@@ -274,6 +275,7 @@
         root_pid: nil,
         root_view: WebAppWeb.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: WebAppWeb.PageLive
       }
     }
@@ -282,6 +284,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 9_852_700},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -342,6 +345,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -350,6 +354,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 1_570_300},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "home"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -479,6 +484,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -487,6 +493,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 3_097_000},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "home"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -620,6 +627,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -628,6 +636,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 13_033_300},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "metrics"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -727,6 +736,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -735,6 +745,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 2_126_300},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{
         "nav" => "phoenix",
         "node" => "nonode@nohost",
@@ -839,6 +850,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -847,6 +859,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 14_130_600},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{
         "nav" => "phoenix",
         "node" => "nonode@nohost",
@@ -980,6 +993,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -988,6 +1002,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 4_767_700},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "request_logger"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -1091,6 +1106,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -1099,6 +1115,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 273_200},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{
         "node" => "nonode@nohost",
         "page" => "request_logger",
@@ -1220,6 +1237,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -1228,6 +1246,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 438_100},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{
         "node" => "nonode@nohost",
         "page" => "request_logger",
@@ -1353,6 +1372,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -1361,6 +1381,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 445_000},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "applications"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -1459,6 +1480,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -1467,6 +1489,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 226_400},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "processes"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -1565,6 +1588,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -1573,6 +1597,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 899_800},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "ports"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -1671,6 +1696,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -1679,6 +1705,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 224_400},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "sockets"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -1777,6 +1804,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }
@@ -1785,6 +1813,7 @@
     event: [:phoenix, :live_view, :mount, :stop],
     measurements: %{duration: 228_400},
     metadata: %{
+      uri: "http://localhost:4000",
       params: %{"node" => "nonode@nohost", "page" => "ets"},
       session: %{
         "_csrf_token" => "KoliQihOn9FRWt9iwZlspNNg",
@@ -1883,6 +1912,7 @@
         root_pid: nil,
         root_view: Phoenix.LiveDashboard.PageLive,
         router: WebAppWeb.Router,
+        transport_pid: nil,
         view: Phoenix.LiveDashboard.PageLive
       }
     }

@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Dropped support for old versions of Grafana Agent and now the only available version is the 0.42.0 release of Grafana
+  Agent. Eventually PromEx will migrate to Grafana Alloy as that is the
+  [successor for Grafana agent](https://grafana.com/blog/2024/04/09/grafana-alloy-opentelemetry-collector-with-prometheus-pipelines/).
 - Updated package requirements as providing support for older versions of libraries is becoming difficult.
 - Removed deprecated `Logger.warn` calls [#207](https://github.com/akoutmos/prom_ex/pull/207).
 - The Phoenix plugin now leans on the `[:phoenix, :endpoint, :init]` telemetry event for `Endpoint` metrics as
