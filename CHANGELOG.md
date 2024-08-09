@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for Peep as a metrics storage engine [#240](https://github.com/akoutmos/prom_ex/pull/240) &
+  [#241](https://github.com/akoutmos/prom_ex/pull/241). Read the PromEx module docs for how this works as the
+  implementation changed after this merge.
+- Configuration for dashboard title [#226](https://github.com/akoutmos/prom_ex/pull/226).
+
+### Fixed
+
+- Pool size and timeout duration panels in Ecto dashboard [#223](https://github.com/akoutmos/prom_ex/pull/223).
+
+### Changed
+
+- Updated package requirements as providing support for older versions of libraries is becoming difficult.
+- Removed deprecated `Logger.warn` calls [#207](https://github.com/akoutmos/prom_ex/pull/207).
+- The Phoenix plugin now leans on the `[:phoenix, :endpoint, :init]` telemetry event for `Endpoint` metrics as
+  opposed to polling [c358232](https://github.com/akoutmos/prom_ex/commit/c35823256042da4047237b8420b498d69ae54b27).
+
 ## [1.9.0] - 2023-10-12
 
 ### Added
