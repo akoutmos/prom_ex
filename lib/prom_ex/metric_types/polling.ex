@@ -4,22 +4,33 @@ defmodule PromEx.MetricTypes.Polling do
   of pollable metric sources from a plugin.
   """
 
+  require Logger
+
   @typedoc """
   - `group_name`: A unique identifier for the collection of metrics.
   - `measurements_mfa`: An MFA tuple that defines what function will be
     executed that will emit Telemetry events.
   - `metrics`: A list of Telemetry Metrics structs that define the metrics.
   - `poll_rate`: An integer representing the millisecond between metrics samples.
+  - `opts`: A keyword list of options to configure the execution of the polling job.
+    The supported options are currently:
+      - `detach_on_error`: Configures whether your MFA will continue to be invoked
+        even after it encounters an error. The default for this is `true`.
   """
 
   @type t :: %__MODULE__{
           group_name: atom(),
           poll_rate: pos_integer(),
           measurements_mfa: PromEx.measurements_mfa(),
-          metrics: list(PromEx.telemetry_metrics())
+          metrics: list(PromEx.telemetry_metrics()),
+          opts: keyword()
         }
 
-  defstruct group_name: :default, poll_rate: 5_000, measurements_mfa: nil, metrics: []
+  defstruct group_name: :default, poll_rate: 5_000, measurements_mfa: nil, metrics: [], opts: []
+
+  @default_opts [
+    detach_on_error: true
+  ]
 
   @doc """
   Create a struct that encompasses a group of polling type metrics. The `group_name` should be unique and should follow
@@ -30,15 +41,35 @@ defmodule PromEx.MetricTypes.Polling do
           group_name :: atom(),
           poll_rate :: pos_integer(),
           measurements_mfa :: PromEx.measurements_mfa(),
-          metrics :: list(PromEx.telemetry_metrics())
+          metrics :: list(PromEx.telemetry_metrics()),
+          opts :: keyword()
         ) ::
           __MODULE__.t()
-  def build(group_name, poll_rate, measurements_mfa, metrics) do
-    %__MODULE__{
-      group_name: group_name,
-      poll_rate: poll_rate,
-      measurements_mfa: measurements_mfa,
-      metrics: metrics
-    }
+  def build(group_name, poll_rate, measurements_mfa, metrics, opts \\ []) do
+    opts = Keyword.merge(@default_opts, opts)
+
+    if opts[:detach_on_error] do
+      %__MODULE__{
+        group_name: group_name,
+        poll_rate: poll_rate,
+        measurements_mfa: measurements_mfa,
+        metrics: metrics
+      }
+    else
+      %__MODULE__{
+        group_name: group_name,
+        poll_rate: poll_rate,
+        measurements_mfa: {__MODULE__, :safe_polling_runner, [measurements_mfa]},
+        metrics: metrics
+      }
+    end
+  end
+
+  @doc false
+  def safe_polling_runner({module, function, args} = mfa) do
+    apply(module, function, args)
+  rescue
+    error ->
+      Logger.warning("MFA #{inspect(mfa)} encountered an error but has not been detached: #{inspect(error)}")
   end
 end
