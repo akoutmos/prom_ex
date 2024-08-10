@@ -62,8 +62,7 @@ defmodule PromEx do
 
   1. [TelemetryMetricsPrometheus.Core](https://github.com/beam-telemetry/telemetry_metrics_prometheus_core) - This is the
   default adapter and is included with PromEx.
-  2. [Peep](https://github.com/rkallos/peep) - In order to use Peep as your storage adapter, you need to add `:peep`
-  to your list of dependencies like so: `{:peep, "~> 3.2"}`. After running `mix deps.get` you will need to add the following
+  2. [Peep](https://github.com/rkallos/peep) - In order to use Peep as your storage adapter,  you will need to add the following
   to your `config.exs` file:
 
       ```elixir
