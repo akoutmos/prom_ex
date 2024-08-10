@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Pool size and timeout duration panels in Ecto dashboard [#223](https://github.com/akoutmos/prom_ex/pull/223).
+- MFA invocation for GrafanaAgent configuration file creation.
 
 ### Changed
 

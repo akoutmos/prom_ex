@@ -1,7 +1,5 @@
 server:
-  log_level: <%= @log_level %><%= if @render_listen_port do %>
-  http_listen_port: <%= @agent_port %>
-  grpc_listen_port: <%= @grpc_port %><% end %>
+  log_level: <%= @log_level %>
 
 prometheus:
   wal_directory: "<%= @wal_dir %>"

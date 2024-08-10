@@ -325,8 +325,12 @@ defmodule PromEx.Config do
     %{
       version: Keyword.get(grafana_agent_opts, :version, Downloader.default_version()),
       working_directory: Keyword.get(grafana_agent_opts, :working_directory),
-      config_opts: grafana_agent_opts |> get_grafana_agent_config(:config_opts) |> extract_opts_for_config()
+      config_opts: grafana_agent_opts |> Keyword.get(:config_opts) |> extract_opts_for_config()
     }
+  end
+
+  defp extract_opts_for_config({_m, _f, _a} = mfa) do
+    mfa
   end
 
   defp extract_opts_for_config(opts) do
@@ -334,8 +338,8 @@ defmodule PromEx.Config do
       scrape_interval: "15s",
       bearer_token: "blank",
       log_level: "error",
-      agent_port: "4040",
-      grpc_port: "9095",
+      agent_port: "12345",
+      grpc_port: "123456",
       job: nil,
       instance: nil,
       prometheus_url: get_grafana_agent_config(opts, :prometheus_url),

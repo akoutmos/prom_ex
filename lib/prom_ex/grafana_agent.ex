@@ -74,25 +74,37 @@ defmodule PromEx.GrafanaAgent do
          %{
            port_wrapper_path: port_wrapper_path,
            binary_path: binary_path,
-           config_file_path: config_file_path,
-           grafana_agent_config: %{
-             config_opts: %{
-               agent_port: agent_port,
-               grpc_port: grpc_port
-             }
-           }
+           config_file_path: config_file_path
          } = state
        ) do
     Logger.info("Starting GrafanaAgent")
 
-    wrapper_args = [binary_path, "-config.file", config_file_path]
-
     wrapper_args =
-      if pre_v0_26?(state) do
-        wrapper_args
-      else
-        wrapper_args ++
-          ["-server.http.address", "127.0.0.1:#{agent_port}", "-server.grpc.address", "127.0.0.1:#{grpc_port}"]
+      case state do
+        %{
+          grafana_agent_config: %{
+            config_opts: %{
+              agent_port: agent_port,
+              grpc_port: grpc_port
+            }
+          }
+        } ->
+          [
+            binary_path,
+            "-config.file",
+            config_file_path,
+            "-server.http.address",
+            "127.0.0.1:#{agent_port}",
+            "-server.grpc.address",
+            "127.0.0.1:#{grpc_port}"
+          ]
+
+        _ ->
+          [
+            binary_path,
+            "-config.file",
+            config_file_path
+          ]
       end
 
     {:spawn_executable, port_wrapper_path}
@@ -144,7 +156,7 @@ defmodule PromEx.GrafanaAgent do
     bin_dir
     |> File.ls!()
     |> Enum.find_value(fn file ->
-      if Regex.match?(~r/agent-(?:linux|darwin|freebsd|windows)-(?:amd64|arm64)/, file) do
+      if Regex.match?(~r/grafana-agent-(?:linux|darwin|freebsd|windows)-(?:amd64|arm64)/, file) do
         Path.join(bin_dir, file)
       else
         nil
@@ -157,21 +169,27 @@ defmodule PromEx.GrafanaAgent do
     base_directory = get_base_directory(state)
 
     # Create the necessary directory structure in the base dir
-    config_dir = Path.join(base_directory, "/config")
-    File.mkdir_p!(config_dir)
-
-    # Create the necessary directory structure in the base dir
     wal_dir = Path.join(base_directory, "/prom_wal")
     File.mkdir_p!(wal_dir)
 
     state
     |> Map.get(:grafana_agent_config)
     |> Map.get(:config_opts)
-    |> Map.put(:wal_dir, wal_dir)
-    |> Map.put(:render_listen_port, pre_v0_26?(state))
-    |> maybe_put_job(state)
-    |> maybe_put_instance()
-    |> ConfigRenderer.generate_config_file(config_dir)
+    |> case do
+      {module, function, arguments} ->
+        apply(module, function, arguments)
+
+      config_opts ->
+        # Create the necessary directory structure in the base dir
+        config_dir = Path.join(base_directory, "/config")
+        File.mkdir_p!(config_dir)
+
+        config_opts
+        |> Map.put(:wal_dir, wal_dir)
+        |> maybe_put_job(state)
+        |> maybe_put_instance()
+        |> ConfigRenderer.generate_config_file(config_dir)
+    end
   end
 
   defp maybe_put_job(%{job: nil} = opts, state) do
@@ -192,6 +210,4 @@ defmodule PromEx.GrafanaAgent do
   defp maybe_put_instance(opts) do
     opts
   end
-
-  defp pre_v0_26?(%{grafana_agent_config: %{version: version}}), do: Version.compare(version, "0.26.0") == :lt
 end
