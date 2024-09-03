@@ -435,12 +435,23 @@ if Code.ensure_loaded?(Oban) do
 
       config
       |> Oban.Repo.all(query)
-      |> Enum.each(fn {queue, state, count} ->
+      |> include_zeros_for_missing_queue_states()
+      |> Enum.each(fn {{queue, state}, count} ->
         measurements = %{count: count}
         metadata = %{name: normalize_module_name(oban_supervisor), queue: queue, state: state}
 
         :telemetry.execute([:prom_ex, :plugin, :oban, :queue, :length, :count], measurements, metadata)
       end)
+    end
+
+    defp include_zeros_for_missing_queue_states(query_result) do
+      all_queues = Keyword.keys(Oban.config().queues)
+      all_states = Oban.Job.states()
+
+      zeros = for queue <- all_queues, state <- all_states, into: %{}, do: {{queue, state}, 0}
+      counts = for {queue, state, count} <- query_result, into: %{}, do: {{queue, state}, count}
+
+      Map.merge(zeros, counts)
     end
 
     defp get_oban_supervisors(opts) do
