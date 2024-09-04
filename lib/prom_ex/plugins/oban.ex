@@ -448,7 +448,7 @@ if Code.ensure_loaded?(Oban) do
       all_queues = Keyword.keys(Oban.config().queues)
       all_states = Oban.Job.states()
 
-      zeros = for queue <- all_queues, state <- all_states, into: %{}, do: {{queue, state}, 0}
+      zeros = for queue <- all_queues, state <- all_states, into: %{}, do: {{to_string(queue), to_string(state)}, 0}
       counts = for {queue, state, count} <- query_result, into: %{}, do: {{queue, state}, count}
 
       Map.merge(zeros, counts)
