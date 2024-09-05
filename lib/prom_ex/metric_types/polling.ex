@@ -14,8 +14,8 @@ defmodule PromEx.MetricTypes.Polling do
   - `poll_rate`: An integer representing the millisecond between metrics samples.
   - `opts`: A keyword list of options to configure the execution of the polling job.
     The supported options are currently:
-      - `detach_on_error`: Configures whether your MFA will continue to be invoked
-        even after it encounters an error. The default for this is `true`.
+      - `detach_on_error`: Configures whether your MFA will stop being invoked
+        after it encounters an error. The default for this is `true`.
   """
 
   @type t :: %__MODULE__{
