@@ -36,6 +36,6 @@
     "ssri": ">=6.0.2",
     "terser-webpack-plugin": "^2.3.2",
     "webpack": "5.94.0",
-    "webpack-cli": "^3.3.2"
+    "webpack-cli": "^5.1.4"
   }
 }
