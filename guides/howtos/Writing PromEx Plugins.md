@@ -22,7 +22,7 @@ provided to the struct `build` function.
 
 To have your custom plugin expose event based metrics, implement a `event_metrics/1` function and build out a collection
 of `Telemetry.Metrics` structs (`distribution`, `counter`, `last_value`, and `sum`). Be sure to look at plugins like
-`PromEx.Plugins.Phoenix` for more in depth examples.
+`PromEx.Plugins.Phoenix` for more in-depth examples.
 
 ```elixir
 defmodule MyApp.PromEx.Plugins.MyPhoenix do
@@ -61,7 +61,7 @@ end
 ## Adding Polling Metrics
 
 Polling metrics are similar to event metrics in that they require similar fields (`group_name` and `metrics` to be
-specific). In addition, the `PromEx.MetricTypes.Polling.build/4` function requires an `measurements_mfa` argument which
+specific). In addition, the `PromEx.MetricTypes.Polling.build/4` function requires a `measurements_mfa` argument which
 specifies what function will be executed on the polling interval. This function should run `:telemetry.execute/3`
 somewhere in its function body. Once that event is executed, the corresponding event in the struct will be triggered and
 you will capture the desired data point. The following example from `PromEx.Plugins.Beam` should highlight this concept:

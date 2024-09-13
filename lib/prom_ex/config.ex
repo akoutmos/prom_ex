@@ -105,7 +105,7 @@ defmodule PromEx.Config do
       via the API.
 
     * `:auth_token` - The auth token that was created in Grafana so that PromEx can upload dashboards
-      via the API.
+      via the API. Alternatively, an MFA tuple is allowed. This function must return the auth token string.
 
     * `:upload_dashboards_on_start` - Using the config values that you set in your application config
       (`config.exs`, `dev.exs`, `prod.exs`, etc) PromEx will attempt to upload your Dashboards to
@@ -216,7 +216,8 @@ defmodule PromEx.Config do
       config value. When using `:basic` strategy you'll need to provide `:auth_user` and `:auth_password` values.
 
     * `:auth_token` - When using a `:bearer` authentication strategy, this field is required to validate the
-      incoming request against a valid auth token.
+      incoming request against a valid auth token. Alternatively, an MFA tuple is allowed. This function must
+      return the auth token string.
 
     * `:auth_user` - When using a `:basic` authentication strategy, this field is required to validate the
       incoming request against a valid user.
