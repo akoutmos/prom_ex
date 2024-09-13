@@ -270,6 +270,9 @@ There are a couple of solutions to this problem:
    maintain in order to only execute the `PromEx.Plug` plug when the incoming request fulfills your configured
    requirements (see the [PromEx.Plug HexDocs](https://hexdocs.pm/prom_ex/1.1.1/PromEx.Plug.html) for an example).
 
+3. If Unplug doesn't suit your needs, you can invoke `PromEx.Plug`
+   [conditionally with your own logic](https://hexdocs.pm/plug/1.16.1/Plug.Builder.html#module-conditional-plugs).
+
 ## Performance Concerns
 
 You may think to yourself that with all these metrics being collected and scraped, that the performance of your
