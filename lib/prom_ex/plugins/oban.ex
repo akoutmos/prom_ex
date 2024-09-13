@@ -97,6 +97,8 @@ if Code.ensure_loaded?(Oban) do
 
       oban_supervisors = get_oban_supervisors(opts)
 
+      polling_opts = Keyword.get(opts, :opts, [])
+
       # Queue length details
       Polling.build(
         :oban_queue_poll_metrics,
@@ -110,7 +112,8 @@ if Code.ensure_loaded?(Oban) do
             measurement: :count,
             tags: [:name, :queue, :state]
           )
-        ]
+        ],
+        polling_opts
       )
     end
 
