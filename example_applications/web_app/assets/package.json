@@ -23,7 +23,7 @@
     "browserslist": ">=4.16.5",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.2",
-    "elliptic": "^6.5.4",
+    "elliptic": "^6.5.7",
     "hard-source-webpack-plugin": "^0.13.1",
     "is-svg": "4.4.0",
     "lodash": ">=4.17.21",
