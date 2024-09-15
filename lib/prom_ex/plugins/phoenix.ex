@@ -189,9 +189,9 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     defp endpoint_info(metric_prefix, opts) do
-      # Fetch user options
-      phoenix_endpoint = Keyword.get(opts, :endpoint) || Keyword.get(opts, :endpoints)
-      keep_function_filter = keep_endpoint_metrics(phoenix_endpoint)
+      phoenix_endpoints = normalize_endpoint(opts)
+
+      keep_function_filter = keep_endpoint_metrics(phoenix_endpoints)
 
       Event.build(
         :phoenix_endpoint_metrics,
@@ -218,8 +218,17 @@ if Code.ensure_loaded?(Phoenix) do
       )
     end
 
-    defp keep_endpoint_metrics(phoenix_endpoint) when is_atom(phoenix_endpoint) do
-      keep_endpoint_metrics([phoenix_endpoint])
+    defp normalize_endpoint(opts) do
+      cond do
+        endpoint = Keyword.get(opts, :endpoint) ->
+          [endpoint]
+
+        endpoints = Keyword.get(opts, :endpoints) ->
+          Enum.map(endpoints, fn e -> elem(e, 0) end)
+
+        true ->
+          []
+      end
     end
 
     defp keep_endpoint_metrics(phoenix_endpoints) do
