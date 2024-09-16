@@ -346,7 +346,7 @@ if Code.ensure_loaded?(Phoenix) do
               %{
                 endpoint: normalize_module_name(endpoint),
                 event: normalize_event_name.(event),
-                handler: handler
+                handler: normalize_module_name(handler)
               }
             end,
             tags: [:endpoint, :handler, :event],
