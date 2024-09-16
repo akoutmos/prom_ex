@@ -251,7 +251,7 @@ if Code.ensure_loaded?(Phoenix) do
         end
 
       %{
-        endpoint: module,
+        endpoint: normalize_module_name(module),
         url: module.url(),
         port: port
       }
