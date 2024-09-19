@@ -62,13 +62,13 @@ defmodule PromEx.MixProject do
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_metrics_prometheus_core, "~> 1.2"},
       {:peep, "~> 3.0"},
-      {:plug_cowboy, ">= 2.6.0"},
       {:octo_fetch, "~> 0.4"},
 
       # Optional dependencies depending on what telemetry events the user is interested in capturing
       {:phoenix, ">= 1.7.0", optional: true},
       {:phoenix_live_view, ">= 0.20.0", optional: true},
       {:plug, ">= 1.16.0", optional: true},
+      {:plug_cowboy, ">= 2.6.0", optional: true},
       {:ecto, ">= 3.11.0", optional: true},
       {:oban, ">= 2.10.0", optional: true},
       {:absinthe, ">= 1.7.0", optional: true},
