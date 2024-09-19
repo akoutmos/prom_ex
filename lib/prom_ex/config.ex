@@ -199,7 +199,8 @@ defmodule PromEx.Config do
 
   * `:metrics_server` - This key contains the configuration information needed to run a standalone
     HTTP server powered by Cowboy. This server provides a lightweight solution to serving up PromEx
-    metrics. Its configuration options are:
+    metrics. In order to use this standalone metrics server plug you need to have `:plug` and `:plug_cowboy`
+    as dependencies in your project. Its configuration options are:
 
     * `:port` - The port that the Cowboy HTTP server should run on.
 
