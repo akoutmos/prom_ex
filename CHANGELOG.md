@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Phoenix plugin was not properly handling multiple endpoints [#254](https://github.com/akoutmos/prom_ex/pull/254).
+- Oban plugin now sets queue state to zero [#245](https://github.com/akoutmos/prom_ex/pull/245) and [Oban Pro support](https://github.com/benonymus/prom_ex/commit/d5a56d0d4cc15bded4326dee0ac35e2f8c9b5d15).
 
 ## [1.10.0] - 2024-08-10
 
