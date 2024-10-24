@@ -190,7 +190,6 @@ if Code.ensure_loaded?(Phoenix) do
 
     defp endpoint_info(metric_prefix, opts) do
       phoenix_endpoints = normalize_endpoint(opts)
-
       keep_function_filter = keep_endpoint_metrics(phoenix_endpoints)
 
       Event.build(
@@ -224,7 +223,9 @@ if Code.ensure_loaded?(Phoenix) do
           [endpoint]
 
         endpoints = Keyword.get(opts, :endpoints) ->
-          Enum.map(endpoints, fn e -> elem(e, 0) end)
+          Enum.map(endpoints, fn {endpoint, _settings} ->
+            endpoint
+          end)
 
         true ->
           []
@@ -497,7 +498,9 @@ if Code.ensure_loaded?(Phoenix) do
       |> String.trim_leading("Elixir.")
     end
 
-    defp normalize_module_name(name), do: name
+    defp normalize_module_name(name) do
+      String.trim_leading(name, "Elixir.")
+    end
 
     defp normalize_action(action) when is_atom(action), do: action
     defp normalize_action(_action), do: "Unknown"

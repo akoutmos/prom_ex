@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0] - 2024-10-24
+
+### Fixed
+
+- Phoenix plugin was not properly handling multiple endpoints [#254](https://github.com/akoutmos/prom_ex/pull/254).
+
 ## [1.10.0] - 2024-08-10
 
 ### Added

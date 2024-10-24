@@ -6,24 +6,24 @@ web_app_prom_ex_prom_ex_status_info 1
 web_app_prom_ex_phoenix_channel_joined_total{endpoint="WebAppWeb.Endpoint",result="ok",transport="websocket"} 17
 # HELP web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds The time it takes for the application to respond to channel messages.
 # TYPE web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds histogram
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="10"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="100"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="500"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="1000"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="5000"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="10000"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="+Inf"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_sum{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket"} 0.051792
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_count{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Elixir.Phoenix.LiveReloader.Socket"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="10"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="100"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="500"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="1000"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="5000"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="10000"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket",le="+Inf"} 1
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_sum{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket"} 0.051792
-web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_count{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Elixir.Phoenix.LiveReloader.Socket"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket",le="10"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket",le="100"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket",le="500"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket",le="1000"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket",le="5000"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket",le="10000"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket",le="+Inf"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_sum{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket"} 0.051792
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_count{endpoint="WebAppWeb.Endpoint",event="test_event",handler="Phoenix.LiveReloader.Socket"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket",le="10"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket",le="100"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket",le="500"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket",le="1000"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket",le="5000"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket",le="10000"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_bucket{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket",le="+Inf"} 1
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_sum{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket"} 0.051792
+web_app_prom_ex_phoenix_channel_handled_in_duration_milliseconds_count{endpoint="WebAppWeb.Endpoint",event="another_test_event",handler="Phoenix.LiveReloader.Socket"} 1
 # HELP web_app_prom_ex_phoenix_http_requests_total The number of requests have been serviced.
 # TYPE web_app_prom_ex_phoenix_http_requests_total counter
 web_app_prom_ex_phoenix_http_requests_total{action="index",controller="Phoenix.LiveView.Plug",host="localhost",method="GET",path="/",status="500"} 2
