@@ -448,7 +448,17 @@ if Code.ensure_loaded?(Oban) do
     end
 
     defp include_zeros_for_missing_queue_states(query_result) do
-      all_queues = Keyword.keys(Oban.config().queues)
+      {_, opts} =
+        Oban.config().plugins
+        |> Enum.find({nil, [queues: Oban.config().queues]}, fn {plugin, _} ->
+          plugin == Oban.Pro.Plugins.DynamicQueues
+        end)
+
+      all_queues =
+        opts
+        |> Keyword.get(:queues, [])
+        |> Keyword.keys()
+
       all_states = Oban.Job.states()
 
       zeros = for queue <- all_queues, state <- all_states, into: %{}, do: {{to_string(queue), to_string(state)}, 0}
