@@ -37,11 +37,10 @@ if Code.ensure_loaded?(Phoenix) do
 
     - `additional_tags`: This option is OPTIONAL and allows you to specify additional tags (as a list of atoms) to be
       added to the HTTP metrics. This is useful if you want to add additional context to your metrics. The additional
-      tag values will be taken from the private key `:prom_ex` on the connection struct, which should be a map.
-      Defaults to `[]`.
+      tag values will be taken from the private key `:prom_ex_[tag]` on the connection struct. Defaults to `[]`.
 
       For example, if you want to report the authentication status of the request, you can set
-      `additional_tags: [:authenticated]` and use `PromEx.Plugins.Phoenix.put_metadata(conn, :authenticated, true)`
+      `additional_tags: [:authenticated]` and use `Plug.Conn.put_private(conn, :prom_ex_authenticated, true)`
       in a controller or plug to add the tag to the metrics.
 
     - `normalize_event_name`: This option is OPTIONAL and allows you to remap the channel event names to a different
@@ -88,11 +87,10 @@ if Code.ensure_loaded?(Phoenix) do
 
         - `additional_tags`: This option is OPTIONAL and allows you to specify additional tags (as a list of atoms) to be
           added to the HTTP metrics. This is useful if you want to add additional context to your metrics. The additional
-          tag values will be taken from the private key `:prom_ex` on the connection struct, which should be a map.
-          Defaults to `[]`.
+          tag values will be taken from the private key `:prom_ex_[tag]` on the connection struct. Defaults to `[]`.
 
           For example, if you want to report the authentication status of the request, you can set
-          `additional_tags: [:authenticated]` and use `PromEx.Plugins.Phoenix.put_metadata(conn, :authenticated, true)`
+          `additional_tags: [:authenticated]` and use `Plug.Conn.put_private(conn, :prom_ex_authenticated, true)`
           in a controller or plug to add the tag to the metrics.
 
     #### Example plugin configuration
@@ -485,7 +483,7 @@ if Code.ensure_loaded?(Phoenix) do
 
     defp do_get_additional_tags(tag_map, conn, additional_tags) do
       Enum.reduce(additional_tags, tag_map, fn tag, acc ->
-        Map.put(acc, tag, conn.private[:prom_ex][tag])
+        Map.put(acc, tag, conn.private[:"prom_ex_#{tag}"])
       end)
     end
 
@@ -606,19 +604,6 @@ if Code.ensure_loaded?(Phoenix) do
           raise KeyError, "Neither #{inspect(key1)} nor #{inspect(key2)} found in #{inspect(keywordlist)}"
       end
     end
-
-    @doc """
-    This function is used to put additional metadata on the connection struct. This is useful if you want to add
-    additional context to your metrics. In order for the additional metadata to be included as a tag in the HTTP
-    metrics, you must include the `key` in the `additional_tags` option in the plugin configuration.
-    """
-    def put_metadata(conn, key, value) do
-      metadata =
-        Map.get(conn.private, :prom_ex, %{})
-        |> Map.put(key, value)
-
-      Plug.Conn.put_private(conn, :prom_ex, metadata)
-    end
   end
 else
   defmodule PromEx.Plugins.Phoenix do
@@ -627,10 +612,6 @@ else
 
     @impl true
     def event_metrics(_opts) do
-      PromEx.Plugin.no_dep_raise(__MODULE__, "Phoenix")
-    end
-
-    def put_metadata(conn, key, value) do
       PromEx.Plugin.no_dep_raise(__MODULE__, "Phoenix")
     end
   end
