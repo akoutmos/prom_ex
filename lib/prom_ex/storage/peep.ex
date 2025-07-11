@@ -10,7 +10,6 @@ defmodule PromEx.Storage.Peep do
   def scrape(name) do
     Peep.get_all_metrics(name)
     |> Peep.Prometheus.export()
-    |> IO.iodata_to_binary()
   end
 
   @impl true
