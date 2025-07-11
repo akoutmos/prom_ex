@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 config :web_app,
   ecto_repos: [WebApp.Repo, WebApp.Repo2],

@@ -22,7 +22,7 @@ defmodule WebAppWeb do
       use Phoenix.Controller, namespace: WebAppWeb
 
       import Plug.Conn
-      import WebAppWeb.Gettext
+      use Gettext, backend: WebAppWeb.Gettext
       alias WebAppWeb.Router.Helpers, as: Routes
     end
   end
@@ -45,7 +45,7 @@ defmodule WebAppWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {WebAppWeb.LayoutView, "live.html"}
+        layout: {WebAppWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end
@@ -72,7 +72,7 @@ defmodule WebAppWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import WebAppWeb.Gettext
+      use Gettext, backend: WebAppWeb.Gettext
     end
   end
 
@@ -83,12 +83,13 @@ defmodule WebAppWeb do
 
       # Import LiveView helpers (live_render, live_component, live_patch, etc)
       import Phoenix.LiveView.Helpers
+      import Phoenix.Component
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
       import WebAppWeb.ErrorHelpers
-      import WebAppWeb.Gettext
+      use Gettext, backend: WebAppWeb.Gettext
       alias WebAppWeb.Router.Helpers, as: Routes
     end
   end
