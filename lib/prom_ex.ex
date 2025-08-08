@@ -549,7 +549,7 @@ defmodule PromEx do
 
     plug_definition = {PromEx.MetricsServer.Plug, plug_opts}
 
-    spec = server_spec(process_name, plug_definition, port, scheme, config)
+    spec = server_spec(plug_definition, port, scheme, process_name, config)
 
     Logger.info(
       "PromEx is starting a standalone metrics server on port #{inspect(port)} over #{Atom.to_string(scheme)}"
