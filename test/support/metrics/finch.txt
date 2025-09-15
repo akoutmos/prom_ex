@@ -1,0 +1,109 @@
+# HELP web_app_prom_ex_prom_ex_status_info Information regarding the PromEx library. Primarily used as a source of truth for Prometheus default labels.
+# TYPE web_app_prom_ex_prom_ex_status_info gauge
+web_app_prom_ex_prom_ex_status_info 1
+# HELP web_app_prom_ex_finch_connect_count_total Total number of connection attempts
+# TYPE web_app_prom_ex_finch_connect_count_total counter
+web_app_prom_ex_finch_connect_count_total{finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https"} 1
+# HELP web_app_prom_ex_finch_connect_duration_milliseconds The time spent establishing a connection
+# TYPE web_app_prom_ex_finch_connect_duration_milliseconds histogram
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="10"} 0
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="50"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="100"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="250"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="500"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="1000"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="2500"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="5000"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https",le="+Inf"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_count{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https"} 1
+web_app_prom_ex_finch_connect_duration_milliseconds_sum{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",port="443",scheme="https"} 25.0
+# HELP web_app_prom_ex_finch_queue_duration_milliseconds The time spent waiting in the connection pool queue
+# TYPE web_app_prom_ex_finch_queue_duration_milliseconds histogram
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="1"} 0
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="5"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="10"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="25"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="50"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="100"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="250"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="500"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="1000"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="+Inf"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_count{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https"} 1
+web_app_prom_ex_finch_queue_duration_milliseconds_sum{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https"} 5.0
+# HELP web_app_prom_ex_finch_queue_exception_count_total Total number of Finch queue exceptions
+# TYPE web_app_prom_ex_finch_queue_exception_count_total counter
+web_app_prom_ex_finch_queue_exception_count_total{finch_name="Elixir.MyApp.Finch",host="api.example.com",kind="error",port="443",reason=":pool_timeout",scheme="https"} 1
+# HELP web_app_prom_ex_finch_queue_idle_time_milliseconds The time the connection spent idle before being used
+# TYPE web_app_prom_ex_finch_queue_idle_time_milliseconds histogram
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="10"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="50"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="100"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="250"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="500"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="1000"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="5000"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="10000"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https",le="+Inf"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_count{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https"} 1
+web_app_prom_ex_finch_queue_idle_time_milliseconds_sum{finch_name="Elixir.MyApp.Finch",host="api.example.com",pool="{:https, \"api.example.com\", 443}",port="443",scheme="https"} 10.0
+# HELP web_app_prom_ex_finch_request_count_total Total number of Finch requests
+# TYPE web_app_prom_ex_finch_request_count_total counter
+web_app_prom_ex_finch_request_count_total{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200"} 1
+web_app_prom_ex_finch_request_count_total{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201"} 1
+# HELP web_app_prom_ex_finch_request_duration_milliseconds The time spent making the HTTP request
+# TYPE web_app_prom_ex_finch_request_duration_milliseconds histogram
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="10"} 0
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="50"} 0
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="100"} 0
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="250"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="500"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="1000"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="2500"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="5000"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="10000"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200",le="+Inf"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_count{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_sum{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",status="200"} 150.0
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="10"} 0
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="50"} 0
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="100"} 0
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="250"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="500"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="1000"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="2500"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="5000"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="10000"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_bucket{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201",le="+Inf"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_count{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201"} 1
+web_app_prom_ex_finch_request_duration_milliseconds_sum{finch_name="Elixir.MyApp.Finch",host="api.example.com",method="POST",port="443",scheme="https",status="201"} 200.0
+# HELP web_app_prom_ex_finch_request_exception_count_total Total number of Finch request exceptions
+# TYPE web_app_prom_ex_finch_request_exception_count_total counter
+web_app_prom_ex_finch_request_exception_count_total{finch_name="Elixir.MyApp.Finch",host="api.example.com",kind="error",method="POST",port="443",reason=":timeout",scheme="https"} 1
+# HELP web_app_prom_ex_finch_send_duration_milliseconds The time spent sending the request
+# TYPE web_app_prom_ex_finch_send_duration_milliseconds histogram
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="1"} 0
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="5"} 0
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="10"} 0
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="25"} 0
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="50"} 0
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="100"} 1
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="250"} 1
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="500"} 1
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="1000"} 1
+web_app_prom_ex_finch_send_duration_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="+Inf"} 1
+web_app_prom_ex_finch_send_duration_milliseconds_count{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https"} 1
+web_app_prom_ex_finch_send_duration_milliseconds_sum{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https"} 75.0
+# HELP web_app_prom_ex_finch_send_idle_time_milliseconds The time the connection spent idle before sending
+# TYPE web_app_prom_ex_finch_send_idle_time_milliseconds histogram
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="1"} 0
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="5"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="10"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="25"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="50"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="100"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="250"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="500"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_bucket{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https",le="+Inf"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_count{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https"} 1
+web_app_prom_ex_finch_send_idle_time_milliseconds_sum{error="none",finch_name="Elixir.MyApp.Finch",host="api.example.com",method="GET",port="443",scheme="https"} 5.0

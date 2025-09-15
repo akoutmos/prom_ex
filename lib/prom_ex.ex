@@ -89,7 +89,7 @@ defmodule PromEx do
     - [X] `PromEx.Plugins.Broadway` - [Telemetry docs](https://hexdocs.pm/broadway/Broadway.html#module-telemetry)
 
   Backlog Elixir library metrics:
-    - [ ] Finch - [Telemetry docs](https://hexdocs.pm/finch/Finch.Telemetry.html#content)
+    - [X] `PromEx.Plugins.Finch` - [Telemetry docs](https://hexdocs.pm/finch/Finch.Telemetry.html#content)
     - [ ] Swoosh - [Telemetry docs](https://hexdocs.pm/swoosh/1.5.0/Swoosh.html#module-telemetry)
     - [ ] ChromicPDF - [Telemetry docs](https://hexdocs.pm/chromic_pdf/ChromicPDF.html#module-telemetry-support)
     - [ ] Dataloader - [Telemetry docs](https://hexdocs.pm/dataloader/telemetry.html)
