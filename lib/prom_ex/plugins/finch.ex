@@ -47,18 +47,15 @@ if Code.ensure_loaded?(Finch) do
 
     use PromEx.Plugin
 
-    @request_start_event [:finch, :request, :start]
     @request_stop_event [:finch, :request, :stop]
     @request_exception_event [:finch, :request, :exception]
 
-    @queue_start_event [:finch, :queue, :start]
     @queue_stop_event [:finch, :queue, :stop]
     @queue_exception_event [:finch, :queue, :exception]
 
     @connect_start_event [:finch, :connect, :start]
     @connect_stop_event [:finch, :connect, :stop]
 
-    @send_start_event [:finch, :send, :start]
     @send_stop_event [:finch, :send, :stop]
 
     @impl true
