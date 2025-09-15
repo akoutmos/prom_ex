@@ -233,7 +233,7 @@ if Code.ensure_loaded?(Finch) do
     defp finch_request_tag_values(%{name: name, request: request, result: result}) do
       %{
         finch_name: name,
-        method: String.upcase(Atom.to_string(request.method)),
+        method: normalize_method(request.method),
         scheme: request.scheme,
         host: request.host,
         port: request.port,
@@ -244,7 +244,7 @@ if Code.ensure_loaded?(Finch) do
     defp finch_request_exception_tag_values(%{name: name, request: request, kind: kind, reason: reason}) do
       %{
         finch_name: name,
-        method: String.upcase(Atom.to_string(request.method)),
+        method: normalize_method(request.method),
         scheme: request.scheme,
         host: request.host,
         port: request.port,
@@ -274,7 +274,8 @@ if Code.ensure_loaded?(Finch) do
       }
     end
 
-    defp finch_connect_tag_values(%{name: name, scheme: scheme, host: host, port: port, error: error}) do
+    defp finch_connect_tag_values(%{name: name, scheme: scheme, host: host, port: port} = metadata) do
+      error = Map.get(metadata, :error)
       %{
         finch_name: name,
         scheme: scheme,
@@ -293,16 +294,20 @@ if Code.ensure_loaded?(Finch) do
       }
     end
 
-    defp finch_send_tag_values(%{name: name, request: request, error: error}) do
+    defp finch_send_tag_values(%{name: name, request: request} = metadata) do
+      error = Map.get(metadata, :error)
       %{
         finch_name: name,
-        method: String.upcase(Atom.to_string(request.method)),
+        method: normalize_method(request.method),
         scheme: request.scheme,
         host: request.host,
         port: request.port,
         error: if(error, do: inspect(error), else: "none")
       }
     end
+
+    defp normalize_method(method) when is_atom(method), do: String.upcase(Atom.to_string(method))
+    defp normalize_method(method) when is_binary(method), do: String.upcase(method)
 
     defp extract_status_from_result({:ok, %{status: status}}), do: Integer.to_string(status)
     defp extract_status_from_result({:error, _reason}), do: "error"
