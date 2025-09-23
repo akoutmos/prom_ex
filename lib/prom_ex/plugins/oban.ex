@@ -20,6 +20,14 @@ if Code.ensure_loaded?(Oban) do
     - `duration_unit`: This is an OPTIONAL option and is a `Telemetry.Metrics.time_unit()`. It can be one of:
       `:second | :millisecond | :microsecond | :nanosecond`. It is `:millisecond` by default.
 
+    - `job_attempt_buckets`: OPTIONAL. Buckets for job attempt distributions. Defaults to `[1, 5, 10]`.
+
+    - `job_duration_buckets`: OPTIONAL. Buckets for job duration and queue time distributions
+      (in the configured `duration_unit`). Defaults to `[10, 100, 500, 1_000, 5_000, 20_000]`.
+
+    - `producer_duration_buckets`: OPTIONAL. Buckets for producer duration distributions
+      (in the configured `duration_unit`). Defaults to `[10, 100, 500, 1_000, 5_000, 10_000]`.
+
     This plugin exposes the following metric groups:
     - `:oban_init_event_metrics`
     - `:oban_job_event_metrics`
@@ -74,6 +82,9 @@ if Code.ensure_loaded?(Oban) do
       otp_app = Keyword.fetch!(opts, :otp_app)
       metric_prefix = Keyword.get(opts, :metric_prefix, PromEx.metric_prefix(otp_app, :oban))
       duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
+      job_attempt_buckets = Keyword.get(opts, :job_attempt_buckets, [1, 5, 10])
+      job_duration_buckets = Keyword.get(opts, :job_duration_buckets, [10, 100, 500, 1_000, 5_000, 20_000])
+      producer_duration_buckets = Keyword.get(opts, :producer_duration_buckets, [10, 100, 500, 1_000, 5_000, 10_000])
 
       oban_supervisors = get_oban_supervisors(opts)
       keep_function_filter = keep_oban_instance_metrics(oban_supervisors)
@@ -83,8 +94,14 @@ if Code.ensure_loaded?(Oban) do
 
       [
         oban_supervisor_init_event_metrics(metric_prefix, keep_function_filter, duration_unit),
-        oban_job_event_metrics(metric_prefix, keep_function_filter, duration_unit),
-        oban_producer_event_metrics(metric_prefix, keep_function_filter, duration_unit),
+        oban_job_event_metrics(
+          metric_prefix,
+          keep_function_filter,
+          duration_unit,
+          job_attempt_buckets,
+          job_duration_buckets
+        ),
+        oban_producer_event_metrics(metric_prefix, keep_function_filter, duration_unit, producer_duration_buckets),
         oban_circuit_breaker_event_metrics(metric_prefix, keep_function_filter)
       ]
     end
@@ -186,9 +203,13 @@ if Code.ensure_loaded?(Oban) do
       }
     end
 
-    defp oban_job_event_metrics(metric_prefix, keep_function_filter, duration_unit) do
-      job_attempt_buckets = [1, 5, 10]
-      job_duration_buckets = [10, 100, 500, 1_000, 5_000, 20_000]
+    defp oban_job_event_metrics(
+           metric_prefix,
+           keep_function_filter,
+           duration_unit,
+           job_attempt_buckets,
+           job_duration_buckets
+         ) do
       duration_unit_plural = Utils.make_plural_atom(duration_unit)
 
       Event.build(
@@ -279,7 +300,7 @@ if Code.ensure_loaded?(Oban) do
       )
     end
 
-    defp oban_producer_event_metrics(metric_prefix, keep_function_filter, duration_unit) do
+    defp oban_producer_event_metrics(metric_prefix, keep_function_filter, duration_unit, producer_duration_buckets) do
       duration_unit_plural = Utils.make_plural_atom(duration_unit)
 
       Event.build(
@@ -291,7 +312,7 @@ if Code.ensure_loaded?(Oban) do
             measurement: :duration,
             description: "How long it took to dispatch the job.",
             reporter_options: [
-              buckets: [10, 100, 500, 1_000, 5_000, 10_000]
+              buckets: producer_duration_buckets
             ],
             unit: {:native, duration_unit},
             tag_values: &producer_tag_values/1,
@@ -318,7 +339,7 @@ if Code.ensure_loaded?(Oban) do
             measurement: :duration,
             description: "How long it took for the producer to raise an exception.",
             reporter_options: [
-              buckets: [10, 100, 500, 1_000, 5_000, 10_000]
+              buckets: producer_duration_buckets
             ],
             unit: {:native, duration_unit},
             tag_values: &producer_tag_values/1,

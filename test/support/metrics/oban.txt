@@ -68,6 +68,7 @@ web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{error="Arithme
 web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="500"} 0
 web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="1000"} 0
 web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="5000"} 0
+web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="10000"} 0
 web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="20000"} 0
 web_app_prom_ex_oban_job_exception_queue_time_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="+Inf"} 3
 web_app_prom_ex_oban_job_exception_queue_time_milliseconds_sum{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker"} 110286.49199999998
@@ -79,6 +80,7 @@ web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{error="Arithmeti
 web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="500"} 3
 web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="1000"} 3
 web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="5000"} 3
+web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="10000"} 3
 web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="20000"} 3
 web_app_prom_ex_oban_job_exception_duration_milliseconds_bucket{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker",le="+Inf"} 3
 web_app_prom_ex_oban_job_exception_duration_milliseconds_sum{error="ArithmeticError",kind="error",name="Oban",queue="default",state="failure",worker="WebApp.Jobs.DefaultWorker"} 25.9197
@@ -110,6 +112,7 @@ web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="event
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="500"} 1
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="1000"} 1
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="5000"} 1
+web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="10000"} 1
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="20000"} 1
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="+Inf"} 1
 web_app_prom_ex_oban_job_queue_time_milliseconds_sum{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker"} 43.516
@@ -119,6 +122,7 @@ web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="defau
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="500"} 0
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="1000"} 0
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="5000"} 0
+web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="10000"} 0
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="20000"} 0
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="+Inf"} 8
 web_app_prom_ex_oban_job_queue_time_milliseconds_sum{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker"} 308053.534
@@ -128,6 +132,7 @@ web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="500"} 3
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="1000"} 3
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="5000"} 3
+web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="10000"} 3
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="20000"} 3
 web_app_prom_ex_oban_job_queue_time_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="+Inf"} 3
 web_app_prom_ex_oban_job_queue_time_milliseconds_sum{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker"} 137.731
@@ -139,6 +144,7 @@ web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",que
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="500"} 1
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="1000"} 4
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="5000"} 8
+web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="10000"} 8
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="20000"} 8
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker",le="+Inf"} 8
 web_app_prom_ex_oban_job_processing_duration_milliseconds_sum{name="Oban",queue="default",state="success",worker="WebApp.Jobs.DefaultWorker"} 8692.4147
@@ -148,6 +154,7 @@ web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",que
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="500"} 1
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="1000"} 1
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="5000"} 1
+web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="10000"} 1
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="20000"} 1
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker",le="+Inf"} 1
 web_app_prom_ex_oban_job_processing_duration_milliseconds_sum{name="Oban",queue="events",state="success",worker="WebApp.Jobs.EventWorker"} 108.77759999999999
@@ -157,6 +164,7 @@ web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",que
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="500"} 3
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="1000"} 3
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="5000"} 3
+web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="10000"} 3
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="20000"} 3
 web_app_prom_ex_oban_job_processing_duration_milliseconds_bucket{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker",le="+Inf"} 3
 web_app_prom_ex_oban_job_processing_duration_milliseconds_sum{name="Oban",queue="media",state="success",worker="WebApp.Jobs.MediaWorker"} 662.5332999999999

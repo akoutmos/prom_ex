@@ -10,7 +10,10 @@ defmodule PromEx.Plugins.ObanTest do
 
     @impl true
     def plugins do
-      [{PromEx.Plugins.Oban, oban_supervisors: [Oban]}]
+      [
+        {PromEx.Plugins.Oban,
+         oban_supervisors: [Oban], job_duration_buckets: [10, 100, 500, 1_000, 5_000, 10_000, 20_000]}
+      ]
     end
   end
 
