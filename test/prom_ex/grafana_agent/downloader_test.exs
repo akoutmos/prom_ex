@@ -5,9 +5,10 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
 
   alias PromEx.GrafanaAgent.Downloader
 
-  @download_timeout 10_000
+  @download_timeout 180_000
 
   describe "download/2" do
+    @tag timeout: 600_000
     test "should be able to download all of the listed versions" do
       OctoFetch.Test.test_all_supported_downloads(Downloader)
     end
@@ -21,6 +22,7 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
     end
 
     @tag :tmp_dir
+    @tag timeout: 180_000
     test "should download the file the first time and use the filesystem the second time", %{tmp_dir: tmp_dir} do
       {os, arch} = get_system_arch()
 
@@ -42,6 +44,7 @@ defmodule PromEx.GrafanaAgent.DownloaderTest do
     end
 
     @tag :tmp_dir
+    @tag timeout: 180_000
     test "should download multiple agents in parallel", %{tmp_dir: tmp_dir} do
       {os, arch} = get_system_arch()
 
