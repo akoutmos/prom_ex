@@ -76,7 +76,7 @@ defmodule PromEx.MixProject do
       {:plug_cowboy, ">= 2.6.0", optional: true},
       {:ecto, ">= 3.11.0", optional: true},
       {:oban, ">= 2.10.0", optional: true},
-      {:absinthe, ">= 1.7.0", optional: true},
+      {:absinthe, ">= 1.8.0", optional: true},
       {:broadway, ">= 1.1.0", optional: true},
 
       # PromEx development related dependencies
@@ -84,7 +84,7 @@ defmodule PromEx.MixProject do
       {:ex_doc, "~> 0.34.2", only: :dev},
       {:excoveralls, "~> 0.18.2", only: :test, runtime: false},
       {:doctor, "~> 0.21.0", only: :dev},
-      {:credo, "~> 1.7.7", only: :dev},
+      {:credo, "~> 1.7.14", only: :dev},
       {:dialyxir, "~> 1.4.3", only: :dev, runtime: false}
     ]
   end
