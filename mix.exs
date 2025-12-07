@@ -13,13 +13,6 @@ defmodule PromEx.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
-        coveralls: :test,
-        "coveralls.detail": :test,
-        "coveralls.post": :test,
-        "coveralls.html": :test,
-        "coveralls.github": :test
-      ],
       dialyzer: [
         plt_add_apps: [
           :absinthe,
@@ -38,6 +31,18 @@ defmodule PromEx.MixProject do
       deps: deps(),
       docs: docs(),
       aliases: aliases()
+    ]
+  end
+
+  def cli do
+    [
+      preferred_envs: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+        "coveralls.github": :test
+      ]
     ]
   end
 
