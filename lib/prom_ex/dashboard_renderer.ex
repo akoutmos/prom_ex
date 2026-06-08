@@ -4,8 +4,6 @@ defmodule PromEx.DashboardRenderer do
   and ensure that requested files actually exist
   """
 
-  require Logger
-
   @type t :: %__MODULE__{
           file_type: :eex | :json | nil,
           relative_path: String.t(),

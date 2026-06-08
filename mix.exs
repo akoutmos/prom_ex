@@ -13,13 +13,6 @@ defmodule PromEx.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
-        coveralls: :test,
-        "coveralls.detail": :test,
-        "coveralls.post": :test,
-        "coveralls.html": :test,
-        "coveralls.github": :test
-      ],
       dialyzer: [
         plt_add_apps: [
           :absinthe,
@@ -51,6 +44,18 @@ defmodule PromEx.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
+  def cli do
+    [
+      preferred_envs: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+        "coveralls.github": :test
+      ]
+    ]
+  end
+
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
@@ -69,18 +74,18 @@ defmodule PromEx.MixProject do
       {:phoenix_live_view, ">= 0.20.0", optional: true},
       {:plug, ">= 1.16.0", optional: true},
       {:plug_cowboy, ">= 2.6.0", optional: true},
-      {:ecto, ">= 3.11.0", optional: true},
+      {:ecto, ">= 3.14.0", optional: true},
       {:oban, ">= 2.10.0", optional: true},
-      {:absinthe, ">= 1.7.0", optional: true},
+      {:absinthe, ">= 1.8.0", optional: true},
       {:broadway, ">= 1.1.0", optional: true},
 
       # PromEx development related dependencies
       {:bypass, "~> 2.1", only: :test},
-      {:ex_doc, "~> 0.34.2", only: :dev},
+      {:ex_doc, "~> 0.40.3", only: :dev},
       {:excoveralls, "~> 0.18.2", only: :test, runtime: false},
-      {:doctor, "~> 0.21.0", only: :dev},
-      {:credo, "~> 1.7.7", only: :dev},
-      {:dialyxir, "~> 1.4.3", only: :dev, runtime: false}
+      {:doctor, "~> 0.23.0", only: :dev},
+      {:credo, "~> 1.7.19", only: :dev},
+      {:dialyxir, "~> 1.4.7", only: :dev, runtime: false}
     ]
   end
 

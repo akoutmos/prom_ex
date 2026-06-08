@@ -34,8 +34,6 @@ if Code.ensure_loaded?(Broadway) do
 
     use PromEx.Plugin
 
-    require Logger
-
     alias Broadway.{BatchInfo, Options}
     alias PromEx.Utils
 

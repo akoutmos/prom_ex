@@ -109,7 +109,7 @@ if Code.ensure_loaded?(Plug.Router) do
     """
 
     use PromEx.Plugin
-    require Logger
+
     alias Plug.Conn
 
     @stop_event [:prom_ex, :router, :stop]
