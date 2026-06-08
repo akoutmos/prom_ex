@@ -168,6 +168,7 @@ defmodule PromEx do
     metrics_collector_name = Module.concat([calling_module, Metrics])
     dashboard_uploader_name = Module.concat([calling_module, DashboardUploader])
     grafana_client_name = Module.concat([calling_module, GrafanaClient])
+    grafana_alloy_name = Module.concat([calling_module, GrafanaAlloy])
     grafana_agent_name = Module.concat([calling_module, GrafanaAgent])
     metrics_server_name = Module.concat([calling_module, MetricsServer])
     lifecycle_annotator_name = Module.concat([calling_module, LifecycleAnnotator])
@@ -191,6 +192,7 @@ defmodule PromEx do
           drop_metrics_groups: drop_metrics_groups,
           ets_flush_interval: ets_flush_interval,
           grafana_config: grafana_config,
+          grafana_alloy_config: grafana_alloy_config,
           grafana_agent_config: grafana_agent_config,
           metrics_server_config: metrics_server_config
         } = __MODULE__.init_opts()
@@ -228,6 +230,11 @@ defmodule PromEx do
               grafana_config,
               __MODULE__,
               unquote(grafana_client_name)
+            )
+            |> PromEx.grafana_alloy_child_spec(
+              grafana_alloy_config,
+              __MODULE__,
+              unquote(grafana_alloy_name)
             )
             |> PromEx.grafana_agent_child_spec(
               grafana_agent_config,
@@ -441,6 +448,20 @@ defmodule PromEx do
       |> Keyword.put(:name, process_name)
 
     spec = {PromEx.GrafanaClient, opts}
+
+    [spec | acc]
+  end
+
+  @doc false
+  def grafana_alloy_child_spec(acc, :disabled, _, _) do
+    acc
+  end
+
+  def grafana_alloy_child_spec(acc, grafana_alloy_config, prom_ex_module, process_name) do
+    spec = {
+      PromEx.GrafanaAlloy,
+      name: process_name, prom_ex_module: prom_ex_module, grafana_alloy_config: grafana_alloy_config
+    }
 
     [spec | acc]
   end

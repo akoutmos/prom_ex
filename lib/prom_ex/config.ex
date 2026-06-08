@@ -132,6 +132,19 @@ defmodule PromEx.Config do
     * `:finch_pools` - (optional) A map that will be passed to Finch.start_link/1 as the :pools key,
       which can be used to configure protocol, pool size, HTTP host headers, proxy server, etc.
 
+  * `:grafana_alloy` - This key contains the configuration information for running Grafana Alloy via a
+    port in order to push metrics to a Prometheus instance via `remote_write` functionality:
+
+    > ### Environment dependencies {: .warning}
+    >
+    > If your application is running inside of an Alpine Linux container (or any environment that
+    > is based on [musl](https://www.musl-libc.org/) as opposed to
+    > [glibc](https://www.gnu.org/software/libc/), be sure to add `libc6-compat` to to your list
+    > of packages. In addition, you'll also need bash running, as this port is wrapped by a
+    > [bash script](https://hexdocs.pm/elixir/1.12/Port.html#module-zombie-operating-system-processes).
+    > For example, in a Dockerfile you would add:
+    > `RUN apk add --no-cache bash libc6-compat`
+
   * `:grafana_agent` - This key contains the configuration information for running GrafanaAgent via a
     port in order to push metrics to a Prometheus instance via `remote_write` functionality:
 
@@ -238,6 +251,7 @@ defmodule PromEx.Config do
   - `ets_flush_interval`: How often should the ETS buffer table be compacted.
   - `grafana_config`: A map containing all the relevant settings to connect to Grafana.
   - `grafana_agent_config`: A map containing all the relevant settings to connect to GrafanaAgent.
+  - `grafana_alloy_config`: A map containing all the relevant settings to connect to Grafana Alloy.
   - `metrics_server_config`: A map containing all the relevant settings to start a standalone HTTP Cowboy server for metrics.
   """
 
@@ -250,6 +264,7 @@ defmodule PromEx.Config do
           ets_flush_interval: :integer,
           grafana_config: map(),
           grafana_agent_config: map(),
+          grafana_alloy_config: map(),
           metrics_server_config: map()
         }
 
@@ -260,6 +275,7 @@ defmodule PromEx.Config do
     :ets_flush_interval,
     :grafana_config,
     :grafana_agent_config,
+    :grafana_alloy_config,
     :metrics_server_config
   ]
 
@@ -279,6 +295,11 @@ defmodule PromEx.Config do
       |> Keyword.get(:grafana_agent, :disabled)
       |> generate_grafana_agent_config()
 
+    grafana_alloy_config =
+      opts
+      |> Keyword.get(:grafana_alloy, :disabled)
+      |> generate_grafana_alloy_config()
+
     metrics_server_config =
       opts
       |> Keyword.get(:metrics_server, :disabled)
@@ -291,6 +312,7 @@ defmodule PromEx.Config do
       ets_flush_interval: Keyword.get(opts, :ets_flush_interval, 7_500),
       grafana_config: grafana_config,
       grafana_agent_config: grafana_agent_config,
+      grafana_alloy_config: grafana_alloy_config,
       metrics_server_config: metrics_server_config
     }
   end
@@ -318,6 +340,16 @@ defmodule PromEx.Config do
       :error ->
         raise "When configuring the Grafana client for PromEx, the #{inspect(config_key)} key is required."
     end
+  end
+
+  defp generate_grafana_alloy_config(:disabled), do: :disabled
+
+  defp generate_grafana_alloy_config(grafana_alloy_opts) do
+    %{
+      version: Keyword.get(grafana_alloy_opts, :version, Downloader.default_version()),
+      working_directory: Keyword.get(grafana_alloy_opts, :working_directory),
+      config_opts: grafana_alloy_opts |> Keyword.get(:config_opts) |> extract_opts_for_config()
+    }
   end
 
   defp generate_grafana_agent_config(:disabled), do: :disabled
