@@ -60,7 +60,7 @@ defmodule PromEx.MixProject do
   defp deps do
     [
       # Required dependencies
-      {:jason, "~> 1.4"},
+      {:jason, "~> 1.4", optional: true},
       {:finch, "~> 0.18"},
       {:telemetry, ">= 1.0.0"},
       {:telemetry_poller, "~> 1.1"},

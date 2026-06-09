@@ -56,14 +56,14 @@ defmodule TestApp.PlugRouter do
 
   plug PromEx.Plug, prom_ex_module: TestApp.PromEx, path: "/metrics"
   plug Plug.Telemetry, event_prefix: [:testapp, :plug, :router]
-  plug Plug.Parsers, parsers: [:json], json_decoder: Jason
+  plug Plug.Parsers, parsers: [:json], json_decoder: PromEx.JSON
   plug :match
   plug :dispatch
 
   get "/users/:id" do
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(200, Jason.encode!(%{"id" => conn.params["id"]}))
+    |> send_resp(200, PromEx.JSON.encode!(%{"id" => conn.params["id"]}))
     |> halt()
   end
 

@@ -19,7 +19,7 @@ end
   |> Finch.build(users_path)
   |> Finch.request(StressTester)
 
-all_users = Jason.decode!(body)
+all_users = PromEx.JSON.decode!(body)
 
 # Level up all the users slowly
 all_users
@@ -78,7 +78,7 @@ task_2 =
         age = Faker.random_between(18, 75)
 
         data = %{first_name: first_name, last_name: last_name, age: age, points: 0}
-        payload = Jason.encode!(data)
+        payload = PromEx.JSON.encode!(data)
 
         :post
         |> Finch.build(users_path, [{"content-type", "application/json"}], payload)
@@ -98,7 +98,7 @@ Task.await_many([task_1, task_2], 60_000)
   |> Finch.build(users_path)
   |> Finch.request(StressTester)
 
-all_users = Jason.decode!(body)
+all_users = PromEx.JSON.decode!(body)
 
 all_users
 |> Enum.shuffle()

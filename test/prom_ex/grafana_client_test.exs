@@ -45,7 +45,7 @@ defmodule PromEx.GrafanaClientTest do
     Bypass.expect(bypass, "POST", "/api/annotations", fn conn ->
       {:ok, body, conn} = Plug.Conn.read_body(conn, [])
 
-      details = Jason.decode!(body)
+      details = PromEx.JSON.decode!(body)
       assert details["time"] == 1_640_995_200_000
       assert details["tags"] == ["some", "tags"]
       assert details["text"] == "message"
@@ -86,7 +86,7 @@ defmodule PromEx.GrafanaClientTest do
     Bypass.expect(bypass, "POST", "/api/annotations", fn conn ->
       {:ok, body, conn} = Plug.Conn.read_body(conn, [])
 
-      details = Jason.decode!(body)
+      details = PromEx.JSON.decode!(body)
       assert details["dashboardId"] == 1
       assert details["panelId"] == 2
       assert details["time"] == 1_640_995_200_000

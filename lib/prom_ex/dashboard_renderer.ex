@@ -105,8 +105,8 @@ defmodule PromEx.DashboardRenderer do
   end
 
   @doc """
-  This function will decode the JSON dashboard using `Jason`. If any errors occur during the decoding process,
-  the struct will be marked as having invalid JSON.
+  This function will decode the JSON dashboard using JSON if available and fallback to Jason. If any errors
+  occur during the decoding process, the struct will be marked as having invalid JSON.
   """
   @spec decode_dashboard(__MODULE__.t()) :: __MODULE__.t()
   def decode_dashboard(%__MODULE__{valid_file?: false} = dashboard_render) do
@@ -114,7 +114,7 @@ defmodule PromEx.DashboardRenderer do
   end
 
   def decode_dashboard(%__MODULE__{rendered_file: json_definition} = dashboard_render) do
-    case Jason.decode(json_definition) do
+    case PromEx.JSON.decode(json_definition) do
       {:ok, decoded_dashboard} ->
         %{dashboard_render | decoded_dashboard: decoded_dashboard, valid_json?: true}
 

@@ -23,7 +23,7 @@ jobs:
           elixir-version: "1.17.2"
           otp-version: "27.0"
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             deps
@@ -53,6 +53,7 @@ jobs:
       matrix:
         elixir:
           - "1.17"
+          - "1.18"
         otp:
           - "26.0"
           - "27.0"

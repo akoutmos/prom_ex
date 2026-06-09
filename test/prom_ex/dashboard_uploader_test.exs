@@ -161,7 +161,7 @@ defmodule PromEx.DashboardUploaderTest do
       {:ok, body, conn} = Plug.Conn.read_body(conn, [])
 
       assert body
-             |> Jason.decode!()
+             |> PromEx.JSON.decode!()
              |> get_in(["dashboard", "title"]) == "My really cool custom title"
 
       Plug.Conn.resp(conn, 200, response_payload)

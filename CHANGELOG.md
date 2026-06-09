@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- PromEx now uses Elixir 1.18 default JSON module and falls back to Jason if it is not available.
+
 ## [1.11.0] - 2024-10-24
 
 ### Fixed

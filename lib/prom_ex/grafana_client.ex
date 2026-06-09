@@ -73,7 +73,7 @@ defmodule PromEx.GrafanaClient do
 
     dashboard_uid =
       dashboard_contents
-      |> Jason.decode!()
+      |> PromEx.JSON.decode!()
       |> Map.get("uid")
 
     :get
@@ -94,7 +94,7 @@ defmodule PromEx.GrafanaClient do
     headers = grafana_headers(:post, grafana_conn.authorization)
 
     payload =
-      Jason.encode!(%{
+      PromEx.JSON.encode!(%{
         uid: folder_uid,
         title: title
       })
@@ -136,7 +136,7 @@ defmodule PromEx.GrafanaClient do
         overwrite: true
       }
       |> Map.merge(attrs)
-      |> Jason.encode!()
+      |> PromEx.JSON.encode!()
 
     :put
     |> Finch.build("#{grafana_conn.base_url}/api/folders/#{folder_uid}", headers, payload)
@@ -193,7 +193,7 @@ defmodule PromEx.GrafanaClient do
         {:time_end, v} -> {:timeEnd, v}
         {k, v} -> {k, v}
       end)
-      |> Jason.encode!()
+      |> PromEx.JSON.encode!()
 
     :post
     |> Finch.build("#{grafana_conn.base_url}/api/annotations", headers, payload)
@@ -204,7 +204,7 @@ defmodule PromEx.GrafanaClient do
   defp handle_grafana_response(finch_response) do
     case finch_response do
       {:ok, %Finch.Response{status: status_code, body: body}} when status_code in [200, 201] ->
-        {:ok, Jason.decode!(body)}
+        {:ok, PromEx.JSON.decode!(body)}
 
       {:ok, %Finch.Response{status: status_code} = response} ->
         Logger.warning("Received a #{status_code} from Grafana because: #{inspect(response)}")
@@ -236,12 +236,12 @@ defmodule PromEx.GrafanaClient do
   end
 
   defp generate_payload(dashboard_definition, opts) do
-    dashboard = Jason.decode!(dashboard_definition)
+    dashboard = PromEx.JSON.decode!(dashboard_definition)
 
     opts
     |> Map.new()
     |> Map.put(:dashboard, dashboard)
-    |> Jason.encode!()
+    |> PromEx.JSON.encode!()
   end
 
   defp lookup_status_code(status_code) do

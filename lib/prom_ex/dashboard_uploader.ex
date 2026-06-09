@@ -126,7 +126,7 @@ defmodule PromEx.DashboardUploader do
   end
 
   defp upload_dashboard(dashboard_definition, grafana_conn, upload_opts, full_dashboard_path) do
-    dashboard_contents = Jason.encode!(dashboard_definition)
+    dashboard_contents = PromEx.JSON.encode!(dashboard_definition)
 
     case GrafanaClient.upload_dashboard(grafana_conn, dashboard_contents, upload_opts) do
       {:ok, _response_payload} ->
