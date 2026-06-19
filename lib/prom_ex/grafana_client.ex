@@ -210,8 +210,8 @@ defmodule PromEx.GrafanaClient do
         Logger.warning("Received a #{status_code} from Grafana because: #{inspect(response)}")
         {:error, lookup_status_code(status_code)}
 
-      {:error, %Mint.TransportError{} = mint_error_reason} ->
-        {:error, Exception.message(mint_error_reason)}
+      {:error, %Finch.TransportError{} = transport_error} ->
+        {:error, Exception.message(transport_error)}
 
       unknown_response ->
         Logger.warning("Received an unhandled response from Grafana because: #{inspect(unknown_response)}")
