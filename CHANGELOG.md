@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-06-19
+
+- Fix Oban plugin initial state hydration [#278](https://github.com/akoutmos/prom_ex/pull/278)
+- Allow additional (custom) tags in HTTP events [#259](https://github.com/akoutmos/prom_ex/pull/259)
+- Support Peep v4.0+ [#270](https://github.com/akoutmos/prom_ex/pull/270)
+- Use correct legend for Atom Table Size panel in BEAM Grafana dashboard [#272](https://github.com/akoutmos/prom_ex/pull/272)
+- Keep options order in Phoenix plugin [#286](https://github.com/akoutmos/prom_ex/pull/286)
+
 ## [1.11.0] - 2024-10-24
 
 ### Fixed
