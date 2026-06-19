@@ -51,6 +51,14 @@ defmodule TestApp.InternalRouter do
   end
 end
 
+defmodule TestApp.OverlapRouter do
+  use Phoenix.Router
+
+  scope "/", TestApp do
+    get "/users", UserController, :overlap_index
+  end
+end
+
 defmodule TestApp.PlugRouter do
   use Plug.Router
 

@@ -123,4 +123,57 @@ defmodule PromEx.Plugins.PhoenixTest do
       assert Phoenix.polling_metrics([]) == []
     end
   end
+
+  describe "router options order preservation" do
+    defp http_tag_values_fn(opts) do
+      [_endpoint_info, http_metrics | _] =
+        Phoenix.event_metrics(Keyword.merge([otp_app: :prom_ex], opts))
+
+      http_metrics.metrics
+      |> List.first()
+      |> Map.get(:tag_values)
+    end
+
+    defp resolve_action(tag_values_fn, path) do
+      conn = %Plug.Conn{method: "GET", request_path: path, host: "localhost", status: 200}
+      tag_values_fn.(%{conn: conn}).action
+    end
+
+    test "first router wins for overlapping routes" do
+      tag_values_fn =
+        http_tag_values_fn(
+          endpoints: [{TestApp.Endpoint, routers: [TestApp.Router, TestApp.OverlapRouter]}]
+        )
+
+      assert resolve_action(tag_values_fn, "/users") == :index
+    end
+
+    test "preserves insertion order when deduplicating routers" do
+      # [Router, OverlapRouter, Router] should deduplicate to [Router, OverlapRouter]
+      tag_values_fn =
+        http_tag_values_fn(
+          endpoints: [
+            {TestApp.Endpoint,
+             routers: [TestApp.Router, TestApp.OverlapRouter, TestApp.Router]}
+          ]
+        )
+
+      # TestApp.Router is first, so its action wins for the overlapping route
+      assert resolve_action(tag_values_fn, "/users") == :index
+    end
+
+    test "keeps first occurrence when deduplicating, not last" do
+      # [OverlapRouter, Router, OverlapRouter] should deduplicate to [OverlapRouter, Router]
+      tag_values_fn =
+        http_tag_values_fn(
+          endpoints: [
+            {TestApp.Endpoint,
+             routers: [TestApp.OverlapRouter, TestApp.Router, TestApp.OverlapRouter]}
+          ]
+        )
+
+      # TestApp.OverlapRouter is first, so its action wins for the overlapping route
+      assert resolve_action(tag_values_fn, "/users") == :overlap_index
+    end
+  end
 end

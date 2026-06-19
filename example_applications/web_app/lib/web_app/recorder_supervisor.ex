@@ -22,8 +22,7 @@ defmodule WebApp.RecorderSupervisor do
         :polling_metrics
       ]
       |> Enum.flat_map(&get_metrics(module, &1, args))
-      |> MapSet.new()
-      |> MapSet.to_list()
+      |> Enum.uniq()
 
     name = Module.concat(module, Recorder)
 

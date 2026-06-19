@@ -529,8 +529,7 @@ if Code.ensure_loaded?(Phoenix) do
             {_endpoint, endpoint_opts} ->
               Keyword.get(endpoint_opts, :additional_routes, [])
           end)
-          |> MapSet.new()
-          |> MapSet.to_list()
+          |> Enum.uniq()
 
         _router ->
           Keyword.get(opts, :additional_routes, [])
@@ -569,8 +568,7 @@ if Code.ensure_loaded?(Phoenix) do
         _router ->
           [Keyword.get(opts, :event_prefix, [:phoenix, :endpoint])]
       end
-      |> MapSet.new()
-      |> MapSet.to_list()
+      |> Enum.uniq()
     end
 
     defp fetch_routers!(opts) do
@@ -584,8 +582,7 @@ if Code.ensure_loaded?(Phoenix) do
               endpoint_opts
               |> Keyword.fetch!(:routers)
           end)
-          |> MapSet.new()
-          |> MapSet.to_list()
+          |> Enum.uniq()
 
         router ->
           [router]
