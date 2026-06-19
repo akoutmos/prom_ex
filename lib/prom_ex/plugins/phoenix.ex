@@ -35,6 +35,14 @@ if Code.ensure_loaded?(Phoenix) do
       will be set to `some-route`. You can pass in either a regular expression or a string to match the incoming
       request.
 
+    - `additional_tags`: This option is OPTIONAL and allows you to specify additional tags (as a list of atoms) to be
+      added to the HTTP metrics. This is useful if you want to add additional context to your metrics. The additional
+      tag values will be taken from the private key `:prom_ex_[tag]` on the connection struct. Defaults to `[]`.
+
+      For example, if you want to report the authentication status of the request, you can set
+      `additional_tags: [:authenticated]` and use `Plug.Conn.put_private(conn, :prom_ex_authenticated, true)`
+      in a controller or plug to add the tag to the metrics.
+
     - `normalize_event_name`: This option is OPTIONAL and allows you to remap the channel event names to a different
       name. This is useful if you want to limit the number or size of event names that are emitted.
 
@@ -76,6 +84,14 @@ if Code.ensure_loaded?(Phoenix) do
 
         - `:additional_routes`: This option is OPTIONAL and allows you to specify route path labels for applications routes
         not defined in your Router modules for the corresponding endpoint.
+
+        - `additional_tags`: This option is OPTIONAL and allows you to specify additional tags (as a list of atoms) to be
+          added to the HTTP metrics. This is useful if you want to add additional context to your metrics. The additional
+          tag values will be taken from the private key `:prom_ex_[tag]` on the connection struct. Defaults to `[]`.
+
+          For example, if you want to report the authentication status of the request, you can set
+          `additional_tags: [:authenticated]` and use `Plug.Conn.put_private(conn, :prom_ex_authenticated, true)`
+          in a controller or plug to add the tag to the metrics.
 
     #### Example plugin configuration
 
@@ -261,6 +277,7 @@ if Code.ensure_loaded?(Phoenix) do
     defp http_events(metric_prefix, opts) do
       routers = fetch_routers!(opts)
       additional_routes = fetch_additional_routes!(opts)
+      additional_tags = fetch_additional_tags!(opts)
       http_metrics_tags = [:status, :method, :path, :controller, :action, :host]
       duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
       duration_unit_plural = Utils.make_plural_atom(duration_unit)
@@ -277,8 +294,8 @@ if Code.ensure_loaded?(Phoenix) do
             reporter_options: [
               buckets: [10, 100, 500, 1_000, 5_000, 10_000, 30_000]
             ],
-            tag_values: get_conn_tags(routers, additional_routes),
-            tags: http_metrics_tags,
+            tag_values: get_conn_tags(routers, additional_routes, additional_tags),
+            tags: http_metrics_tags ++ additional_tags,
             unit: {:native, duration_unit}
           ),
 
@@ -296,8 +313,8 @@ if Code.ensure_loaded?(Phoenix) do
                 _ -> :erlang.iolist_size(metadata.conn.resp_body)
               end
             end,
-            tag_values: get_conn_tags(routers, additional_routes),
-            tags: http_metrics_tags,
+            tag_values: get_conn_tags(routers, additional_routes, additional_tags),
+            tags: http_metrics_tags ++ additional_tags,
             unit: :byte
           ),
 
@@ -306,8 +323,8 @@ if Code.ensure_loaded?(Phoenix) do
             metric_prefix ++ [:http, :requests, :total],
             event_name: @stop_event,
             description: "The number of requests have been serviced.",
-            tag_values: get_conn_tags(routers, additional_routes),
-            tags: http_metrics_tags
+            tag_values: get_conn_tags(routers, additional_routes, additional_tags),
+            tags: http_metrics_tags ++ additional_tags
           )
         ]
       )
@@ -386,14 +403,21 @@ if Code.ensure_loaded?(Phoenix) do
       )
     end
 
-    defp get_conn_tags(routers, []) do
+    defp get_conn_tags(routers, additional_routes, additional_tags) do
       fn
         %{conn: %Conn{} = conn} ->
-          default_route_tags = %{
-            path: "Unknown",
-            controller: "Unknown",
-            action: "Unknown"
-          }
+          default_route_tags =
+            case additional_routes do
+              [] ->
+                %{
+                  path: "Unknown",
+                  controller: "Unknown",
+                  action: "Unknown"
+                }
+
+              additional_routes ->
+                handle_additional_routes_check(conn, additional_routes)
+            end
 
           conn
           |> do_get_router_info(routers, default_route_tags)
@@ -402,27 +426,11 @@ if Code.ensure_loaded?(Phoenix) do
             method: conn.method,
             host: conn.host
           })
+          |> do_get_additional_tags(conn, additional_tags)
 
         _ ->
           Logger.warning("Could not resolve path for request")
-      end
-    end
-
-    defp get_conn_tags(routers, additional_routes) do
-      fn
-        %{conn: %Conn{} = conn} ->
-          default_route_tags = handle_additional_routes_check(conn, additional_routes)
-
-          conn
-          |> do_get_router_info(routers, default_route_tags)
-          |> Map.merge(%{
-            status: conn.status,
-            method: conn.method,
-            host: conn.host
-          })
-
-        _ ->
-          Logger.warning("Could not resolve path for request")
+          %{}
       end
     end
 
@@ -473,6 +481,12 @@ if Code.ensure_loaded?(Phoenix) do
       end)
     end
 
+    defp do_get_additional_tags(tag_map, conn, additional_tags) do
+      Enum.reduce(additional_tags, tag_map, fn tag, acc ->
+        Map.put(acc, tag, conn.private[:"prom_ex_#{tag}"])
+      end)
+    end
+
     defp set_up_telemetry_proxy(phoenix_event_prefixes) do
       phoenix_event_prefixes
       |> Enum.each(fn telemetry_prefix ->
@@ -520,6 +534,24 @@ if Code.ensure_loaded?(Phoenix) do
 
         _router ->
           Keyword.get(opts, :additional_routes, [])
+      end
+    end
+
+    defp fetch_additional_tags!(opts) do
+      opts
+      |> fetch_either!(:router, :endpoints)
+      |> case do
+        endpoints when is_list(endpoints) ->
+          endpoints
+          |> Enum.flat_map(fn
+            {_endpoint, endpoint_opts} ->
+              Keyword.get(endpoint_opts, :additional_tags, [])
+          end)
+          |> MapSet.new()
+          |> MapSet.to_list()
+
+        _router ->
+          Keyword.get(opts, :additional_tags, [])
       end
     end
 

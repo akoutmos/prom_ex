@@ -3076,7 +3076,9 @@
         port: 4000,
         private: %{
           phoenix_endpoint: WebAppWeb.Endpoint,
-          phoenix_request_logger: {"request_logger", "request_logger"}
+          phoenix_request_logger: {"request_logger", "request_logger"},
+          prom_ex_my_metadata: "test",
+          prom_ex_non_collected_metadata: "test"
         },
         query_params: %{},
         query_string: "",

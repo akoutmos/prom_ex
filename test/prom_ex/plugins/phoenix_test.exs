@@ -59,6 +59,26 @@ defmodule PromEx.Plugins.PhoenixTest do
     end
   end
 
+  defmodule WebApp.PromExSingleEndpointAdditionalTags do
+    use PromEx, otp_app: :web_app
+
+    @additional_routes [
+      special_label: "/really-cool-route",
+      another_label: ~r(\/another-cool-route)
+    ]
+
+    @impl true
+    def plugins do
+      [
+        {Phoenix,
+         router: TestApp.Router,
+         additional_routes: @additional_routes,
+         endpoint: TestApp.Endpoint,
+         additional_tags: [:my_metadata]}
+      ]
+    end
+  end
+
   test "telemetry events are accumulated for single endpoint configuration" do
     start_supervised!(WebApp.PromExSingleEndpoint)
     Events.execute_all(:phoenix)
@@ -80,6 +100,16 @@ defmodule PromEx.Plugins.PhoenixTest do
     collected_metrics = Metrics.read_collected(WebApp.PromExSingleEndpointNormalizedChannelEvents)
 
     assert collected_metrics |> Enum.any?(&String.contains?(&1, "unknown"))
+  end
+
+  test "telemetry events include additional tags" do
+    start_supervised!(WebApp.PromExSingleEndpointAdditionalTags)
+    Events.execute_all(:phoenix)
+
+    collected_metrics = Metrics.read_collected(WebApp.PromExSingleEndpointAdditionalTags)
+
+    assert collected_metrics |> Enum.any?(&String.contains?(&1, "my_metadata=\"test\""))
+    refute collected_metrics |> Enum.any?(&String.contains?(&1, "non_collected_metadata=\"test\""))
   end
 
   describe "event_metrics/1" do
