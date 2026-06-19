@@ -4,7 +4,7 @@ defmodule PromEx.MixProject do
   def project do
     [
       app: :prom_ex,
-      version: "1.11.0",
+      version: "1.12.0",
       elixir: "~> 1.14",
       name: "PromEx",
       source_url: "https://github.com/akoutmos/prom_ex",
@@ -112,7 +112,7 @@ defmodule PromEx.MixProject do
   defp package do
     [
       name: "prom_ex",
-      files: ~w(lib priv/grafana_agent priv/*.eex mix.exs README.md LICENSE CHANGELOG.md),
+      files: ~w(lib guides priv/grafana_agent priv/*.eex mix.exs README.md LICENSE CHANGELOG.md),
       licenses: ["MIT"],
       maintainers: ["Alex Koutmos"],
       links: %{
