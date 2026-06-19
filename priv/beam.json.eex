@@ -1844,7 +1844,7 @@
         {
           "expr": "<%= @beam_metric_prefix %>_stats_atom_count{job=\"$job\", instance=\"$instance\"}",
           "interval": "",
-          "legendFormat": "Active ports",
+          "legendFormat": "Active Atoms",
           "refId": "A"
         }
       ],
