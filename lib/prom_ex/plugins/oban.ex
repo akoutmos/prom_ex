@@ -438,7 +438,7 @@ if Code.ensure_loaded?(Oban) do
 
       config
       |> Oban.Repo.all(query)
-      |> include_zeros_for_missing_queue_states()
+      |> include_zeros_for_missing_queue_states(config)
       |> Enum.each(fn {{queue, state}, count} ->
         measurements = %{count: count}
         metadata = %{name: normalize_module_name(oban_supervisor), queue: queue, state: state}
@@ -447,10 +447,10 @@ if Code.ensure_loaded?(Oban) do
       end)
     end
 
-    defp include_zeros_for_missing_queue_states(query_result) do
+    defp include_zeros_for_missing_queue_states(query_result, config) do
       {_, opts} =
-        Oban.config().plugins
-        |> Enum.find({nil, [queues: Oban.config().queues]}, fn {plugin, _} ->
+        config.plugins
+        |> Enum.find({nil, [queues: config.queues]}, fn {plugin, _} ->
           plugin == Oban.Pro.Plugins.DynamicQueues
         end)
 
