@@ -483,7 +483,8 @@ if Code.ensure_loaded?(Phoenix) do
 
     defp do_get_additional_tags(tag_map, conn, additional_tags) do
       Enum.reduce(additional_tags, tag_map, fn tag, acc ->
-        Map.put(acc, tag, conn.private[:"prom_ex_#{tag}"])
+        key = String.to_existing_atom("prom_ex_#{tag}")
+        Map.put(acc, tag, conn.private[key])
       end)
     end
 

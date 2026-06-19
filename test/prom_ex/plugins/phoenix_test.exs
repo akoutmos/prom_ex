@@ -141,9 +141,7 @@ defmodule PromEx.Plugins.PhoenixTest do
 
     test "first router wins for overlapping routes" do
       tag_values_fn =
-        http_tag_values_fn(
-          endpoints: [{TestApp.Endpoint, routers: [TestApp.Router, TestApp.OverlapRouter]}]
-        )
+        http_tag_values_fn(endpoints: [{TestApp.Endpoint, routers: [TestApp.Router, TestApp.OverlapRouter]}])
 
       assert resolve_action(tag_values_fn, "/users") == :index
     end
@@ -153,8 +151,7 @@ defmodule PromEx.Plugins.PhoenixTest do
       tag_values_fn =
         http_tag_values_fn(
           endpoints: [
-            {TestApp.Endpoint,
-             routers: [TestApp.Router, TestApp.OverlapRouter, TestApp.Router]}
+            {TestApp.Endpoint, routers: [TestApp.Router, TestApp.OverlapRouter, TestApp.Router]}
           ]
         )
 
@@ -167,8 +164,7 @@ defmodule PromEx.Plugins.PhoenixTest do
       tag_values_fn =
         http_tag_values_fn(
           endpoints: [
-            {TestApp.Endpoint,
-             routers: [TestApp.OverlapRouter, TestApp.Router, TestApp.OverlapRouter]}
+            {TestApp.Endpoint, routers: [TestApp.OverlapRouter, TestApp.Router, TestApp.OverlapRouter]}
           ]
         )
 
