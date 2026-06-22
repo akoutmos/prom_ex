@@ -6,14 +6,19 @@ if Code.ensure_loaded?(Absinthe) do
     metrics you'll need to make sure that you have `:analyze_complexity` enabled in
     [Absinthe.Plug](https://hexdocs.pm/absinthe_plug/Absinthe.Plug.html#t:opts/0). This plugin can
     generate a large amount of Prometheus series, so it is suggested that you use the
-    `ignored_entrypoints` and `only_entrypoints` (TODO: coming soon) options to prune down the
-    resulting metrics if needed.
+    `ignored_entrypoints` and `only_entrypoints` options to prune down the resulting metrics if needed.
 
     This plugin supports the following options:
     - `ignored_entrypoints`: This option is OPTIONAL and is used to filter out Absinthe GraphQL
       schema entrypoints that you do not want to track metrics for. For example, if you don't want
       metrics on the `:__schema` entrypoint (used for GraphQL schema introspection), you would set
       a value of `[:__schema]`. This is applicable to queries, mutations, and subscriptions.
+
+    - `only_entrypoints`: This option is OPTIONAL and is used to track metrics for only specific
+      Absinthe GraphQL schema entrypoints. When set, only the specified entrypoints will have
+      metrics tracked. For example, setting `[:user, :create_post]` will only track metrics for
+      those two entrypoints. This option takes precedence over `ignored_entrypoints`. This is
+      applicable to queries, mutations, and subscriptions.
 
     - `metric_prefix`: This option is OPTIONAL and is used to override the default metric prefix of
       `[otp_app, :prom_ex, :absinthe]`. If this changes you will also want to set `absinthe_metric_prefix`
@@ -36,7 +41,11 @@ if Code.ensure_loaded?(Absinthe) do
       def plugins do
         [
           ...
-          {PromEx.Plugins.Absinthe, ignored_entrypoints: [:__schema]}
+          # Option 1: Ignore specific entrypoints
+          {PromEx.Plugins.Absinthe, ignored_entrypoints: [:__schema]},
+
+          # Option 2: Only track specific entrypoints
+          # {PromEx.Plugins.Absinthe, only_entrypoints: [:user, :create_post, :update_post]}
         ]
       end
 
@@ -83,6 +92,11 @@ if Code.ensure_loaded?(Absinthe) do
         |> Keyword.get(:ignored_entrypoints, [])
         |> MapSet.new()
 
+      only_entrypoints =
+        opts
+        |> Keyword.get(:only_entrypoints, [])
+        |> MapSet.new()
+
       duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
       duration_unit_plural = Utils.make_plural_atom(duration_unit)
 
@@ -103,7 +117,7 @@ if Code.ensure_loaded?(Absinthe) do
             tag_values: &subscription_stop_tag_values/1,
             tags: event_tags,
             unit: {:native, duration_unit},
-            drop: entrypoint_in_ignore_set?(ignored_entrypoints)
+            drop: entrypoint_filter(only_entrypoints, ignored_entrypoints)
           )
         ]
       )
@@ -114,6 +128,11 @@ if Code.ensure_loaded?(Absinthe) do
       ignored_entrypoints =
         opts
         |> Keyword.get(:ignored_entrypoints, [])
+        |> MapSet.new()
+
+      only_entrypoints =
+        opts
+        |> Keyword.get(:only_entrypoints, [])
         |> MapSet.new()
 
       duration_unit = Keyword.get(opts, :duration_unit, :millisecond)
@@ -136,7 +155,7 @@ if Code.ensure_loaded?(Absinthe) do
             tag_values: &operation_execute_stop_tag_values/1,
             tags: event_tags,
             unit: {:native, duration_unit},
-            drop: entrypoint_in_ignore_set?(ignored_entrypoints)
+            drop: entrypoint_filter(only_entrypoints, ignored_entrypoints)
           ),
 
           # Capture GraphQL request complexity
@@ -162,7 +181,8 @@ if Code.ensure_loaded?(Absinthe) do
 
                 current_operation ->
                   entrypoint = entrypoint_from_current_operation(current_operation)
-                  MapSet.member?(ignored_entrypoints, entrypoint) or is_nil(current_operation.complexity)
+                  should_filter = should_filter_entrypoint?(entrypoint, only_entrypoints, ignored_entrypoints)
+                  should_filter or is_nil(current_operation.complexity)
               end
             end
           ),
@@ -181,7 +201,7 @@ if Code.ensure_loaded?(Absinthe) do
       )
     end
 
-    defp entrypoint_in_ignore_set?(ignored_entrypoints) do
+    defp entrypoint_filter(only_entrypoints, ignored_entrypoints) do
       fn metadata ->
         metadata.blueprint
         |> Absinthe.Blueprint.current_operation()
@@ -191,8 +211,16 @@ if Code.ensure_loaded?(Absinthe) do
 
           current_operation ->
             entrypoint = entrypoint_from_current_operation(current_operation)
-            MapSet.member?(ignored_entrypoints, entrypoint)
+            should_filter_entrypoint?(entrypoint, only_entrypoints, ignored_entrypoints)
         end
+      end
+    end
+
+    defp should_filter_entrypoint?(entrypoint, only_entrypoints, ignored_entrypoints) do
+      if MapSet.size(only_entrypoints) > 0 do
+        not MapSet.member?(only_entrypoints, entrypoint)
+      else
+        MapSet.member?(ignored_entrypoints, entrypoint)
       end
     end
 
