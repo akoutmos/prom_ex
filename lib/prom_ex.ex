@@ -190,6 +190,7 @@ defmodule PromEx do
           manual_metrics_start_delay: manual_metrics_start_delay,
           drop_metrics_groups: drop_metrics_groups,
           ets_flush_interval: ets_flush_interval,
+          ets_flush_timeout: ets_flush_timeout,
           grafana_config: grafana_config,
           grafana_agent_config: grafana_agent_config,
           metrics_server_config: metrics_server_config
@@ -216,7 +217,7 @@ defmodule PromEx do
           # Start the relevant child processes depending on configuration
           children =
             []
-            |> PromEx.ets_cron_flusher_child_spec(__MODULE__, ets_flush_interval, unquote(ets_cron_flusher_name))
+            |> PromEx.ets_cron_flusher_child_spec(__MODULE__, ets_flush_interval, ets_flush_timeout, unquote(ets_cron_flusher_name))
             |> PromEx.metrics_collector_child_spec(unquote(store), telemetry_metrics, unquote(metrics_collector_name))
             |> PromEx.manual_metrics_child_spec(
               manual_metrics,
@@ -400,10 +401,13 @@ defmodule PromEx do
   end
 
   @doc false
-  def ets_cron_flusher_child_spec(acc, prom_ex_module, ets_flush_interval, process_name) do
+  def ets_cron_flusher_child_spec(acc, prom_ex_module, ets_flush_interval, ets_flush_timeout, process_name) do
     spec =
       {PromEx.ETSCronFlusher,
-       name: process_name, prom_ex_module: prom_ex_module, ets_flush_interval: ets_flush_interval}
+       name: process_name,
+       prom_ex_module: prom_ex_module,
+       ets_flush_interval: ets_flush_interval,
+       ets_flush_timeout: ets_flush_timeout}
 
     [spec | acc]
   end

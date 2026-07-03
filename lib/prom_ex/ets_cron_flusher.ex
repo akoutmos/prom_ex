@@ -2,13 +2,12 @@ defmodule PromEx.ETSCronFlusher do
   @moduledoc """
   This module is used to regularly flush ETS of any buffered distribution
   type metrics (see https://github.com/beam-telemetry/telemetry_metrics_prometheus_core/blob/main/lib/core.ex#L25-L28)
-  for more information. At the moment the flush interval is not configurable
-  but that could change in the future.
+  for more information.
   """
 
   use GenServer
 
-  @flush_timeout 10_000
+  require Logger
 
   @doc """
   Used to start the `PromEx.ETSCronFlusher` process.
@@ -49,7 +48,7 @@ defmodule PromEx.ETSCronFlusher do
   end
 
   @impl true
-  def handle_info(:flush_ets, state) do
+  def handle_info(:flush_ets, %{ets_flush_timeout: timeout} = state) do
     # In order to avoid leaking large binaries of metrics, the flush should take place
     # inside of an ephemeral task so that the heap memory is reclaimed when the process
     # dies
@@ -58,7 +57,13 @@ defmodule PromEx.ETSCronFlusher do
         PromEx.get_metrics(state.prom_ex_module)
       end)
 
-    Task.await(flush_task, @flush_timeout)
+    case Task.yield(flush_task, timeout) || Task.shutdown(flush_task) do
+      {:ok, _result} ->
+        :ok
+
+      nil ->
+        Logger.warning("[PromEx.ETSCronFlusher] ETS flush timed out after #{timeout}ms")
+    end
 
     timer_ref = schedule_flush(state)
     {:noreply, %{state | timer_ref: timer_ref}}

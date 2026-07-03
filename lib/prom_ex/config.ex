@@ -91,6 +91,11 @@ defmodule PromEx.Config do
     that periodically compacts ETS. This config value determines how often ETS should be compacted.
     Default value: `7_500`
 
+  * `ets_flush_timeout` - The maximum time in milliseconds to wait for an ETS flush to complete.
+    If the flush takes longer than this value, the task is shut down and a warning is logged.
+    On busy systems or shared-cpu machines, `get_metrics/1` can be slow under load, so you may
+    need to increase this value. Default value: `10_000`
+
   * `:grafana` - This key contains the configuration information for connecting to Grafana. Its
     configuration options are:
 
@@ -248,6 +253,7 @@ defmodule PromEx.Config do
           manual_metrics_start_delay: :no_delay | pos_integer(),
           drop_metrics_groups: MapSet.t(),
           ets_flush_interval: :integer,
+          ets_flush_timeout: :integer,
           grafana_config: map(),
           grafana_agent_config: map(),
           metrics_server_config: map()
@@ -258,6 +264,7 @@ defmodule PromEx.Config do
     :manual_metrics_start_delay,
     :drop_metrics_groups,
     :ets_flush_interval,
+    :ets_flush_timeout,
     :grafana_config,
     :grafana_agent_config,
     :metrics_server_config
@@ -289,6 +296,7 @@ defmodule PromEx.Config do
       manual_metrics_start_delay: Keyword.get(opts, :manual_metrics_start_delay, :no_delay),
       drop_metrics_groups: opts |> Keyword.get(:drop_metrics_groups, []) |> MapSet.new(),
       ets_flush_interval: Keyword.get(opts, :ets_flush_interval, 7_500),
+      ets_flush_timeout: Keyword.get(opts, :ets_flush_timeout, 10_000),
       grafana_config: grafana_config,
       grafana_agent_config: grafana_agent_config,
       metrics_server_config: metrics_server_config

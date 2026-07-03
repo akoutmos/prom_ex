@@ -27,6 +27,7 @@ defmodule PromEx.ETSCronFlusherTest do
         disabled: false,
         drop_metrics_groups: MapSet.new(),
         ets_flush_interval: 2_500,
+        ets_flush_timeout: 10_000,
         grafana_agent_config: :disabled,
         grafana_config: :disabled,
         manual_metrics_start_delay: :no_delay,

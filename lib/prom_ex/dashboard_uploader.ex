@@ -66,8 +66,8 @@ defmodule PromEx.DashboardUploader do
           upload_dashboard(dashboard_definition, grafana_conn, upload_opts, full_path)
 
         %DashboardRenderer{full_path: path, error: error} ->
-          Logger.info(
-            "The dashboard definition for #{inspect(path)} is invalid due to the following error: #{inspect(error)}"
+          Logger.error(
+            "PromEx.DashboardUploader failed to render dashboard #{inspect(path)}: #{inspect(error)}"
           )
       end
     end)
@@ -133,7 +133,7 @@ defmodule PromEx.DashboardUploader do
         Logger.info("PromEx.DashboardUploader successfully uploaded #{full_dashboard_path} to Grafana.")
 
       {:error, reason} ->
-        Logger.warning(
+        Logger.error(
           "PromEx.DashboardUploader failed to upload #{full_dashboard_path} to Grafana: #{inspect(reason)}"
         )
     end
