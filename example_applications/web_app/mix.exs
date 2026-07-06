@@ -7,7 +7,7 @@ defmodule WebApp.MixProject do
       version: "0.1.0",
       elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -33,22 +33,23 @@ defmodule WebApp.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.6.0"},
+      {:phoenix, "~> 1.7.0"},
       {:phoenix_ecto, "~> 4.4.0"},
-      {:ecto_sql, "~> 3.7.0"},
+      {:ecto_sql, "~> 3.12.0"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_live_view, "~> 0.16.0"},
+      {:phoenix_live_view, "~> 0.20.0"},
       {:floki, ">= 0.0.0", only: :test},
-      {:phoenix_html, "~> 3.0.0"},
+      {:phoenix_view, "~> 2.0.0"},
+      {:phoenix_html, "~> 3.3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.5.0"},
+      {:phoenix_live_dashboard, "~> 0.8.0"},
       {:telemetry_metrics, "~> 0.6.0", override: true},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:faker, "~> 0.16"},
-      {:oban, "~> 2.9.0"},
-      {:broadway, "~> 1.0.2"},
+      {:oban, "~> 2.10.0"},
+      {:broadway, "~> 1.1.0"},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       # {:prom_ex, "~> 1.5.0"}
       {:prom_ex, path: "../../"}
@@ -64,7 +65,12 @@ defmodule WebApp.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "cmd npm install --prefix assets"],
+      setup: [
+        "deps.get",
+        "ecto.setup",
+        "cmd npm install --prefix assets",
+        "cmd npm run deploy --prefix assets"
+      ],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]

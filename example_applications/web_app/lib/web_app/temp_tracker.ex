@@ -9,9 +9,7 @@ defmodule WebApp.TempTracker do
 
   def get_coldest_city do
     Agent.get(__MODULE__, fn {city, country, temp} ->
-      "The coldest city on earth is currently #{city}, #{country} with a temperature of #{
-        kelvin_to_c(temp)
-      }°C"
+      "The coldest city on earth is currently #{city}, #{country} with a temperature of #{kelvin_to_c(temp)}°C"
     end)
   end
 
