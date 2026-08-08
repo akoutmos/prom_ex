@@ -284,7 +284,7 @@ defmodule PromEx do
       end
 
       @doc false
-      def __grafana_folder_uid__ do
+      def __grafana_folder__ do
         __MODULE__.init_opts()
         |> Map.get(:grafana_config)
         |> case do
@@ -294,7 +294,11 @@ defmodule PromEx do
           grafana_config ->
             Map.get(grafana_config, :folder_name, :default)
         end
-        |> case do
+      end
+
+      @doc false
+      def __grafana_folder_uid__ do
+        case __MODULE__.__grafana_folder__() do
           :default ->
             :default
 
@@ -316,7 +320,10 @@ defmodule PromEx do
         module_name = Atom.to_string(__MODULE__)
         dashboard_otp_app_name = Atom.to_string(dashboard_otp_app)
 
-        string_uid = "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}:#{dashboard_title}"
+        grafana_folder = __MODULE__.__grafana_folder__()
+
+        string_uid =
+          "#{otp_app_name}:#{module_name}:#{dashboard_otp_app_name}:#{dashboard_path}:#{dashboard_title}:#{grafana_folder}"
 
         # Grafana limits us to 40 character UIDs...so taking the MD5 of
         # a complete unique identifier to use as the UID
