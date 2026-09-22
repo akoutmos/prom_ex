@@ -92,4 +92,54 @@ defmodule PromEx.Plugins.ObanTest do
       assert [] == ObanPlugin.manual_metrics([])
     end
   end
+
+  describe "include_zeros_for_missing_queue_states/2" do
+    @query_result [{"default", "available", 3}, {"exports", "executing", 1}]
+
+    test "zero-fills queues configured with plain Oban queues" do
+      config = %Oban.Config{
+        queues: [default: [limit: 10], exports: [limit: 5]],
+        plugins: [{Oban.Plugins.Pruner, []}]
+      }
+
+      assert ObanPlugin.include_zeros_for_missing_queue_states(@query_result, config) ==
+               expected_queue_lengths(["default", "exports"])
+    end
+
+    test "zero-fills queues configured with Oban.Pro.Plugins.DynamicQueues" do
+      config = %Oban.Config{
+        queues: [],
+        plugins: [{Oban.Plugins.Pruner, []}, {Oban.Pro.Plugins.DynamicQueues, queues: [default: 10, exports: 5]}]
+      }
+
+      assert ObanPlugin.include_zeros_for_missing_queue_states(@query_result, config) ==
+               expected_queue_lengths(["default", "exports"])
+    end
+
+    test "zero-fills queues configured with Oban.Pro.Queues" do
+      # Oban >= 2.24 normalizes `queues: {Oban.Pro.Queues, queues: [...]}` into this shape
+      config = %Oban.Config{
+        queues: [],
+        plugins: [{Oban.Plugins.Pruner, []}, {Oban.Pro.Queues, queues: [default: 10, exports: 5]}]
+      }
+
+      assert ObanPlugin.include_zeros_for_missing_queue_states(@query_result, config) ==
+               expected_queue_lengths(["default", "exports"])
+    end
+
+    test "only reports the queried counts when no queues are configured" do
+      config = %Oban.Config{queues: [], plugins: [{Oban.Plugins.Pruner, []}]}
+
+      assert ObanPlugin.include_zeros_for_missing_queue_states(@query_result, config) == %{
+               {"default", "available"} => 3,
+               {"exports", "executing"} => 1
+             }
+    end
+  end
+
+  defp expected_queue_lengths(queues) do
+    zeros = for queue <- queues, state <- Oban.Job.states(), into: %{}, do: {{queue, to_string(state)}, 0}
+
+    Map.merge(zeros, %{{"default", "available"} => 3, {"exports", "executing"} => 1})
+  end
 end

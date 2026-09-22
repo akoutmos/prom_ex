@@ -447,11 +447,16 @@ if Code.ensure_loaded?(Oban) do
       end)
     end
 
-    defp include_zeros_for_missing_queue_states(query_result, config) do
+    # Oban Pro 1.8 renamed `Oban.Pro.Plugins.DynamicQueues` to `Oban.Pro.Queues` but still supports the old
+    # name, so queues may be configured through either module.
+    @pro_queue_plugins [Oban.Pro.Plugins.DynamicQueues, Oban.Pro.Queues]
+
+    @doc false
+    def include_zeros_for_missing_queue_states(query_result, config) do
       {_, opts} =
         config.plugins
         |> Enum.find({nil, [queues: config.queues]}, fn {plugin, _} ->
-          plugin == Oban.Pro.Plugins.DynamicQueues
+          plugin in @pro_queue_plugins
         end)
 
       all_queues =

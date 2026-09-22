@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Zero-fill Oban queue lengths when queues are configured with Oban Pro 1.8's `Oban.Pro.Queues`
+
 ## [1.12.0] - 2026-06-19
 
 - Fix Oban plugin initial state hydration [#278](https://github.com/akoutmos/prom_ex/pull/278)
