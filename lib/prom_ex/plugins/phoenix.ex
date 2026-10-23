@@ -65,7 +65,7 @@ if Code.ensure_loaded?(Phoenix) do
       endpoint: MyApp.Endpoint,
       router: MyAppWeb.Public.Router,
       event_prefix: [:admin, :endpoint],
-      normalize_event_name: fn event -> event end)
+      normalize_event_name: fn event -> event end
     }
     ```
 
